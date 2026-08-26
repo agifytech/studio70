@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
-:root{--bg:#0d0d0f;--card:#17171b;--muted:#9b9ba3;--text:#f5f5f7;--accent:#ff2d75;--green:#22d477;--line:#292930;--white:#fff;--font-display:'Anton',Impact,sans-serif;--font-body:'Space Grotesk',Arial,sans-serif}
+:root{--bg:#0d0d0f;--card:#17171b;--muted:#9b9ba3;--text:#f5f5f7;--accent:#ff2d75;--green:#22d477;--infinity:#00d66c;--line:#292930;--white:#fff;--font-display:'Anton',Impact,sans-serif;--font-body:'Space Grotesk',Arial,sans-serif}
 *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body)} button,input,select,textarea{font:inherit;font-family:var(--font-body)} button{cursor:pointer}
 
 img {
@@ -20,7 +20,9 @@ img {
 header{position:sticky;top:0;z-index:20;background:rgba(13,13,15,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
 .header-container{max-width:1280px;margin:auto;display:flex;align-items:center;gap:28px;padding:16px 22px} .logo{font-family:var(--font-display);font-size:26px;letter-spacing:.5px;white-space:nowrap;text-transform:uppercase;transform:skew(-6deg)}
 nav{display:flex;gap:20px;flex:1} nav a{color:#ddd;text-decoration:none;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;position:relative;padding-bottom:2px} nav a:hover{color:var(--accent)} .header-icons{display:flex;gap:8px} .iconbtn{background:#202026;color:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-weight:700} .iconbtn:hover{border-color:var(--accent)}
-.hero{min-height:460px;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;background:radial-gradient(circle at center,#29131e 0,#0d0d0f 60%)} .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,45,117,.08) 0 26px,transparent 26px 52px);pointer-events:none} .hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:repeating-linear-gradient(90deg,var(--accent) 0 22px,#0d0d0f 22px 44px)} .hero>div{position:relative;z-index:1} .hero .eyebrow{display:inline-block;color:#0d0d0f;background:var(--accent);font-family:var(--font-display);font-weight:400;letter-spacing:3px;font-size:13px;padding:6px 14px;transform:skew(-8deg)} .hero h1{font:clamp(64px,12vw,120px)/.82 var(--font-display);margin:20px 0 2px;text-transform:uppercase} .hero h2{font:clamp(18px,3vw,28px) var(--font-body);font-weight:700;letter-spacing:6px;margin:0 0 28px;color:var(--muted)} .btn{border:2px solid #0d0d0f;border-radius:2px;padding:15px 26px;font-family:var(--font-display);font-weight:400;letter-spacing:1px;text-transform:uppercase;font-size:16px;background:var(--accent);color:#fff;box-shadow:5px 5px 0 #0d0d0f;transition:transform .15s,box-shadow .15s} .btn:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 #0d0d0f} .trustbar{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:1280px;margin:0 auto;padding:0 22px 10px}.trustbar span{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 14px;display:flex;align-items:center;gap:6px}.announce{background:var(--accent);color:#fff;text-align:center;font-size:12px;font-weight:700;letter-spacing:1px;padding:9px 12px;overflow:hidden}
+.hero{min-height:460px;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;background:radial-gradient(circle at center,#29131e 0,#0d0d0f 60%)} .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,45,117,.08) 0 26px,transparent 26px 52px);pointer-events:none} .hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:repeating-linear-gradient(90deg,var(--accent) 0 22px,#0d0d0f 22px 44px)} .hero>div{position:relative;z-index:1} .hero .eyebrow{display:inline-block;color:#0d0d0f;background:var(--accent);font-family:var(--font-display);font-weight:400;letter-spacing:3px;font-size:13px;padding:6px 14px;transform:skew(-8deg)} .hero h1{font:clamp(64px,12vw,120px)/.82 var(--font-display);margin:20px 0 2px;text-transform:uppercase} .hero h2{font:clamp(18px,3vw,28px) var(--font-body);font-weight:700;letter-spacing:6px;margin:0 0 28px;color:var(--muted)} .btn{border:2px solid #0d0d0f;border-radius:2px;padding:15px 26px;font-family:var(--font-display);font-weight:400;letter-spacing:1px;text-transform:uppercase;font-size:16px;background:var(--accent);color:#fff;box-shadow:5px 5px 0 #0d0d0f;transition:transform .15s,box-shadow .15s} .btn:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 #0d0d0f} 
+.btn-infinity{background:var(--infinity);color:#042b17;border-color:#042b17}
+.trustbar{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:1280px;margin:0 auto;padding:0 22px 10px}.trustbar span{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 14px;display:flex;align-items:center;gap:6px}.announce{background:var(--accent);color:#fff;text-align:center;font-size:12px;font-weight:700;letter-spacing:1px;padding:9px 12px;overflow:hidden}
 section{max-width:1280px;margin:auto;padding:42px 22px} .section-title{font:34px var(--font-display);text-transform:uppercase;letter-spacing:1px;margin:0 0 22px;position:relative;padding-left:16px;border-left:6px solid var(--accent)} .category-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px} .cat{padding:24px 15px;border:1px solid var(--line);background:var(--card);border-radius:10px;text-align:center;font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.5px;transition:border-color .15s,transform .15s;cursor:pointer} .cat:hover{border-color:var(--accent);transform:translateY(-2px)}
 .searchbar{display:flex;gap:10px;margin-bottom:22px} .searchbar input,.field{width:100%;background:#121216;color:#fff;border:1px solid var(--line);padding:13px;border-radius:10px;outline:none;font-family:var(--font-body)} .searchbar input:focus,.field:focus{border-color:var(--accent)} .searchbar select{max-width:230px}
 .product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px} .product{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;transition:border-color .15s,transform .15s} .product:hover{border-color:var(--accent);transform:translateY(-3px)} 
@@ -38,6 +40,7 @@ section{max-width:1280px;margin:auto;padding:42px 22px} .section-title{font:34px
 .product:hover img{transform:scale(1.05)} .product-info{padding:14px} .product h3{font-size:13px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.3px;font-weight:600} .product .price{font-family:var(--font-display);font-size:24px;font-weight:400;color:var(--accent)} .meta{font-size:11px;color:var(--muted);margin:5px 0 12px} .product-actions{display:flex;gap:8px} .smallbtn{flex:1;border:1px solid var(--line);background:#222229;color:#fff;border-radius:8px;padding:10px;font-weight:700;font-size:12px;transition:border-color .15s} .smallbtn:hover{border-color:var(--accent)} .smallbtn.primary{background:var(--green);color:#07160e;border-color:var(--green);text-transform:uppercase;font-weight:700;letter-spacing:.3px} .smallbtn.primary:hover{filter:brightness(1.08)}
 .badge{position:absolute;top:10px;left:10px;background:var(--accent);color:#fff;border-radius:3px;padding:6px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px} .badge.featured{left:auto;right:10px;background:#0d0d0f;border:1px solid var(--green);color:var(--green)} .empty{padding:40px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:15px}
 .drawer,.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;display:none} .drawer.open,.modal.open{display:block} .drawer-panel{margin-left:auto;width:min(480px,100%);height:100%;background:#111116;padding:22px;overflow:auto} .modal-panel{width:min(1100px,94vw);max-height:92vh;overflow:auto;margin:4vh auto;background:#111116;border:1px solid var(--line);border-radius:18px;padding:22px}
+.modal-login{width:min(400px,90vw);margin:15vh auto;background:#111116;border:1px solid var(--line);border-radius:16px;padding:26px}
 .close{float:right;border:0;background:#292930;color:#fff;border-radius:99px;padding:8px 14px;cursor:pointer;font-weight:700} .cart-row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)} .total{font-size:24px;font-weight:900;margin:20px 0}
 .admin-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px} .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px} label{font-size:12px;font-weight:800;color:#bbb} label.full{grid-column:1/-1} textarea{min-height:100px;resize:vertical} .checkrow{display:flex;gap:15px;align-items:center;padding:12px 0} .admin-list{display:grid;gap:8px} .admin-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px;background:#19191f;border:1px solid var(--line);border-radius:10px} .admin-item span{font-size:12px} .admin-tools{display:flex;gap:6px} .danger{background:#4b1722!important;color:#fff!important}
 .scanner{background:#121216;border:1px solid var(--green);padding:18px;border-radius:14px;margin-bottom:20px} .scanner input{font-size:20px;font-weight:800} .scan-result{margin-top:10px;color:var(--green);font-weight:800} .label-preview{background:#fff;color:#111;padding:18px;border-radius:10px;text-align:center;margin-top:15px} .label-preview svg{max-width:100%}
@@ -61,14 +64,32 @@ footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;colo
 <footer><h2>STUDIO 70 BRAND</h2><p>Moda urbana feminina. Estilo, atitude e identidade.</p><p>© 2026 STUDIO 70 BRAND</p></footer>
 
 <!-- MODAIS E DRAWERS -->
-<div class="drawer" id="cartDrawer"><div class="drawer-panel"><button class="close" onclick="window.closeCart()">✕</button><h2 class="section-title">SEU CARRINHO</h2><div id="cartItems"></div><div class="total" id="cartTotal">R$ 0,00</div><button class="btn" style="width:100%" onclick="window.checkoutWhatsApp()">FINALIZAR NO WHATSAPP</button></div></div>
+<div class="drawer" id="cartDrawer"><div class="drawer-panel"><button class="close" onclick="window.closeCart()">✕</button><h2 class="section-title">SEU CARRINHO</h2><div id="cartItems"></div><div class="total" id="cartTotal">R$ 0,00</div>
+<button class="btn btn-infinity" style="width:100%;margin-bottom:10px" onclick="window.checkoutInfinityPay()">PAGAR COM INFINITYPAY ($St70)</button>
+<button class="btn" style="width:100%" onclick="window.checkoutWhatsApp()">FINALIZAR NO WHATSAPP</button></div></div>
 
+<!-- MODAL DE LOGIN ADM -->
+<div class="modal" id="loginModal"><div class="modal-login"><button class="close" onclick="window.closeLogin()">✕</button><h2 class="section-title">ACESSO ADM</h2>
+<form id="loginForm" onsubmit="window.handleLogin(event)">
+  <label style="display:block;margin-bottom:10px">Usuário<input class="field" id="loginUser" value="admin" required></label>
+  <label style="display:block;margin-bottom:15px">Senha<input class="field" id="loginPass" type="password" required></label>
+  <div id="loginError" style="color:var(--accent);font-size:12px;margin-bottom:10px"></div>
+  <button class="btn" type="submit" style="width:100%">ENTRAR NO PAINEL</button>
+</form>
+</div></div>
+
+<!-- PAINEL ADM -->
 <div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="window.closeAdmin()">✕</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU<input class="field" id="pSku" required></label><label>Código de barras<input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label class="full">Link da foto<input class="field" id="pImage" placeholder="001.jpg"></label></div><br><button class="btn" type="submit">SALVAR PRODUTO</button></form></div><div><h3>Produtos cadastrados</h3><button class="smallbtn" onclick="window.resetProductsStorage()" style="background:#8b263e;margin-bottom:12px">🔄 Resetar 200 Produtos</button><div id="adminList" class="admin-list"></div></div></div></div></div>
 
-<div class="modal" id="pdvModal"><div class="modal-panel"><button class="close" onclick="window.closePDV()">✕</button><h2 class="section-title">PDV — PONTO DE VENDA</h2><div class="pdv-layout"><div><div class="pdv-card"><div class="pdv-scan"><b>📟 BIPAR PRODUTO</b><input class="field" id="pdvScanner" placeholder="Passe o código de barras..."><div id="pdvStatus" class="pdv-status"></div></div><div id="pdvItems" class="pdv-items"></div></div></div><div><div class="pdv-card"><div class="pdv-total" id="pdvTotal">R$ 0,00</div><button class="btn" style="width:100%" onclick="window.finishSale()">✓ FINALIZAR VENDA</button><button class="smallbtn" style="width:100%;margin-top:8px" onclick="window.clearPDV()">LIMPAR</button></div></div></div></div></div>
+<!-- PDV -->
+<div class="modal" id="pdvModal"><div class="modal-panel"><button class="close" onclick="window.closePDV()">✕</button><h2 class="section-title">PDV — PONTO DE VENDA</h2><div class="pdv-layout"><div><div class="pdv-card"><div class="pdv-scan"><b>📟 BIPAR PRODUTO</b><input class="field" id="pdvScanner" placeholder="Passe o código de barras..."><div id="pdvStatus" class="pdv-status"></div></div><div id="pdvItems" class="pdv-items"></div></div></div><div><div class="pdv-card"><div class="pdv-total" id="pdvTotal">R$ 0,00</div><button class="btn btn-infinity" style="width:100%;margin-bottom:10px" onclick="window.payPDVInfinity()">COBRAR INFINITYPAY ($St70)</button><button class="btn" style="width:100%" onclick="window.finishSale()">✓ FINALIZAR VENDA</button><button class="smallbtn" style="width:100%;margin-top:8px" onclick="window.clearPDV()">LIMPAR</button></div></div></div></div></div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  const INFINITY_TAG = "St70"; // Sua TAG do InfinityPay
+  const ADMIN_PASSWORD = "1234"; // Senha padrao do Painel ADM
+  let isAdminAuthenticated = false;
+
   const cats = ["Bodies", "Maiôs", "Vestidos", "Macacões", "Shorts", "Croppeds", "Biquínis", "Conjuntos", "Tops"];
   const names = ["JANAÍNA", "BRUNA", "ELIANA", "CÁSSIA", "SUZANA", "FERNANDA", "MARTA", "MARINA", "PATRÍCIA", "AMANDA", "BIA", "CARLA", "DANIELA", "HELENA", "ISABELA"];
 
@@ -226,6 +247,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.removeFromCart = function(id) { cart = cart.filter(item => item.id !== id); saveCart(); renderCart(); };
 
+  // CHECKOUT INFINITYPAY
+  window.checkoutInfinityPay = function() {
+    if (cart.length === 0) return alert('Seu carrinho está vazio!');
+    const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+    const link = `https://infinitypay.io/pay/$${INFINITY_TAG}`;
+    window.open(link, '_blank');
+  };
+
   window.checkoutWhatsApp = function() {
     if (cart.length === 0) return alert('Seu carrinho está vazio!');
     let text = 'Olá! Gostaria de fazer o seguinte pedido na STUDIO 70:\n\n';
@@ -238,6 +267,43 @@ document.addEventListener('DOMContentLoaded', () => {
     text += `\n*Total: R$ ${total.toFixed(2)}*`;
     window.open(`https://wa.me/5500000000000?text=${encodeURIComponent(text)}`, '_blank');
   };
+
+  // GERENCIAMENTO DE LOGIN ADM
+  window.openAdmin = function() {
+    if (!isAdminAuthenticated) {
+      document.getElementById('loginModal').classList.add('open');
+    } else {
+      document.getElementById('adminModal').classList.add('open');
+      renderAdminList();
+    }
+  };
+
+  window.closeLogin = function() { document.getElementById('loginModal').classList.remove('open'); };
+
+  window.handleLogin = function(e) {
+    e.preventDefault();
+    const pass = document.getElementById('loginPass').value;
+    if (pass === ADMIN_PASSWORD) {
+      isAdminAuthenticated = true;
+      document.getElementById('loginError').innerText = '';
+      document.getElementById('loginPass').value = '';
+      window.closeLogin();
+      document.getElementById('adminModal').classList.add('open');
+      renderAdminList();
+    } else {
+      document.getElementById('loginError').innerText = 'Senha incorreta. Tente novamente.';
+    }
+  };
+
+  window.closeAdmin = function() { document.getElementById('adminModal').classList.remove('open'); };
+
+  function renderAdminList() {
+    document.getElementById('adminList').innerHTML = products.slice(0, 30).map(p => `
+      <div class="admin-item">
+        <span><b>${p.name}</b> - R$ ${p.price.toFixed(2)}</span>
+      </div>
+    `).join('');
+  }
 
   window.openPDV = function() { document.getElementById('pdvModal').classList.add('open'); renderPDV(); };
   window.closePDV = function() { document.getElementById('pdvModal').classList.remove('open'); };
@@ -259,6 +325,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pdvTotal').innerText = `R$ ${total.toFixed(2)}`;
   }
 
+  window.payPDVInfinity = function() {
+    if (pdvCart.length === 0) return alert('Nenhum produto selecionado no PDV.');
+    window.open(`https://infinitypay.io/pay/$${INFINITY_TAG}`, '_blank');
+  };
+
   window.finishSale = function() {
     if (pdvCart.length === 0) return alert('Nenhum item no PDV.');
     alert('Venda realizada com sucesso!');
@@ -266,17 +337,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.clearPDV = function() { pdvCart = []; renderPDV(); };
-
-  window.openAdmin = function() { document.getElementById('adminModal').classList.add('open'); renderAdminList(); };
-  window.closeAdmin = function() { document.getElementById('adminModal').classList.remove('open'); };
-
-  function renderAdminList() {
-    document.getElementById('adminList').innerHTML = products.slice(0, 30).map(p => `
-      <div class="admin-item">
-        <span><b>${p.name}</b> - R$ ${p.price.toFixed(2)}</span>
-      </div>
-    `).join('');
-  }
 
   document.getElementById('searchInput').addEventListener('input', () => { currentPage = 1; renderProducts(); });
   document.getElementById('categoryFilter').addEventListener('change', () => { currentPage = 1; renderProducts(); });
