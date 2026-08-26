@@ -20,7 +20,7 @@ img {
 header{position:sticky;top:0;z-index:20;background:rgba(13,13,15,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
 .header-container{max-width:1280px;margin:auto;display:flex;align-items:center;gap:28px;padding:16px 22px} .logo{font-family:var(--font-display);font-size:26px;letter-spacing:.5px;white-space:nowrap;text-transform:uppercase;transform:skew(-6deg)}
 nav{display:flex;gap:20px;flex:1} nav a{color:#ddd;text-decoration:none;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;position:relative;padding-bottom:2px} nav a:hover{color:var(--accent)} .header-icons{display:flex;gap:8px} .iconbtn{background:#202026;color:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-weight:700} .iconbtn:hover{border-color:var(--accent)}
-.hero{min-height:460px;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;background:radial-gradient(circle at center,#29131e 0,#0d0d0f 60%)} .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,45,117,.08) 0 26px,transparent 26px 52px);pointer-events:none} .hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:repeating-linear-gradient(90deg,var(--accent) 0 22px,#0d0d0f 22px 44px)} .hero>div{position:relative;z-index:1} .hero .eyebrow{display:inline-block;color:#0d0d0f;background:var(--accent);font-family:var(--font-display);font-weight:400;letter-spacing:3px;font-size:13px;padding:6px 14px;transform:skew(-8deg)} .hero h1{font:clamp(64px,12vw,120px)/.82 var(--font-display);margin:20px 0 2px;text-transform:uppercase} .hero h2{font:clamp(18px,3vw,28px) var(--font-body);font-weight:700;letter-spacing:6px;margin:0 0 28px;color:var(--muted)} .btn{border:2px solid #0d0d0f;border-radius:2px;padding:15px 26px;font-family:var(--font-display);font-weight:400;letter-spacing:1px;text-transform:uppercase;font-size:16px;background:var(--accent);color:#fff;box-shadow:5px 5px 0 #0d0d0f;transition:transform .15s,box-shadow .15s} .btn:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 #0d0d0f} 
+.hero{min-height:460px;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;background:radial-gradient(circle at center,#29131e 0,#0d0d0f 60%)} .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,45,117,.08) 0 26px,transparent 26px 52px);pointer-events:none} .hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:repeating-linear-gradient(90deg,var(--accent) 0 22px,#0d0d0f 22px 44px)} .hero>div{position:relative;z-index:1} .hero .eyebrow{display:inline-block;color:#0d0d0f;background:var(--accent);font-family:var(--font-display);font-weight:400;letter-spacing:3px;font-size:13px;padding:6px 14px;transform:skew(-8deg)} .hero h1{font:clamp(64px,12vw,120px)/.82 var(--font-display);margin:20px 0 2px;text-transform:uppercase} .hero h2{font:clamp(18px,3vw,28px) var(--font-body);font-weight:700;letter-spacing:6px;margin:0 0 28px;color:var(--muted)} .btn{border:2px solid #0d0d0f;border-radius:2px;padding:15px 26px;font-family:var(--font-display);font-weight:400;letter-spacing:1px;text-transform:uppercase;font-size:16px;background:var(--accent);color:#fff;box-shadow:5px 5px 0 #0d0d0f;transition:transform .15s,box-shadow .15s} .btn:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 #0d0d0f}
 .btn-infinity{background:var(--infinity);color:#042b17;border-color:#042b17}
 .trustbar{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:1280px;margin:0 auto;padding:0 22px 10px}.trustbar span{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 14px;display:flex;align-items:center;gap:6px}.announce{background:var(--accent);color:#fff;text-align:center;font-size:12px;font-weight:700;letter-spacing:1px;padding:9px 12px;overflow:hidden}
 section{max-width:1280px;margin:auto;padding:42px 22px} .section-title{font:34px var(--font-display);text-transform:uppercase;letter-spacing:1px;margin:0 0 22px;position:relative;padding-left:16px;border-left:6px solid var(--accent)} .category-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px} .cat{padding:24px 15px;border:1px solid var(--line);background:var(--card);border-radius:10px;text-align:center;font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.5px;transition:border-color .15s,transform .15s;cursor:pointer} .cat:hover{border-color:var(--accent);transform:translateY(-2px)}
@@ -41,36 +41,34 @@ section{max-width:1280px;margin:auto;padding:42px 22px} .section-title{font:34px
 .badge{position:absolute;top:10px;left:10px;background:var(--accent);color:#fff;border-radius:3px;padding:6px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px} .badge.featured{left:auto;right:10px;background:#0d0d0f;border:1px solid var(--green);color:var(--green)} .empty{padding:40px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:15px}
 .drawer,.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;display:none} .drawer.open,.modal.open{display:block} .drawer-panel{margin-left:auto;width:min(480px,100%);height:100%;background:#111116;padding:22px;overflow:auto} .modal-panel{width:min(1100px,94vw);max-height:92vh;overflow:auto;margin:4vh auto;background:#111116;border:1px solid var(--line);border-radius:18px;padding:22px}
 .modal-login{width:min(400px,90vw);margin:15vh auto;background:#111116;border:1px solid var(--line);border-radius:16px;padding:26px}
-.close{float:right;border:0;background:#292930;color:#fff;border-radius:99px;padding:8px 14px;cursor:pointer;font-weight:700} .cart-row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)} .total{font-size:24px;font-weight:900;margin:20px 0}
+.close{float:right;border:0;background:#292930;color:#fff;border-radius:9px;padding:8px 12px;cursor:pointer} .cart-row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)} .total{font-size:24px;font-weight:900;margin:20px 0}
 .admin-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px} .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px} label{font-size:12px;font-weight:800;color:#bbb} label.full{grid-column:1/-1} textarea{min-height:100px;resize:vertical} .checkrow{display:flex;gap:15px;align-items:center;padding:12px 0} .admin-list{display:grid;gap:8px} .admin-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px;background:#19191f;border:1px solid var(--line);border-radius:10px} .admin-item span{font-size:12px} .admin-tools{display:flex;gap:6px} .danger{background:#4b1722!important;color:#fff!important}
 .scanner{background:#121216;border:1px solid var(--green);padding:18px;border-radius:14px;margin-bottom:20px} .scanner input{font-size:20px;font-weight:800} .scan-result{margin-top:10px;color:var(--green);font-weight:800} .label-preview{background:#fff;color:#111;padding:18px;border-radius:10px;text-align:center;margin-top:15px} .label-preview svg{max-width:100%}
-footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;color:#aaa} footer h2{font-family:var(--font-display);text-transform:uppercase;letter-spacing:1px;font-weight:400} .whatsapp{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border-radius:50%;background:var(--green);color:#07160e;display:grid;place-items:center;text-decoration:none;font-size:26px;font-weight:900;z-index:25;box-shadow:0 4px 18px rgba(34,212,119,.45)}
+footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;color:#aaa} footer h2{font-family:var(--font-display);text-transform:uppercase;letter-spacing:1px;font-weight:400} .whatsapp{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border-radius:50%;background:var(--green);color:#07160e;display:grid;place-items:center;text-decoration:none;font-size:26px;font-weight:900;z-index:25;box-shadow:0 4px 18px rgba(34,212,119,.45);animation:wa-pulse 2.2s infinite}
+@keyframes wa-pulse{0%{box-shadow:0 0 0 0 rgba(34,212,119,.55)}70%{box-shadow:0 0 0 14px rgba(34,212,119,0)}100%{box-shadow:0 0 0 0 rgba(34,212,119,0)}}
+@media(prefers-reduced-motion:reduce){.whatsapp{animation:none}}
 @media(max-width:950px){.product-grid{grid-template-columns:repeat(3,1fr)} nav{display:none} .category-grid{grid-template-columns:repeat(3,1fr)} .admin-grid{grid-template-columns:1fr}} @media(max-width:650px){.product-grid{grid-template-columns:repeat(2,1fr);gap:10px} .product img{height:260px} .hero h1{font-size:76px} .category-grid{grid-template-columns:repeat(2,1fr)} .form-grid{grid-template-columns:1fr}}
 
-.pdv-layout{display:grid;grid-template-columns:1.35fr .9fr;gap:18px}.pdv-card{background:#15151a;border:1px solid var(--line);border-radius:15px;padding:18px}.pdv-scan{border:1px solid var(--green);background:#101614;padding:16px;border-radius:12px}.pdv-scan input{font-size:24px;font-weight:900}.pdv-items{display:grid;gap:8px;margin-top:14px}.pdv-item{display:grid;grid-template-columns:54px 1fr auto auto;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:11px;background:#19191f}.pdv-item img{width:54px;height:65px;object-fit:cover;border-radius:8px;background:#222}.pdv-item-name{font-weight:800;font-size:13px}.pdv-item-meta{font-size:10px;color:var(--muted);margin-top:4px}.qtybox{display:flex;align-items:center;gap:5px}.qtybox button{width:30px;height:30px;border:1px solid var(--line);background:#24242b;color:#fff;border-radius:7px}.qtybox b{min-width:25px;text-align:center}.pdv-total{font-size:32px;font-weight:900;color:var(--accent);text-align:right;margin:18px 0}.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pay-grid label{display:block}.change-box{background:#101614;border:1px solid var(--green);border-radius:10px;padding:12px;margin-top:10px}.change-box strong{font-size:24px;color:var(--green)}.pdv-status{min-height:22px;margin-top:8px;font-weight:800}.success{color:var(--green)}.error{color:#ff6b8f}@media(max-width:900px){.pdv-layout{grid-template-columns:1fr}}
+.pdv-layout{display:grid;grid-template-columns:1.35fr .9fr;gap:18px}.pdv-card{background:#15151a;border:1px solid var(--line);border-radius:15px;padding:18px}.pdv-scan{border:1px solid var(--green);background:#101614;padding:16px;border-radius:12px}.pdv-scan input{font-size:24px;font-weight:900}.pdv-items{display:grid;gap:8px;margin-top:14px}.pdv-item{display:grid;grid-template-columns:54px 1fr auto auto;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:11px;background:#19191f}.pdv-item img{width:54px;height:65px;object-fit:cover;border-radius:8px;background:#222}.pdv-item-name{font-weight:800;font-size:13px}.pdv-item-meta{font-size:10px;color:var(--muted);margin-top:4px}.qtybox{display:flex;align-items:center;gap:5px}.qtybox button{width:30px;height:30px;border:1px solid var(--line);background:#24242b;color:#fff;border-radius:7px}.qtybox b{min-width:25px;text-align:center}.pdv-total{font-size:32px;font-weight:900;color:var(--accent);text-align:right;margin:18px 0}.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pay-grid label{display:block}.change-box{background:#101614;border:1px solid var(--green);border-radius:10px;padding:12px;margin-top:10px}.change-box strong{font-size:24px;color:var(--green)}.pdv-history{max-height:440px;overflow:auto;display:grid;gap:8px}.sale-row{padding:12px;border:1px solid var(--line);border-radius:10px;background:#19191f}.sale-row b{font-size:13px}.sale-row small{color:var(--muted)}.pdv-status{min-height:22px;margin-top:8px;font-weight:800}.success{color:var(--green)}.error{color:#ff6b8f}.warn{color:#ffd166}.pdv-shortcuts{font-size:11px;color:var(--muted);margin-top:8px}@media(max-width:900px){.pdv-layout{grid-template-columns:1fr}.pdv-item{grid-template-columns:48px 1fr}.pdv-item>.qtybox,.pdv-item>.lineprice{grid-column:2}.pay-grid{grid-template-columns:1fr}}
 </style></head>
 <body>
 <div class="announce">🔥 FRETE GRÁTIS ACIMA DE R$150 &nbsp;·&nbsp; ENTREGA PARA TODO O BRASIL &nbsp;·&nbsp; TROCA FÁCIL EM 7 DIAS</div>
-<header><div class="header-container"><div class="logo">STUDIO 70 BRAND</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><a href="#produtos">VESTIDOS</a><a href="#produtos">CONJUNTOS</a><a href="#produtos">TOPS</a></nav><div class="header-icons"><button class="iconbtn" onclick="window.openCart()">🛒 <b id="cartCount">0</b></button><button class="iconbtn" onclick="window.openPDV()">🧾 PDV</button><button class="iconbtn" onclick="window.openAdmin()">⚙️ ADM</button></div></div></header>
+<header><div class="header-container"><div class="logo">STUDIO 70 BRAND</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><a href="#produtos">VESTIDOS</a><a href="#produtos">CONJUNTOS</a><a href="#produtos">TOPS</a></nav><div class="header-icons"><button class="iconbtn" id="searchBtn">🔍</button><button class="iconbtn" id="cartBtn" onclick="openCart()">🛒 <b id="cartCount">0</b></button><button class="iconbtn" id="pdvBtn" onclick="openPDV()">🧾 PDV</button><button class="iconbtn" id="adminBtn" onclick="openAdmin()">⚙️ ADM</button></div></div></header>
 
-<main id="inicio">
-<section class="hero" style="padding:0 22px"><div><span class="eyebrow">NOVA COLEÇÃO 2026</span><h1>STUDIO 70</h1><h2>URBAN WOMAN</h2><a class="btn" href="#produtos">VER LANÇAMENTOS →</a></div></section>
+<main id="inicio"><section class="hero" style="padding:0 22px"><div><span class="eyebrow">NOVA COLEÇÃO 2026</span><h1>STUDIO 70</h1><h2>URBAN WOMAN</h2><a class="btn" href="#produtos">VER LANÇAMENTOS →</a></div></section>
 <div class="trustbar"><span>🚚 Frete grátis acima de R$150</span><span>🔄 Troca fácil em 7 dias</span><span>🔒 Compra 100% segura</span><span>💳 Parcele suas compras</span></div>
 <section><h2 class="section-title">CATEGORIAS</h2><div class="category-grid" id="categories"></div></section>
-<section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section>
-</main>
+<section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section></main>
 
-<a class="whatsapp" href="https://wa.me/5500000000000" target="_blank">✆</a>
+<a class="whatsapp" id="whatsappFloat" href="https://wa.me/5500000000000" target="_blank">✆</a>
 <footer><h2>STUDIO 70 BRAND</h2><p>Moda urbana feminina. Estilo, atitude e identidade.</p><p>© 2026 STUDIO 70 BRAND</p></footer>
 
-<!-- MODAIS E DRAWERS -->
-<div class="drawer" id="cartDrawer"><div class="drawer-panel"><button class="close" onclick="window.closeCart()">✕</button><h2 class="section-title">SEU CARRINHO</h2><div id="cartItems"></div><div class="total" id="cartTotal">R$ 0,00</div>
-<button class="btn btn-infinity" style="width:100%;margin-bottom:10px" onclick="window.checkoutInfinityPay()">PAGAR COM INFINITYPAY ($St70)</button>
-<button class="btn" style="width:100%" onclick="window.checkoutWhatsApp()">FINALIZAR NO WHATSAPP</button></div></div>
+<div class="drawer" id="cartDrawer"><div class="drawer-panel"><button class="close" onclick="closeCart()">×</button><h2 class="section-title">SEU CARRINHO</h2><div id="cartItems"></div><div class="total" id="cartTotal">R$ 0,00</div>
+<button class="btn btn-infinity" style="width:100%;margin-bottom:10px" onclick="checkoutInfinityPay()">PAGAR COM INFINITE PAY ($St70)</button>
+<button class="btn" style="width:100%" onclick="checkoutWhatsApp()">FINALIZAR NO WHATSAPP</button></div></div>
 
-<!-- MODAL DE LOGIN ADM -->
-<div class="modal" id="loginModal"><div class="modal-login"><button class="close" onclick="window.closeLogin()">✕</button><h2 class="section-title">ACESSO ADM</h2>
-<form id="loginForm" onsubmit="window.handleLogin(event)">
+<div class="modal" id="loginModal"><div class="modal-login"><button class="close" onclick="closeLogin()">×</button><h2 class="section-title">ACESSO ADM</h2>
+<form id="loginForm" onsubmit="handleLogin(event)">
   <label style="display:block;margin-bottom:10px">Usuário<input class="field" id="loginUser" value="admin" required></label>
   <label style="display:block;margin-bottom:15px">Senha<input class="field" id="loginPass" type="password" required></label>
   <div id="loginError" style="color:var(--accent);font-size:12px;margin-bottom:10px"></div>
@@ -78,273 +76,386 @@ footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;colo
 </form>
 </div></div>
 
-<!-- PAINEL ADM -->
-<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="window.closeAdmin()">✕</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU<input class="field" id="pSku" required></label><label>Código de barras<input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label class="full">Link da foto<input class="field" id="pImage" placeholder="001.jpg"></label></div><br><button class="btn" type="submit">SALVAR PRODUTO</button></form></div><div><h3>Produtos cadastrados</h3><button class="smallbtn" onclick="window.resetProductsStorage()" style="background:#8b263e;margin-bottom:12px">🔄 Resetar 200 Produtos</button><div id="adminList" class="admin-list"></div></div></div></div></div>
+<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU<input class="field" id="pSku" required></label><label>Código de barras<input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label class="full">Link da foto<input class="field" id="pImage" placeholder="https://... ou 001.jpg"></label><label class="full">Descrição<textarea class="field" id="pDescription"></textarea></label></div><div class="checkrow"><label><input type="checkbox" id="pActive" checked> Ativo</label><label><input type="checkbox" id="pFeatured"> Destaque</label></div><button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><svg id="barcodeSvg"></svg><div id="labelCode"></div></div></div><div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" onclick="printSelectedLabel()">🖨️ Imprimir etiqueta</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center;cursor:pointer">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden onchange="importDataFile(event)"></label></div><div id="adminList" class="admin-list"></div></div></div></div></div>
 
-<!-- PDV -->
-<div class="modal" id="pdvModal"><div class="modal-panel"><button class="close" onclick="window.closePDV()">✕</button><h2 class="section-title">PDV — PONTO DE VENDA</h2><div class="pdv-layout"><div><div class="pdv-card"><div class="pdv-scan"><b>📟 BIPAR PRODUTO</b><input class="field" id="pdvScanner" placeholder="Passe o código de barras..."><div id="pdvStatus" class="pdv-status"></div></div><div id="pdvItems" class="pdv-items"></div></div></div><div><div class="pdv-card"><div class="pdv-total" id="pdvTotal">R$ 0,00</div><button class="btn btn-infinity" style="width:100%;margin-bottom:10px" onclick="window.payPDVInfinity()">COBRAR INFINITYPAY ($St70)</button><button class="btn" style="width:100%" onclick="window.finishSale()">✓ FINALIZAR VENDA</button><button class="smallbtn" style="width:100%;margin-top:8px" onclick="window.clearPDV()">LIMPAR</button></div></div></div></div></div>
+<div class="modal" id="pdvModal"><div class="modal-panel"><button class="close" onclick="closePDV()">×</button><h2 class="section-title">PDV — PONTO DE VENDA</h2>
+<div class="pdv-layout">
+ <div>
+  <div class="pdv-card">
+   <div class="pdv-scan"><b>📟 BIPAR PRODUTO</b><input class="field" id="pdvScanner" placeholder="Passe o leitor de código de barras..." autocomplete="off"><div id="pdvStatus" class="pdv-status"></div><div class="pdv-shortcuts">Enter confirma a bipagem · F2 abre o PDV · Esc fecha</div></div>
+   <div class="searchbar" style="margin-top:14px"><input id="pdvSearch" placeholder="Buscar produto por nome, SKU ou código..."><button class="smallbtn" onclick="pdvSearchAdd()">ADICIONAR</button></div>
+   <div id="pdvItems" class="pdv-items"></div>
+  </div>
+ </div>
+ <div>
+  <div class="pdv-card">
+   <h3 style="margin-top:0">Resumo da venda</h3>
+   <div id="pdvSummary"></div>
+   <div class="pdv-total" id="pdvTotal">R$ 0,00</div>
+   <div class="pay-grid">
+    <label>Pagamento<select class="field" id="pdvPayment"><option>InfinitePay ($St70)</option><option>PIX</option><option>Dinheiro</option><option>Cartão de débito</option><option>Cartão de crédito</option><option>Outro</option></select></label>
+    <label>Desconto (R$)<input class="field" id="pdvDiscount" type="number" min="0" step="0.01" value="0" oninput="updatePDVTotals()"></label>
+    <label style="grid-column:1/-1">Valor recebido<input class="field" id="pdvReceived" type="number" min="0" step="0.01" value="0" oninput="updatePDVTotals()"></label>
+   </div>
+   <div class="change-box"><span>Troco</span><br><strong id="pdvChange">R$ 0,00</strong></div>
+   <button class="btn btn-infinity" style="width:100%;margin-top:10px" onclick="payPDVInfinity()">COBRAR INFINITE PAY ($St70)</button>
+   <button class="btn" style="width:100%;margin-top:8px" onclick="finishSale()">✓ FINALIZAR VENDA</button>
+   <button class="smallbtn" style="width:100%;margin-top:8px" onclick="clearPDV()">LIMPAR VENDA</button>
+  </div>
+  <div class="pdv-card" style="margin-top:18px"><h3 style="margin-top:0">Últimas vendas</h3><div id="pdvHistory" class="pdv-history"></div></div>
+ </div>
+</div></div></div>
+
+<div class="modal" id="productModal"><div class="modal-panel"><button class="close" onclick="closeProduct()">×</button><div id="productBody"></div></div></div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const INFINITY_TAG = "st70"; // Sua TAG do InfinityPay
-  const ADMIN_PASSWORD = "080523"; // Senha padrao do Painel ADM
-  let isAdminAuthenticated = false;
+const INFINITY_TAG = "St70";
+const ADMIN_PASSWORD = "1234";
+let isAdminAuthenticated = false;
 
-  const cats = ["Bodies", "Maiôs", "Vestidos", "Macacões", "Shorts", "Croppeds", "Biquínis", "Conjuntos", "Tops"];
-  const names = ["JANAÍNA", "BRUNA", "ELIANA", "CÁSSIA", "SUZANA", "FERNANDA", "MARTA", "MARINA", "PATRÍCIA", "AMANDA", "BIA", "CARLA", "DANIELA", "HELENA", "ISABELA"];
+const cats = ["Bodies", "Maiôs", "Vestidos", "Macacões", "Shorts", "Croppeds", "Biquínis", "Conjuntos", "Tops"];
+const names = ["JANAÍNA", "BRUNA", "ELIANA", "CÁSSIA", "SUZANA", "FERNANDA", "MARTA", "MARINA", "PATRÍCIA", "AMANDA", "BIA", "CARLA", "DANIELA", "HELENA", "ISABELA"];
 
-  const SEED_PRODUCTS = Array.from({ length: 200 }, (_, i) => {
-    const num = i + 1;
-    const pad = String(num).padStart(3, '0');
-    const category = cats[i % cats.length];
-    const baseName = names[i % names.length];
-    return {
-      id: `p${pad}`,
-      name: `${category.slice(0, -1).toUpperCase()} ${baseName} ${pad}`,
-      price: parseFloat((29.99 + (i % 15) * 5.5).toFixed(2)),
-      category: category,
-      sku: `SKU-${category.toUpperCase()}-${pad}`,
-      barcode: `ST70${String(num).padStart(6, '0')}`,
-      image: `${pad}.jpg`,
-      active: true,
-      featured: i % 4 === 0,
-      stock: 5 + (i % 20)
-    };
+const SEED_PRODUCTS = Array.from({ length: 200 }, (_, i) => {
+  const num = i + 1;
+  const pad = String(num).padStart(3, '0');
+  const category = cats[i % cats.length];
+  const baseName = names[i % names.length];
+  const imgNum = String((i % 9) + 1).padStart(3, '0');
+  
+  return {
+    id: `p${pad}`,
+    name: `${category.slice(0, -1).toUpperCase()} ${baseName} ${pad}`,
+    price: parseFloat((29.99 + (i % 15) * 5.5).toFixed(2)),
+    category: category,
+    sku: `SKU-${category.toUpperCase()}-${pad}`,
+    barcode: `ST70${String(num).padStart(6, '0')}`,
+    image: `${imgNum}.jpg`,
+    active: true,
+    featured: i % 4 === 0,
+    stock: 5 + (i % 20),
+    sizes: ["P", "M", "G"],
+    colors: ["Preto", "Branco"],
+    description: `${category} ${baseName} — Produto exclusivo do catálogo STUDIO 70 BRAND.`
+  };
+});
+
+let products = JSON.parse(localStorage.getItem('st70_products')) || SEED_PRODUCTS;
+let cart = JSON.parse(localStorage.getItem('st70_cart')) || [];
+let pdvCart = [];
+let currentPage = 1;
+const itemsPerPage = 12;
+
+function saveProducts() { localStorage.setItem('st70_products', JSON.stringify(products)); }
+function saveCart() {
+  localStorage.setItem('st70_cart', JSON.stringify(cart));
+  document.getElementById('cartCount').innerText = cart.reduce((acc, item) => acc + item.qty, 0);
+}
+
+function renderCategories() {
+  const categories = [...new Set(products.map(p => p.category))];
+  document.getElementById('categories').innerHTML = categories.map(c => `<div class="cat" onclick="filterByCategory('${c}')">${c}</div>`).join('');
+  document.getElementById('categoryFilter').innerHTML = '<option value="">Todas as categorias</option>' + categories.map(c => `<option value="${c}">${c}</option>`).join('');
+  document.getElementById('pCategory').innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join('');
+}
+
+function filterByCategory(cat) {
+  document.getElementById('categoryFilter').value = cat;
+  currentPage = 1;
+  renderProducts();
+}
+
+function renderProducts() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const cat = document.getElementById('categoryFilter').value;
+  
+  const filtered = products.filter(p => {
+    const matchSearch = p.name.toLowerCase().includes(search) || p.sku.toLowerCase().includes(search) || p.barcode.includes(search);
+    const matchCat = !cat || p.category === cat;
+    return p.active && matchSearch && matchCat;
   });
 
-  let products = [];
-  try {
-    const stored = localStorage.getItem('st70_products');
-    products = stored ? JSON.parse(stored) : SEED_PRODUCTS;
-  } catch(e) {
-    products = SEED_PRODUCTS;
-  }
-
-  let cart = [];
-  try {
-    const storedCart = localStorage.getItem('st70_cart');
-    cart = storedCart ? JSON.parse(storedCart) : [];
-  } catch(e) {
-    cart = [];
-  }
-
-  let pdvCart = [];
-  let currentPage = 1;
-  const itemsPerPage = 12;
-
-  function saveProducts() { localStorage.setItem('st70_products', JSON.stringify(products)); }
-  function saveCart() {
-    localStorage.setItem('st70_cart', JSON.stringify(cart));
-    document.getElementById('cartCount').innerText = cart.reduce((acc, item) => acc + item.qty, 0);
-  }
-
-  window.resetProductsStorage = function() {
-    localStorage.removeItem('st70_products');
-    products = [...SEED_PRODUCTS];
-    saveProducts();
-    renderCategories();
-    renderProducts();
-    if (document.getElementById('adminModal').classList.contains('open')) renderAdminList();
-    alert('Catálogo restaurado com sucesso!');
-  };
-
-  function renderCategories() {
-    const categories = [...new Set(products.map(p => p.category))];
-    document.getElementById('categories').innerHTML = categories.map(c => `<div class="cat" onclick="window.filterByCategory('${c}')">${c}</div>`).join('');
-    document.getElementById('categoryFilter').innerHTML = '<option value="">Todas as categorias</option>' + categories.map(c => `<option value="${c}">${c}</option>`).join('');
-    document.getElementById('pCategory').innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join('');
-  }
-
-  window.filterByCategory = function(cat) {
-    document.getElementById('categoryFilter').value = cat;
-    currentPage = 1;
-    renderProducts();
-  };
-
-  function renderProducts() {
-    const search = (document.getElementById('searchInput').value || '').toLowerCase();
-    const cat = document.getElementById('categoryFilter').value;
-    
-    const filtered = products.filter(p => {
-      const matchSearch = p.name.toLowerCase().includes(search) || p.sku.toLowerCase().includes(search) || p.barcode.includes(search);
-      const matchCat = !cat || p.category === cat;
-      return p.active && matchSearch && matchCat;
-    });
-
-    const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;
-    if (currentPage > totalPages) currentPage = totalPages;
-    
-    const start = (currentPage - 1) * itemsPerPage;
-    const paginated = filtered.slice(start, start + itemsPerPage);
-    
-    const grid = document.getElementById('productGrid');
-    if (paginated.length === 0) {
-      grid.innerHTML = '<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.<br><br><button class="smallbtn" onclick="window.resetProductsStorage()">Resetar Catálogo</button></div>';
-    } else {
-      grid.innerHTML = paginated.map(p => `
-        <div class="product">
-          ${p.featured ? '<span class="badge featured">Destaque</span>' : ''}
-          <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/400x500/17171b/ff2d75?text=Studio+70'">
-          <div class="product-info">
-            <h3>${p.name}</h3>
-            <div class="price">R$ ${p.price.toFixed(2)}</div>
-            <div class="meta">SKU: ${p.sku} | Estoque: ${p.stock}</div>
-            <div class="product-actions">
-              <button class="smallbtn primary" onclick="window.addToCart('${p.id}')">ADICIONAR</button>
-            </div>
+  const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;
+  if (currentPage > totalPages) currentPage = totalPages;
+  
+  const start = (currentPage - 1) * itemsPerPage;
+  const paginated = filtered.slice(start, start + itemsPerPage);
+  
+  const grid = document.getElementById('productGrid');
+  if (paginated.length === 0) {
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.</div>';
+  } else {
+    grid.innerHTML = paginated.map(p => `
+      <div class="product">
+        ${p.featured ? '<span class="badge featured">Destaque</span>' : ''}
+        <img src="${p.image}" alt="${p.name}" onerror="this.src='001.jpg'">
+        <div class="product-info">
+          <h3>${p.name}</h3>
+          <div class="price">R$ ${p.price.toFixed(2)}</div>
+          <div class="meta">SKU: ${p.sku} | Estoque: ${p.stock}</div>
+          <div class="product-actions">
+            <button class="smallbtn" onclick="openProductDetail('${p.id}')">DETALHES</button>
+            <button class="smallbtn primary" onclick="addToCart('${p.id}')">ADICIONAR</button>
           </div>
         </div>
-      `).join('');
-    }
-
-    let pagHTML = '';
-    for (let i = 1; i <= totalPages; i++) {
-      pagHTML += `<button class="smallbtn" style="${i === currentPage ? 'border-color:var(--accent);color:var(--accent)' : ''}" onclick="window.goToPage(${i})">${i}</button>`;
-    }
-    document.getElementById('pagination').innerHTML = totalPages > 1 ? pagHTML : '';
-  }
-
-  window.goToPage = function(page) { currentPage = page; renderProducts(); };
-
-  window.addToCart = function(id) {
-    const p = products.find(prod => prod.id === id);
-    if (!p) return;
-    const existing = cart.find(item => item.id === id);
-    if (existing) { existing.qty += 1; } else { cart.push({ id: p.id, name: p.name, price: p.price, qty: 1, image: p.image }); }
-    saveCart();
-    window.openCart();
-  };
-
-  window.openCart = function() { renderCart(); document.getElementById('cartDrawer').classList.add('open'); };
-  window.closeCart = function() { document.getElementById('cartDrawer').classList.remove('open'); };
-
-  function renderCart() {
-    const container = document.getElementById('cartItems');
-    if (cart.length === 0) {
-      container.innerHTML = '<div class="empty">Seu carrinho está vazio.</div>';
-      document.getElementById('cartTotal').innerText = 'R$ 0,00';
-      return;
-    }
-    let total = 0;
-    container.innerHTML = cart.map(item => {
-      const subtotal = item.price * item.qty;
-      total += subtotal;
-      return `
-        <div class="cart-row">
-          <div>
-            <b>${item.name}</b><br>
-            <small>R$ ${item.price.toFixed(2)} x ${item.qty}</small>
-          </div>
-          <div>
-            <b>R$ ${subtotal.toFixed(2)}</b>
-            <button style="background:none;border:none;color:var(--accent);margin-left:8px;cursor:pointer" onclick="window.removeFromCart('${item.id}')">✕</button>
-          </div>
-        </div>
-      `;
-    }).join('');
-    document.getElementById('cartTotal').innerText = `R$ ${total.toFixed(2)}`;
-  }
-
-  window.removeFromCart = function(id) { cart = cart.filter(item => item.id !== id); saveCart(); renderCart(); };
-
-  // CHECKOUT INFINITYPAY
-  window.checkoutInfinityPay = function() {
-    if (cart.length === 0) return alert('Seu carrinho está vazio!');
-    const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
-    const link = `https://infinitypay.io/pay/$${INFINITY_TAG}`;
-    window.open(link, '_blank');
-  };
-
-  window.checkoutWhatsApp = function() {
-    if (cart.length === 0) return alert('Seu carrinho está vazio!');
-    let text = 'Olá! Gostaria de fazer o seguinte pedido na STUDIO 70:\n\n';
-    let total = 0;
-    cart.forEach(item => {
-      const sub = item.price * item.qty;
-      total += sub;
-      text += `• ${item.name} (${item.qty}x) - R$ ${sub.toFixed(2)}\n`;
-    });
-    text += `\n*Total: R$ ${total.toFixed(2)}*`;
-    window.open(`https://wa.me/5500000000000?text=${encodeURIComponent(text)}`, '_blank');
-  };
-
-  // GERENCIAMENTO DE LOGIN ADM
-  window.openAdmin = function() {
-    if (!isAdminAuthenticated) {
-      document.getElementById('loginModal').classList.add('open');
-    } else {
-      document.getElementById('adminModal').classList.add('open');
-      renderAdminList();
-    }
-  };
-
-  window.closeLogin = function() { document.getElementById('loginModal').classList.remove('open'); };
-
-  window.handleLogin = function(e) {
-    e.preventDefault();
-    const pass = document.getElementById('loginPass').value;
-    if (pass === ADMIN_PASSWORD) {
-      isAdminAuthenticated = true;
-      document.getElementById('loginError').innerText = '';
-      document.getElementById('loginPass').value = '';
-      window.closeLogin();
-      document.getElementById('adminModal').classList.add('open');
-      renderAdminList();
-    } else {
-      document.getElementById('loginError').innerText = 'Senha incorreta. Tente novamente.';
-    }
-  };
-
-  window.closeAdmin = function() { document.getElementById('adminModal').classList.remove('open'); };
-
-  function renderAdminList() {
-    document.getElementById('adminList').innerHTML = products.slice(0, 30).map(p => `
-      <div class="admin-item">
-        <span><b>${p.name}</b> - R$ ${p.price.toFixed(2)}</span>
       </div>
     `).join('');
   }
 
-  window.openPDV = function() { document.getElementById('pdvModal').classList.add('open'); renderPDV(); };
-  window.closePDV = function() { document.getElementById('pdvModal').classList.remove('open'); };
-
-  function renderPDV() {
-    const container = document.getElementById('pdvItems');
-    const total = pdvCart.reduce((a, b) => a + (b.price * b.qty), 0);
-    container.innerHTML = pdvCart.map(i => `
-      <div class="pdv-item">
-        <img src="${i.image}" onerror="this.src='https://via.placeholder.com/100'">
-        <div>
-          <div class="pdv-item-name">${i.name}</div>
-          <div class="pdv-item-meta">R$ ${i.price.toFixed(2)}</div>
-        </div>
-        <div class="qtybox"><b>${i.qty}</b></div>
-        <div><b>R$ ${(i.price * i.qty).toFixed(2)}</b></div>
-      </div>
-    `).join('');
-    document.getElementById('pdvTotal').innerText = `R$ ${total.toFixed(2)}`;
+  let pagHTML = '';
+  for (let i = 1; i <= totalPages; i++) {
+    pagHTML += `<button class="smallbtn" style="${i === currentPage ? 'border-color:var(--accent);color:var(--accent)' : ''}" onclick="goToPage(${i})">${i}</button>`;
   }
+  document.getElementById('pagination').innerHTML = totalPages > 1 ? pagHTML : '';
+}
 
-  window.payPDVInfinity = function() {
-    if (pdvCart.length === 0) return alert('Nenhum produto selecionado no PDV.');
-    window.open(`https://infinitypay.io/pay/$${INFINITY_TAG}`, '_blank');
-  };
+function goToPage(page) { currentPage = page; renderProducts(); }
 
-  window.finishSale = function() {
-    if (pdvCart.length === 0) return alert('Nenhum item no PDV.');
-    alert('Venda realizada com sucesso!');
-    window.clearPDV();
-  };
-
-  window.clearPDV = function() { pdvCart = []; renderPDV(); };
-
-  document.getElementById('searchInput').addEventListener('input', () => { currentPage = 1; renderProducts(); });
-  document.getElementById('categoryFilter').addEventListener('change', () => { currentPage = 1; renderProducts(); });
-
-  renderCategories();
-  renderProducts();
+function addToCart(id) {
+  const p = products.find(prod => prod.id === id);
+  if (!p) return;
+  const existing = cart.find(item => item.id === id);
+  if (existing) { existing.qty += 1; } else { cart.push({ id: p.id, name: p.name, price: p.price, qty: 1, image: p.image }); }
   saveCart();
+  openCart();
+}
+
+function openCart() { renderCart(); document.getElementById('cartDrawer').classList.add('open'); }
+function closeCart() { document.getElementById('cartDrawer').classList.remove('open'); }
+
+function renderCart() {
+  const container = document.getElementById('cartItems');
+  if (cart.length === 0) {
+    container.innerHTML = '<div class="empty">Seu carrinho está vazio.</div>';
+    document.getElementById('cartTotal').innerText = 'R$ 0,00';
+    return;
+  }
+  let total = 0;
+  container.innerHTML = cart.map(item => {
+    const subtotal = item.price * item.qty;
+    total += subtotal;
+    return `
+      <div class="cart-row">
+        <div>
+          <b>${item.name}</b><br>
+          <small>R$ ${item.price.toFixed(2)} x ${item.qty}</small>
+        </div>
+        <div>
+          <b>R$ ${subtotal.toFixed(2)}</b>
+          <button style="background:none;border:none;color:var(--accent);margin-left:8px;cursor:pointer" onclick="removeFromCart('${item.id}')">✕</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('cartTotal').innerText = `R$ ${total.toFixed(2)}`;
+}
+
+function removeFromCart(id) { cart = cart.filter(item => item.id !== id); saveCart(); renderCart(); }
+
+function checkoutInfinityPay() {
+  if (cart.length === 0) return alert('Seu carrinho está vazio!');
+  window.open(`https://infinitepay.io/pay/$${INFINITY_TAG}`, '_blank');
+}
+
+function checkoutWhatsApp() {
+  if (cart.length === 0) return alert('Seu carrinho está vazio!');
+  let text = 'Olá! Gostaria de fazer o seguinte pedido na STUDIO 70:\n\n';
+  let total = 0;
+  cart.forEach(item => {
+    const sub = item.price * item.qty;
+    total += sub;
+    text += `• ${item.name} (${item.qty}x) - R$ ${sub.toFixed(2)}\n`;
+  });
+  text += `\n*Total: R$ ${total.toFixed(2)}*`;
+  window.open(`https://wa.me/5500000000000?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+// GESTÃO DE AUTENTICAÇÃO E LOGIN ADM
+function openAdmin() {
+  if (!isAdminAuthenticated) {
+    document.getElementById('loginModal').classList.add('open');
+  } else {
+    document.getElementById('adminModal').classList.add('open');
+    renderAdminList();
+  }
+}
+
+function closeLogin() { document.getElementById('loginModal').classList.remove('open'); }
+
+function handleLogin(e) {
+  e.preventDefault();
+  const pass = document.getElementById('loginPass').value;
+  if (pass === ADMIN_PASSWORD) {
+    isAdminAuthenticated = true;
+    document.getElementById('loginError').innerText = '';
+    document.getElementById('loginPass').value = '';
+    closeLogin();
+    document.getElementById('adminModal').classList.add('open');
+    renderAdminList();
+  } else {
+    document.getElementById('loginError').innerText = 'Senha incorreta. Tente novamente.';
+  }
+}
+
+function closeAdmin() { document.getElementById('adminModal').classList.remove('open'); }
+
+function openPDV() { document.getElementById('pdvModal').classList.add('open'); document.getElementById('pdvScanner').focus(); renderPDV(); }
+function closePDV() { document.getElementById('pdvModal').classList.remove('open'); }
+
+function pdvSearchAdd() {
+  const val = document.getElementById('pdvSearch').value.toLowerCase().trim();
+  if (!val) return;
+  const p = products.find(prod => prod.barcode === val || prod.sku.toLowerCase() === val || prod.name.toLowerCase().includes(val));
+  if (p) { addToPDV(p); document.getElementById('pdvSearch').value = ''; } 
+  else { document.getElementById('pdvStatus').innerText = 'Produto não encontrado.'; document.getElementById('pdvStatus').className = 'pdv-status error'; }
+}
+
+function addToPDV(product) {
+  const exist = pdvCart.find(i => i.id === product.id);
+  if (exist) { exist.qty += 1; } else { pdvCart.push({ ...product, qty: 1 }); }
+  document.getElementById('pdvStatus').innerText = `Adicionado: ${product.name}`;
+  document.getElementById('pdvStatus').className = 'pdv-status success';
+  renderPDV();
+}
+
+function updatePDVQty(id, delta) {
+  const item = pdvCart.find(i => i.id === id);
+  if (item) { item.qty += delta; if (item.qty <= 0) pdvCart = pdvCart.filter(i => i.id !== id); }
+  renderPDV();
+}
+
+function renderPDV() {
+  const container = document.getElementById('pdvItems');
+  container.innerHTML = pdvCart.map(i => `
+    <div class="pdv-item">
+      <img src="${i.image}" onerror="this.src='001.jpg'">
+      <div>
+        <div class="pdv-item-name">${i.name}</div>
+        <div class="pdv-item-meta">R$ ${i.price.toFixed(2)} un</div>
+      </div>
+      <div class="qtybox">
+        <button onclick="updatePDVQty('${i.id}', -1)">-</button>
+        <b>${i.qty}</b>
+        <button onclick="updatePDVQty('${i.id}', 1)">+</button>
+      </div>
+      <div class="lineprice"><b>R$ ${(i.price * i.qty).toFixed(2)}</b></div>
+    </div>
+  `).join('');
+  updatePDVTotals();
+}
+
+function updatePDVTotals() {
+  const subtotal = pdvCart.reduce((a, b) => a + (b.price * b.qty), 0);
+  const discount = parseFloat(document.getElementById('pdvDiscount').value) || 0;
+  const received = parseFloat(document.getElementById('pdvReceived').value) || 0;
+  const finalTotal = Math.max(0, subtotal - discount);
+  document.getElementById('pdvTotal').innerText = `R$ ${finalTotal.toFixed(2)}`;
+  document.getElementById('pdvChange').innerText = `R$ ${Math.max(0, received - finalTotal).toFixed(2)}`;
+}
+
+function payPDVInfinity() {
+  if (pdvCart.length === 0) return alert('Nenhum item no PDV.');
+  window.open(`https://infinitepay.io/pay/$${INFINITY_TAG}`, '_blank');
+}
+
+function finishSale() {
+  if (pdvCart.length === 0) return alert('Nenhum item no PDV.');
+  alert('Venda realizada com sucesso!');
+  clearPDV();
+}
+
+function clearPDV() { pdvCart = []; document.getElementById('pdvDiscount').value = 0; document.getElementById('pdvReceived').value = 0; renderPDV(); }
+
+function renderAdminList() {
+  const search = document.getElementById('adminSearch').value.toLowerCase();
+  const filtered = products.filter(p => p.name.toLowerCase().includes(search) || p.sku.toLowerCase().includes(search));
+  document.getElementById('adminCount').innerText = `(${filtered.length})`;
+  document.getElementById('adminList').innerHTML = filtered.slice(0, 50).map(p => `
+    <div class="admin-item">
+      <span><b>${p.name}</b><br><small>R$ ${p.price.toFixed(2)} | Estoque: ${p.stock}</small></span>
+      <div class="admin-tools">
+        <button class="smallbtn" onclick="editProduct('${p.id}')">✏️</button>
+        <button class="smallbtn danger" onclick="deleteProduct('${p.id}')">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function editProduct(id) {
+  const p = products.find(prod => prod.id === id);
+  if (!p) return;
+  document.getElementById('editId').value = p.id;
+  document.getElementById('pName').value = p.name;
+  document.getElementById('pPrice').value = p.price;
+  document.getElementById('pSku').value = p.sku;
+  document.getElementById('pBarcode').value = p.barcode;
+  document.getElementById('pCategory').value = p.category;
+  document.getElementById('pStock').value = p.stock;
+  document.getElementById('pSizes').value = p.sizes ? p.sizes.join(', ') : '';
+  document.getElementById('pColors').value = p.colors ? p.colors.join(', ') : '';
+  document.getElementById('pImage').value = p.image;
+  document.getElementById('pDescription').value = p.description;
+  document.getElementById('pActive').checked = p.active;
+  document.getElementById('pFeatured').checked = p.featured;
+  document.getElementById('formTitle').innerText = 'Editar produto';
+}
+
+function clearForm() {
+  document.getElementById('productForm').reset();
+  document.getElementById('editId').value = '';
+  document.getElementById('formTitle').innerText = 'Novo produto';
+}
+
+document.getElementById('productForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const id = document.getElementById('editId').value || `p${String(products.length + 1).padStart(3, '0')}`;
+  const newProd = {
+    id,
+    name: document.getElementById('pName').value,
+    price: parseFloat(document.getElementById('pPrice').value),
+    sku: document.getElementById('pSku').value,
+    barcode: document.getElementById('pBarcode').value,
+    category: document.getElementById('pCategory').value,
+    stock: parseInt(document.getElementById('pStock').value) || 0,
+    sizes: document.getElementById('pSizes').value.split(',').map(s => s.trim()).filter(Boolean),
+    colors: document.getElementById('pColors').value.split(',').map(c => c.trim()).filter(Boolean),
+    image: document.getElementById('pImage').value || '001.jpg',
+    description: document.getElementById('pDescription').value,
+    active: document.getElementById('pActive').checked,
+    featured: document.getElementById('pFeatured').checked
+  };
+
+  const index = products.findIndex(p => p.id === id);
+  if (index >= 0) { products[index] = newProd; } else { products.push(newProd); }
+  
+  saveProducts(); renderAdminList(); renderProducts(); clearForm();
+  alert('Produto salvo com sucesso!');
 });
+
+function deleteProduct(id) {
+  if (confirm('Deseja remover este produto?')) {
+    products = products.filter(p => p.id !== id);
+    saveProducts(); renderAdminList(); renderProducts();
+  }
+}
+
+document.getElementById('pdvScanner').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const val = e.target.value.trim();
+    const p = products.find(prod => prod.barcode === val || prod.sku === val);
+    if (p) { addToPDV(p); } else { document.getElementById('pdvStatus').innerText = 'Código não encontrado!'; document.getElementById('pdvStatus').className = 'pdv-status error'; }
+    e.target.value = '';
+  }
+});
+
+document.getElementById('searchInput').addEventListener('input', () => { currentPage = 1; renderProducts(); });
+document.getElementById('categoryFilter').addEventListener('change', () => { currentPage = 1; renderProducts(); });
+document.getElementById('adminSearch').addEventListener('input', renderAdminList);
+
+renderCategories();
+renderProducts();
+saveCart();
 </script>
 </body>
 </html>
