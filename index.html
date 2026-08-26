@@ -20,23 +20,22 @@ img {
 header{position:sticky;top:0;z-index:20;background:rgba(13,13,15,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
 .header-container{max-width:1280px;margin:auto;display:flex;align-items:center;gap:28px;padding:16px 22px} .logo{font-family:var(--font-display);font-size:26px;letter-spacing:.5px;white-space:nowrap;text-transform:uppercase;transform:skew(-6deg)}
 nav{display:flex;gap:20px;flex:1} nav a{color:#ddd;text-decoration:none;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;position:relative;padding-bottom:2px} nav a:hover{color:var(--accent)} .header-icons{display:flex;gap:8px} .iconbtn{background:#202026;color:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-weight:700} .iconbtn:hover{border-color:var(--accent)}
-.hero{min-height:460px;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;background:radial-gradient(circle at center,#29131e 0,#0d0d0f 60%)} .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,45,117,.08) 0 26px,transparent 26px 52px);pointer-events:none} .hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:repeating-linear-gradient(90deg,var(--accent) 0 22px,#0d0d0f 22px 44px)} .hero>div{position:relative;z-index:1} .hero .eyebrow{display:inline-block;color:#0d0d0f;background:var(--accent);font-family:var(--font-display);font-weight:400;letter-spacing:3px;font-size:13px;padding:6px 14px;transform:skew(-8deg)} .hero h1{font:clamp(64px,12vw,120px)/.82 var(--font-display);margin:20px 0 2px;text-transform:uppercase} .hero h2{font:clamp(18px,3vw,28px) var(--font-body);font-weight:700;letter-spacing:6px;margin:0 0 28px;color:var(--muted)} .btn{border:2px solid #0d0d0f;border-radius:2px;padding:15px 26px;font-family:var(--font-display);font-weight:400;letter-spacing:1px;text-transform:uppercase;font-size:16px;background:var(--accent);color:#fff;box-shadow:5px 5px 0 #0d0d0f;transition:transform .15s,box-shadow .15s} .btn:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 #0d0d0f} .trustbar{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:1280px;margin:0 auto;padding:0 22px 10px}.trustbar span{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 14px;display:flex;align-items:center;gap:6px}.announce{background:var(--accent);color:#fff;text-align:center;font-size:12px;font-weight:700;letter-spacing:1px;padding:99px 12px;overflow:hidden}
+.hero{min-height:460px;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;background:radial-gradient(circle at center,#29131e 0,#0d0d0f 60%)} .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,45,117,.08) 0 26px,transparent 26px 52px);pointer-events:none} .hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:repeating-linear-gradient(90deg,var(--accent) 0 22px,#0d0d0f 22px 44px)} .hero>div{position:relative;z-index:1} .hero .eyebrow{display:inline-block;color:#0d0d0f;background:var(--accent);font-family:var(--font-display);font-weight:400;letter-spacing:3px;font-size:13px;padding:6px 14px;transform:skew(-8deg)} .hero h1{font:clamp(64px,12vw,120px)/.82 var(--font-display);margin:20px 0 2px;text-transform:uppercase} .hero h2{font:clamp(18px,3vw,28px) var(--font-body);font-weight:700;letter-spacing:6px;margin:0 0 28px;color:var(--muted)} .btn{border:2px solid #0d0d0f;border-radius:2px;padding:15px 26px;font-family:var(--font-display);font-weight:400;letter-spacing:1px;text-transform:uppercase;font-size:16px;background:var(--accent);color:#fff;box-shadow:5px 5px 0 #0d0d0f;transition:transform .15s,box-shadow .15s} .btn:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 #0d0d0f} .trustbar{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:1280px;margin:0 auto;padding:0 22px 10px}.trustbar span{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 14px;display:flex;align-items:center;gap:6px}.announce{background:var(--accent);color:#fff;text-align:center;font-size:12px;font-weight:700;letter-spacing:1px;padding:9px 12px;overflow:hidden}
 section{max-width:1280px;margin:auto;padding:42px 22px} .section-title{font:34px var(--font-display);text-transform:uppercase;letter-spacing:1px;margin:0 0 22px;position:relative;padding-left:16px;border-left:6px solid var(--accent)} .category-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px} .cat{padding:24px 15px;border:1px solid var(--line);background:var(--card);border-radius:10px;text-align:center;font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.5px;transition:border-color .15s,transform .15s;cursor:pointer} .cat:hover{border-color:var(--accent);transform:translateY(-2px)}
 .searchbar{display:flex;gap:10px;margin-bottom:22px} .searchbar input,.field{width:100%;background:#121216;color:#fff;border:1px solid var(--line);padding:13px;border-radius:10px;outline:none;font-family:var(--font-body)} .searchbar input:focus,.field:focus{border-color:var(--accent)} .searchbar select{max-width:230px}
 .product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px} .product{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;transition:border-color .15s,transform .15s} .product:hover{border-color:var(--accent);transform:translateY(-3px)} 
 
 .product img {
   width: 100%;
-  aspect-ratio: 3 / 4;
+  height: 330px;
   object-fit: cover;
-  object-position: top center;
-  display: block;
+  object-position: center top;
   background: #17171b;
   padding: 0;
-  transition: transform .3s ease;
+  transition: transform .3s;
 }
 
-.product:hover img{transform:scale(1.03)} .product-info{padding:14px} .product h3{font-size:13px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.3px;font-weight:600} .product .price{font-family:var(--font-display);font-size:24px;font-weight:400;color:var(--accent)} .meta{font-size:11px;color:var(--muted);margin:5px 0 12px} .product-actions{display:flex;gap:8px} .smallbtn{flex:1;border:1px solid var(--line);background:#222229;color:#fff;border-radius:8px;padding:10px;font-weight:700;font-size:12px;transition:border-color .15s} .smallbtn:hover{border-color:var(--accent)} .smallbtn.primary{background:var(--green);color:#07160e;border-color:var(--green);text-transform:uppercase;font-weight:700;letter-spacing:.3px} .smallbtn.primary:hover{filter:brightness(1.08)}
+.product:hover img{transform:scale(1.05)} .product-info{padding:14px} .product h3{font-size:13px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.3px;font-weight:600} .product .price{font-family:var(--font-display);font-size:24px;font-weight:400;color:var(--accent)} .meta{font-size:11px;color:var(--muted);margin:5px 0 12px} .product-actions{display:flex;gap:8px} .smallbtn{flex:1;border:1px solid var(--line);background:#222229;color:#fff;border-radius:8px;padding:10px;font-weight:700;font-size:12px;transition:border-color .15s} .smallbtn:hover{border-color:var(--accent)} .smallbtn.primary{background:var(--green);color:#07160e;border-color:var(--green);text-transform:uppercase;font-weight:700;letter-spacing:.3px} .smallbtn.primary:hover{filter:brightness(1.08)}
 .badge{position:absolute;top:10px;left:10px;background:var(--accent);color:#fff;border-radius:3px;padding:6px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px} .badge.featured{left:auto;right:10px;background:#0d0d0f;border:1px solid var(--green);color:var(--green)} .empty{padding:40px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:15px}
 .drawer,.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;display:none} .drawer.open,.modal.open{display:block} .drawer-panel{margin-left:auto;width:min(480px,100%);height:100%;background:#111116;padding:22px;overflow:auto} .modal-panel{width:min(1100px,94vw);max-height:92vh;overflow:auto;margin:4vh auto;background:#111116;border:1px solid var(--line);border-radius:18px;padding:22px}
 .close{float:right;border:0;background:#292930;color:#fff;border-radius:9px;padding:8px 12px;cursor:pointer} .cart-row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)} .total{font-size:24px;font-weight:900;margin:20px 0}
@@ -58,7 +57,7 @@ footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;colo
 <section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section></main>
 <a class="whatsapp" id="whatsappFloat" href="https://wa.me/5500000000000" target="_blank">✆</a><footer><h2>STUDIO 70 BRAND</h2><p>Moda urbana feminina. Estilo, atitude e identidade.</p><p>© 2026 STUDIO 70 BRAND</p></footer>
 <div class="drawer" id="cartDrawer"><div class="drawer-panel"><button class="close" onclick="closeCart()">×</button><h2 class="section-title">SEU CARRINHO</h2><div id="cartItems"></div><div class="total" id="cartTotal">R$ 0,00</div><button class="btn" style="width:100%" onclick="checkoutWhatsApp()">FINALIZAR NO WHATSAPP</button></div></div>
-<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU<input class="field" id="pSku" required></label><label>Código de barras<input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label class="full">Link da foto<input class="field" id="pImage" placeholder="https://... ou 001.jpg"></label><label class="full">Descrição<textarea class="field" id="pDescription"></textarea></label></div><div class="checkrow"><label><input type="checkbox" id="pActive" checked> Ativo</label><label><input type="checkbox" id="pFeatured"> Destaque</label></div><button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><svg id="barcodeSvg"></svg><div id="labelCode"></div></div></div><div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" onclick="printSelectedLabel()">🖨️ Imprimir etiqueta</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center;cursor:pointer">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden onchange="importDataFile(event)"></label></div><div id="adminList" class="admin-list"></div></div></div></div></div>
+<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU<input class="field" id="pSku" required></label><label>Código de barras<input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label class="full">Link da foto<input class="field" id="pImage" placeholder="https://... ou 001.jpg"></label><label class="full">Descrição<textarea class="field" id="pDescription"></textarea></label></div><div class="checkrow"><label><input type="checkbox" id="pActive" checked> Ativo</label><label><input type="checkbox" id="pFeatured"> Destaque</label></div><button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><svg id="barcodeSvg"></svg><div id="labelCode"></div></div></div><div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" onclick="printSelectedLabel()">🖨️ Imprimir etiqueta</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center;cursor:pointer">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden onchange="importDataFile(event)"></label><button class="smallbtn" onclick="resetProductsStorage()" style="background:#8b263e">🔄 Resetar para 200 Produtos</button></div><div id="adminList" class="admin-list"></div></div></div></div></div>
 
 <div class="modal" id="pdvModal"><div class="modal-panel"><button class="close" onclick="closePDV()">×</button><h2 class="section-title">PDV — PONTO DE VENDA</h2>
 <div class="pdv-layout">
@@ -89,7 +88,7 @@ footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;colo
 <div class="modal" id="productModal"><div class="modal-panel"><button class="close" onclick="closeProduct()">×</button><div id="productBody"></div></div></div>
 
 <script>
-// Estrutura dos 200 Produtos integrados de forma indexada
+// Estrutura de 200 Produtos com imagem individual para cada produto
 const cats = ["Bodies", "Maiôs", "Vestidos", "Macacões", "Shorts", "Croppeds", "Biquínis", "Conjuntos", "Tops"];
 const names = ["JANAÍNA", "BRUNA", "ELIANA", "CÁSSIA", "SUZANA", "FERNANDA", "MARTA", "MARINA", "PATRÍCIA", "AMANDA", "BIA", "CARLA", "DANIELA", "HELENA", "ISABELA"];
 
@@ -98,7 +97,6 @@ const SEED_PRODUCTS = Array.from({ length: 200 }, (_, i) => {
   const pad = String(num).padStart(3, '0');
   const category = cats[i % cats.length];
   const baseName = names[i % names.length];
-  const imgNum = String((i % 9) + 1).padStart(3, '0');
   
   return {
     id: `p${pad}`,
@@ -107,7 +105,36 @@ const SEED_PRODUCTS = Array.from({ length: 200 }, (_, i) => {
     category: category,
     sku: `SKU-${category.toUpperCase()}-${pad}`,
     barcode: `ST70${String(num).padStart(6, '0')}`,
-    image: `${imgNum}.jpg`,
+    image: `${pad}.jpg`, // Imagem exclusiva para cada produto (001.jpg até 200.jpg)
+    active: true,
+    featured: i % 4 === 0,
+    stock: 5 + (i % 20),
+    sizes: ["P", "M", "G"],
+    colors: ["Preto", "Branco"],
+    description: `${category} ${baseName} — Produto exclusivo do catálogo STUDIO 70 BRAND.`
+  };
+});
+
+let products = JSON.parse(localStorage.getItem('st70_products')) || SEED_PRODUCTS;
+let cart = JSON.parse(localStorage.getItem('st70_cart')) || [];
+let pdvCart = [];
+let currentPage = 1;
+const itemsPerPage = 12;
+
+function saveProducts() { localStorage.setItem('st70_products', JSON.stringify(products)); }
+function saveCart() {
+  localStorage.setItem('st70_cart', JSON.stringify(cart));
+  document.getElementById('cartCount').innerText = cart.reduce((acc, item) => acc + item.qty, 0);
+}
+
+function resetProductsStorage() {
+  localStorage.removeItem('st70_products');
+  products = [...SEED_PRODUCTS];
+  saveProducts();
+  renderCategories();
+  renderProducts();
+  if (document.getElementById('adminModal').classList.contains('open')) renderAdminList();
+  alert('Catálogo resetado com sucesso! 200 produto    image: `${imgNum}.jpg`,
     active: true,
     featured: i % 4 === 0,
     stock: 5 + (i % 20),
