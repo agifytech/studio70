@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>STUDIO 70 BRAND | Moda Urbana</title>
+<title>STUDIO 70 | Estilo Urbano</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
@@ -48,15 +48,67 @@ footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;colo
 
 .pdv-layout{display:grid;grid-template-columns:1.35fr .9fr;gap:18px}.pdv-card{background:#15151a;border:1px solid var(--line);border-radius:15px;padding:18px}.pdv-scan{border:1px solid var(--green);background:#101614;padding:16px;border-radius:12px}.pdv-scan input{font-size:24px;font-weight:900}.pdv-items{display:grid;gap:8px;margin-top:14px}.pdv-item{display:grid;grid-template-columns:54px 1fr auto auto;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:11px;background:#19191f}.pdv-item img{width:54px;height:65px;object-fit:cover;border-radius:8px;background:#222}.pdv-item-name{font-weight:800;font-size:13px}.pdv-item-meta{font-size:10px;color:var(--muted);margin-top:4px}.qtybox{display:flex;align-items:center;gap:5px}.qtybox button{width:30px;height:30px;border:1px solid var(--line);background:#24242b;color:#fff;border-radius:7px}.qtybox b{min-width:25px;text-align:center}.pdv-total{font-size:32px;font-weight:900;color:var(--accent);text-align:right;margin:18px 0}.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pay-grid label{display:block}.change-box{background:#101614;border:1px solid var(--green);border-radius:10px;padding:12px;margin-top:10px}.change-box strong{font-size:24px;color:var(--green)}.pdv-history{max-height:440px;overflow:auto;display:grid;gap:8px}.sale-row{padding:12px;border:1px solid var(--line);border-radius:10px;background:#19191f}.sale-row b{font-size:13px}.sale-row small{color:var(--muted)}.pdv-status{min-height:22px;margin-top:8px;font-weight:800}.success{color:var(--green)}.error{color:#ff6b8f}.warn{color:#ffd166}.pdv-shortcuts{font-size:11px;color:var(--muted);margin-top:8px}@media(max-width:900px){.pdv-layout{grid-template-columns:1fr}.pdv-item{grid-template-columns:48px 1fr}.pdv-item>.qtybox,.pdv-item>.lineprice{grid-column:2}.pay-grid{grid-template-columns:1fr}}
 .btn-mercadopago { background: var(--mercadopago) !important; color: #fff !important; }
-</style></head>
+</style>
+</head>
 <body>
 <div class="announce">🔥 FRETE GRÁTIS ACIMA DE R$150 &nbsp;·&nbsp; ENTREGA PARA TODO O BRASIL &nbsp;·&nbsp; TROCA FÁCIL EM 7 DIAS</div>
-<header><div class="header-container"><div class="logo">STUDIO 70 BRAND</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><a href="#produtos">VESTIDOS</a><a href="#produtos">CONJUNTOS</a><a href="#produtos">TOPS</a></nav><div class="header-icons"><button class="iconbtn" id="searchBtn">🔍</button><button class="iconbtn" id="cartBtn" onclick="openCart()">🛒 <b id="cartCount">0</b></button><button class="iconbtn" id="pdvBtn" onclick="openPDV()">🧾 PDV</button><button class="iconbtn" id="adminBtn" onclick="openAdmin()">⚙️ ADM</button></div></div></header>
-<main id="inicio"><section class="hero" style="padding:0 22px"><div><span class="eyebrow">NOVA COLEÇÃO 2026</span><h1>STUDIO 70</h1><h2>URBAN WOMAN</h2><a class="btn" href="#produtos">VER LANÇAMENTOS →</a></div></section>
-<div class="trustbar"><span>🚚 Frete grátis acima de R$150</span><span>🔄 Troca fácil em 7 dias</span><span>🔒 Compra 100% segura</span><span>💳 Parcele suas compras</span></div>
-<section><h2 class="section-title">CATEGORIAS</h2><div class="category-grid" id="categories"></div></section>
-<section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..." oninput="renderProducts()"><select id="categoryFilter" onchange="renderProducts()"><option value="">Todas as categorias</option></select></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section></main>
-<a class="whatsapp" id="whatsappFloat" href="https://wa.me/5500000000000" target="_blank">✆</a><footer><h2>STUDIO 70 BRAND</h2><p>Moda urbana feminina. Estilo, atitude e identidade.</p><p>© 2026 STUDIO 70 BRAND</p></footer>
+<header>
+  <div class="header-container">
+    <div class="logo">STUDIO 70 BRAND</div>
+    <nav>
+      <a href="#inicio">INÍCIO</a>
+      <a href="#produtos">LANÇAMENTOS</a>
+      <a href="#produtos">VESTIDOS</a>
+      <a href="#produtos">CONJUNTOS</a>
+      <a href="#produtos">TOPS</a>
+    </nav>
+    <div class="header-icons">
+      <button class="iconbtn" id="searchBtn">🔍</button>
+      <button class="iconbtn" id="cartBtn" onclick="openCart()">🛒 <b id="cartCount">0</b></button>
+      <button class="iconbtn" id="pdvBtn" onclick="openPDV()">🧾 PDV</button>
+      <button class="iconbtn" id="adminBtn" onclick="openAdmin()">⚙️ ADM</button>
+    </div>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="hero" style="padding:0 22px">
+    <div>
+      <span class="eyebrow">NOVA COLEÇÃO 2026</span>
+      <h1>STUDIO 70</h1>
+      <h2>URBAN WOMAN</h2>
+      <a class="btn" href="#produtos">VER LANÇAMENTOS →</a>
+    </div>
+  </section>
+  <div class="trustbar">
+    <span>🚚 Frete grátis acima de R$250</span>
+    <span>🔄 Troca fácil em 7 dias</span>
+    <span>🔒 Compra 100% segura</span>
+    <span>💳 Parcele suas compras</span>
+  </div>
+  <section>
+    <h2 class="section-title">CATEGORIAS</h2>
+    <div class="category-grid" id="categories"></div>
+  </section>
+  <section id="produtos">
+    <h2 class="section-title">PRODUTOS</h2>
+    <div class="searchbar">
+      <input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..." oninput="renderProducts()">
+      <select id="categoryFilter" onchange="renderProducts()">
+        <option value="">Todas as categorias</option>
+      </select>
+    </div>
+    <div id="productGrid" class="product-grid"></div>
+    <div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div>
+  </section>
+</main>
+
+<a class="whatsapp" id="whatsappFloat" href="https://wa.me/5500000000000" target="_blank">✆</a>
+<footer>
+  <h2>STUDIO 70 BRAND</h2>
+  <p>Estilo, atitude e identidade.</p>
+  <p>© 2026 STUDIO 70 BRAND</p>
+</footer>
 
 <div class="drawer" id="cartDrawer">
   <div class="drawer-panel">
@@ -69,46 +121,122 @@ footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;colo
   </div>
 </div>
 
-<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU<input class="field" id="pSku" required></label><label>Código de barras<input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label class="full">Link da foto<input class="field" id="pImage" placeholder="https://... ou 001.jpg"></label><label class="full">Descrição<textarea class="field" id="pDescription"></textarea></label></div><div class="checkrow"><label><input type="checkbox" id="pActive" checked> Ativo</label><label><input type="checkbox" id="pFeatured"> Destaque</label></div><button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><svg id="barcodeSvg"></svg><div id="labelCode"></div></div></div><div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..." oninput="renderAdminList()"><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" onclick="printSelectedLabel()">🖨️ Imprimir etiqueta</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center;cursor:pointer">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden onchange="importDataFile(event)"></label></div><div id="adminList" class="admin-list"></div></div></div></div></div>
-
-<div class="modal" id="pdvModal"><div class="modal-panel"><button class="close" onclick="closePDV()">×</button><h2 class="section-title">PDV — PONTO DE VENDA</h2>
-<div class="pdv-layout">
- <div>
-  <div class="pdv-card">
-   <div class="pdv-scan"><b>📟 BIPAR PRODUTO</b><input class="field" id="pdvScanner" placeholder="Passe o leitor de código de barras..." autocomplete="off"><div id="pdvStatus" class="pdv-status"></div><div class="pdv-shortcuts">Enter confirma a bipagem · F2 abre o PDV · Esc fecha</div></div>
-   <div class="searchbar" style="margin-top:14px"><input id="pdvSearch" placeholder="Buscar produto por nome, SKU ou código..."><button class="smallbtn" onclick="pdvSearchAdd()">ADICIONAR</button></div>
-   <div id="pdvItems" class="pdv-items"></div>
+<div class="modal" id="adminModal">
+  <div class="modal-panel">
+    <button class="close" onclick="closeAdmin()">×</button>
+    <h2 class="section-title">PAINEL ADMINISTRATIVO</h2>
+    <div class="scanner">
+      <b>📟 BIPAGEM / LEITOR</b>
+      <p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipa o produto.</p>
+      <input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off">
+      <div class="scan-result" id="scanResult"></div>
+    </div>
+    <div class="admin-grid">
+      <div>
+        <h3 id="formTitle">Novo produto</h3>
+        <form id="productForm">
+          <input type="hidden" id="editId">
+          <div class="form-grid">
+            <label>Nome<input class="field" id="pName" required></label>
+            <label>Preço<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label>
+            <label>SKU<input class="field" id="pSku" required></label>
+            <label>Código de barras<input class="field" id="pBarcode" required></label>
+            <label>Categoria<select class="field" id="pCategory"></select></label>
+            <label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label>
+            <label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label>
+            <label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label>
+            <label class="full">Link da foto<input class="field" id="pImage" placeholder="https://... ou 001.jpg"></label>
+            <label class="full">Descrição<textarea class="field" id="pDescription"></textarea></label>
+          </div>
+          <div class="checkrow">
+            <label><input type="checkbox" id="pActive" checked> Ativo</label>
+            <label><input type="checkbox" id="pFeatured"> Destaque</label>
+          </div>
+          <button class="btn" type="submit">SALVAR PRODUTO</button>
+          <button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button>
+        </form>
+        <div class="label-preview" id="labelPreview" style="display:none">
+          <b id="labelName"></b>
+          <svg id="barcodeSvg"></svg>
+          <div id="labelCode"></div>
+        </div>
+      </div>
+      <div>
+        <h3>Produtos cadastrados <span id="adminCount"></span></h3>
+        <input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..." oninput="renderAdminList()">
+        <div class="admin-tools" style="margin:10px 0;flex-wrap:wrap">
+          <button class="smallbtn" onclick="printSelectedLabel()">🖨️ Imprimir etiqueta</button>
+          <button class="smallbtn" onclick="exportData()">⬇️ Backup</button>
+          <label class="smallbtn" style="display:inline-block;text-align:center;cursor:pointer">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden onchange="importDataFile(event)"></label>
+        </div>
+        <div id="adminList" class="admin-list"></div>
+      </div>
+    </div>
   </div>
- </div>
- <div>
-  <div class="pdv-card">
-   <h3 style="margin-top:0">Resumo da venda</h3>
-   <div id="pdvSummary"></div>
-   <div class="pdv-total" id="pdvTotal">R$ 0,00</div>
-   <div class="pay-grid">
-    <label>Pagamento
-      <select class="field" id="pdvPayment">
-        <option>Mercado Pago</option>
-        <option>PIX</option>
-        <option>Dinheiro</option>
-        <option>Cartão de débito</option>
-        <option>Cartão de crédito</option>
-        <option>Outro</option>
-      </select>
-    </label>
-    <label>Desconto (R$)<input class="field" id="pdvDiscount" type="number" min="0" step="0.01" value="0" oninput="updatePDVTotals()"></label>
-    <label style="grid-column:1/-1">Valor recebido<input class="field" id="pdvReceived" type="number" min="0" step="0.01" value="0" oninput="updatePDVTotals()"></label>
-   </div>
-   <div class="change-box"><span>Troco</span><br><strong id="pdvChange">R$ 0,00</strong></div>
-   <button class="btn btn-mercadopago" style="width:100%;margin-top:10px;" onclick="finishSaleMercadoPago()">COBRAR MERCADO PAGO</button>
-   <button class="btn" style="width:100%;margin-top:8px" onclick="finishSale()">✓ FINALIZAR VENDA</button>
-   <button class="smallbtn" style="width:100%;margin-top:8px" onclick="clearPDV()">LIMPAR VENDA</button>
-  </div>
-  <div class="pdv-card" style="margin-top:18px"><h3 style="margin-top:0">Últimas vendas</h3><div id="pdvHistory" class="pdv-history"></div></div>
- </div>
-</div></div></div>
+</div>
 
-<div class="modal" id="productModal"><div class="modal-panel"><button class="close" onclick="closeProduct()">×</button><div id="productBody"></div></div></div>
+<div class="modal" id="pdvModal">
+  <div class="modal-panel">
+    <button class="close" onclick="closePDV()">×</button>
+    <h2 class="section-title">PDV — PONTO DE VENDA</h2>
+    <div class="pdv-layout">
+      <div>
+        <div class="pdv-card">
+          <div class="pdv-scan">
+            <b>📟 BIPAR PRODUTO</b>
+            <input class="field" id="pdvScanner" placeholder="Passe o leitor de código de barras..." autocomplete="off">
+            <div id="pdvStatus" class="pdv-status"></div>
+            <div class="pdv-shortcuts">Enter confirma a bipagem · F2 abre o PDV · Esc fecha</div>
+          </div>
+          <div class="searchbar" style="margin-top:14px">
+            <input id="pdvSearch" placeholder="Buscar produto por nome, SKU ou código...">
+            <button class="smallbtn" onclick="pdvSearchAdd()">ADICIONAR</button>
+          </div>
+          <div id="pdvItems" class="pdv-items"></div>
+        </div>
+      </div>
+      <div>
+        <div class="pdv-card">
+          <h3 style="margin-top:0">Resumo da venda</h3>
+          <div id="pdvSummary"></div>
+          <div class="pdv-total" id="pdvTotal">R$ 0,00</div>
+          <div class="pay-grid">
+            <label>Pagamento
+              <select class="field" id="pdvPayment">
+                <option>Mercado Pago</option>
+                <option>PIX</option>
+                <option>Dinheiro</option>
+                <option>Cartão de débito</option>
+                <option>Cartão de crédito</option>
+                <option>Outro</option>
+              </select>
+            </label>
+            <label>Desconto (R$)<input class="field" id="pdvDiscount" type="number" min="0" step="0.01" value="0" oninput="updatePDVTotals()"></label>
+            <label style="grid-column:1/-1">Valor recebido<input class="field" id="pdvReceived" type="number" min="0" step="0.01" value="0" oninput="updatePDVTotals()"></label>
+          </div>
+          <div class="change-box">
+            <span>Troco</span><br>
+            <strong id="pdvChange">R$ 0,00</strong>
+          </div>
+          <button class="btn btn-mercadopago" style="width:100%;margin-top:10px;" onclick="finishSaleMercadoPago()">COBRAR MERCADO PAGO</button>
+          <button class="btn" style="width:100%;margin-top:8px" onclick="finishSale()">✓ FINALIZAR VENDA</button>
+          <button class="smallbtn" style="width:100%;margin-top:8px" onclick="clearPDV()">LIMPAR VENDA</button>
+        </div>
+        <div class="pdv-card" style="margin-top:18px">
+          <h3 style="margin-top:0">Últimas vendas</h3>
+          <div id="pdvHistory" class="pdv-history"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="productModal">
+  <div class="modal-panel">
+    <button class="close" onclick="closeProductModal()">×</button>
+    <div id="productBody"></div>
+  </div>
+</div>
 
 <script>
 const MERCADO_PAGO_LINK_PADRAO = "https://www.mercadopago.com.br"; 
@@ -353,7 +481,6 @@ function saveSale(paymentMethod) {
   const discount = parseFloat(document.getElementById('pdvDiscount').value) || 0;
   const finalTotal = Math.max(0, subtotal - discount);
 
-  // Atualiza estoque local
   pdvCart.forEach(item => {
     const prod = products.find(p => p.id === item.id);
     if (prod) prod.stock = Math.max(0, prod.stock - item.qty);
@@ -454,113 +581,104 @@ document.getElementById('productForm').addEventListener('submit', (e) => {
   };
 
   const index = products.findIndex(p => p.id === id);
-  if (index >= 0) { products[index] = newProd; } else { products.push(newProd); }
-  
-  saveProducts(); renderAdminList(); renderProducts(); clearForm();
+  if (index >= 0) {
+    products[index] = newProd;
+  } else {
+    products.unshift(newProd);
+  }
+
+  saveProducts();
+  renderProducts();
+  renderCategories();
+  renderAdminList();
+  clearForm();
   alert('Produto salvo com sucesso!');
 });
 
 function deleteProduct(id) {
-  if (confirm('Deseja remover este produto?')) {
-    products = products.filter(p => p.id !== id);
-    saveProducts(); renderAdminList(); renderProducts();
-  }
+  if (!confirm('Deseja realmente excluir este produto?')) return;
+  products = products.filter(p => p.id !== id);
+  saveProducts();
+  renderProducts();
+  renderCategories();
+  renderAdminList();
 }
-
-// Bipagem no PDV
-document.getElementById('pdvScanner').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    const val = e.target.value.trim();
-    const p = products.find(prod => prod.barcode === val || prod.sku === val);
-    if (p) { 
-      addToPDV(p); 
-    } else {
-      document.getElementById('pdvStatus').innerText = 'Produto não encontrado.';
-      document.getElementById('pdvStatus').className = 'pdv-status error';
-    }
-    e.target.value = '';
-  }
-});
-
-// Bipagem no Admin
-document.getElementById('scannerInput').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    const val = e.target.value.trim();
-    const p = products.find(prod => prod.barcode === val || prod.sku === val);
-    if (p) {
-      editProduct(p.id);
-      document.getElementById('scanResult').innerText = `Produto encontrado: ${p.name}`;
-      if (window.JsBarcode) {
-        document.getElementById('labelPreview').style.display = 'block';
-        document.getElementById('labelName').innerText = p.name;
-        document.getElementById('labelCode').innerText = p.barcode;
-        JsBarcode("#barcodeSvg", p.barcode, { format: "CODE128", width: 2, height: 50 });
-      }
-    } else {
-      document.getElementById('scanResult').innerText = 'Código não cadastrado.';
-    }
-    e.target.value = '';
-  }
-});
-
-function openProductDetail(id) {
-  const p = products.find(prod => prod.id === id);
-  if (!p) return;
-  document.getElementById('productBody').innerHTML = `
-    <h2>${p.name}</h2>
-    <img src="${p.image}" style="max-height:400px;object-fit:cover;border-radius:10px;" onerror="this.src='https://via.placeholder.com/300x330/17171b/ffffff?text=STUDIO+70'">
-    <p><b>Preço:</b> R$ ${p.price.toFixed(2)}</p>
-    <p><b>SKU:</b> ${p.sku}</p>
-    <p><b>Descrição:</b> ${p.description}</p>
-    <button class="btn primary" onclick="addToCart('${p.id}'); closeProduct();">ADICIONAR AO CARRINHO</button>
-  `;
-  document.getElementById('productModal').classList.add('open');
-}
-function closeProduct() { document.getElementById('productModal').classList.remove('open'); }
 
 function exportData() {
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(products));
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(products, null, 2));
   const downloadAnchor = document.createElement('a');
   downloadAnchor.setAttribute("href", dataStr);
-  downloadAnchor.setAttribute("download", `backup_st70_${Date.now()}.json`);
+  downloadAnchor.setAttribute("download", "studio70_backup.json");
   document.body.appendChild(downloadAnchor);
   downloadAnchor.click();
   downloadAnchor.remove();
 }
 
 function importDataFile(event) {
-  const fileReader = new FileReader();
-  fileReader.onload = function(e) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
     try {
-      const importedProducts = JSON.parse(e.target.result);
-      if (Array.isArray(importedProducts)) {
-        products = importedProducts;
-        saveProducts(); renderAdminList(); renderProducts(); renderCategories();
-        alert('Banco de dados restaurado!');
+      const imported = JSON.parse(e.target.result);
+      if (Array.isArray(imported)) {
+        products = imported;
+        saveProducts();
+        renderProducts();
+        renderCategories();
+        renderAdminList();
+        alert('Dados restaurados com sucesso!');
+      } else {
+        alert('Arquivo de backup inválido.');
       }
-    } catch (err) { alert('Arquivo de backup inválido.'); }
+    } catch(err) {
+      alert('Erro ao processar o arquivo JSON.');
+    }
   };
-  fileReader.readAsText(event.target.files[0]);
+  reader.readAsText(file);
 }
 
-function printSelectedLabel() {
-  const val = document.getElementById('pBarcode').value;
-  if (!val) return alert('Selecione ou edite um produto com código de barras para imprimir.');
-  window.print();
+function openProductDetail(id) {
+  const p = products.find(prod => prod.id === id);
+  if (!p) return;
+  document.getElementById('productBody').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <img src="${p.image}" style="width:100%;max-height:400px;object-fit:contain;background:#17171b;border-radius:10px" onerror="this.src='https://via.placeholder.com/400x400/17171b/ffffff?text=STUDIO+70'">
+      <div>
+        <span class="badge" style="position:static;display:inline-block;margin-bottom:10px">${p.category}</span>
+        <h2>${p.name}</h2>
+        <div class="price" style="margin:10px 0">R$ ${p.price.toFixed(2)}</div>
+        <p style="color:var(--muted);font-size:13px">${p.description || 'Sem descrição.'}</p>
+        <p style="font-size:12px;margin:15px 0"><b>SKU:</b> ${p.sku} | <b>Estoque:</b> ${p.stock}</p>
+        ${p.sizes && p.sizes.length ? `<p style="font-size:12px"><b>Tamanhos:</b> ${p.sizes.join(', ')}</p>` : ''}
+        ${p.colors && p.colors.length ? `<p style="font-size:12px"><b>Cores:</b> ${p.colors.join(', ')}</p>` : ''}
+        <button class="btn primary" style="width:100%;margin-top:20px;background:var(--green);color:#07160e;border:none" onclick="addToCart('${p.id}');closeProductModal()">ADICIONAR AO CARRINHO</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('productModal').classList.add('open');
 }
 
-// Atalhos Globais
+function closeProductModal() { document.getElementById('productModal').classList.remove('open'); }
+
 window.addEventListener('keydown', (e) => {
-  if (e.key === 'F2') { e.preventDefault(); openPDV(); }
-  if (e.key === 'Escape') { closePDV(); closeAdmin(); closeCart(); closeProduct(); }
+  if (e.key === 'F2') {
+    e.preventDefault();
+    openPDV();
+  }
+  if (e.key === 'Escape') {
+    closeCart();
+    closeAdmin();
+    closePDV();
+    closeProductModal();
+  }
 });
 
-// Inicialização da tela
-renderCategories();
-renderProducts();
-saveCart();
+window.onload = function() {
+  renderCategories();
+  renderProducts();
+  saveCart();
+};
 </script>
 </body>
 </html>
