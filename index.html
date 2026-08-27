@@ -25,7 +25,6 @@ section{max-width:1280px;margin:auto;padding:42px 22px} .section-title{font:34px
 .searchbar{display:flex;gap:10px;margin-bottom:22px} .searchbar input,.field{width:100%;background:#121216;color:#fff;border:1px solid var(--line);padding:13px;border-radius:10px;outline:none;font-family:var(--font-body)} .searchbar input:focus,.field:focus{border-color:var(--accent)} .searchbar select{max-width:230px}
 .product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px} .product{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;transition:border-color .15s,transform .15s} .product:hover{border-color:var(--accent);transform:translateY(-3px)} 
 
-/* AJUSTE APLICADO: object-fit: contain para evitar cortes/distorções */
 .product img {
   width: 100%;
   height: 330px;
@@ -145,7 +144,7 @@ footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;colo
             <label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label>
             <label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label>
             <label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label>
-            <label class="full">Link da foto<input class="field" id="pImage" placeholder="https://... ou 001.jpg"></label>
+            <label class="full">Link da foto<input class="field" id="pImage" placeholder="001.jpg ou nome_da_imagem.jpg"></label>
             <label class="full">Descrição<textarea class="field" id="pDescription"></textarea></label>
           </div>
           <div class="checkrow">
@@ -244,12 +243,25 @@ const MERCADO_PAGO_LINK_PADRAO = "https://www.mercadopago.com.br";
 const cats = ["Bodies", "Maiôs", "Vestidos", "Macacões", "Shorts", "Croppeds", "Biquínis", "Conjuntos", "Tops"];
 const names = ["JANAÍNA", "BRUNA", "ELIANA", "CÁSSIA", "SUZANA", "FERNANDA", "MARTA", "MARINA", "PATRÍCIA", "AMANDA", "BIA", "CARLA", "DANIELA", "HELENA", "ISABELA"];
 
-const SEED_PRODUCTS = Array.from({ length: 200 }, (_, i) => {
+// Lista exata das imagens reais fornecidas na raiz do projeto (sem duplicatas)
+const realImages = [
+  "001.jpg",
+  "002.jpg",
+  "003.jpg",
+  "004.jpg",
+  "005.jpg",
+  "006.jpg",
+  "007.jpg",
+  "008.jpg",
+  "009.jpg"
+];
+
+// Gerando os produtos utilizando as imagens reais de forma cíclica (sem duplicação desnecessária de nomes e mantendo o catálogo coerente)
+const SEED_PRODUCTS = Array.from({ length: realImages.length }, (_, i) => {
   const num = i + 1;
   const pad = String(num).padStart(3, '0');
   const category = cats[i % cats.length];
   const baseName = names[i % names.length];
-  const imgNum = String((i % 9) + 1).padStart(3, '0');
   
   return {
     id: `p${pad}`,
@@ -258,10 +270,10 @@ const SEED_PRODUCTS = Array.from({ length: 200 }, (_, i) => {
     category: category,
     sku: `SKU-${category.toUpperCase()}-${pad}`,
     barcode: `ST70${String(num).padStart(6, '0')}`,
-    image: `${imgNum}.jpg`,
+    image: realImages[i], // Apontando diretamente para o arquivo na raiz
     active: true,
-    featured: i % 4 === 0,
-    stock: 5 + (i % 20),
+    featured: i % 3 === 0,
+    stock: 10 + (i * 2),
     sizes: ["P", "M", "G"],
     colors: ["Preto", "Branco"],
     description: `${category} ${baseName} — Produto exclusivo do catálogo STUDIO 70 BRAND.`
@@ -508,7 +520,7 @@ function renderPDVHistory() {
     container.innerHTML = '<small style="color:var(--muted)">Nenhuma venda realizada.</small>';
     return;
   }
-  container.innerHTML = salesHistory.slice(0, 10).map(s => `
+    container.innerHTML = salesHistory.slice(0, 10).map(s => `
     <div class="sale-row">
       <b>${s.id} — R$ ${s.total.toFixed(2)}</b><br>
       <small>${s.date} | ${s.itemsCount} itens | ${s.payment}</small>
