@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>STUDIO 70 | Estilo Urbano</title>
+<title>STUDIO 70 BRAND | Moda Urbana</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
@@ -25,13 +25,13 @@ section{max-width:1280px;margin:auto;padding:42px 22px} .section-title{font:34px
 .searchbar{display:flex;gap:10px;margin-bottom:22px} .searchbar input,.field{width:100%;background:#121216;color:#fff;border:1px solid var(--line);padding:13px;border-radius:10px;outline:none;font-family:var(--font-body)} .searchbar input:focus,.field:focus{border-color:var(--accent)} .searchbar select{max-width:230px}
 .product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px} .product{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;transition:border-color .15s,transform .15s} .product:hover{border-color:var(--accent);transform:translateY(-3px)} 
 
+/* AJUSTE APLICADO: object-fit: contain para evitar cortes/distorções */
 .product img {
   width: 100%;
   height: 330px;
-  object-fit: cover;
-  object-position: center top;
-  background: #17171b;
-  padding: 0;
+  object-fit: contain;
+  background: #121216;
+  padding: 8px;
   transition: transform .3s;
 }
 
@@ -46,7 +46,7 @@ footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;colo
 @media(prefers-reduced-motion:reduce){.whatsapp{animation:none}}
 @media(max-width:950px){.product-grid{grid-template-columns:repeat(3,1fr)} nav{display:none} .category-grid{grid-template-columns:repeat(3,1fr)} .admin-grid{grid-template-columns:1fr}} @media(max-width:650px){.product-grid{grid-template-columns:repeat(2,1fr);gap:10px} .product img{height:260px} .hero h1{font-size:76px} .category-grid{grid-template-columns:repeat(2,1fr)} .form-grid{grid-template-columns:1fr}}
 
-.pdv-layout{display:grid;grid-template-columns:1.35fr .9fr;gap:18px}.pdv-card{background:#15151a;border:1px solid var(--line);border-radius:15px;padding:18px}.pdv-scan{border:1px solid var(--green);background:#101614;padding:16px;border-radius:12px}.pdv-scan input{font-size:24px;font-weight:900}.pdv-items{display:grid;gap:8px;margin-top:14px}.pdv-item{display:grid;grid-template-columns:54px 1fr auto auto;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:11px;background:#19191f}.pdv-item img{width:54px;height:65px;object-fit:cover;border-radius:8px;background:#222}.pdv-item-name{font-weight:800;font-size:13px}.pdv-item-meta{font-size:10px;color:var(--muted);margin-top:4px}.qtybox{display:flex;align-items:center;gap:5px}.qtybox button{width:30px;height:30px;border:1px solid var(--line);background:#24242b;color:#fff;border-radius:7px}.qtybox b{min-width:25px;text-align:center}.pdv-total{font-size:32px;font-weight:900;color:var(--accent);text-align:right;margin:18px 0}.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pay-grid label{display:block}.change-box{background:#101614;border:1px solid var(--green);border-radius:10px;padding:12px;margin-top:10px}.change-box strong{font-size:24px;color:var(--green)}.pdv-history{max-height:440px;overflow:auto;display:grid;gap:8px}.sale-row{padding:12px;border:1px solid var(--line);border-radius:10px;background:#19191f}.sale-row b{font-size:13px}.sale-row small{color:var(--muted)}.pdv-status{min-height:22px;margin-top:8px;font-weight:800}.success{color:var(--green)}.error{color:#ff6b8f}.warn{color:#ffd166}.pdv-shortcuts{font-size:11px;color:var(--muted);margin-top:8px}@media(max-width:900px){.pdv-layout{grid-template-columns:1fr}.pdv-item{grid-template-columns:48px 1fr}.pdv-item>.qtybox,.pdv-item>.lineprice{grid-column:2}.pay-grid{grid-template-columns:1fr}}
+.pdv-layout{display:grid;grid-template-columns:1.35fr .9fr;gap:18px}.pdv-card{background:#15151a;border:1px solid var(--line);border-radius:15px;padding:18px}.pdv-scan{border:1px solid var(--green);background:#101614;padding:16px;border-radius:12px}.pdv-scan input{font-size:24px;font-weight:900}.pdv-items{display:grid;gap:8px;margin-top:14px}.pdv-item{display:grid;grid-template-columns:54px 1fr auto auto;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:11px;background:#19191f}.pdv-item img{width:54px;height:65px;object-fit:contain;background:#121216;border-radius:8px}.pdv-item-name{font-weight:800;font-size:13px}.pdv-item-meta{font-size:10px;color:var(--muted);margin-top:4px}.qtybox{display:flex;align-items:center;gap:5px}.qtybox button{width:30px;height:30px;border:1px solid var(--line);background:#24242b;color:#fff;border-radius:7px}.qtybox b{min-width:25px;text-align:center}.pdv-total{font-size:32px;font-weight:900;color:var(--accent);text-align:right;margin:18px 0}.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pay-grid label{display:block}.change-box{background:#101614;border:1px solid var(--green);border-radius:10px;padding:12px;margin-top:10px}.change-box strong{font-size:24px;color:var(--green)}.pdv-history{max-height:440px;overflow:auto;display:grid;gap:8px}.sale-row{padding:12px;border:1px solid var(--line);border-radius:10px;background:#19191f}.sale-row b{font-size:13px}.sale-row small{color:var(--muted)}.pdv-status{min-height:22px;margin-top:8px;font-weight:800}.success{color:var(--green)}.error{color:#ff6b8f}.warn{color:#ffd166}.pdv-shortcuts{font-size:11px;color:var(--muted);margin-top:8px}@media(max-width:900px){.pdv-layout{grid-template-columns:1fr}.pdv-item{grid-template-columns:48px 1fr}.pdv-item>.qtybox,.pdv-item>.lineprice{grid-column:2}.pay-grid{grid-template-columns:1fr}}
 .btn-mercadopago { background: var(--mercadopago) !important; color: #fff !important; }
 </style>
 </head>
@@ -81,7 +81,7 @@ footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;colo
     </div>
   </section>
   <div class="trustbar">
-    <span>🚚 Frete grátis acima de R$250</span>
+    <span>🚚 Frete grátis acima de R$150</span>
     <span>🔄 Troca fácil em 7 dias</span>
     <span>🔒 Compra 100% segura</span>
     <span>💳 Parcele suas compras</span>
@@ -106,7 +106,7 @@ footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;colo
 <a class="whatsapp" id="whatsappFloat" href="https://wa.me/5500000000000" target="_blank">✆</a>
 <footer>
   <h2>STUDIO 70 BRAND</h2>
-  <p>Estilo, atitude e identidade.</p>
+  <p>Moda urbana feminina. Estilo, atitude e identidade.</p>
   <p>© 2026 STUDIO 70 BRAND</p>
 </footer>
 
