@@ -7,37 +7,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
-:root{--bg:#0d0d0f;--card:#17171b;--muted:#9b9ba3;--text:#f5f5f7;--accent:#ff2d75;--green:#22d477;--mercadopago:#009ee3;--line:#292930;--white:#fff;--font-display:'Anton',Impact,sans-serif;--font-body:'Space Grotesk',Arial,sans-serif}
+:root{--bg:#0d0d0f;--card:#17171b;--muted:#9b9ba3;--text:#f5f5f7;--accent:#ff2d75;--green:#22d477;--line:#292930;--white:#fff;--font-display:'Anton',Impact,sans-serif;--font-body:'Space Grotesk',Arial,sans-serif}
 *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body)} button,input,select,textarea{font:inherit;font-family:var(--font-body)} button{cursor:pointer}
-
-img {
-  max-width: 100%;
-  height: auto;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-}
-
 header{position:sticky;top:0;z-index:20;background:rgba(13,13,15,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
 .header-container{max-width:1280px;margin:auto;display:flex;align-items:center;gap:28px;padding:16px 22px} .logo{font-family:var(--font-display);font-size:26px;letter-spacing:.5px;white-space:nowrap;text-transform:uppercase;transform:skew(-6deg)}
 nav{display:flex;gap:20px;flex:1} nav a{color:#ddd;text-decoration:none;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;position:relative;padding-bottom:2px} nav a:hover{color:var(--accent)} .header-icons{display:flex;gap:8px} .iconbtn{background:#202026;color:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-weight:700} .iconbtn:hover{border-color:var(--accent)}
 .hero{min-height:460px;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;background:radial-gradient(circle at center,#29131e 0,#0d0d0f 60%)} .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(255,45,117,.08) 0 26px,transparent 26px 52px);pointer-events:none} .hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:repeating-linear-gradient(90deg,var(--accent) 0 22px,#0d0d0f 22px 44px)} .hero>div{position:relative;z-index:1} .hero .eyebrow{display:inline-block;color:#0d0d0f;background:var(--accent);font-family:var(--font-display);font-weight:400;letter-spacing:3px;font-size:13px;padding:6px 14px;transform:skew(-8deg)} .hero h1{font:clamp(64px,12vw,120px)/.82 var(--font-display);margin:20px 0 2px;text-transform:uppercase} .hero h2{font:clamp(18px,3vw,28px) var(--font-body);font-weight:700;letter-spacing:6px;margin:0 0 28px;color:var(--muted)} .btn{border:2px solid #0d0d0f;border-radius:2px;padding:15px 26px;font-family:var(--font-display);font-weight:400;letter-spacing:1px;text-transform:uppercase;font-size:16px;background:var(--accent);color:#fff;box-shadow:5px 5px 0 #0d0d0f;transition:transform .15s,box-shadow .15s} .btn:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 #0d0d0f} .trustbar{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:1280px;margin:0 auto;padding:0 22px 10px}.trustbar span{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 14px;display:flex;align-items:center;gap:6px}.announce{background:var(--accent);color:#fff;text-align:center;font-size:12px;font-weight:700;letter-spacing:1px;padding:9px 12px;overflow:hidden}
-section{max-width:1280px;margin:auto;padding:42px 22px} .section-title{font:34px var(--font-display);text-transform:uppercase;letter-spacing:1px;margin:0 0 22px;position:relative;padding-left:16px;border-left:6px solid var(--accent)} .category-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px} .cat{padding:24px 15px;border:1px solid var(--line);background:var(--card);border-radius:10px;text-align:center;font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.5px;transition:border-color .15s,transform .15s;cursor:pointer} .cat:hover{border-color:var(--accent);transform:translateY(-2px)}
+section{max-width:1280px;margin:auto;padding:42px 22px} .section-title{font:34px var(--font-display);text-transform:uppercase;letter-spacing:1px;margin:0 0 22px;position:relative;padding-left:16px;border-left:6px solid var(--accent)} .category-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px} .cat{padding:24px 15px;border:1px solid var(--line);background:var(--card);border-radius:10px;text-align:center;font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.5px;transition:border-color .15s,transform .15s} .cat:hover{border-color:var(--accent);transform:translateY(-2px)}
 .searchbar{display:flex;gap:10px;margin-bottom:22px} .searchbar input,.field{width:100%;background:#121216;color:#fff;border:1px solid var(--line);padding:13px;border-radius:10px;outline:none;font-family:var(--font-body)} .searchbar input:focus,.field:focus{border-color:var(--accent)} .searchbar select{max-width:230px}
-.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px} .product{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;transition:border-color .15s,transform .15s} .product:hover{border-color:var(--accent);transform:translateY(-3px)} 
-
-.product img {
-  width: 100%;
-  height: 330px;
-  object-fit: contain;
-  background: #121216;
-  padding: 8px;
-  transition: transform .3s;
-}
-
-.product:hover img{transform:scale(1.05)} .product-info{padding:14px} .product h3{font-size:13px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.3px;font-weight:600} .product .price{font-family:var(--font-display);font-size:24px;font-weight:400;color:var(--accent)} .meta{font-size:11px;color:var(--muted);margin:5px 0 12px} .product-actions{display:flex;gap:8px} .smallbtn{flex:1;border:1px solid var(--line);background:#222229;color:#fff;border-radius:8px;padding:10px;font-weight:700;font-size:12px;transition:border-color .15s} .smallbtn:hover{border-color:var(--accent)} .smallbtn.primary{background:var(--green);color:#07160e;border-color:var(--green);text-transform:uppercase;font-weight:700;letter-spacing:.3px} .smallbtn.primary:hover{filter:brightness(1.08)}
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px} .product{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;transition:border-color .15s,transform .15s} .product:hover{border-color:var(--accent);transform:translateY(-3px)} .product img{width:100%;height:330px;object-fit:contain;background:#fff;padding:6px;transition:transform .3s} .product:hover img{transform:scale(1.05)} .product-info{padding:14px} .product h3{font-size:13px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.3px;font-weight:600} .product .price{font-family:var(--font-display);font-size:24px;font-weight:400;color:var(--accent)} .meta{font-size:11px;color:var(--muted);margin:5px 0 12px} .product-actions{display:flex;gap:8px} .smallbtn{flex:1;border:1px solid var(--line);background:#222229;color:#fff;border-radius:8px;padding:10px;font-weight:700;font-size:12px;transition:border-color .15s} .smallbtn:hover{border-color:var(--accent)} .smallbtn.primary{background:var(--green);color:#07160e;border-color:var(--green);text-transform:uppercase;font-weight:700;letter-spacing:.3px} .smallbtn.primary:hover{filter:brightness(1.08)}
 .badge{position:absolute;top:10px;left:10px;background:var(--accent);color:#fff;border-radius:3px;padding:6px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px} .badge.featured{left:auto;right:10px;background:#0d0d0f;border:1px solid var(--green);color:var(--green)} .empty{padding:40px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:15px}
 .drawer,.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;display:none} .drawer.open,.modal.open{display:block} .drawer-panel{margin-left:auto;width:min(480px,100%);height:100%;background:#111116;padding:22px;overflow:auto} .modal-panel{width:min(1100px,94vw);max-height:92vh;overflow:auto;margin:4vh auto;background:#111116;border:1px solid var(--line);border-radius:18px;padding:22px}
-.close{float:right;border:0;background:#292930;color:#fff;border-radius:99px;padding:8px 12px;cursor:pointer} .cart-row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)} .total{font-size:24px;font-weight:900;margin:20px 0}
+.close{float:right;border:0;background:#292930;color:#fff;border-radius:9px;padding:8px 12px} .cart-row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)} .total{font-size:24px;font-weight:900;margin:20px 0}
 .admin-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px} .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px} label{font-size:12px;font-weight:800;color:#bbb} label.full{grid-column:1/-1} textarea{min-height:100px;resize:vertical} .checkrow{display:flex;gap:15px;align-items:center;padding:12px 0} .admin-list{display:grid;gap:8px} .admin-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px;background:#19191f;border:1px solid var(--line);border-radius:10px} .admin-item span{font-size:12px} .admin-tools{display:flex;gap:6px} .danger{background:#4b1722!important;color:#fff!important}
 .scanner{background:#121216;border:1px solid var(--green);padding:18px;border-radius:14px;margin-bottom:20px} .scanner input{font-size:20px;font-weight:800} .scan-result{margin-top:10px;color:var(--green);font-weight:800} .label-preview{background:#fff;color:#111;padding:18px;border-radius:10px;text-align:center;margin-top:15px} .label-preview svg{max-width:100%}
 footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;color:#aaa} footer h2{font-family:var(--font-display);text-transform:uppercase;letter-spacing:1px;font-weight:400} .whatsapp{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border-radius:50%;background:var(--green);color:#07160e;display:grid;place-items:center;text-decoration:none;font-size:26px;font-weight:900;z-index:25;box-shadow:0 4px 18px rgba(34,212,119,.45);animation:wa-pulse 2.2s infinite}
@@ -45,652 +26,103 @@ footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;colo
 @media(prefers-reduced-motion:reduce){.whatsapp{animation:none}}
 @media(max-width:950px){.product-grid{grid-template-columns:repeat(3,1fr)} nav{display:none} .category-grid{grid-template-columns:repeat(3,1fr)} .admin-grid{grid-template-columns:1fr}} @media(max-width:650px){.product-grid{grid-template-columns:repeat(2,1fr);gap:10px} .product img{height:260px} .hero h1{font-size:76px} .category-grid{grid-template-columns:repeat(2,1fr)} .form-grid{grid-template-columns:1fr}}
 
-.pdv-layout{display:grid;grid-template-columns:1.35fr .9fr;gap:18px}.pdv-card{background:#15151a;border:1px solid var(--line);border-radius:15px;padding:18px}.pdv-scan{border:1px solid var(--green);background:#101614;padding:16px;border-radius:12px}.pdv-scan input{font-size:24px;font-weight:900}.pdv-items{display:grid;gap:8px;margin-top:14px}.pdv-item{display:grid;grid-template-columns:54px 1fr auto auto;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:11px;background:#19191f}.pdv-item img{width:54px;height:65px;object-fit:contain;background:#121216;border-radius:8px}.pdv-item-name{font-weight:800;font-size:13px}.pdv-item-meta{font-size:10px;color:var(--muted);margin-top:4px}.qtybox{display:flex;align-items:center;gap:5px}.qtybox button{width:30px;height:30px;border:1px solid var(--line);background:#24242b;color:#fff;border-radius:7px}.qtybox b{min-width:25px;text-align:center}.pdv-total{font-size:32px;font-weight:900;color:var(--accent);text-align:right;margin:18px 0}.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pay-grid label{display:block}.change-box{background:#101614;border:1px solid var(--green);border-radius:10px;padding:12px;margin-top:10px}.change-box strong{font-size:24px;color:var(--green)}.pdv-history{max-height:440px;overflow:auto;display:grid;gap:8px}.sale-row{padding:12px;border:1px solid var(--line);border-radius:10px;background:#19191f}.sale-row b{font-size:13px}.sale-row small{color:var(--muted)}.pdv-status{min-height:22px;margin-top:8px;font-weight:800}.success{color:var(--green)}.error{color:#ff6b8f}.warn{color:#ffd166}.pdv-shortcuts{font-size:11px;color:var(--muted);margin-top:8px}@media(max-width:900px){.pdv-layout{grid-template-columns:1fr}.pdv-item{grid-template-columns:48px 1fr}.pdv-item>.qtybox,.pdv-item>.lineprice{grid-column:2}.pay-grid{grid-template-columns:1fr}}
-.btn-mercadopago { background: var(--mercadopago) !important; color: #fff !important; }
-</style>
-</head>
+ .pdv-layout{display:grid;grid-template-columns:1.35fr .9fr;gap:18px}.pdv-card{background:#15151a;border:1px solid var(--line);border-radius:15px;padding:18px}.pdv-scan{border:1px solid var(--green);background:#101614;padding:16px;border-radius:12px}.pdv-scan input{font-size:24px;font-weight:900}.pdv-items{display:grid;gap:8px;margin-top:14px}.pdv-item{display:grid;grid-template-columns:54px 1fr auto auto;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:11px;background:#19191f}.pdv-item img{width:54px;height:65px;object-fit:contain;border-radius:8px;background:#222}.pdv-item-name{font-weight:800;font-size:13px}.pdv-item-meta{font-size:10px;color:var(--muted);margin-top:4px}.qtybox{display:flex;align-items:center;gap:5px}.qtybox button{width:30px;height:30px;border:1px solid var(--line);background:#24242b;color:#fff;border-radius:7px}.qtybox b{min-width:25px;text-align:center}.pdv-total{font-size:32px;font-weight:900;color:var(--accent);text-align:right;margin:18px 0}.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pay-grid label{display:block}.change-box{background:#101614;border:1px solid var(--green);border-radius:10px;padding:12px;margin-top:10px}.change-box strong{font-size:24px;color:var(--green)}.pdv-history{max-height:440px;overflow:auto;display:grid;gap:8px}.sale-row{padding:12px;border:1px solid var(--line);border-radius:10px;background:#19191f}.sale-row b{font-size:13px}.sale-row small{color:var(--muted)}.pdv-status{min-height:22px;margin-top:8px;font-weight:800}.success{color:var(--green)}.error{color:#ff6b8f}.warn{color:#ffd166}.pdv-shortcuts{font-size:11px;color:var(--muted);margin-top:8px}@media(max-width:900px){.pdv-layout{grid-template-columns:1fr}.pdv-item{grid-template-columns:48px 1fr}.pdv-item>.qtybox,.pdv-item>.lineprice{grid-column:2}.pay-grid{grid-template-columns:1fr}}
+</style></head>
 <body>
 <div class="announce">🔥 FRETE GRÁTIS ACIMA DE R$150 &nbsp;·&nbsp; ENTREGA PARA TODO O BRASIL &nbsp;·&nbsp; TROCA FÁCIL EM 7 DIAS</div>
-<header>
-  <div class="header-container">
-    <div class="logo">STUDIO 70 BRAND</div>
-    <nav>
-      <a href="#inicio">INÍCIO</a>
-      <a href="#produtos">LANÇAMENTOS</a>
-      <a href="#produtos">VESTIDOS</a>
-      <a href="#produtos">CONJUNTOS</a>
-      <a href="#produtos">TOPS</a>
-    </nav>
-    <div class="header-icons">
-      <button class="iconbtn" id="searchBtn">🔍</button>
-      <button class="iconbtn" id="cartBtn" onclick="openCart()">🛒 <b id="cartCount">0</b></button>
-      <button class="iconbtn" id="pdvBtn" onclick="openPDV()">🧾 PDV</button>
-      <button class="iconbtn" id="adminBtn" onclick="openAdmin()">⚙️ ADM</button>
-    </div>
+<header><div class="header-container"><div class="logo">STUDIO 70 BRAND</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><a href="#produtos">VESTIDOS</a><a href="#produtos">CONJUNTOS</a><a href="#produtos">TOPS</a></nav><div class="header-icons"><button class="iconbtn" id="searchBtn">🔍</button><button class="iconbtn" id="cartBtn">🛒 <b id="cartCount">0</b></button><button class="iconbtn" id="pdvBtn">🧾 PDV</button><button class="iconbtn" id="adminBtn">⚙️ ADM</button></div></div></header>
+<main id="inicio"><section class="hero" style="padding:0 22px"><div><span class="eyebrow">NOVA COLEÇÃO 2026</span><h1>STUDIO 70</h1><h2>URBAN WOMAN</h2><a class="btn" href="#produtos">VER LANÇAMENTOS →</a></div></section>
+<div class="trustbar"><span>🚚 Frete grátis acima de R$150</span><span>🔄 Troca fácil em 7 dias</span><span>🔒 Compra 100% segura</span><span>💳 Parcele suas compras</span></div>
+<section><h2 class="section-title">CATEGORIAS</h2><div class="category-grid" id="categories"></div></section>
+<section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section></main>
+<a class="whatsapp" id="whatsappFloat" href="#" target="_blank">✆</a><footer><h2>STUDIO 70 BRAND</h2><p>Moda urbana feminina. Estilo, atitude e identidade.</p><p>© 2026 STUDIO 70 BRAND</p></footer>
+<div class="drawer" id="cartDrawer"><div class="drawer-panel"><button class="close" onclick="closeCart()">×</button><h2 class="section-title">SEU CARRINHO</h2><div id="cartItems"></div><div class="total" id="cartTotal">R$ 0,00</div><button class="btn" style="width:100%" onclick="checkoutWhatsApp()">FINALIZAR NO WHATSAPP</button></div></div>
+<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU<input class="field" id="pSku" required></label><label>Código de barras<input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label class="full">Link da foto<input class="field" id="pImage" placeholder="https://... ou products/001.jpg"></label><label class="full">Descrição<textarea class="field" id="pDescription"></textarea></label></div><div class="checkrow"><label><input type="checkbox" id="pActive" checked> Ativo</label><label><input type="checkbox" id="pFeatured"> Destaque</label></div><button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><svg id="barcodeSvg"></svg><div id="labelCode"></div></div></div><div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" onclick="printSelectedLabel()">🖨️ Imprimir etiqueta</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden></label></div><div id="adminList" class="admin-list"></div></div></div></div></div>
+
+<div class="modal" id="pdvModal"><div class="modal-panel"><button class="close" onclick="closePDV()">×</button><h2 class="section-title">PDV — PONTO DE VENDA</h2>
+<div class="pdv-layout">
+ <div>
+  <div class="pdv-card">
+   <div class="pdv-scan"><b>📟 BIPAR PRODUTO</b><input class="field" id="pdvScanner" placeholder="Passe o leitor de código de barras..." autocomplete="off"><div id="pdvStatus" class="pdv-status"></div><div class="pdv-shortcuts">Enter confirma a bipagem · F2 abre o PDV · Esc fecha</div></div>
+   <div class="searchbar" style="margin-top:14px"><input id="pdvSearch" placeholder="Buscar produto por nome, SKU ou código..."><button class="smallbtn" onclick="pdvSearchAdd()">ADICIONAR</button></div>
+   <div id="pdvItems" class="pdv-items"></div>
   </div>
-</header>
-
-<main id="inicio">
-  <section class="hero" style="padding:0 22px">
-    <div>
-      <span class="eyebrow">NOVA COLEÇÃO 2026</span>
-      <h1>STUDIO 70</h1>
-      <h2>URBAN WOMAN</h2>
-      <a class="btn" href="#produtos">VER LANÇAMENTOS →</a>
-    </div>
-  </section>
-  <div class="trustbar">
-    <span>🚚 Frete grátis acima de R$150</span>
-    <span>🔄 Troca fácil em 7 dias</span>
-    <span>🔒 Compra 100% segura</span>
-    <span>💳 Parcele suas compras</span>
+ </div>
+ <div>
+  <div class="pdv-card">
+   <h3 style="margin-top:0">Resumo da venda</h3>
+   <div id="pdvSummary"></div>
+   <div class="pdv-total" id="pdvTotal">R$ 0,00</div>
+   <div class="pay-grid">
+    <label>Pagamento<select class="field" id="pdvPayment"><option>PIX</option><option>Dinheiro</option><option>Cartão de débito</option><option>Cartão de crédito</option><option>Outro</option></select></label>
+    <label>Desconto (R$)<input class="field" id="pdvDiscount" type="number" min="0" step="0.01" value="0"></label>
+    <label style="grid-column:1/-1">Valor recebido<input class="field" id="pdvReceived" type="number" min="0" step="0.01" value="0"></label>
+   </div>
+   <div class="change-box"><span>Troco</span><br><strong id="pdvChange">R$ 0,00</strong></div>
+   <button class="btn" style="width:100%;margin-top:14px" onclick="finishSale()">✓ FINALIZAR VENDA</button>
+   <button class="smallbtn" style="width:100%;margin-top:8px" onclick="clearPDV()">LIMPAR VENDA</button>
   </div>
-  <section>
-    <h2 class="section-title">CATEGORIAS</h2>
-    <div class="category-grid" id="categories"></div>
-  </section>
-  <section id="produtos">
-    <h2 class="section-title">PRODUTOS</h2>
-    <div class="searchbar">
-      <input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..." oninput="renderProducts()">
-      <select id="categoryFilter" onchange="renderProducts()">
-        <option value="">Todas as categorias</option>
-      </select>
-    </div>
-    <div id="productGrid" class="product-grid"></div>
-    <div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div>
-  </section>
-</main>
-
-<a class="whatsapp" id="whatsappFloat" href="https://wa.me/5500000000000" target="_blank">✆</a>
-<footer>
-  <h2>STUDIO 70 BRAND</h2>
-  <p>Moda urbana feminina. Estilo, atitude e identidade.</p>
-  <p>© 2026 STUDIO 70 BRAND</p>
-</footer>
-
-<div class="drawer" id="cartDrawer">
-  <div class="drawer-panel">
-    <button class="close" onclick="closeCart()">×</button>
-    <h2 class="section-title">SEU CARRINHO</h2>
-    <div id="cartItems"></div>
-    <div class="total" id="cartTotal">R$ 0,00</div>
-    <button class="btn btn-mercadopago" style="width:100%;margin-bottom:10px" onclick="checkoutMercadoPago()">PAGAR COM MERCADO PAGO</button>
-    <button class="btn" style="width:100%" onclick="checkoutWhatsApp()">FINALIZAR NO WHATSAPP</button>
-  </div>
-</div>
-
-<div class="modal" id="adminModal">
-  <div class="modal-panel">
-    <button class="close" onclick="closeAdmin()">×</button>
-    <h2 class="section-title">PAINEL ADMINISTRATIVO</h2>
-    <div class="scanner">
-      <b>📟 BIPAGEM / LEITOR</b>
-      <p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipa o produto.</p>
-      <input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off">
-      <div class="scan-result" id="scanResult"></div>
-    </div>
-    <div class="admin-grid">
-      <div>
-        <h3 id="formTitle">Novo produto</h3>
-        <form id="productForm">
-          <input type="hidden" id="editId">
-          <div class="form-grid">
-            <label>Nome<input class="field" id="pName" required></label>
-            <label>Preço<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label>
-            <label>SKU<input class="field" id="pSku" required></label>
-            <label>Código de barras<input class="field" id="pBarcode" required></label>
-            <label>Categoria<select class="field" id="pCategory"></select></label>
-            <label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label>
-            <label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label>
-            <label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label>
-            <label class="full">Link da foto<input class="field" id="pImage" placeholder="001.jpg ou nome_da_imagem.jpg"></label>
-            <label class="full">Descrição<textarea class="field" id="pDescription"></textarea></label>
-          </div>
-          <div class="checkrow">
-            <label><input type="checkbox" id="pActive" checked> Ativo</label>
-            <label><input type="checkbox" id="pFeatured"> Destaque</label>
-          </div>
-          <button class="btn" type="submit">SALVAR PRODUTO</button>
-          <button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button>
-        </form>
-        <div class="label-preview" id="labelPreview" style="display:none">
-          <b id="labelName"></b>
-          <svg id="barcodeSvg"></svg>
-          <div id="labelCode"></div>
-        </div>
-      </div>
-      <div>
-        <h3>Produtos cadastrados <span id="adminCount"></span></h3>
-        <input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..." oninput="renderAdminList()">
-        <div class="admin-tools" style="margin:10px 0;flex-wrap:wrap">
-          <button class="smallbtn" onclick="printSelectedLabel()">🖨️ Imprimir etiqueta</button>
-          <button class="smallbtn" onclick="exportData()">⬇️ Backup</button>
-          <label class="smallbtn" style="display:inline-block;text-align:center;cursor:pointer">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden onchange="importDataFile(event)"></label>
-        </div>
-        <div id="adminList" class="admin-list"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="pdvModal">
-  <div class="modal-panel">
-    <button class="close" onclick="closePDV()">×</button>
-    <h2 class="section-title">PDV — PONTO DE VENDA</h2>
-    <div class="pdv-layout">
-      <div>
-        <div class="pdv-card">
-          <div class="pdv-scan">
-            <b>📟 BIPAR PRODUTO</b>
-            <input class="field" id="pdvScanner" placeholder="Passe o leitor de código de barras..." autocomplete="off">
-            <div id="pdvStatus" class="pdv-status"></div>
-            <div class="pdv-shortcuts">Enter confirma a bipagem · F2 abre o PDV · Esc fecha</div>
-          </div>
-          <div class="searchbar" style="margin-top:14px">
-            <input id="pdvSearch" placeholder="Buscar produto por nome, SKU ou código...">
-            <button class="smallbtn" onclick="pdvSearchAdd()">ADICIONAR</button>
-          </div>
-          <div id="pdvItems" class="pdv-items"></div>
-        </div>
-      </div>
-      <div>
-        <div class="pdv-card">
-          <h3 style="margin-top:0">Resumo da venda</h3>
-          <div id="pdvSummary"></div>
-          <div class="pdv-total" id="pdvTotal">R$ 0,00</div>
-          <div class="pay-grid">
-            <label>Pagamento
-              <select class="field" id="pdvPayment">
-                <option>Mercado Pago</option>
-                <option>PIX</option>
-                <option>Dinheiro</option>
-                <option>Cartão de débito</option>
-                <option>Cartão de crédito</option>
-                <option>Outro</option>
-              </select>
-            </label>
-            <label>Desconto (R$)<input class="field" id="pdvDiscount" type="number" min="0" step="0.01" value="0" oninput="updatePDVTotals()"></label>
-            <label style="grid-column:1/-1">Valor recebido<input class="field" id="pdvReceived" type="number" min="0" step="0.01" value="0" oninput="updatePDVTotals()"></label>
-          </div>
-          <div class="change-box">
-            <span>Troco</span><br>
-            <strong id="pdvChange">R$ 0,00</strong>
-          </div>
-          <button class="btn btn-mercadopago" style="width:100%;margin-top:10px;" onclick="finishSaleMercadoPago()">COBRAR MERCADO PAGO</button>
-          <button class="btn" style="width:100%;margin-top:8px" onclick="finishSale()">✓ FINALIZAR VENDA</button>
-          <button class="smallbtn" style="width:100%;margin-top:8px" onclick="clearPDV()">LIMPAR VENDA</button>
-        </div>
-        <div class="pdv-card" style="margin-top:18px">
-          <h3 style="margin-top:0">Últimas vendas</h3>
-          <div id="pdvHistory" class="pdv-history"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="productModal">
-  <div class="modal-panel">
-    <button class="close" onclick="closeProductModal()">×</button>
-    <div id="productBody"></div>
-  </div>
-</div>
-
+  <div class="pdv-card" style="margin-top:18px"><h3 style="margin-top:0">Últimas vendas</h3><div id="pdvHistory" class="pdv-history"></div></div>
+ </div>
+</div></div></div>
+<div class="modal" id="productModal"><div class="modal-panel"><button class="close" onclick="closeProduct()">×</button><div id="productBody"></div></div></div>
 <script>
-const MERCADO_PAGO_LINK_PADRAO = "https://www.mercadopago.com.br"; 
+const SEED_PRODUCTS = [{"id": "p001", "name": "BODY JANAÍNA", "price": 50.99, "category": "Bodies", "sku": "SKU-BODY-JANAINA-001", "barcode": "ST70000001", "image": "products/001.jpg", "active": true, "featured": true, "stock": 0, "sizes": [], "colors": [], "description": "BODY JANAÍNA — produto do catálogo STUDIO 70."}, {"id": "p002", "name": "MAIÔ BRUNA", "price": 45.99, "category": "Maiôs", "sku": "SKU-MAIO-BRUNA-002", "barcode": "ST70000002", "image": "products/002.jpg", "active": true, "featured": true, "stock": 0, "sizes": [], "colors": [], "description": "MAIÔ BRUNA — produto do catálogo STUDIO 70."}, {"id": "p003", "name": "VESTIDO ELIANA", "price": 75.99, "category": "Vestidos", "sku": "SKU-VESTIDO-ELIANA-003", "barcode": "ST70000003", "image": "products/003.jpg", "active": true, "featured": true, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO ELIANA — produto do catálogo STUDIO 70."}, {"id": "p004", "name": "MACAQUINHO CÁSSIA", "price": 77.99, "category": "Macacões", "sku": "SKU-MACAQUINHO-CASSIA-004", "barcode": "ST70000004", "image": "products/004.jpg", "active": true, "featured": true, "stock": 0, "sizes": [], "colors": [], "description": "MACAQUINHO CÁSSIA — produto do catálogo STUDIO 70."}, {"id": "p005", "name": "SHORT-SAIA SUZANA", "price": 55.99, "category": "Shorts", "sku": "SKU-SHORT-SAIA-SUZANA-005", "barcode": "ST70000005", "image": "products/005.jpg", "active": true, "featured": true, "stock": 0, "sizes": [], "colors": [], "description": "SHORT-SAIA SUZANA — produto do catálogo STUDIO 70."}, {"id": "p006", "name": "BODY FERNANDA", "price": 47.99, "category": "Bodies", "sku": "SKU-BODY-FERNANDA-006", "barcode": "ST70000006", "image": "products/006.jpg", "active": true, "featured": true, "stock": 0, "sizes": [], "colors": [], "description": "BODY FERNANDA — produto do catálogo STUDIO 70."}, {"id": "p007", "name": "CROPPED MARTA", "price": 45.99, "category": "Croppeds", "sku": "SKU-CROPPED-MARTA-007", "barcode": "ST70000007", "image": "products/007.jpg", "active": true, "featured": true, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED MARTA — produto do catálogo STUDIO 70."}, {"id": "p008", "name": "BIQUÍNI MARINA", "price": 30.99, "category": "Biquínis", "sku": "SKU-BIQUINI-MARINA-008", "barcode": "ST70000008", "image": "products/008.jpg", "active": true, "featured": true, "stock": 0, "sizes": [], "colors": [], "description": "BIQUÍNI MARINA — produto do catálogo STUDIO 70."}, {"id": "p009", "name": "BIQUÍNI PATRÍCIA", "price": 30.99, "category": "Biquínis", "sku": "SKU-BIQUINI-PATRICIA-009", "barcode": "ST70000009", "image": "products/009.jpg", "active": true, "featured": true, "stock": 0, "sizes": [], "colors": [], "description": "BIQUÍNI PATRÍCIA — produto do catálogo STUDIO 70."}, {"id": "p010", "name": "MACACÃO CAROLINA", "price": 112.99, "category": "Macacões", "sku": "SKU-MACACAO-CAROLINA-010", "barcode": "ST70000010", "image": "products/010.jpg", "active": true, "featured": true, "stock": 0, "sizes": [], "colors": [], "description": "MACACÃO CAROLINA — produto do catálogo STUDIO 70."}, {"id": "p011", "name": "CROPPED RENATA", "price": 37.99, "category": "Croppeds", "sku": "SKU-CROPPED-RENATA-011", "barcode": "ST70000011", "image": "products/011.jpg", "active": true, "featured": true, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED RENATA — produto do catálogo STUDIO 70."}, {"id": "p012", "name": "VESTIDO ALINE", "price": 97.99, "category": "Vestidos", "sku": "SKU-VESTIDO-ALINE-012", "barcode": "ST70000012", "image": "products/012.jpg", "active": true, "featured": true, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO ALINE — produto do catálogo STUDIO 70."}, {"id": "p013", "name": "CONJUNTO NATÁLIA", "price": 62.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-NATALIA-013", "barcode": "ST70000013", "image": "products/013.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO NATÁLIA — produto do catálogo STUDIO 70."}, {"id": "p014", "name": "MACACÃO CRISTINA", "price": 102.99, "category": "Macacões", "sku": "SKU-MACACAO-CRISTINA-014", "barcode": "ST70000014", "image": "products/014.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "MACACÃO CRISTINA — produto do catálogo STUDIO 70."}, {"id": "p015", "name": "VESTIDO ANDREZA", "price": 95.99, "category": "Vestidos", "sku": "SKU-VESTIDO-ANDREZA-015", "barcode": "ST70000015", "image": "products/015.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO ANDREZA — produto do catálogo STUDIO 70."}, {"id": "p016", "name": "TULE E CROPPED CLÁUDIA", "price": 60.99, "category": "Tule", "sku": "SKU-TULE-E-CROPPED-CLAUDIA-016", "barcode": "ST70000016", "image": "products/016.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "TULE E CROPPED CLÁUDIA — produto do catálogo STUDIO 70."}, {"id": "p017", "name": "CROPPED DIANA", "price": 35.99, "category": "Croppeds", "sku": "SKU-CROPPED-DIANA-017", "barcode": "ST70000017", "image": "products/017.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED DIANA — produto do catálogo STUDIO 70."}, {"id": "p018", "name": "VESTIDO RAQUEL", "price": 72.99, "category": "Vestidos", "sku": "SKU-VESTIDO-RAQUEL-018", "barcode": "ST70000018", "image": "products/018.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO RAQUEL — produto do catálogo STUDIO 70."}, {"id": "p019", "name": "BODY MÔNICA", "price": 62.99, "category": "Bodies", "sku": "SKU-BODY-MONICA-019", "barcode": "ST70000019", "image": "products/019.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY MÔNICA — produto do catálogo STUDIO 70."}, {"id": "p020", "name": "CALÇA VALÉRIA", "price": 75.99, "category": "Calças", "sku": "SKU-CALCA-VALERIA-020", "barcode": "ST70000020", "image": "products/020.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CALÇA VALÉRIA — produto do catálogo STUDIO 70."}, {"id": "p021", "name": "VESTIDO SIMONE", "price": 75.99, "category": "Vestidos", "sku": "SKU-VESTIDO-SIMONE-021", "barcode": "ST70000021", "image": "products/021.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO SIMONE — produto do catálogo STUDIO 70."}, {"id": "p022", "name": "VESTIDO VANESSA", "price": 112.99, "category": "Vestidos", "sku": "SKU-VESTIDO-VANESSA-022", "barcode": "ST70000022", "image": "products/022.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO VANESSA — produto do catálogo STUDIO 70."}, {"id": "p023", "name": "VESTIDO LUCIANA", "price": 75.99, "category": "Vestidos", "sku": "SKU-VESTIDO-LUCIANA-023", "barcode": "ST70000023", "image": "products/023.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO LUCIANA — produto do catálogo STUDIO 70."}, {"id": "p024", "name": "BLUSA TATIANA", "price": 40.99, "category": "Blusas", "sku": "SKU-BLUSA-TATIANA-024", "barcode": "ST70000024", "image": "products/024.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA TATIANA — produto do catálogo STUDIO 70."}, {"id": "p025", "name": "VESTIDO LORENA", "price": 85.99, "category": "Vestidos", "sku": "SKU-VESTIDO-LORENA-025", "barcode": "ST70000025", "image": "products/025.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO LORENA — produto do catálogo STUDIO 70."}, {"id": "p026", "name": "CONJUNTO CARLA", "price": 70.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-CARLA-026", "barcode": "ST70000026", "image": "products/026.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO CARLA — produto do catálogo STUDIO 70."}, {"id": "p027", "name": "BLUSA BRUNA", "price": 47.99, "category": "Blusas", "sku": "SKU-BLUSA-BRUNA-027", "barcode": "ST70000027", "image": "products/027.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA BRUNA — produto do catálogo STUDIO 70."}, {"id": "p028", "name": "CONJUNTO MARIANA", "price": 110.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-MARIANA-028", "barcode": "ST70000028", "image": "products/028.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO MARIANA — produto do catálogo STUDIO 70."}, {"id": "p029", "name": "CONJUNTO DANIELA", "price": 87.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-DANIELA-029", "barcode": "ST70000029", "image": "products/029.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO DANIELA — produto do catálogo STUDIO 70."}, {"id": "p030", "name": "CONJUNTO RENATA", "price": 100.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-RENATA-030", "barcode": "ST70000030", "image": "products/030.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO RENATA — produto do catálogo STUDIO 70."}, {"id": "p031", "name": "BLUSA MIRETTE OMBRO SÓ BICO", "price": 60.99, "category": "Blusas", "sku": "SKU-BLUSA-MIRETTE-OMBRO-SO-BICO-031", "barcode": "ST70000031", "image": "products/031.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA MIRETTE OMBRO SÓ BICO — produto do catálogo STUDIO 70."}, {"id": "p032", "name": "CONJUNTO MAELLE", "price": 97.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-MAELLE-032", "barcode": "ST70000032", "image": "products/032.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO MAELLE — produto do catálogo STUDIO 70."}, {"id": "p033", "name": "CROPPED RAVENA", "price": 37.99, "category": "Croppeds", "sku": "SKU-CROPPED-RAVENA-033", "barcode": "ST70000033", "image": "products/033.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED RAVENA — produto do catálogo STUDIO 70."}, {"id": "p034", "name": "MACACÃO CELINA", "price": 100.99, "category": "Macacões", "sku": "SKU-MACACAO-CELINA-034", "barcode": "ST70000034", "image": "products/034.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "MACACÃO CELINA — produto do catálogo STUDIO 70."}, {"id": "p035", "name": "CONJUNTO MÁRCIA", "price": 97.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-MARCIA-035", "barcode": "ST70000035", "image": "products/035.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO MÁRCIA — produto do catálogo STUDIO 70."}, {"id": "p036", "name": "CONJUNTO YASMIN CAPUZ E CALÇA", "price": 125.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-YASMIN-CAPUZ-E-CALCA-036", "barcode": "ST70000036", "image": "products/036.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO YASMIN CAPUZ E CALÇA — produto do catálogo STUDIO 70."}, {"id": "p037", "name": "CALÇA NATÁLIA CARGO", "price": 102.99, "category": "Calças", "sku": "SKU-CALCA-NATALIA-CARGO-037", "barcode": "ST70000037", "image": "products/037.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CALÇA NATÁLIA CARGO — produto do catálogo STUDIO 70."}, {"id": "p038", "name": "CONJUNTO MIRELA", "price": 100.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-MIRELA-038", "barcode": "ST70000038", "image": "products/038.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO MIRELA — produto do catálogo STUDIO 70."}, {"id": "p039", "name": "CROPPED ISADORA", "price": 40.99, "category": "Croppeds", "sku": "SKU-CROPPED-ISADORA-039", "barcode": "ST70000039", "image": "products/039.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED ISADORA — produto do catálogo STUDIO 70."}, {"id": "p040", "name": "CONJUNTO TRIO OLÍVIA", "price": 155.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-TRIO-OLIVIA-040", "barcode": "ST70000040", "image": "products/040.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO TRIO OLÍVIA — produto do catálogo STUDIO 70."}, {"id": "p041", "name": "CROPPED AURORA", "price": 47.99, "category": "Croppeds", "sku": "SKU-CROPPED-AURORA-041", "barcode": "ST70000041", "image": "products/041.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED AURORA — produto do catálogo STUDIO 70."}, {"id": "p042", "name": "BLUSA CECÍLIA MANGA LONGA", "price": 42.99, "category": "Blusas", "sku": "SKU-BLUSA-CECILIA-MANGA-LONGA-042", "barcode": "ST70000042", "image": "products/042.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA CECÍLIA MANGA LONGA — produto do catálogo STUDIO 70."}, {"id": "p043", "name": "CONJUNTO LORENA", "price": 112.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-LORENA-043", "barcode": "ST70000043", "image": "products/043.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO LORENA — produto do catálogo STUDIO 70."}, {"id": "p044", "name": "CROPPED ESTRELA DO ARRAIÁ", "price": 42.99, "category": "Croppeds", "sku": "SKU-CROPPED-ESTRELA-DO-ARRAIA-044", "barcode": "ST70000044", "image": "products/044.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED ESTRELA DO ARRAIÁ — produto do catálogo STUDIO 70."}, {"id": "p045", "name": "CONJUNTO FLOR DE SÃO JOÃO", "price": 80.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-FLOR-DE-SAO-JOAO-045", "barcode": "ST70000045", "image": "products/045.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO FLOR DE SÃO JOÃO — produto do catálogo STUDIO 70."}, {"id": "p046", "name": "CROPPED MORENA DO ARRAIÁ", "price": 37.99, "category": "Croppeds", "sku": "SKU-CROPPED-MORENA-DO-ARRAIA-046", "barcode": "ST70000046", "image": "products/046.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED MORENA DO ARRAIÁ — produto do catálogo STUDIO 70."}, {"id": "p047", "name": "CONJUNTO MARIÁ", "price": 72.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-MARIA-047", "barcode": "ST70000047", "image": "products/047.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO MARIÁ — produto do catálogo STUDIO 70."}, {"id": "p048", "name": "VESTIDO MARIA BONITA", "price": 75.99, "category": "Vestidos", "sku": "SKU-VESTIDO-MARIA-BONITA-048", "barcode": "ST70000048", "image": "products/048.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO MARIA BONITA — produto do catálogo STUDIO 70."}, {"id": "p049", "name": "CALÇA LEGGING AYLA", "price": 82.99, "category": "Calças", "sku": "SKU-CALCA-LEGGING-AYLA-049", "barcode": "ST70000049", "image": "products/049.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CALÇA LEGGING AYLA — produto do catálogo STUDIO 70."}, {"id": "p050", "name": "BLUSA DEGAGE DRAPEADA LATAREL", "price": 40.99, "category": "Blusas", "sku": "SKU-BLUSA-DEGAGE-DRAPEADA-LATAREL-050", "barcode": "ST70000050", "image": "products/050.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA DEGAGE DRAPEADA LATAREL — produto do catálogo STUDIO 70."}, {"id": "p051", "name": "BODY JULIANA", "price": 57.99, "category": "Bodies", "sku": "SKU-BODY-JULIANA-051", "barcode": "ST70000051", "image": "products/051.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY JULIANA — produto do catálogo STUDIO 70."}, {"id": "p052", "name": "SHORT CARGO BIANCA", "price": 40.99, "category": "Shorts", "sku": "SKU-SHORT-CARGO-BIANCA-052", "barcode": "ST70000052", "image": "products/052.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "SHORT CARGO BIANCA — produto do catálogo STUDIO 70."}, {"id": "p053", "name": "CONJUNTO ELISA", "price": 85.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-ELISA-053", "barcode": "ST70000053", "image": "products/053.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO ELISA — produto do catálogo STUDIO 70."}, {"id": "p054", "name": "SHORT MAITÊ", "price": 40.99, "category": "Shorts", "sku": "SKU-SHORT-MAITE-054", "barcode": "ST70000054", "image": "products/054.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "SHORT MAITÊ — produto do catálogo STUDIO 70."}, {"id": "p055", "name": "CROPPED CAVADO PRISCILA", "price": 37.99, "category": "Croppeds", "sku": "SKU-CROPPED-CAVADO-PRISCILA-055", "barcode": "ST70000055", "image": "products/055.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED CAVADO PRISCILA — produto do catálogo STUDIO 70."}, {"id": "p056", "name": "CONJUNTO MAYA", "price": 87.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-MAYA-056", "barcode": "ST70000056", "image": "products/056.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO MAYA — produto do catálogo STUDIO 70."}, {"id": "p057", "name": "CALÇA FLARE ALINE", "price": 82.99, "category": "Calças", "sku": "SKU-CALCA-FLARE-ALINE-057", "barcode": "ST70000057", "image": "products/057.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CALÇA FLARE ALINE — produto do catálogo STUDIO 70."}, {"id": "p058", "name": "BLUSA ANA MANGA LONGA ROMANTIC", "price": 50.99, "category": "Blusas", "sku": "SKU-BLUSA-ANA-MANGA-LONGA-ROMANTIC-058", "barcode": "ST70000058", "image": "products/058.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA ANA MANGA LONGA ROMANTIC — produto do catálogo STUDIO 70."}, {"id": "p059", "name": "BLUSA ANA MANGA LONGA COM BABADO", "price": 55.99, "category": "Blusas", "sku": "SKU-BLUSA-ANA-MANGA-LONGA-COM-BABADO-059", "barcode": "ST70000059", "image": "products/059.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA ANA MANGA LONGA COM BABADO — produto do catálogo STUDIO 70."}, {"id": "p060", "name": "BODY MANGA LONGA ELIANA", "price": 67.99, "category": "Bodies", "sku": "SKU-BODY-MANGA-LONGA-ELIANA-060", "barcode": "ST70000060", "image": "products/060.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY MANGA LONGA ELIANA — produto do catálogo STUDIO 70."}, {"id": "p061", "name": "VESTIDO ELAINE", "price": 95.99, "category": "Vestidos", "sku": "SKU-VESTIDO-ELAINE-061", "barcode": "ST70000061", "image": "products/061.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO ELAINE — produto do catálogo STUDIO 70."}, {"id": "p062", "name": "CROPPED GOLA MANGA LONGA", "price": 50.99, "category": "Croppeds", "sku": "SKU-CROPPED-GOLA-MANGA-LONGA-062", "barcode": "ST70000062", "image": "products/062.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED GOLA MANGA LONGA — produto do catálogo STUDIO 70."}, {"id": "p063", "name": "CONJUNTO NOÊMIA", "price": 127.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-NOEMIA-063", "barcode": "ST70000063", "image": "products/063.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO NOÊMIA — produto do catálogo STUDIO 70."}, {"id": "p064", "name": "BLUSA DÉBORA", "price": 52.99, "category": "Blusas", "sku": "SKU-BLUSA-DEBORA-064", "barcode": "ST70000064", "image": "products/064.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA DÉBORA — produto do catálogo STUDIO 70."}, {"id": "p065", "name": "BLUSA FLÁVIA ESSENCIAL", "price": 45.99, "category": "Blusas", "sku": "SKU-BLUSA-FLAVIA-ESSENCIAL-065", "barcode": "ST70000065", "image": "products/065.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA FLÁVIA ESSENCIAL — produto do catálogo STUDIO 70."}, {"id": "p066", "name": "CALÇA HELENA PANTALONA", "price": 87.99, "category": "Calças", "sku": "SKU-CALCA-HELENA-PANTALONA-066", "barcode": "ST70000066", "image": "products/066.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CALÇA HELENA PANTALONA — produto do catálogo STUDIO 70."}, {"id": "p067", "name": "CONJUNTO TAINÁ", "price": 70.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-TAINA-067", "barcode": "ST70000067", "image": "products/067.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO TAINÁ — produto do catálogo STUDIO 70."}, {"id": "p068", "name": "BODY MANGA LONGA PAOLA", "price": 60.99, "category": "Bodies", "sku": "SKU-BODY-MANGA-LONGA-PAOLA-068", "barcode": "ST70000068", "image": "products/068.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY MANGA LONGA PAOLA — produto do catálogo STUDIO 70."}, {"id": "p069", "name": "VESTIDO MID", "price": 72.99, "category": "Vestidos", "sku": "SKU-VESTIDO-MID-069", "barcode": "ST70000069", "image": "products/069.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO MID — produto do catálogo STUDIO 70."}, {"id": "p070", "name": "BLUSA ELISA", "price": 42.99, "category": "Blusas", "sku": "SKU-BLUSA-ELISA-070", "barcode": "ST70000070", "image": "products/070.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA ELISA — produto do catálogo STUDIO 70."}, {"id": "p071", "name": "CONJUNTO ALANA", "price": 85.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-ALANA-071", "barcode": "ST70000071", "image": "products/071.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO ALANA — produto do catálogo STUDIO 70."}, {"id": "p072", "name": "BLUSA REGINA", "price": 37.99, "category": "Blusas", "sku": "SKU-BLUSA-REGINA-072", "barcode": "ST70000072", "image": "products/072.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA REGINA — produto do catálogo STUDIO 70."}, {"id": "p073", "name": "CROPPED GABRIELA", "price": 45.99, "category": "Croppeds", "sku": "SKU-CROPPED-GABRIELA-073", "barcode": "ST70000073", "image": "products/073.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED GABRIELA — produto do catálogo STUDIO 70."}, {"id": "p074", "name": "CROPPED ELORA", "price": 45.99, "category": "Croppeds", "sku": "SKU-CROPPED-ELORA-074", "barcode": "ST70000074", "image": "products/074.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED ELORA — produto do catálogo STUDIO 70."}, {"id": "p075", "name": "BLUSA ZARA", "price": 42.99, "category": "Blusas", "sku": "SKU-BLUSA-ZARA-075", "barcode": "ST70000075", "image": "products/075.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA ZARA — produto do catálogo STUDIO 70."}, {"id": "p076", "name": "BLUSA PAULA", "price": 47.99, "category": "Blusas", "sku": "SKU-BLUSA-PAULA-076", "barcode": "ST70000076", "image": "products/076.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA PAULA — produto do catálogo STUDIO 70."}, {"id": "p077", "name": "CROPPED PEITINHO", "price": 35.99, "category": "Croppeds", "sku": "SKU-CROPPED-PEITINHO-077", "barcode": "ST70000077", "image": "products/077.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED PEITINHO — produto do catálogo STUDIO 70."}, {"id": "p078", "name": "BLUSA VALENÇA", "price": 47.99, "category": "Blusas", "sku": "SKU-BLUSA-VALENCA-078", "barcode": "ST70000078", "image": "products/078.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA VALENÇA — produto do catálogo STUDIO 70."}, {"id": "p079", "name": "CROPPED FERNANDA", "price": 45.99, "category": "Croppeds", "sku": "SKU-CROPPED-FERNANDA-079", "barcode": "ST70000079", "image": "products/079.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED FERNANDA — produto do catálogo STUDIO 70."}, {"id": "p080", "name": "BLUSA ISADORA", "price": 42.99, "category": "Blusas", "sku": "SKU-BLUSA-ISADORA-080", "barcode": "ST70000080", "image": "products/080.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA ISADORA — produto do catálogo STUDIO 70."}, {"id": "p081", "name": "CONJUNTO CECÍLIA JACQUARD", "price": 80.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-CECILIA-JACQUARD-081", "barcode": "ST70000081", "image": "products/081.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO CECÍLIA JACQUARD — produto do catálogo STUDIO 70."}, {"id": "p082", "name": "MACAQUINHO LUÍSA", "price": 87.99, "category": "Macacões", "sku": "SKU-MACAQUINHO-LUISA-082", "barcode": "ST70000082", "image": "products/082.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "MACAQUINHO LUÍSA — produto do catálogo STUDIO 70."}, {"id": "p083", "name": "CALÇA PANTALONA ADIDAS", "price": 80.99, "category": "Calças", "sku": "SKU-CALCA-PANTALONA-ADIDAS-083", "barcode": "ST70000083", "image": "products/083.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CALÇA PANTALONA ADIDAS — produto do catálogo STUDIO 70."}, {"id": "p084", "name": "CONJUNTO RITA", "price": 62.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-RITA-084", "barcode": "ST70000084", "image": "products/084.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO RITA — produto do catálogo STUDIO 70."}, {"id": "p085", "name": "CONJUNTO DÉBORA", "price": 80.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-DEBORA-085", "barcode": "ST70000085", "image": "products/085.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO DÉBORA — produto do catálogo STUDIO 70."}, {"id": "p086", "name": "CONJUNTO NO SUPLEX MICHELE", "price": 72.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-NO-SUPLEX-MICHELE-086", "barcode": "ST70000086", "image": "products/086.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO NO SUPLEX MICHELE — produto do catálogo STUDIO 70."}, {"id": "p087", "name": "CONJUNTO CROPPED E SAIA", "price": 72.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-CROPPED-E-SAIA-087", "barcode": "ST70000087", "image": "products/087.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO CROPPED E SAIA — produto do catálogo STUDIO 70."}, {"id": "p088", "name": "VESTIDO SUZANA", "price": 95.99, "category": "Vestidos", "sku": "SKU-VESTIDO-SUZANA-088", "barcode": "ST70000088", "image": "products/088.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO SUZANA — produto do catálogo STUDIO 70."}, {"id": "p089", "name": "BODY PLUS REBECA", "price": 70.99, "category": "Bodies", "sku": "SKU-BODY-PLUS-REBECA-089", "barcode": "ST70000089", "image": "products/089.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY PLUS REBECA — produto do catálogo STUDIO 70."}, {"id": "p090", "name": "VESTIDO DALILA", "price": 72.99, "category": "Vestidos", "sku": "SKU-VESTIDO-DALILA-090", "barcode": "ST70000090", "image": "products/090.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO DALILA — produto do catálogo STUDIO 70."}, {"id": "p091", "name": "VESTIDO BABADO", "price": 72.99, "category": "Vestidos", "sku": "SKU-VESTIDO-BABADO-091", "barcode": "ST70000091", "image": "products/091.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO BABADO — produto do catálogo STUDIO 70."}, {"id": "p092", "name": "VESTIDO VIVIANE", "price": 60.99, "category": "Vestidos", "sku": "SKU-VESTIDO-VIVIANE-092", "barcode": "ST70000092", "image": "products/092.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO VIVIANE — produto do catálogo STUDIO 70."}, {"id": "p093", "name": "VESTIDO MYLA", "price": 85.99, "category": "Vestidos", "sku": "SKU-VESTIDO-MYLA-093", "barcode": "ST70000093", "image": "products/093.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO MYLA — produto do catálogo STUDIO 70."}, {"id": "p094", "name": "VESTIDO CURTO", "price": 80.99, "category": "Vestidos", "sku": "SKU-VESTIDO-CURTO-094", "barcode": "ST70000094", "image": "products/094.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO CURTO — produto do catálogo STUDIO 70."}, {"id": "p095", "name": "BODY GIOVANNA ALCINHA", "price": 47.99, "category": "Bodies", "sku": "SKU-BODY-GIOVANNA-ALCINHA-095", "barcode": "ST70000095", "image": "products/095.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY GIOVANNA ALCINHA — produto do catálogo STUDIO 70."}, {"id": "p096", "name": "VESTIDO BELLA", "price": 107.99, "category": "Vestidos", "sku": "SKU-VESTIDO-BELLA-096", "barcode": "ST70000096", "image": "products/096.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO BELLA — produto do catálogo STUDIO 70."}, {"id": "p097", "name": "CONJUNTO SAFIRA", "price": 87.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-SAFIRA-097", "barcode": "ST70000097", "image": "products/097.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO SAFIRA — produto do catálogo STUDIO 70."}, {"id": "p098", "name": "BODY GLADIADOR", "price": 62.99, "category": "Bodies", "sku": "SKU-BODY-GLADIADOR-098", "barcode": "ST70000098", "image": "products/098.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY GLADIADOR — produto do catálogo STUDIO 70."}, {"id": "p099", "name": "BODY PLUS BIANCA", "price": 67.99, "category": "Bodies", "sku": "SKU-BODY-PLUS-BIANCA-099", "barcode": "ST70000099", "image": "products/099.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY PLUS BIANCA — produto do catálogo STUDIO 70."}, {"id": "p100", "name": "BODY TOMARA QUE CAIA", "price": 50.99, "category": "Bodies", "sku": "SKU-BODY-TOMARA-QUE-CAIA-100", "barcode": "ST70000100", "image": "products/100.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY TOMARA QUE CAIA — produto do catálogo STUDIO 70."}, {"id": "p101", "name": "VESTIDO TAINÁ ALCINHA TROPICAL", "price": 85.99, "category": "Vestidos", "sku": "SKU-VESTIDO-TAINA-ALCINHA-TROPICAL-101", "barcode": "ST70000101", "image": "products/101.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO TAINÁ ALCINHA TROPICAL — produto do catálogo STUDIO 70."}, {"id": "p102", "name": "VESTIDO BIANCA GOLA", "price": 80.99, "category": "Vestidos", "sku": "SKU-VESTIDO-BIANCA-GOLA-102", "barcode": "ST70000102", "image": "products/102.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO BIANCA GOLA — produto do catálogo STUDIO 70."}, {"id": "p103", "name": "VESTIDO OMBRO SÓ LUDMILLA", "price": 75.99, "category": "Vestidos", "sku": "SKU-VESTIDO-OMBRO-SO-LUDMILLA-103", "barcode": "ST70000103", "image": "products/103.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO OMBRO SÓ LUDMILLA — produto do catálogo STUDIO 70."}, {"id": "p104", "name": "CONJUNTO PAULA", "price": 70.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-PAULA-104", "barcode": "ST70000104", "image": "products/104.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO PAULA — produto do catálogo STUDIO 70."}, {"id": "p105", "name": "SAIA BABADO", "price": 70.99, "category": "Saias", "sku": "SKU-SAIA-BABADO-105", "barcode": "ST70000105", "image": "products/105.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "SAIA BABADO — produto do catálogo STUDIO 70."}, {"id": "p106", "name": "VESTIDO LONGO SABRINA", "price": 115.99, "category": "Vestidos", "sku": "SKU-VESTIDO-LONGO-SABRINA-106", "barcode": "ST70000106", "image": "products/106.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO LONGO SABRINA — produto do catálogo STUDIO 70."}, {"id": "p107", "name": "CONJUNTO YASMIM", "price": 97.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-YASMIM-107", "barcode": "ST70000107", "image": "products/107.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO YASMIM — produto do catálogo STUDIO 70."}, {"id": "p108", "name": "CONJUNTO BEATRIZ", "price": 70.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-BEATRIZ-108", "barcode": "ST70000108", "image": "products/108.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO BEATRIZ — produto do catálogo STUDIO 70."}, {"id": "p109", "name": "BLUSA CIGANINHA FERNANDA", "price": 40.99, "category": "Blusas", "sku": "SKU-BLUSA-CIGANINHA-FERNANDA-109", "barcode": "ST70000109", "image": "products/109.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA CIGANINHA FERNANDA — produto do catálogo STUDIO 70."}, {"id": "p110", "name": "BIQUÍNI CARIOCA AMARRAÇÃO", "price": 35.99, "category": "Biquínis", "sku": "SKU-BIQUINI-CARIOCA-AMARRACAO-110", "barcode": "ST70000110", "image": "products/110.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BIQUÍNI CARIOCA AMARRAÇÃO — produto do catálogo STUDIO 70."}, {"id": "p111", "name": "SHORT VERÃO TROPICAL", "price": 37.99, "category": "Shorts", "sku": "SKU-SHORT-VERAO-TROPICAL-111", "barcode": "ST70000111", "image": "products/111.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "SHORT VERÃO TROPICAL — produto do catálogo STUDIO 70."}, {"id": "p112", "name": "VESTIDO BALI", "price": 102.99, "category": "Vestidos", "sku": "SKU-VESTIDO-BALI-112", "barcode": "ST70000112", "image": "products/112.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO BALI — produto do catálogo STUDIO 70."}, {"id": "p113", "name": "BIQUINI TOMARA QUE CAIA", "price": 50.99, "category": "Biquínis", "sku": "SKU-BIQUINI-TOMARA-QUE-CAIA-113", "barcode": "ST70000113", "image": "products/113.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BIQUINI TOMARA QUE CAIA — produto do catálogo STUDIO 70."}, {"id": "p114", "name": "BIQUINI FLORA", "price": 55.99, "category": "Biquínis", "sku": "SKU-BIQUINI-FLORA-114", "barcode": "ST70000114", "image": "products/114.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BIQUINI FLORA — produto do catálogo STUDIO 70."}, {"id": "p115", "name": "MACAQUINHO CLARA", "price": 82.99, "category": "Macacões", "sku": "SKU-MACAQUINHO-CLARA-115", "barcode": "ST70000115", "image": "products/115.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "MACAQUINHO CLARA — produto do catálogo STUDIO 70."}, {"id": "p116", "name": "VESTIDO MID YOLANDA", "price": 70.99, "category": "Vestidos", "sku": "SKU-VESTIDO-MID-YOLANDA-116", "barcode": "ST70000116", "image": "products/116.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO MID YOLANDA — produto do catálogo STUDIO 70."}, {"id": "p117", "name": "BIQUINI ASA DELTA", "price": 60.99, "category": "Biquínis", "sku": "SKU-BIQUINI-ASA-DELTA-117", "barcode": "ST70000117", "image": "products/117.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BIQUINI ASA DELTA — produto do catálogo STUDIO 70."}, {"id": "p118", "name": "BIQUINI MIRELA", "price": 47.99, "category": "Biquínis", "sku": "SKU-BIQUINI-MIRELA-118", "barcode": "ST70000118", "image": "products/118.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BIQUINI MIRELA — produto do catálogo STUDIO 70."}, {"id": "p119", "name": "VESTIDO RÔ", "price": 90.99, "category": "Vestidos", "sku": "SKU-VESTIDO-RO-119", "barcode": "ST70000119", "image": "products/119.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO RÔ — produto do catálogo STUDIO 70."}, {"id": "p120", "name": "BIQUINI MARILYN HOT PANT", "price": 57.99, "category": "Biquínis", "sku": "SKU-BIQUINI-MARILYN-HOT-PANT-120", "barcode": "ST70000120", "image": "products/120.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BIQUINI MARILYN HOT PANT — produto do catálogo STUDIO 70."}, {"id": "p121", "name": "CONJUNTO CROPPED E SAIA", "price": 77.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-CROPPED-E-SAIA-121", "barcode": "ST70000121", "image": "products/121.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO CROPPED E SAIA — produto do catálogo STUDIO 70."}, {"id": "p122", "name": "VESTIDO LUNA", "price": 60.99, "category": "Vestidos", "sku": "SKU-VESTIDO-LUNA-122", "barcode": "ST70000122", "image": "products/122.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO LUNA — produto do catálogo STUDIO 70."}, {"id": "p123", "name": "VESTIDO LONGO FENDA", "price": 80.99, "category": "Vestidos", "sku": "SKU-VESTIDO-LONGO-FENDA-123", "barcode": "ST70000123", "image": "products/123.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO LONGO FENDA — produto do catálogo STUDIO 70."}, {"id": "p124", "name": "VESTIDO BELLA NOTE", "price": 75.99, "category": "Vestidos", "sku": "SKU-VESTIDO-BELLA-NOTE-124", "barcode": "ST70000124", "image": "products/124.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO BELLA NOTE — produto do catálogo STUDIO 70."}, {"id": "p125", "name": "CONJUNTO SARAH LI", "price": 60.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-SARAH-LI-125", "barcode": "ST70000125", "image": "products/125.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO SARAH LI — produto do catálogo STUDIO 70."}, {"id": "p126", "name": "BIQUINI ROBSON", "price": 52.99, "category": "Biquínis", "sku": "SKU-BIQUINI-ROBSON-126", "barcode": "ST70000126", "image": "products/126.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BIQUINI ROBSON — produto do catálogo STUDIO 70."}, {"id": "p127", "name": "BIQUINI TOP AMARRAÇÃO LATERAL", "price": 40.99, "category": "Biquínis", "sku": "SKU-BIQUINI-TOP-AMARRACAO-LATERAL-127", "barcode": "ST70000127", "image": "products/127.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BIQUINI TOP AMARRAÇÃO LATERAL — produto do catálogo STUDIO 70."}, {"id": "p128", "name": "CONJUNTO CATHARINE", "price": 90.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-CATHARINE-128", "barcode": "ST70000128", "image": "products/128.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO CATHARINE — produto do catálogo STUDIO 70."}, {"id": "p129", "name": "VESTIDO CLARA", "price": 80.99, "category": "Vestidos", "sku": "SKU-VESTIDO-CLARA-129", "barcode": "ST70000129", "image": "products/129.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO CLARA — produto do catálogo STUDIO 70."}, {"id": "p130", "name": "VESTIDO DARA", "price": 97.99, "category": "Vestidos", "sku": "SKU-VESTIDO-DARA-130", "barcode": "ST70000130", "image": "products/130.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO DARA — produto do catálogo STUDIO 70."}, {"id": "p131", "name": "CONJUNTO CAMILY", "price": 85.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-CAMILY-131", "barcode": "ST70000131", "image": "products/131.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO CAMILY — produto do catálogo STUDIO 70."}, {"id": "p132", "name": "VESTIDO KAYLA", "price": 90.99, "category": "Vestidos", "sku": "SKU-VESTIDO-KAYLA-132", "barcode": "ST70000132", "image": "products/132.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO KAYLA — produto do catálogo STUDIO 70."}, {"id": "p133", "name": "VESTIDO KASSIA", "price": 85.99, "category": "Vestidos", "sku": "SKU-VESTIDO-KASSIA-133", "barcode": "ST70000133", "image": "products/133.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO KASSIA — produto do catálogo STUDIO 70."}, {"id": "p134", "name": "BLUSA DEGAGE", "price": 47.99, "category": "Blusas", "sku": "SKU-BLUSA-DEGAGE-134", "barcode": "ST70000134", "image": "products/134.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA DEGAGE — produto do catálogo STUDIO 70."}, {"id": "p135", "name": "CROPPED SABRINA", "price": 42.99, "category": "Croppeds", "sku": "SKU-CROPPED-SABRINA-135", "barcode": "ST70000135", "image": "products/135.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED SABRINA — produto do catálogo STUDIO 70."}, {"id": "p136", "name": "CROPPED TRANSPASSADO", "price": 40.99, "category": "Croppeds", "sku": "SKU-CROPPED-TRANSPASSADO-136", "barcode": "ST70000136", "image": "products/136.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED TRANSPASSADO — produto do catálogo STUDIO 70."}, {"id": "p137", "name": "CROPPED VINTAGE", "price": 50.99, "category": "Croppeds", "sku": "SKU-CROPPED-VINTAGE-137", "barcode": "ST70000137", "image": "products/137.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED VINTAGE — produto do catálogo STUDIO 70."}, {"id": "p138", "name": "VESTIDO DRAPEADO", "price": 87.99, "category": "Vestidos", "sku": "SKU-VESTIDO-DRAPEADO-138", "barcode": "ST70000138", "image": "products/138.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO DRAPEADO — produto do catálogo STUDIO 70."}, {"id": "p139", "name": "CONJUNTO DAYENE", "price": 85.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-DAYENE-139", "barcode": "ST70000139", "image": "products/139.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO DAYENE — produto do catálogo STUDIO 70."}, {"id": "p140", "name": "CONJUNTO PAOLLA", "price": 60.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-PAOLLA-140", "barcode": "ST70000140", "image": "products/140.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO PAOLLA — produto do catálogo STUDIO 70."}, {"id": "p141", "name": "CONJUNTO KIARA", "price": 60.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-KIARA-141", "barcode": "ST70000141", "image": "products/141.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO KIARA — produto do catálogo STUDIO 70."}, {"id": "p142", "name": "CONJUNTO BETHY", "price": 60.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-BETHY-142", "barcode": "ST70000142", "image": "products/142.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO BETHY — produto do catálogo STUDIO 70."}, {"id": "p143", "name": "CONJUNTO VANESSA", "price": 60.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-VANESSA-143", "barcode": "ST70000143", "image": "products/143.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO VANESSA — produto do catálogo STUDIO 70."}, {"id": "p144", "name": "CONJUNTO TROPICAL CHIC", "price": 60.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-TROPICAL-CHIC-144", "barcode": "ST70000144", "image": "products/144.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO TROPICAL CHIC — produto do catálogo STUDIO 70."}, {"id": "p145", "name": "BODY ANNA", "price": 60.99, "category": "Bodies", "sku": "SKU-BODY-ANNA-145", "barcode": "ST70000145", "image": "products/145.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY ANNA — produto do catálogo STUDIO 70."}, {"id": "p146", "name": "BODY AURA ONE", "price": 60.99, "category": "Bodies", "sku": "SKU-BODY-AURA-ONE-146", "barcode": "ST70000146", "image": "products/146.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY AURA ONE — produto do catálogo STUDIO 70."}, {"id": "p147", "name": "CROPPED ANNY", "price": 45.99, "category": "Croppeds", "sku": "SKU-CROPPED-ANNY-147", "barcode": "ST70000147", "image": "products/147.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED ANNY — produto do catálogo STUDIO 70."}, {"id": "p148", "name": "VESTIDO ANA LIZ", "price": 85.99, "category": "Vestidos", "sku": "SKU-VESTIDO-ANA-LIZ-148", "barcode": "ST70000148", "image": "products/148.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO ANA LIZ — produto do catálogo STUDIO 70."}, {"id": "p149", "name": "CROPPED TAINARA", "price": 40.99, "category": "Croppeds", "sku": "SKU-CROPPED-TAINARA-149", "barcode": "ST70000149", "image": "products/149.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED TAINARA — produto do catálogo STUDIO 70."}, {"id": "p150", "name": "CONJUNTO GLOW", "price": 75.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-GLOW-150", "barcode": "ST70000150", "image": "products/150.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO GLOW — produto do catálogo STUDIO 70."}, {"id": "p151", "name": "CONJUNTO BRILHO ÚNICO", "price": 75.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-BRILHO-UNICO-151", "barcode": "ST70000151", "image": "products/151.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO BRILHO ÚNICO — produto do catálogo STUDIO 70."}, {"id": "p152", "name": "CROPPED TAINÁ", "price": 45.99, "category": "Croppeds", "sku": "SKU-CROPPED-TAINA-152", "barcode": "ST70000152", "image": "products/152.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED TAINÁ — produto do catálogo STUDIO 70."}, {"id": "p153", "name": "CONJUNTO LUNA", "price": 100.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-LUNA-153", "barcode": "ST70000153", "image": "products/153.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO LUNA — produto do catálogo STUDIO 70."}, {"id": "p154", "name": "CROPPED AURA", "price": 45.99, "category": "Croppeds", "sku": "SKU-CROPPED-AURA-154", "barcode": "ST70000154", "image": "products/154.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED AURA — produto do catálogo STUDIO 70."}, {"id": "p155", "name": "BODY STELLA", "price": 57.99, "category": "Bodies", "sku": "SKU-BODY-STELLA-155", "barcode": "ST70000155", "image": "products/155.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY STELLA — produto do catálogo STUDIO 70."}, {"id": "p156", "name": "VESTIDO CAROLINE", "price": 100.99, "category": "Vestidos", "sku": "SKU-VESTIDO-CAROLINE-156", "barcode": "ST70000156", "image": "products/156.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO CAROLINE — produto do catálogo STUDIO 70."}, {"id": "p157", "name": "CROPPED ALMARE", "price": 50.99, "category": "Croppeds", "sku": "SKU-CROPPED-ALMARE-157", "barcode": "ST70000157", "image": "products/157.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED ALMARE — produto do catálogo STUDIO 70."}, {"id": "p158", "name": "BODY MANU", "price": 62.99, "category": "Bodies", "sku": "SKU-BODY-MANU-158", "barcode": "ST70000158", "image": "products/158.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY MANU — produto do catálogo STUDIO 70."}, {"id": "p159", "name": "BIQUÍNI ASA DELTA", "price": 50.99, "category": "Biquínis", "sku": "SKU-BIQUINI-ASA-DELTA-159", "barcode": "ST70000159", "image": "products/159.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BIQUÍNI ASA DELTA — produto do catálogo STUDIO 70."}, {"id": "p160", "name": "SAIA SAÍDA DE PRAIA", "price": 50.99, "category": "Saias", "sku": "SKU-SAIA-SAIDA-DE-PRAIA-160", "barcode": "ST70000160", "image": "products/160.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "SAIA SAÍDA DE PRAIA — produto do catálogo STUDIO 70."}, {"id": "p161", "name": "BLUSA LUMIAR", "price": 45.99, "category": "Blusas", "sku": "SKU-BLUSA-LUMIAR-161", "barcode": "ST70000161", "image": "products/161.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA LUMIAR — produto do catálogo STUDIO 70."}, {"id": "p162", "name": "VESTIDO JANAINA", "price": 67.99, "category": "Vestidos", "sku": "SKU-VESTIDO-JANAINA-162", "barcode": "ST70000162", "image": "products/162.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO JANAINA — produto do catálogo STUDIO 70."}, {"id": "p163", "name": "VESTIDO ANGEL", "price": 80.99, "category": "Vestidos", "sku": "SKU-VESTIDO-ANGEL-163", "barcode": "ST70000163", "image": "products/163.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO ANGEL — produto do catálogo STUDIO 70."}, {"id": "p164", "name": "VESTIDO CINDY", "price": 60.99, "category": "Vestidos", "sku": "SKU-VESTIDO-CINDY-164", "barcode": "ST70000164", "image": "products/164.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO CINDY — produto do catálogo STUDIO 70."}, {"id": "p165", "name": "VESTIDO ELISE", "price": 82.99, "category": "Vestidos", "sku": "SKU-VESTIDO-ELISE-165", "barcode": "ST70000165", "image": "products/165.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO ELISE — produto do catálogo STUDIO 70."}, {"id": "p166", "name": "CROPPED SOLANGE", "price": 35.99, "category": "Croppeds", "sku": "SKU-CROPPED-SOLANGE-166", "barcode": "ST70000166", "image": "products/166.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED SOLANGE — produto do catálogo STUDIO 70."}, {"id": "p167", "name": "CROPPED ALINE", "price": 35.99, "category": "Croppeds", "sku": "SKU-CROPPED-ALINE-167", "barcode": "ST70000167", "image": "products/167.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED ALINE — produto do catálogo STUDIO 70."}, {"id": "p168", "name": "CONJUNTO BALLET", "price": 117.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-BALLET-168", "barcode": "ST70000168", "image": "products/168.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO BALLET — produto do catálogo STUDIO 70."}, {"id": "p169", "name": "CROPPED PRISCILA", "price": 47.99, "category": "Croppeds", "sku": "SKU-CROPPED-PRISCILA-169", "barcode": "ST70000169", "image": "products/169.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED PRISCILA — produto do catálogo STUDIO 70."}, {"id": "p170", "name": "CROPPED MIA", "price": 32.99, "category": "Croppeds", "sku": "SKU-CROPPED-MIA-170", "barcode": "ST70000170", "image": "products/170.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED MIA — produto do catálogo STUDIO 70."}, {"id": "p171", "name": "CONJUNTO ISABELA", "price": 87.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-ISABELA-171", "barcode": "ST70000171", "image": "products/171.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO ISABELA — produto do catálogo STUDIO 70."}, {"id": "p172", "name": "BODY MAFÊ", "price": 50.99, "category": "Bodies", "sku": "SKU-BODY-MAFE-172", "barcode": "ST70000172", "image": "products/172.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY MAFÊ — produto do catálogo STUDIO 70."}, {"id": "p173", "name": "CROPPED PEITINHO", "price": 40.99, "category": "Croppeds", "sku": "SKU-CROPPED-PEITINHO-173", "barcode": "ST70000173", "image": "products/173.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED PEITINHO — produto do catálogo STUDIO 70."}, {"id": "p174", "name": "CROPPED VALENTINA WILD", "price": 42.99, "category": "Croppeds", "sku": "SKU-CROPPED-VALENTINA-WILD-174", "barcode": "ST70000174", "image": "products/174.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED VALENTINA WILD — produto do catálogo STUDIO 70."}, {"id": "p175", "name": "SHORT GIULIA", "price": 55.99, "category": "Shorts", "sku": "SKU-SHORT-GIULIA-175", "barcode": "ST70000175", "image": "products/175.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "SHORT GIULIA — produto do catálogo STUDIO 70."}, {"id": "p176", "name": "CROPPED GIULIA", "price": 42.99, "category": "Croppeds", "sku": "SKU-CROPPED-GIULIA-176", "barcode": "ST70000176", "image": "products/176.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED GIULIA — produto do catálogo STUDIO 70."}, {"id": "p177", "name": "CROPPED ALICIA", "price": 45.99, "category": "Croppeds", "sku": "SKU-CROPPED-ALICIA-177", "barcode": "ST70000177", "image": "products/177.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED ALICIA — produto do catálogo STUDIO 70."}, {"id": "p178", "name": "BIQUÍNI MALAI", "price": 55.99, "category": "Biquínis", "sku": "SKU-BIQUINI-MALAI-178", "barcode": "ST70000178", "image": "products/178.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BIQUÍNI MALAI — produto do catálogo STUDIO 70."}, {"id": "p179", "name": "SAIA MANUELA MID", "price": 67.99, "category": "Saias", "sku": "SKU-SAIA-MANUELA-MID-179", "barcode": "ST70000179", "image": "products/179.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "SAIA MANUELA MID — produto do catálogo STUDIO 70."}, {"id": "p180", "name": "CROPPED AYLA", "price": 45.99, "category": "Croppeds", "sku": "SKU-CROPPED-AYLA-180", "barcode": "ST70000180", "image": "products/180.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED AYLA — produto do catálogo STUDIO 70."}, {"id": "p181", "name": "DUO HANNA", "price": 105.99, "category": "Duos", "sku": "SKU-DUO-HANNA-181", "barcode": "ST70000181", "image": "products/181.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "DUO HANNA — produto do catálogo STUDIO 70."}, {"id": "p182", "name": "CROPPED ATENA", "price": 42.99, "category": "Croppeds", "sku": "SKU-CROPPED-ATENA-182", "barcode": "ST70000182", "image": "products/182.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED ATENA — produto do catálogo STUDIO 70."}, {"id": "p183", "name": "CROPPED MANGA CURTA ADIDAS", "price": 37.99, "category": "Croppeds", "sku": "SKU-CROPPED-MANGA-CURTA-ADIDAS-183", "barcode": "ST70000183", "image": "products/183.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED MANGA CURTA ADIDAS — produto do catálogo STUDIO 70."}, {"id": "p184", "name": "BLUSA MANGA LONGA", "price": 50.99, "category": "Blusas", "sku": "SKU-BLUSA-MANGA-LONGA-184", "barcode": "ST70000184", "image": "products/184.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA MANGA LONGA — produto do catálogo STUDIO 70."}, {"id": "p185", "name": "BLUSA RAFAELA", "price": 45.99, "category": "Blusas", "sku": "SKU-BLUSA-RAFAELA-185", "barcode": "ST70000185", "image": "products/185.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA RAFAELA — produto do catálogo STUDIO 70."}, {"id": "p186", "name": "VESTIDO AMARE", "price": 60.99, "category": "Vestidos", "sku": "SKU-VESTIDO-AMARE-186", "barcode": "ST70000186", "image": "products/186.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO AMARE — produto do catálogo STUDIO 70."}, {"id": "p187", "name": "CONJUNTO CLARA MINIMAL", "price": 80.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-CLARA-MINIMAL-187", "barcode": "ST70000187", "image": "products/187.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO CLARA MINIMAL — produto do catálogo STUDIO 70."}, {"id": "p188", "name": "BODY BÁRBARA", "price": 60.99, "category": "Bodies", "sku": "SKU-BODY-BARBARA-188", "barcode": "ST70000188", "image": "products/188.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY BÁRBARA — produto do catálogo STUDIO 70."}, {"id": "p189", "name": "BODY SICÍLIA", "price": 55.99, "category": "Bodies", "sku": "SKU-BODY-SICILIA-189", "barcode": "ST70000189", "image": "products/189.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY SICÍLIA — produto do catálogo STUDIO 70."}, {"id": "p190", "name": "BODY PAOLA", "price": 57.99, "category": "Bodies", "sku": "SKU-BODY-PAOLA-190", "barcode": "ST70000190", "image": "products/190.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY PAOLA — produto do catálogo STUDIO 70."}, {"id": "p191", "name": "CONJUNTO BRISA", "price": 60.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-BRISA-191", "barcode": "ST70000191", "image": "products/191.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO BRISA — produto do catálogo STUDIO 70."}, {"id": "p192", "name": "CONJUNTO SHORT SAIA LOVE LOVE", "price": 60.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-SHORT-SAIA-LOVE-LOVE-192", "barcode": "ST70000192", "image": "products/192.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO SHORT SAIA LOVE LOVE — produto do catálogo STUDIO 70."}, {"id": "p193", "name": "CONJUNTO BIANCA", "price": 75.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-BIANCA-193", "barcode": "ST70000193", "image": "products/193.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO BIANCA — produto do catálogo STUDIO 70."}, {"id": "p194", "name": "VESTIDO MARGOT", "price": 87.99, "category": "Vestidos", "sku": "SKU-VESTIDO-MARGOT-194", "barcode": "ST70000194", "image": "products/194.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO MARGOT — produto do catálogo STUDIO 70."}, {"id": "p195", "name": "BLUSA TULÊ ROBERTA", "price": 45.99, "category": "Blusas", "sku": "SKU-BLUSA-TULE-ROBERTA-195", "barcode": "ST70000195", "image": "products/195.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA TULÊ ROBERTA — produto do catálogo STUDIO 70."}, {"id": "p196", "name": "SHORT LUNA", "price": 50.99, "category": "Shorts", "sku": "SKU-SHORT-LUNA-196", "barcode": "ST70000196", "image": "products/196.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "SHORT LUNA — produto do catálogo STUDIO 70."}, {"id": "p197", "name": "CROPPED LIVI", "price": 35.99, "category": "Croppeds", "sku": "SKU-CROPPED-LIVI-197", "barcode": "ST70000197", "image": "products/197.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED LIVI — produto do catálogo STUDIO 70."}, {"id": "p198", "name": "BODY AGATHA", "price": 55.99, "category": "Bodies", "sku": "SKU-BODY-AGATHA-198", "barcode": "ST70000198", "image": "products/198.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY AGATHA — produto do catálogo STUDIO 70."}, {"id": "p199", "name": "MACAQUINHO LAVÍNIA", "price": 100.99, "category": "Macacões", "sku": "SKU-MACAQUINHO-LAVINIA-199", "barcode": "ST70000199", "image": "products/199.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "MACAQUINHO LAVÍNIA — produto do catálogo STUDIO 70."}, {"id": "p200", "name": "MACAQUINHO FLOR DO CARIBE", "price": 127.99, "category": "Macacões", "sku": "SKU-MACAQUINHO-FLOR-DO-CARIBE-200", "barcode": "ST70000200", "image": "products/200.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "MACAQUINHO FLOR DO CARIBE — produto do catálogo STUDIO 70."}, {"id": "p201", "name": "MACAQUINHO BLOSSOM", "price": 100.99, "category": "Macacões", "sku": "SKU-MACAQUINHO-BLOSSOM-201", "barcode": "ST70000201", "image": "products/201.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "MACAQUINHO BLOSSOM — produto do catálogo STUDIO 70."}, {"id": "p202", "name": "CROPPED SURI", "price": 30.99, "category": "Croppeds", "sku": "SKU-CROPPED-SURI-202", "barcode": "ST70000202", "image": "products/202.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED SURI — produto do catálogo STUDIO 70."}, {"id": "p203", "name": "VESTIDO CLARA", "price": 72.99, "category": "Vestidos", "sku": "SKU-VESTIDO-CLARA-203", "barcode": "ST70000203", "image": "products/203.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO CLARA — produto do catálogo STUDIO 70."}, {"id": "p204", "name": "VESTIDO DÁLIA", "price": 107.99, "category": "Vestidos", "sku": "SKU-VESTIDO-DALIA-204", "barcode": "ST70000204", "image": "products/204.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO DÁLIA — produto do catálogo STUDIO 70."}, {"id": "p205", "name": "MACACÃO BARCELONA", "price": 92.99, "category": "Macacões", "sku": "SKU-MACACAO-BARCELONA-205", "barcode": "ST70000205", "image": "products/205.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "MACACÃO BARCELONA — produto do catálogo STUDIO 70."}, {"id": "p206", "name": "VESTIDO ÁRTEMIS", "price": 80.99, "category": "Vestidos", "sku": "SKU-VESTIDO-ARTEMIS-206", "barcode": "ST70000206", "image": "products/206.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO ÁRTEMIS — produto do catálogo STUDIO 70."}, {"id": "p207", "name": "CONJUNTO SAVANA CHIC", "price": 95.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-SAVANA-CHIC-207", "barcode": "ST70000207", "image": "products/207.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO SAVANA CHIC — produto do catálogo STUDIO 70."}, {"id": "p208", "name": "CROPPED FLOR DE LÓTUS", "price": 40.99, "category": "Croppeds", "sku": "SKU-CROPPED-FLOR-DE-LOTUS-208", "barcode": "ST70000208", "image": "products/208.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CROPPED FLOR DE LÓTUS — produto do catálogo STUDIO 70."}, {"id": "p209", "name": "MACAQUINHO FLORA ENCANTADA", "price": 110.99, "category": "Macacões", "sku": "SKU-MACAQUINHO-FLORA-ENCANTADA-209", "barcode": "ST70000209", "image": "products/209.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "MACAQUINHO FLORA ENCANTADA — produto do catálogo STUDIO 70."}, {"id": "p210", "name": "VESTIDO AURA MÍSTICA", "price": 100.99, "category": "Vestidos", "sku": "SKU-VESTIDO-AURA-MISTICA-210", "barcode": "ST70000210", "image": "products/210.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO AURA MÍSTICA — produto do catálogo STUDIO 70."}, {"id": "p211", "name": "VESTIDO CLAIRE", "price": 100.99, "category": "Vestidos", "sku": "SKU-VESTIDO-CLAIRE-211", "barcode": "ST70000211", "image": "products/211.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO CLAIRE — produto do catálogo STUDIO 70."}, {"id": "p212", "name": "CONJUNTO PITANGA", "price": 115.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-PITANGA-212", "barcode": "ST70000212", "image": "products/212.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO PITANGA — produto do catálogo STUDIO 70."}, {"id": "p213", "name": "CONJUNTO FASCÍNIO DA NATUREZA", "price": 125.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-FASCINIO-DA-NATUREZA-213", "barcode": "ST70000213", "image": "products/213.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO FASCÍNIO DA NATUREZA — produto do catálogo STUDIO 70."}, {"id": "p214", "name": "VESTIDO ESSÊNCIA TROPICAL", "price": 130.99, "category": "Vestidos", "sku": "SKU-VESTIDO-ESSENCIA-TROPICAL-214", "barcode": "ST70000214", "image": "products/214.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO ESSÊNCIA TROPICAL — produto do catálogo STUDIO 70."}, {"id": "p215", "name": "VESTIDO THALITA", "price": 80.99, "category": "Vestidos", "sku": "SKU-VESTIDO-THALITA-215", "barcode": "ST70000215", "image": "products/215.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO THALITA — produto do catálogo STUDIO 70."}, {"id": "p216", "name": "CONJUNTO MAY", "price": 80.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-MAY-216", "barcode": "ST70000216", "image": "products/216.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO MAY — produto do catálogo STUDIO 70."}, {"id": "p217", "name": "BODY NUBIA", "price": 50.99, "category": "Bodies", "sku": "SKU-BODY-NUBIA-217", "barcode": "ST70000217", "image": "products/217.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BODY NUBIA — produto do catálogo STUDIO 70."}, {"id": "p218", "name": "BLUSA BIANCA", "price": 37.99, "category": "Blusas", "sku": "SKU-BLUSA-BIANCA-218", "barcode": "ST70000218", "image": "products/218.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA BIANCA — produto do catálogo STUDIO 70."}, {"id": "p219", "name": "CONJUNTO DÉBORA MALHA BARTÔ", "price": 72.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-DEBORA-MALHA-BARTO-219", "barcode": "ST70000219", "image": "products/219.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO DÉBORA MALHA BARTÔ — produto do catálogo STUDIO 70."}, {"id": "p220", "name": "BLUSA GOLA ALTA", "price": 47.99, "category": "Blusas", "sku": "SKU-BLUSA-GOLA-ALTA-220", "barcode": "ST70000220", "image": "products/220.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "BLUSA GOLA ALTA — produto do catálogo STUDIO 70."}, {"id": "p221", "name": "CONJUNTO VIVIANE", "price": 90.99, "category": "Conjuntos", "sku": "SKU-CONJUNTO-VIVIANE-221", "barcode": "ST70000221", "image": "products/221.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "CONJUNTO VIVIANE — produto do catálogo STUDIO 70."}, {"id": "p222", "name": "VESTIDO MAX COLAR", "price": 92.99, "category": "Vestidos", "sku": "SKU-VESTIDO-MAX-COLAR-222", "barcode": "ST70000222", "image": "products/222.jpg", "active": true, "featured": false, "stock": 0, "sizes": [], "colors": [], "description": "VESTIDO MAX COLAR — produto do catálogo STUDIO 70."}];
+const CATEGORIES = ['Vestidos','Conjuntos','Croppeds','Bodies','Biquínis','Macacões','Blusas','Calças','Shorts','Saias','Maiôs','Duos','Tule','Outros'];
+let products = JSON.parse(localStorage.getItem('studio70_products') || 'null') || SEED_PRODUCTS;
+let cart = JSON.parse(localStorage.getItem('studio70_cart') || '[]');
+let pdvCart = JSON.parse(localStorage.getItem('studio70_pdv_cart') || '[]');
+let sales = JSON.parse(localStorage.getItem('studio70_sales') || '[]');
+let page=1; const perPage=24;
+const money=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+function save(){localStorage.setItem('studio70_products',JSON.stringify(products));}
+function renderCategories(){document.getElementById('categories').innerHTML=CATEGORIES.map(c=>`<button class="cat" onclick="filterCat('${c}')">${c}</button>`).join(''); const sel=document.getElementById('categoryFilter'); sel.innerHTML='<option value="">Todas as categorias</option>'+CATEGORIES.map(c=>`<option>${c}</option>`).join(''); document.getElementById('pCategory').innerHTML=CATEGORIES.map(c=>`<option>${c}</option>`).join('');}
+function filtered(){const q=document.getElementById('searchInput').value.trim().toLowerCase(), c=document.getElementById('categoryFilter').value; return products.filter(p=>p.active!==false && (!c||p.category===c) && (!q||[p.name,p.sku,p.barcode,p.category].join(' ').toLowerCase().includes(q)));}
+function renderProducts(){const list=filtered(); const pages=Math.max(1,Math.ceil(list.length/perPage)); page=Math.min(page,pages); const slice=list.slice((page-1)*perPage,page*perPage); document.getElementById('productGrid').innerHTML=slice.length?slice.map(p=>`<article class="product"><img src="${p.image||'products/001.jpg'}" alt="${p.name}" loading="lazy" onerror="this.src='products/001.jpg'"><span class="badge">${p.category}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${p.name}</h3><div class="price">${money(p.price)}</div><div class="meta">SKU: ${p.sku}<br>Código: ${p.barcode}</div><div class="product-actions"><button class="smallbtn" onclick="openProduct('${p.id}')">DETALHES</button><button class="smallbtn primary" onclick="addCart('${p.id}')">COMPRAR</button></div></div></article>`).join(''):'<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.</div>'; document.getElementById('pagination').innerHTML=Array.from({length:pages},(_,i)=>`<button class="smallbtn" onclick="page=${i+1};renderProducts()" ${i+1===page?'style="background:var(--accent)"':''}>${i+1}</button>`).join('');}
+function filterCat(c){document.getElementById('categoryFilter').value=c;page=1;document.getElementById('produtos').scrollIntoView({behavior:'smooth'});renderProducts();}
+function openProduct(id){const p=products.find(x=>x.id===id); if(!p)return; document.getElementById('productBody').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:25px"><img src="${p.image}" style="width:100%;max-height:600px;object-fit:contain;background:#222;border-radius:15px"><div><h1 class="section-title">${p.name}</h1><div class="price" style="font-size:30px;color:var(--accent)">${money(p.price)}</div><p>${p.description||''}</p><p><b>SKU:</b> ${p.sku}<br><b>Código:</b> ${p.barcode}<br><b>Estoque:</b> ${p.stock||0}</p><button class="btn" onclick="addCart('${p.id}');closeProduct()">ADICIONAR AO CARRINHO</button></div></div>`;document.getElementById('productModal').classList.add('open');}
+function closeProduct(){document.getElementById('productModal').classList.remove('open')}
+function addCart(id){const p=products.find(x=>x.id===id);if(!p)return;const item=cart.find(x=>x.id===id);if(item)item.qty++;else cart.push({id,qty:1});saveCart();renderCart();}
+function saveCart(){localStorage.setItem('studio70_cart',JSON.stringify(cart));document.getElementById('cartCount').textContent=cart.reduce((a,b)=>a+b.qty,0);}
+function renderCart(){const el=document.getElementById('cartItems'); if(!cart.length)el.innerHTML='<div class="empty">Nenhum produto adicionado.</div>'; else el.innerHTML=cart.map(i=>{const p=products.find(x=>x.id===i.id);return `<div class="cart-row"><div><b>${p.name}</b><br>${money(p.price)} × ${i.qty}</div><button class="smallbtn" onclick="removeCart('${i.id}')">−</button></div>`}).join('');const total=cart.reduce((s,i)=>s+(products.find(p=>p.id===i.id)?.price||0)*i.qty,0);document.getElementById('cartTotal').textContent=money(total);saveCart();}
+function removeCart(id){const i=cart.find(x=>x.id===id);if(!i)return;if(i.qty>1)i.qty--;else cart=cart.filter(x=>x.id!==id);renderCart();}
+function checkoutWhatsApp(){const phone=localStorage.getItem('studio70_whatsapp')||'';if(!phone)return alert('Cadastre o WhatsApp no painel ou configure studio70_whatsapp no navegador.');let msg='Olá! Quero comprar:%0A'+cart.map(i=>{const p=products.find(x=>x.id===i.id);return `• ${p.name} — ${i.qty}x — ${money(p.price*i.qty)}`}).join('%0A');window.open(`https://wa.me/${phone.replace(/\D/g,'')}?text=${msg}`,'_blank');}
+function closeCart(){document.getElementById('cartDrawer').classList.remove('open')}
+document.getElementById('cartBtn').onclick=()=>document.getElementById('cartDrawer').classList.add('open'); document.getElementById('searchBtn').onclick=()=>{document.getElementById('searchInput').focus();document.getElementById('produtos').scrollIntoView({behavior:'smooth'})}; document.getElementById('searchInput').oninput=()=>{page=1;renderProducts()}; document.getElementById('categoryFilter').onchange=()=>{page=1;renderProducts()};
 
-const cats = ["Bodies", "Maiôs", "Vestidos", "Macacões", "Shorts", "Croppeds", "Biquínis", "Conjuntos", "Tops"];
-const names = ["JANAÍNA", "BRUNA", "ELIANA", "CÁSSIA", "SUZANA", "FERNANDA", "MARTA", "MARINA", "PATRÍCIA", "AMANDA", "BIA", "CARLA", "DANIELA", "HELENA", "ISABELA"];
-
-// Lista exata das imagens reais fornecidas na raiz do projeto (sem duplicatas)
-const realImages = [
-  "001.jpg",
-  "002.jpg",
-  "003.jpg",
-  "004.jpg",
-  "005.jpg",
-  "006.jpg",
-  "007.jpg",
-  "008.jpg",
-  "009.jpg"
-];
-
-// Gerando os produtos utilizando as imagens reais de forma cíclica (sem duplicação desnecessária de nomes e mantendo o catálogo coerente)
-const SEED_PRODUCTS = Array.from({ length: realImages.length }, (_, i) => {
-  const num = i + 1;
-  const pad = String(num).padStart(3, '0');
-  const category = cats[i % cats.length];
-  const baseName = names[i % names.length];
-  
-  return {
-    id: `p${pad}`,
-    name: `${category.slice(0, -1).toUpperCase()} ${baseName} ${pad}`,
-    price: parseFloat((29.99 + (i % 15) * 5.5).toFixed(2)),
-    category: category,
-    sku: `SKU-${category.toUpperCase()}-${pad}`,
-    barcode: `ST70${String(num).padStart(6, '0')}`,
-    image: realImages[i], // Apontando diretamente para o arquivo na raiz
-    active: true,
-    featured: i % 3 === 0,
-    stock: 10 + (i * 2),
-    sizes: ["P", "M", "G"],
-    colors: ["Preto", "Branco"],
-    description: `${category} ${baseName} — Produto exclusivo do catálogo STUDIO 70 BRAND.`
-  };
-});
-
-let stored = JSON.parse(localStorage.getItem('st70_products'));
-let products = (stored && stored.length > 0) ? stored : SEED_PRODUCTS;
-if (!stored || stored.length === 0) {
-  localStorage.setItem('st70_products', JSON.stringify(SEED_PRODUCTS));
-}
-
-let cart = JSON.parse(localStorage.getItem('st70_cart')) || [];
-let pdvCart = [];
-let salesHistory = JSON.parse(localStorage.getItem('st70_sales')) || [];
-let currentPage = 1;
-const itemsPerPage = 12;
-
-function saveProducts() { localStorage.setItem('st70_products', JSON.stringify(products)); }
-function saveCart() {
-  localStorage.setItem('st70_cart', JSON.stringify(cart));
-  document.getElementById('cartCount').innerText = cart.reduce((acc, item) => acc + item.qty, 0);
-}
-
-function renderCategories() {
-  const categories = [...new Set(products.map(p => p.category))];
-  document.getElementById('categories').innerHTML = categories.map(c => `<div class="cat" onclick="filterByCategory('${c}')">${c}</div>`).join('');
-  document.getElementById('categoryFilter').innerHTML = '<option value="">Todas as categorias</option>' + categories.map(c => `<option value="${c}">${c}</option>`).join('');
-  document.getElementById('pCategory').innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join('');
-}
-
-function filterByCategory(cat) {
-  document.getElementById('categoryFilter').value = cat;
-  currentPage = 1;
-  renderProducts();
-}
-
-function renderProducts() {
-  const search = document.getElementById('searchInput').value.toLowerCase();
-  const cat = document.getElementById('categoryFilter').value;
-  
-  const filtered = products.filter(p => {
-    const matchSearch = p.name.toLowerCase().includes(search) || p.sku.toLowerCase().includes(search) || p.barcode.includes(search);
-    const matchCat = !cat || p.category === cat;
-    return p.active && matchSearch && matchCat;
-  });
-
-  const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;
-  if (currentPage > totalPages) currentPage = totalPages;
-  
-  const start = (currentPage - 1) * itemsPerPage;
-  const paginated = filtered.slice(start, start + itemsPerPage);
-  
-  const grid = document.getElementById('productGrid');
-  if (paginated.length === 0) {
-    grid.innerHTML = '<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.</div>';
-  } else {
-    grid.innerHTML = paginated.map(p => `
-      <div class="product">
-        ${p.featured ? '<span class="badge featured">Destaque</span>' : ''}
-        <img src="${p.image}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x330/17171b/ffffff?text=STUDIO+70'">
-        <div class="product-info">
-          <h3>${p.name}</h3>
-          <div class="price">R$ ${p.price.toFixed(2)}</div>
-          <div class="meta">SKU: ${p.sku} | Estoque: ${p.stock}</div>
-          <div class="product-actions">
-            <button class="smallbtn" onclick="openProductDetail('${p.id}')">DETALHES</button>
-            <button class="smallbtn primary" onclick="addToCart('${p.id}')">ADICIONAR</button>
-          </div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  let pagHTML = '';
-  for (let i = 1; i <= totalPages; i++) {
-    pagHTML += `<button class="smallbtn" style="${i === currentPage ? 'border-color:var(--accent);color:var(--accent)' : ''}" onclick="goToPage(${i})">${i}</button>`;
-  }
-  document.getElementById('pagination').innerHTML = totalPages > 1 ? pagHTML : '';
-}
-
-function goToPage(page) { currentPage = page; renderProducts(); }
-
-function addToCart(id) {
-  const p = products.find(prod => prod.id === id);
-  if (!p) return;
-  const existing = cart.find(item => item.id === id);
-  if (existing) { existing.qty += 1; } else { cart.push({ id: p.id, name: p.name, price: p.price, qty: 1, image: p.image }); }
-  saveCart();
-  openCart();
-}
-
-function openCart() { renderCart(); document.getElementById('cartDrawer').classList.add('open'); }
-function closeCart() { document.getElementById('cartDrawer').classList.remove('open'); }
-
-function renderCart() {
-  const container = document.getElementById('cartItems');
-  if (cart.length === 0) {
-    container.innerHTML = '<div class="empty">Seu carrinho está vazio.</div>';
-    document.getElementById('cartTotal').innerText = 'R$ 0,00';
-    return;
-  }
-  let total = 0;
-  container.innerHTML = cart.map(item => {
-    const subtotal = item.price * item.qty;
-    total += subtotal;
-    return `
-      <div class="cart-row">
-        <div>
-          <b>${item.name}</b><br>
-          <small>R$ ${item.price.toFixed(2)} x ${item.qty}</small>
-        </div>
-        <div>
-          <b>R$ ${subtotal.toFixed(2)}</b>
-          <button style="background:none;border:none;color:var(--accent);margin-left:8px;cursor:pointer" onclick="removeFromCart('${item.id}')">✕</button>
-        </div>
-      </div>
-    `;
-  }).join('');
-  document.getElementById('cartTotal').innerText = `R$ ${total.toFixed(2)}`;
-}
-
-function removeFromCart(id) { cart = cart.filter(item => item.id !== id); saveCart(); renderCart(); }
-
-function checkoutMercadoPago() {
-  if (cart.length === 0) return alert('Seu carrinho está vazio!');
-  window.open(MERCADO_PAGO_LINK_PADRAO, '_blank');
-}
-
-function checkoutWhatsApp() {
-  if (cart.length === 0) return alert('Seu carrinho está vazio!');
-  let text = 'Olá! Gostaria de fazer o seguinte pedido na STUDIO 70:\n\n';
-  let total = 0;
-  cart.forEach(item => {
-    const sub = item.price * item.qty;
-    total += sub;
-    text += `• ${item.name} (${item.qty}x) - R$ ${sub.toFixed(2)}\n`;
-  });
-  text += `\n*Total: R$ ${total.toFixed(2)}*`;
-  window.open(`https://wa.me/5500000000000?text=${encodeURIComponent(text)}`, '_blank');
-}
-
-function openPDV() { 
-  document.getElementById('pdvModal').classList.add('open'); 
-  document.getElementById('pdvScanner').focus(); 
-  renderPDV(); 
-  renderPDVHistory();
-}
-function closePDV() { document.getElementById('pdvModal').classList.remove('open'); }
-
-function pdvSearchAdd() {
-  const val = document.getElementById('pdvSearch').value.toLowerCase().trim();
-  if (!val) return;
-  const p = products.find(prod => prod.barcode === val || prod.sku.toLowerCase() === val || prod.name.toLowerCase().includes(val));
-  if (p) { addToPDV(p); document.getElementById('pdvSearch').value = ''; } 
-  else { document.getElementById('pdvStatus').innerText = 'Produto não encontrado.'; document.getElementById('pdvStatus').className = 'pdv-status error'; }
-}
-
-function addToPDV(product) {
-  const exist = pdvCart.find(i => i.id === product.id);
-  if (exist) { exist.qty += 1; } else { pdvCart.push({ ...product, qty: 1 }); }
-  document.getElementById('pdvStatus').innerText = `Adicionado: ${product.name}`;
-  document.getElementById('pdvStatus').className = 'pdv-status success';
-  renderPDV();
-}
-
-function updatePDVQty(id, delta) {
-  const item = pdvCart.find(i => i.id === id);
-  if (item) { item.qty += delta; if (item.qty <= 0) pdvCart = pdvCart.filter(i => i.id !== id); }
-  renderPDV();
-}
-
-function renderPDV() {
-  const container = document.getElementById('pdvItems');
-  container.innerHTML = pdvCart.map(i => `
-    <div class="pdv-item">
-      <img src="${i.image}" onerror="this.src='https://via.placeholder.com/54x65/17171b/ffffff?text=S70'">
-      <div>
-        <div class="pdv-item-name">${i.name}</div>
-        <div class="pdv-item-meta">R$ ${i.price.toFixed(2)} un</div>
-      </div>
-      <div class="qtybox">
-        <button onclick="updatePDVQty('${i.id}', -1)">-</button>
-        <b>${i.qty}</b>
-        <button onclick="updatePDVQty('${i.id}', 1)">+</button>
-      </div>
-      <div class="lineprice"><b>R$ ${(i.price * i.qty).toFixed(2)}</b></div>
-    </div>
-  `).join('');
-  updatePDVTotals();
-}
-
-function updatePDVTotals() {
-  const subtotal = pdvCart.reduce((a, b) => a + (b.price * b.qty), 0);
-  const discount = parseFloat(document.getElementById('pdvDiscount').value) || 0;
-  const received = parseFloat(document.getElementById('pdvReceived').value) || 0;
-  const finalTotal = Math.max(0, subtotal - discount);
-  document.getElementById('pdvTotal').innerText = `R$ ${finalTotal.toFixed(2)}`;
-  document.getElementById('pdvChange').innerText = `R$ ${Math.max(0, received - finalTotal).toFixed(2)}`;
-}
-
-function finishSaleMercadoPago() {
-  if (pdvCart.length === 0) return alert('Nenhum item no PDV.');
-  window.open(MERCADO_PAGO_LINK_PADRAO, '_blank');
-  saveSale('Mercado Pago');
-}
-
-function finishSale() {
-  if (pdvCart.length === 0) return alert('Nenhum item no PDV.');
-  const payment = document.getElementById('pdvPayment').value;
-  saveSale(payment);
-  alert('Venda realizada com sucesso!');
-}
-
-function saveSale(paymentMethod) {
-  const subtotal = pdvCart.reduce((a, b) => a + (b.price * b.qty), 0);
-  const discount = parseFloat(document.getElementById('pdvDiscount').value) || 0;
-  const finalTotal = Math.max(0, subtotal - discount);
-
-  pdvCart.forEach(item => {
-    const prod = products.find(p => p.id === item.id);
-    if (prod) prod.stock = Math.max(0, prod.stock - item.qty);
-  });
-
-  const sale = {
-    id: `V-${Date.now()}`,
-    date: new Date().toLocaleString('pt-BR'),
-    itemsCount: pdvCart.reduce((a, b) => a + b.qty, 0),
-    total: finalTotal,
-    payment: paymentMethod
-  };
-
-  salesHistory.unshift(sale);
-  localStorage.setItem('st70_sales', JSON.stringify(salesHistory));
-  saveProducts();
-  renderProducts();
-  clearPDV();
-  renderPDVHistory();
-}
-
-function renderPDVHistory() {
-  const container = document.getElementById('pdvHistory');
-  if (salesHistory.length === 0) {
-    container.innerHTML = '<small style="color:var(--muted)">Nenhuma venda realizada.</small>';
-    return;
-  }
-    container.innerHTML = salesHistory.slice(0, 10).map(s => `
-    <div class="sale-row">
-      <b>${s.id} — R$ ${s.total.toFixed(2)}</b><br>
-      <small>${s.date} | ${s.itemsCount} itens | ${s.payment}</small>
-    </div>
-  `).join('');
-}
-
-function clearPDV() { pdvCart = []; document.getElementById('pdvDiscount').value = 0; document.getElementById('pdvReceived').value = 0; renderPDV(); }
-
-function openAdmin() { document.getElementById('adminModal').classList.add('open'); renderAdminList(); }
-function closeAdmin() { document.getElementById('adminModal').classList.remove('open'); }
-
-function renderAdminList() {
-  const search = document.getElementById('adminSearch').value.toLowerCase();
-  const filtered = products.filter(p => p.name.toLowerCase().includes(search) || p.sku.toLowerCase().includes(search));
-  document.getElementById('adminCount').innerText = `(${filtered.length})`;
-  document.getElementById('adminList').innerHTML = filtered.slice(0, 50).map(p => `
-    <div class="admin-item">
-      <span><b>${p.name}</b><br><small>R$ ${p.price.toFixed(2)} | Estoque: ${p.stock}</small></span>
-      <div class="admin-tools">
-        <button class="smallbtn" onclick="editProduct('${p.id}')">✏️</button>
-        <button class="smallbtn danger" onclick="deleteProduct('${p.id}')">🗑️</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-function editProduct(id) {
-  const p = products.find(prod => prod.id === id);
-  if (!p) return;
-  document.getElementById('editId').value = p.id;
-  document.getElementById('pName').value = p.name;
-  document.getElementById('pPrice').value = p.price;
-  document.getElementById('pSku').value = p.sku;
-  document.getElementById('pBarcode').value = p.barcode;
-  document.getElementById('pCategory').value = p.category;
-  document.getElementById('pStock').value = p.stock;
-  document.getElementById('pSizes').value = p.sizes ? p.sizes.join(', ') : '';
-  document.getElementById('pColors').value = p.colors ? p.colors.join(', ') : '';
-  document.getElementById('pImage').value = p.image;
-  document.getElementById('pDescription').value = p.description;
-  document.getElementById('pActive').checked = p.active;
-  document.getElementById('pFeatured').checked = p.featured;
-  document.getElementById('formTitle').innerText = 'Editar produto';
-}
-
-function clearForm() {
-  document.getElementById('productForm').reset();
-  document.getElementById('editId').value = '';
-  document.getElementById('formTitle').innerText = 'Novo produto';
-}
-
-document.getElementById('productForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const id = document.getElementById('editId').value || `p${String(products.length + 1).padStart(3, '0')}`;
-  const newProd = {
-    id,
-    name: document.getElementById('pName').value,
-    price: parseFloat(document.getElementById('pPrice').value),
-    sku: document.getElementById('pSku').value,
-    barcode: document.getElementById('pBarcode').value,
-    category: document.getElementById('pCategory').value,
-    stock: parseInt(document.getElementById('pStock').value) || 0,
-    sizes: document.getElementById('pSizes').value.split(',').map(s => s.trim()).filter(Boolean),
-    colors: document.getElementById('pColors').value.split(',').map(c => c.trim()).filter(Boolean),
-    image: document.getElementById('pImage').value || '001.jpg',
-    description: document.getElementById('pDescription').value,
-    active: document.getElementById('pActive').checked,
-    featured: document.getElementById('pFeatured').checked
-  };
-
-  const index = products.findIndex(p => p.id === id);
-  if (index >= 0) {
-    products[index] = newProd;
-  } else {
-    products.unshift(newProd);
-  }
-
-  saveProducts();
-  renderProducts();
-  renderCategories();
-  renderAdminList();
-  clearForm();
-  alert('Produto salvo com sucesso!');
-});
-
-function deleteProduct(id) {
-  if (!confirm('Deseja realmente excluir este produto?')) return;
-  products = products.filter(p => p.id !== id);
-  saveProducts();
-  renderProducts();
-  renderCategories();
-  renderAdminList();
-}
-
-function exportData() {
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(products, null, 2));
-  const downloadAnchor = document.createElement('a');
-  downloadAnchor.setAttribute("href", dataStr);
-  downloadAnchor.setAttribute("download", "studio70_backup.json");
-  document.body.appendChild(downloadAnchor);
-  downloadAnchor.click();
-  downloadAnchor.remove();
-}
-
-function importDataFile(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const imported = JSON.parse(e.target.result);
-      if (Array.isArray(imported)) {
-        products = imported;
-        saveProducts();
-        renderProducts();
-        renderCategories();
-        renderAdminList();
-        alert('Dados restaurados com sucesso!');
-      } else {
-        alert('Arquivo de backup inválido.');
-      }
-    } catch(err) {
-      alert('Erro ao processar o arquivo JSON.');
-    }
-  };
-  reader.readAsText(file);
-}
-
-function openProductDetail(id) {
-  const p = products.find(prod => prod.id === id);
-  if (!p) return;
-  document.getElementById('productBody').innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-      <img src="${p.image}" style="width:100%;max-height:400px;object-fit:contain;background:#17171b;border-radius:10px" onerror="this.src='https://via.placeholder.com/400x400/17171b/ffffff?text=STUDIO+70'">
-      <div>
-        <span class="badge" style="position:static;display:inline-block;margin-bottom:10px">${p.category}</span>
-        <h2>${p.name}</h2>
-        <div class="price" style="margin:10px 0">R$ ${p.price.toFixed(2)}</div>
-        <p style="color:var(--muted);font-size:13px">${p.description || 'Sem descrição.'}</p>
-        <p style="font-size:12px;margin:15px 0"><b>SKU:</b> ${p.sku} | <b>Estoque:</b> ${p.stock}</p>
-        ${p.sizes && p.sizes.length ? `<p style="font-size:12px"><b>Tamanhos:</b> ${p.sizes.join(', ')}</p>` : ''}
-        ${p.colors && p.colors.length ? `<p style="font-size:12px"><b>Cores:</b> ${p.colors.join(', ')}</p>` : ''}
-        <button class="btn primary" style="width:100%;margin-top:20px;background:var(--green);color:#07160e;border:none" onclick="addToCart('${p.id}');closeProductModal()">ADICIONAR AO CARRINHO</button>
-      </div>
-    </div>
-  `;
-  document.getElementById('productModal').classList.add('open');
-}
-
-function closeProductModal() { document.getElementById('productModal').classList.remove('open'); }
-
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'F2') {
-    e.preventDefault();
-    openPDV();
-  }
-  if (e.key === 'Escape') {
-    closeCart();
-    closeAdmin();
-    closePDV();
-    closeProductModal();
-  }
-});
-
-window.onload = function() {
-  renderCategories();
-  renderProducts();
-  saveCart();
-};
-</script>
-</body>
-</html>
+function savePDV(){localStorage.setItem('studio70_pdv_cart',JSON.stringify(pdvCart));localStorage.setItem('studio70_sales',JSON.stringify(sales));}
+function pdvTotal(){const subtotal=pdvCart.reduce((s,i)=>{const p=products.find(x=>x.id===i.id);return s+(p?p.price:0)*i.qty},0);const discount=Math.max(0,Number(document.getElementById('pdvDiscount')?.value||0));return Math.max(0,subtotal-discount)}
+function pdvFind(code){const c=String(code||'').trim().toLowerCase();return products.find(p=>String(p.barcode||'').toLowerCase()===c||String(p.sku||'').toLowerCase()===c)||products.find(p=>String(p.name||'').toLowerCase()===c)}
+function setPDVStatus(msg,type='success'){const el=document.getElementById('pdvStatus');el.textContent=msg;el.className='pdv-status '+type}
+function addPDVProduct(id){const p=products.find(x=>x.id===id);if(!p)return;const current=pdvCart.find(x=>x.id===id);const qty=current?current.qty:0;if((p.stock||0)>0 && qty>=p.stock){setPDVStatus(`Estoque insuficiente: ${p.name} (${p.stock} disponível)`, 'error');return}if(current)current.qty++;else pdvCart.push({id,qty:1});savePDV();renderPDV();setPDVStatus(`✓ ${p.name} adicionado`, 'success');document.getElementById('pdvScanner').focus()}
+function scanPDV(){const input=document.getElementById('pdvScanner');const code=input.value.trim();if(!code)return;const p=pdvFind(code);if(p)addPDVProduct(p.id);else setPDVStatus(`✕ Produto não cadastrado: ${code}`,'error');input.value='';input.focus()}
+function pdvSearchAdd(){const q=document.getElementById('pdvSearch').value.trim().toLowerCase();if(!q)return;const p=products.find(x=>[x.name,x.sku,x.barcode].join(' ').toLowerCase().includes(q));if(p){addPDVProduct(p.id);document.getElementById('pdvSearch').value=''}else setPDVStatus('Nenhum produto encontrado','error')}
+function changePDVQty(id,delta){const i=pdvCart.find(x=>x.id===id),p=products.find(x=>x.id===id);if(!i||!p)return;const next=i.qty+delta;if(next<=0)pdvCart=pdvCart.filter(x=>x.id!==id);else if((p.stock||0)===0||next<=p.stock)i.qty=next;else return setPDVStatus(`Estoque insuficiente para ${p.name}`,'error');savePDV();renderPDV()}
+function renderPDV(){const items=document.getElementById('pdvItems');if(!items)return;items.innerHTML=pdvCart.length?pdvCart.map(i=>{const p=products.find(x=>x.id===i.id);if(!p)return '';return `<div class="pdv-item"><img src="${p.image||'products/001.jpg'}" onerror="this.src='products/001.jpg'"><div><div class="pdv-item-name">${p.name}</div><div class="pdv-item-meta">${p.sku} · ${p.barcode}</div></div><div class="qtybox"><button onclick="changePDVQty('${p.id}',-1)">−</button><b>${i.qty}</b><button onclick="changePDVQty('${p.id}',1)">+</button></div><div class="lineprice"><b>${money(p.price*i.qty)}</b></div></div>`}).join(''):'<div class="empty">Nenhum produto na venda.</div>';const total=pdvTotal();document.getElementById('pdvTotal').textContent=money(total);document.getElementById('pdvSummary').innerHTML=`<div style="display:flex;justify-content:space-between"><span>Itens</span><b>${pdvCart.reduce((s,i)=>s+i.qty,0)}</b></div><div style="display:flex;justify-content:space-between"><span>Subtotal</span><b>${money(pdvCart.reduce((s,i)=>{const p=products.find(x=>x.id===i.id);return s+(p?p.price:0)*i.qty},0))}</b></div><div style="display:flex;justify-content:space-between"><span>Desconto</span><b>${money(Number(document.getElementById('pdvDiscount')?.value||0))}</b></div>`;updateChange();renderSales()}
+function updateChange(){const total=pdvTotal(),received=Number(document.getElementById('pdvReceived')?.value||0),change=Math.max(0,received-total);const el=document.getElementById('pdvChange');if(el)el.textContent=money(change)}
+function clearPDV(){pdvCart=[];document.getElementById('pdvDiscount').value='0';document.getElementById('pdvReceived').value='0';savePDV();renderPDV();setPDVStatus('Venda limpa','warn');document.getElementById('pdvScanner').focus()}
+function finishSale(){if(!pdvCart.length)return setPDVStatus('Adicione pelo menos um produto.','error');const total=pdvTotal(),payment=document.getElementById('pdvPayment').value,received=Number(document.getElementById('pdvReceived').value||0);if(payment==='Dinheiro'&&received<total)return setPDVStatus(`Valor recebido insuficiente. Faltam ${money(total-received)}.`,'error');for(const i of pdvCart){const p=products.find(x=>x.id===i.id);if(!p)continue;if((p.stock||0)>0 && i.qty>p.stock)return setPDVStatus(`Estoque insuficiente: ${p.name}.`,'error')}pdvCart.forEach(i=>{const p=products.find(x=>x.id===i.id);if(p&&(p.stock||0)>0)p.stock=Math.max(0,p.stock-i.qty)});const sale={id:'V'+Date.now(),date:new Date().toISOString(),items:pdvCart.map(i=>{const p=products.find(x=>x.id===i.id);return {id:p.id,name:p.name,sku:p.sku,barcode:p.barcode,qty:i.qty,unit:p.price,total:p.price*i.qty}}),subtotal:pdvCart.reduce((s,i)=>{const p=products.find(x=>x.id===i.id);return s+p.price*i.qty},0),discount:Number(document.getElementById('pdvDiscount').value||0),total,payment,received,change:Math.max(0,received-total)};sales.unshift(sale);sales=sales.slice(0,500);pdvCart=[];save();savePDV();renderProducts();renderAdmin();renderPDV();setPDVStatus(`✓ Venda ${sale.id} concluída — ${money(total)}`,'success');printSale(sale)}
+function printSale(sale){const w=window.open('','_blank','width=420,height=650');if(!w)return;const rows=sale.items.map(i=>`<tr><td>${i.name}<br><small>${i.qty} x ${money(i.unit)}</small></td><td style="text-align:right">${money(i.total)}</td></tr>`).join('');w.document.write(`<html><head><title>${sale.id}</title><style>body{font-family:Arial,sans-serif;width:320px;margin:20px auto;color:#111}h2{text-align:center;margin:0}.center{text-align:center}table{width:100%;border-collapse:collapse;margin-top:15px}td{padding:7px 0;border-bottom:1px dashed #bbb}small{color:#555}.tot{font-size:20px;font-weight:bold;text-align:right;margin-top:12px}</style></head><body><h2>STUDIO 70 BRAND</h2><div class="center">COMPROVANTE DE VENDA<br>${sale.id}<br>${new Date(sale.date).toLocaleString('pt-BR')}</div><table>${rows}</table><div>Subtotal: ${money(sale.subtotal)}</div><div>Desconto: ${money(sale.discount)}</div><div class="tot">TOTAL: ${money(sale.total)}</div><p>Pagamento: ${sale.payment}</p>${sale.payment==='Dinheiro'?`<p>Recebido: ${money(sale.received)}<br>Troco: ${money(sale.change)}</p>`:''}<p class="center">Obrigado pela preferência!</p><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>`);w.document.close()}
+function renderSales(){const el=document.getElementById('pdvHistory');if(!el)return;el.innerHTML=sales.length?sales.slice(0,20).map(s=>`<div class="sale-row"><b>${s.id} — ${money(s.total)}</b><br><small>${new Date(s.date).toLocaleString('pt-BR')} · ${s.payment} · ${s.items.reduce((a,i)=>a+i.qty,0)} item(ns)</small><br><button class="smallbtn" onclick="printSale(${JSON.stringify(s).replace(/"/g,'&quot;')})">🖨️ Comprovante</button></div>`).join(''):'<div class="empty">Nenhuma venda registrada.</div>'}
+function openPDV(){document.getElementById('pdvModal').classList.add('open');renderPDV();document.getElementById('pdvScanner').focus()}
+function closePDV(){document.getElementById('pdvModal').classList.remove('open')}
+document.getElementById('pdvBtn').onclick=openPDV;
+document.getElementById('pdvScanner').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();scanPDV()}});
+document.getElementById('pdvSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();pdvSearchAdd()}});
+document.getElementById('pdvDiscount').addEventListener('input',renderPDV);document.getElementById('pdvReceived').addEventListener('input',updateChange);
+document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
+function openAdmin(){document.getElementById('adminModal').classList.add('open');renderAdmin();document.getElementById('scannerInput').focus()} function closeAdmin(){document.getElementById('adminModal').classList.remove('open')} document.getElementById('adminBtn').onclick=openAdmin;
+function clearForm(){document.getElementById('productForm').reset();document.getElementById('editId').value='';document.getElementById('formTitle').textContent='Novo produto';document.getElementById('pActive').checked=true;document.getElementById('pBarcode').value='ST70'+String(products.length+1).padStart(6,'0');}
+function editProduct(id){const p=products.find(x=>x.id===id);if(!p)return;document.getElementById('editId').value=p.id;document.getElementById('pName').value=p.name;document.getElementById('pPrice').value=p.price;document.getElementById('pSku').value=p.sku;document.getElementById('pBarcode').value=p.barcode;document.getElementById('pCategory').value=p.category;document.getElementById('pStock').value=p.stock||0;document.getElementById('pSizes').value=(p.sizes||[]).join(', ');document.getElementById('pColors').value=(p.colors||[]).join(', ');document.getElementById('pImage').value=p.image||'';document.getElementById('pDescription').value=p.description||'';document.getElementById('pActive').checked=p.active!==false;document.getElementById('pFeatured').checked=!!p.featured;document.getElementById('formTitle').textContent='Editar produto';document.getElementById('labelPreview').style.display='block';drawLabel(p);window.scrollTo({top:0,behavior:'smooth'})}
+document.getElementById('productForm').onsubmit=e=>{e.preventDefault();const id=document.getElementById('editId').value||'p'+Date.now();const old=products.find(p=>p.id===id);const p={id,name:document.getElementById('pName').value.trim(),price:Number(document.getElementById('pPrice').value),sku:document.getElementById('pSku').value.trim(),barcode:document.getElementById('pBarcode').value.trim(),category:document.getElementById('pCategory').value,stock:Number(document.getElementById('pStock').value||0),sizes:document.getElementById('pSizes').value.split(',').map(x=>x.trim()).filter(Boolean),colors:document.getElementById('pColors').value.split(',').map(x=>x.trim()).filter(Boolean),image:document.getElementById('pImage').value.trim(),description:document.getElementById('pDescription').value.trim(),active:document.getElementById('pActive').checked,featured:document.getElementById('pFeatured').checked};if(old)products=products.map(x=>x.id===id?p:x);else products.unshift(p);save();renderProducts();renderAdmin();drawLabel(p);document.getElementById('labelPreview').style.display='block';alert('Produto salvo com sucesso.')};
+function deleteProduct(id){if(!confirm('Remover este produto?'))return;products=products.filter(p=>p.id!==id);save();renderProducts();renderAdmin();}
+function renderAdmin(){const q=(document.getElementById('adminSearch').value||'').toLowerCase();const list=products.filter(p=>[p.name,p.sku,p.barcode].join(' ').toLowerCase().includes(q));document.getElementById('adminCount').textContent=`(${products.length})`;document.getElementById('adminList').innerHTML=list.slice(0,100).map(p=>`<div class="admin-item"><span><b>${p.name}</b><br>${money(p.price)} · ${p.barcode} · estoque ${p.stock||0}</span><span class="admin-tools"><button class="smallbtn" onclick="editProduct('${p.id}')">Editar</button><button class="smallbtn" onclick="drawLabelFor('${p.id}')">Etiqueta</button><button class="smallbtn danger" onclick="deleteProduct('${p.id}')">Excluir</button></span></div>`).join('');}
+document.getElementById('adminSearch').oninput=renderAdmin;
+function drawLabel(p){document.getElementById('labelName').textContent=`${p.name} · ${money(p.price)}`;document.getElementById('labelCode').textContent=p.barcode;if(window.JsBarcode)JsBarcode('#barcodeSvg',p.barcode,{format:'CODE128',displayValue:true,height:55,margin:8});}
+function drawLabelFor(id){const p=products.find(x=>x.id===id);if(!p)return;drawLabel(p);document.getElementById('labelPreview').style.display='block';document.getElementById('editId').value=p.id;}
+function printSelectedLabel(){const id=document.getElementById('editId').value;if(!id)return alert('Selecione/edite um produto primeiro.');const p=products.find(x=>x.id===id);if(!p)return;drawLabel(p);const w=window.open('','_blank','width=500,height=400');w.document.write(`<html><body style="font-family:Arial;text-align:center;padding:25px"><h3>${p.name}</h3><div>${money(p.price)}</div><svg id="b"></svg><div>${p.barcode}</div><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"><\/script><script>setTimeout(()=>{JsBarcode('#b','${p.barcode}',{format:'CODE128',displayValue:true,height:70});window.print()},300)<\/script></body></html>`);w.document.close();}
+document.getElementById('scannerInput').addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();const code=e.target.value.trim();if(!code)return;const p=products.find(x=>String(x.barcode).toLowerCase()===code.toLowerCase()||String(x.sku).toLowerCase()===code.toLowerCase());const result=document.getElementById('scanResult');if(p){result.textContent=`✓ ${p.name} encontrado — estoque: ${p.stock||0}`;}else result.textContent='✕ Código não cadastrado: '+code;e.target.value='';setTimeout(()=>e.target.focus(),50);});
+document.getElementById('importData').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{products=JSON.parse(r.result);save();renderProducts();renderAdmin();alert('Backup restaurado.')}catch(_ ){alert('Arquivo inválido.')}};r.readAsText(f)};
+function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(products,null,2)],{type:'application/json'}));a.download='studio70-produtos-backup.json';a.click();}
+renderCategories();clearForm();renderProducts();renderCart();renderPDV();
+</script></body></html>
