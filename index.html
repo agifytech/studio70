@@ -215,7 +215,7 @@ function selectShipping(idx){
   updateCheckoutTotal();
 }
 
-// COTAÇÃO DE FRETE INTEGRADA DIRETAMENTE COM O SUPERFRETE
+// COTAÇÃO DE FRETE COM CORS PROXY PARA GitHub Pages
 async function quoteShipping(){
   const cep = digits(val('chk_cep'));
   if(cep.length!==8){ document.getElementById('freightStatus').textContent='Informe um CEP válido.'; document.getElementById('freightStatus').className='status error'; return; }
@@ -227,11 +227,10 @@ async function quoteShipping(){
   try{
     const SUPERFRETE_TOKEN = "eyJhbGciOiJlUzl1NilslnR5cCl6lkpXVCJ9.eyJpYXQiOjE3ODc4NTl5ODYslnN1Yil6lk4ycVNTdGdSbGtmRkgxZXBmZkltZWRs0N0MjligQ.mxbxVAxUbs0vglud94LXoP9oWcar2hKxlnPV3WFomrw";
     
-    // Payload padrão ajustado para o SuperFrete
     const payload = {
       to: cep,
-      from: "01001000", // Substitua pelo seu CEP de origem se necessário
-      services: "1,2", // 1: PAC, 2: SEDEX (exemplo)
+      from: "01001000", 
+      services: "1,2", 
       products: cart.map(i => {
         const p = productObj(i.id);
         return {
@@ -246,7 +245,9 @@ async function quoteShipping(){
       })
     };
 
-    const r = await fetch('https://api.superfrete.com/api/v0/calculator', {
+    // Utilizando corsproxy.io para contornar o bloqueio de CORS do navegador no GitHub Pages
+    const targetUrl = 'https://api.superfrete.com/api/v0/calculator';
+    const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(targetUrl), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
