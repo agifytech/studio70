@@ -26,7 +26,6 @@ footer{border-top:1px solid #bdb9b2;padding:45px 22px;text-align:center;color:#5
 @keyframes wa-pulse{0%{box-shadow:0 0 0 0 rgba(0,0,0,.35)}70%{box-shadow:0 0 0 14px rgba(0,0,0,0)}100%{box-shadow:0 0 0 0 rgba(0,0,0,0)}}
 @media(prefers-reduced-motion:reduce){.whatsapp{animation:none}}
 
-/* Estilos específicos da Tela de Checkout Unificada */
 .checkout-view-container { max-width: 1100px; margin: 28px auto; padding: 0 16px; }
 .checkout-grid { display: grid; grid-template-columns: 1.35fr .8fr; gap: 20px; }
 .checkout-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px; box-shadow: 0 5px 20px #0000000b; }
@@ -46,7 +45,6 @@ footer{border-top:1px solid #bdb9b2;padding:45px 22px;text-align:center;color:#5
 .paybox { margin-top: 16px; padding: 14px; background: #f5f3ef; border: 1px solid var(--line); border-radius: 12px; color: #111; }
 .paybox b { display: block; margin-bottom: 6px; }
 
-/* PDV & Outros */
 .pdv-layout{display:grid;grid-template-columns:1.35fr .9fr;gap:18px}.pdv-card{background:#fff;border:1px solid #c8c5be;border-radius:15px;padding:18px}.pdv-scan{border:1px solid #77736c;background:#eceae6;padding:16px;border-radius:12px}.pdv-scan input{font-size:24px;font-weight:900}.pdv-items{display:grid;gap:8px;margin-top:14px}.pdv-item{display:grid;grid-template-columns:54px 1fr auto auto;gap:10px;align-items:center;padding:10px;border:1px solid #c8c5be;border-radius:11px;background:#fff}.pdv-item img{display:block;width:54px;height:65px;object-fit:contain;object-position:center;border-radius:8px;background:#f2f1ee;max-width:100%;border:0}.pdv-item-name{font-weight:800;font-size:13px}.pdv-item-meta{font-size:10px;color:var(--muted);margin-top:4px}.qtybox{display:flex;align-items:center;gap:5px}.qtybox button{width:30px;height:30px;border:1px solid #c6c2ba;background:#f1efeb;color:#111;border-radius:7px}.qtybox b{min-width:25px;text-align:center}.pdv-total{font-size:32px;font-weight:900;color:#111;text-align:right;margin:18px 0}.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pay-grid label{display:block}.change-box{background:#eceae6;border:1px solid #8a8780;border-radius:10px;padding:12px;margin-top:10px}.change-box strong{font-size:24px;color:#111}.pdv-history{max-height:440px;overflow:auto;display:grid;gap:8px}.sale-row{padding:12px;border:1px solid #c8c5be;border-radius:10px;background:#fff}.sale-row b{font-size:13px}.sale-row small{color:var(--muted)}.pdv-status{min-height:22px;margin-top:8px;font-weight:800}.success{color:#1b1b19}.warn{color:#ffd166}.pdv-shortcuts{font-size:11px;color:var(--muted);margin-top:8px}
 
 @media(max-width:900px){
@@ -77,7 +75,6 @@ footer{border-top:1px solid #bdb9b2;padding:45px 22px;text-align:center;color:#5
   </div>
 </header>
 
-<!-- VIEW 1: LOJA PRINCIPAL -->
 <div id="storeView">
   <main id="inicio">
     <section class="hero" style="padding:0 22px">
@@ -110,7 +107,6 @@ footer{border-top:1px solid #bdb9b2;padding:45px 22px;text-align:center;color:#5
   </main>
 </div>
 
-<!-- VIEW 2: CHECKOUT AVANÇADO (INTEGRADO) -->
 <div id="checkoutView" style="display:none">
   <div class="checkout-view-container">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px">
@@ -174,7 +170,6 @@ footer{border-top:1px solid #bdb9b2;padding:45px 22px;text-align:center;color:#5
   <p>© 2026 STUDIO 70 BRAND</p>
 </footer>
 
-<!-- Modais do Sistema (Carrinho, Login, Admin, PDV, Produto) -->
 <div class="drawer" id="cartDrawer">
   <div class="drawer-panel">
     <button class="close" onclick="closeCart()">×</button>
@@ -313,6 +308,13 @@ async function quoteShipping(){
   try{
     const payload={to:cep, insurance_value:checkoutSubtotal(), products:cart.map(i=>{const d=dimensions(productObj(i.id));return {...d, quantity:Number(i.qty||1)}})};
     const r=await fetch('/api/frete/cotacao',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    
+    // CORREÇÃO APLICADA: Valida se o retorno é JSON antes de processar (Evita o erro 405/HTML)
+    const contentType = r.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Erro 405/404: O servidor não possui a API de frete configurada.");
+    }
+
     const data=await r.json();
     if(!r.ok) throw new Error(data.error||'Falha na cotação');
     shippingOptions = Array.isArray(data)?data:(data?.shipping||data?.result||[]);
@@ -369,6 +371,13 @@ async function pay(){
       items: cart.map(i=>{const p=productObj(i.id);return {id:p.id, title:p.name, quantity:i.qty, unit_price:p.price}})
     };
     const r = await fetch('/api/mercadopago/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    
+    // CORREÇÃO APLICADA: Valida se o retorno é JSON antes de processar
+    const contentType = r.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Erro 405/404: O servidor não possui a API de pagamento configurada.");
+    }
+
     const data = await r.json();
     if(!r.ok) throw new Error(data.error||'Erro ao iniciar pagamento.');
     localStorage.removeItem('studio70_cart');
