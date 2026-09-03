@@ -383,5 +383,39 @@ async function startCardCheckout(){
   }
 }
 
-renderCategories();clearForm();loadPaymentSettings();loadShippingSettings();renderProducts();renderCart();renderPDV();
-</script></body></html>
+renderCategories();clearForm();loadPaymentSettings();loadShippingSettings();renderProducts();renderCart();renderPDV();<!-- Seus outros scripts ou elementos HTML ficam aqui -->
+
+    <script>
+      async function finalizarCompra(carrinhoItens) {
+        try {
+          const urlSupabaseFunction = 'https://tfntuijxyjfpmvdxaidk.supabase.co/functions/v1/create-preference';
+          const installmentsSelect = document.getElementById('installmentsSelect');
+          const selectedInstallments = installmentsSelect ? Number(installmentsSelect.value) || 1 : 1;
+
+          const response = await fetch(urlSupabaseFunction, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              items: carrinhoItens.map(item => ({
+                title: item.nome,
+                quantity: item.quantidade,
+                unit_price: Number(item.preco)
+              })),
+              installments: selectedInstallments
+            })
+          });
+
+          const preference = await response.json();
+          if (preference.init_point) {
+            window.location.href = preference.init_point;
+          } else {
+            console.error("Erro ao criar preferência:", preference);
+            alert("Não foi possível iniciar o pagamento.");
+          }
+        } catch (error) {
+          console.error("Erro de conexão:", error);
+          alert("Erro de rede ao processar o pagamento.");
+        }
+      }
+    </script>
+</body></html>
