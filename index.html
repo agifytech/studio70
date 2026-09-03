@@ -385,25 +385,13 @@ async function startCardCheckout(){
 
 renderCategories();clearForm();loadPaymentSettings();loadShippingSettings();renderProducts();renderCart();renderPDV();<!-- Seus outros scripts ou elementos HTML ficam aqui -->
 
-    <script>
-      async function finalizarCompra(carrinhoItens) {
-        try {
-          const urlSupabaseFunction = 'https://tfntuijxyjfpmvdxaidk.supabase.co/functions/v1/create-preference';
-          const installmentsSelect = document.getElementById('installmentsSelect');
-          const selectedInstallments = installmentsSelect ? Number(installmentsSelect.value) || 1 : 1;
-
-          const response = await fetch(urlSupabaseFunction, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              items: carrinhoItens.map(item => ({
-                title: item.nome,
-                quantity: item.quantidade,
-                unit_price: Number(item.preco)
-              })),
-              installments: selectedInstallments
-            })
-          });
+<script>
+async function finalizarCompra(carrinhoItens) {try {const urlSupabaseFunction = 'https://tfntuijxyjfpmvdxaidk.supabase.co/functions/v1/create-preference';const installmentsSelect = document.getElementById('installmentsSelect');
+const selectedInstallments = installmentsSelect ? Number(installmentsSelect.value) || 1 : 1;
+const response = await fetch(urlSupabaseFunction, {method: 'POST',headers: { 'Content-Type': 'application/json'},body: JSON.stringify({items: carrinhoItens.map(item => ({title: item.nome,quantity: item.quantidade,unit_price: Number(item.preco)})),
+ installments: selectedInstallments
+})
+});
 
           const preference = await response.json();
           if (preference.init_point) {
