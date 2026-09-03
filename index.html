@@ -15,17 +15,10 @@ nav{display:flex;gap:20px;flex:1} nav a{color:#24231f;text-decoration:none;font-
 .hero{min-height:500px;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(190,187,180,.9)),repeating-linear-gradient(115deg,rgba(0,0,0,.025) 0 2px,transparent 2px 7px);color:#111} .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-35deg,rgba(0,0,0,.035) 0 22px,transparent 22px 44px);pointer-events:none} .hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:#111} .hero>div{position:relative;z-index:1} .hero .eyebrow{display:inline-block;color:#fff;background:#111;font-family:var(--font-display);font-weight:400;letter-spacing:3px;font-size:13px;padding:6px 14px;transform:skew(-8deg)} .hero h1{font:clamp(64px,12vw,120px)/.82 var(--font-display);margin:20px 0 2px;text-transform:uppercase} .hero h2{font:clamp(18px,3vw,28px) var(--font-body);font-weight:700;letter-spacing:6px;margin:0 0 28px;color:#4f4d48} .btn{border:2px solid #111;border-radius:2px;padding:15px 26px;font-family:var(--font-display);font-weight:400;letter-spacing:1px;text-transform:uppercase;font-size:16px;background:#111;color:#fff;box-shadow:5px 5px 0 #8c8982;transition:transform .15s,box-shadow .15s} .btn:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 #8c8982} .trustbar{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:1280px;margin:0 auto;padding:0 22px 10px}.trustbar span{font-size:11px;font-weight:700;letter-spacing:.5px;color:#45433e;border:1px solid #bbb8b1;border-radius:999px;padding:8px 14px;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.45)}.announce{background:#111;color:#fff;text-align:center;font-size:12px;font-weight:700;letter-spacing:1px;padding:9px 12px;overflow:hidden}
 section{max-width:1280px;margin:auto;padding:42px 22px} .section-title{font:34px var(--font-display);text-transform:uppercase;letter-spacing:1px;margin:0 0 22px;position:relative;padding-left:16px;border-left:6px solid #111;color:#111} .category-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px} .cat{padding:24px 15px;border:1px solid #c7c4bd;background:#fff;border-radius:10px;text-align:center;font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.5px;color:#171614;transition:border-color .15s,transform .15s} .cat:hover{border-color:#111;transform:translateY(-2px)}
 .searchbar{display:flex;gap:10px;margin-bottom:22px} .searchbar input,.field{width:100%;background:#fff;color:#111;border:1px solid #bdb9b2;padding:13px;border-radius:10px;outline:none;font-family:var(--font-body)} .searchbar input:focus,.field:focus{border-color:#111} .searchbar select{max-width:230px}
-.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px} .product{background:#fff;border:1px solid #c8c5be;border-radius:12px;overflow:hidden;position:relative;transition:border-color .15s,transform .15s} .product:hover{border-color:#111;transform:translateY(-3px)} .product img{display:block;width:100%;height:330px;object-fit:contain;object-position:center;background:#f3f2ef;padding:6px;transition:transform .3s;max-width:100%;border:0} .product:hover img{transform:scale(1.05)} .product-info{padding:14px} .product h3{font-size:13px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.3px;font-weight:600} .product .price{font-family:var(--font-display);font-size:24px;font-weight:400;color:#111} .meta{font-size:11px;color:#6c6963;margin:5px 0 12px} .product-actions{display:flex;gap:8px} .smallbtn{flex:1;border:1px solid #c3c0b9;background:#f2f1ee;color:#111;border-radius:8px;padding:10px;font-weight:700;font-size:12px;transition:border-color .15s} .smallbtn:hover{border-color:#111} .smallbtn.primary{background:#111;color:#fff;border-color:#111;text-transform:uppercase;font-weight:700;letter-spacing:.3px} .smallbtn.primary:hover{filter:brightness(1.08)}
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px} .product{background:#fff;border:1px solid #c8c5be;border-radius:12px;overflow:hidden;position:relative;transition:border-color .15s,transform .15s} .product:hover{border-color:#111;transform:translateY(-3px)} .product img{display:block;width:100%;height:330px;object-fit:contain;object-position:center;background:#f3f2ef;padding:6px;transition:transform .3s;max-width:100%;border:0} .product:hover img{transform:scale(1.05)} .product-info{padding:14px} .product h3{font-size:13px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.3px;font-weight:600} .product h3{font-size:13px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.3px;font-weight:600} .product .price{font-family:var(--font-display);font-size:24px;font-weight:400;color:#111} .meta{font-size:11px;color:#6c6963;margin:5px 0 12px} .product-actions{display:flex;gap:8px} .smallbtn{flex:1;border:1px solid #c3c0b9;background:#f2f1ee;color:#111;border-radius:8px;padding:10px;font-weight:700;font-size:12px;transition:border-color .15s} .smallbtn:hover{border-color:#111} .smallbtn.primary{background:#111;color:#fff;border-color:#111;text-transform:uppercase;font-weight:700;letter-spacing:.3px} .smallbtn.primary:hover{filter:brightness(1.08)}
 .badge{position:absolute;top:10px;left:10px;background:#111;color:#fff;border-radius:3px;padding:6px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px} .badge.featured{left:auto;right:10px;background:#fff;border:1px solid #111;color:#111} .empty{padding:40px;text-align:center;color:#68655f;border:1px dashed #c6c2ba;border-radius:15px}
 .drawer,.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;display:none} .drawer.open,.modal.open{display:block} .drawer-panel{margin-left:auto;width:min(480px,100%);height:100%;background:#f5f4f1;color:#111;padding:22px;overflow:auto;border-left:1px solid #c4c1ba} .modal-panel{width:min(1100px,94vw);max-height:92vh;overflow:auto;margin:4vh auto;background:#f5f4f1;border:1px solid #c4c1ba;border-radius:18px;padding:22px}
 .close{float:right;border:0;background:#111;color:#fff;border-radius:9px;padding:8px 12px} .cart-row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #d0cdc6} .total{font-size:24px;font-weight:900;margin:20px 0;color:#111}
-.admin-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px} .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px} label{font-size:12px;font-weight:800;color:#333} label.full{grid-column:1/-1} textarea{min-height:100px;resize:vertical} .checkrow{display:flex;gap:15px;align-items:center;padding:12px 0} .admin-list{display:grid;gap:8px} .admin-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px;background:#fff;border:1px solid #c8c5be;border-radius:10px} .admin-item span{font-size:12px} .admin-tools{display:flex;gap:6px} .danger{background:#242321!important;color:#fff!important}
-.scanner{background:#eceae6;border:1px solid #77736c;padding:18px;border-radius:14px;margin-bottom:20px} .scanner input{font-size:20px;font-weight:800} .scan-result{margin-top:10px;color:#1b1b19;font-weight:800} .label-preview{background:#fff;color:#111;padding:18px;border-radius:10px;text-align:center;margin-top:15px} .label-preview svg{max-width:100%;height:auto}
-.product-modal-image{width:100%;height:600px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:15px;overflow:hidden}.product-modal-image img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;max-width:100%;max-height:100%}
-footer{border-top:1px solid #bdb9b2;padding:45px 22px;text-align:center;color:#5f5c56} footer h2{font-family:var(--font-display);text-transform:uppercase;letter-spacing:1px;font-weight:400} footer a{color:#111!important} .whatsapp{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border-radius:50%;background:#111;color:#fff;display:grid;place-items:center;text-decoration:none;font-size:26px;font-weight:900;z-index:25;box-shadow:0 4px 18px rgba(0,0,0,.25);animation:wa-pulse 2.2s infinite}
-@keyframes wa-pulse{0%{box-shadow:0 0 0 0 rgba(0,0,0,.35)}70%{box-shadow:0 0 0 14px rgba(0,0,0,0)}100%{box-shadow:0 0 0 0 rgba(0,0,0,0)}}
-@media(prefers-reduced-motion:reduce){.whatsapp{animation:none}}
-
 .checkout-view-container { max-width: 1100px; margin: 28px auto; padding: 0 16px; }
 .checkout-grid { display: grid; grid-template-columns: 1.35fr .8fr; gap: 20px; }
 .checkout-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px; box-shadow: 0 5px 20px #0000000b; }
@@ -44,15 +37,8 @@ footer{border-top:1px solid #bdb9b2;padding:45px 22px;text-align:center;color:#5
 .error { color: var(--error); }
 .paybox { margin-top: 16px; padding: 14px; background: #f5f3ef; border: 1px solid var(--line); border-radius: 12px; color: #111; }
 .paybox b { display: block; margin-bottom: 6px; }
-
-.pdv-layout{display:grid;grid-template-columns:1.35fr .9fr;gap:18px}.pdv-card{background:#fff;border:1px solid #c8c5be;border-radius:15px;padding:18px}.pdv-scan{border:1px solid #77736c;background:#eceae6;padding:16px;border-radius:12px}.pdv-scan input{font-size:24px;font-weight:900}.pdv-items{display:grid;gap:8px;margin-top:14px}.pdv-item{display:grid;grid-template-columns:54px 1fr auto auto;gap:10px;align-items:center;padding:10px;border:1px solid #c8c5be;border-radius:11px;background:#fff}.pdv-item img{display:block;width:54px;height:65px;object-fit:contain;object-position:center;border-radius:8px;background:#f2f1ee;max-width:100%;border:0}.pdv-item-name{font-weight:800;font-size:13px}.pdv-item-meta{font-size:10px;color:var(--muted);margin-top:4px}.qtybox{display:flex;align-items:center;gap:5px}.qtybox button{width:30px;height:30px;border:1px solid #c6c2ba;background:#f1efeb;color:#111;border-radius:7px}.qtybox b{min-width:25px;text-align:center}.pdv-total{font-size:32px;font-weight:900;color:#111;text-align:right;margin:18px 0}.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pay-grid label{display:block}.change-box{background:#eceae6;border:1px solid #8a8780;border-radius:10px;padding:12px;margin-top:10px}.change-box strong{font-size:24px;color:#111}.pdv-history{max-height:440px;overflow:auto;display:grid;gap:8px}.sale-row{padding:12px;border:1px solid #c8c5be;border-radius:10px;background:#fff}.sale-row b{font-size:13px}.sale-row small{color:var(--muted)}.pdv-status{min-height:22px;margin-top:8px;font-weight:800}.success{color:#1b1b19}.warn{color:#ffd166}.pdv-shortcuts{font-size:11px;color:var(--muted);margin-top:8px}
-
-@media(max-width:900px){
-  .header-container{gap:10px;padding:10px 12px}.logo{font-size:22px;flex:1}.header-icons{gap:5px}.iconbtn{padding:9px 10px}.product-grid{grid-template-columns:repeat(2,1fr)}.category-grid{grid-template-columns:repeat(3,1fr)}section{padding:32px 14px}.checkout-grid{grid-template-columns:1fr}.pdv-layout{grid-template-columns:1fr}
-}
-@media(max-width:650px){
-  .announce{font-size:10px;padding:7px 8px;letter-spacing:.3px}.header-container{position:relative}.logo{font-size:19px}.header-icons{margin-left:auto}.header-icons .iconbtn{font-size:0;width:39px;height:39px;padding:0;display:grid;place-items:center}.header-icons .iconbtn#cartBtn{font-size:18px}.header-icons .iconbtn#cartBtn b{font-size:9px}nav{display:none}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.category-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.modal-panel{width:96vw;max-height:94vh;margin:3vh auto;padding:14px}
-}
+footer{border-top:1px solid #bdb9b2;padding:45px 22px;text-align:center;color:#5f5c56} footer h2{font-family:var(--font-display);text-transform:uppercase;letter-spacing:1px;font-weight:400} footer a{color:#111!important} .whatsapp{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border-radius:50%;background:#111;color:#fff;display:grid;place-items:center;text-decoration:none;font-size:26px;font-weight:900;z-index:25;box-shadow:0 4px 18px rgba(0,0,0,.25);animation:wa-pulse 2.2s infinite}
+@keyframes wa-pulse{0%{box-shadow:0 0 0 0 rgba(0,0,0,.35)}70%{box-shadow:0 0 0 14px rgba(0,0,0,0)}100%{box-shadow:0 0 0 0 rgba(0,0,0,0)}}
 </style></head>
 <body>
 <div class="announce">🔥 FRETE GRÁTIS ACIMA DE R$150 &nbsp;·&nbsp; ENTREGA PARA TODO O BRASIL &nbsp;·&nbsp; TROCA FÁCIL EM 7 DIAS</div>
@@ -63,14 +49,9 @@ footer{border-top:1px solid #bdb9b2;padding:45px 22px;text-align:center;color:#5
     <nav>
       <a href="#inicio" onclick="showStoreView()">INÍCIO</a>
       <a href="#produtos" onclick="showStoreView()">LANÇAMENTOS</a>
-      <a href="#" onclick="showStoreView()">FEMININO</a>
-      <a href="#" onclick="showStoreView()">MASCULINO</a>
     </nav>
     <div class="header-icons">
-      <button class="iconbtn" id="searchBtn" onclick="showStoreView()">🔍</button>
       <button class="iconbtn" id="cartBtn" onclick="openCart()">🛒 <b id="cartCount">0</b></button>
-      <button class="iconbtn" id="pdvBtn" onclick="openPDV()">🧾 PDV</button>
-      <button class="iconbtn" id="adminBtn" onclick="openAdmin()">⚙️ ADM</button>
     </div>
   </div>
 </header>
@@ -85,24 +66,9 @@ footer{border-top:1px solid #bdb9b2;padding:45px 22px;text-align:center;color:#5
         <a class="btn" href="#produtos">VER LANÇAMENTOS →</a>
       </div>
     </section>
-    <div class="trustbar">
-      <span>🚚 Frete grátis acima de R$150</span>
-      <span>🔄 Troca fácil em 7 dias</span>
-      <span>🔒 Compra 100% segura</span>
-      <span>💳 Parcele suas compras</span>
-    </div>
-    <section>
-      <h2 class="section-title">CATEGORIAS</h2>
-      <div class="category-grid" id="categories"></div>
-    </section>
     <section id="produtos">
       <h2 class="section-title">PRODUTOS</h2>
-      <div class="searchbar">
-        <input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras...">
-        <select id="categoryFilter"><option value="">Todas as categorias</option></select>
-      </div>
       <div id="productGrid" class="product-grid"></div>
-      <div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div>
     </section>
   </main>
 </div>
@@ -134,17 +100,10 @@ footer{border-top:1px solid #bdb9b2;padding:45px 22px;text-align:center;color:#5
             <label>Bairro<input class="field" id="chk_neighborhood"></label>
             <label>Cidade<input class="field" id="chk_city" autocomplete="address-level2"></label>
             <label>UF<input class="field" id="chk_state" maxlength="2" autocomplete="address-level1"></label>
-            <label style="grid-column:1/-1">Complemento<input class="field" id="chk_complement"></label>
           </div>
           <button class="btn" style="margin-top:14px;width:100%" id="quoteBtn" onclick="quoteShipping()">CALCULAR FRETE</button>
           <div class="status" id="freightStatus"></div>
           <div id="freightList" class="freight-list"></div>
-        </div>
-        <div class="checkout-card" style="margin-top:18px">
-          <h2>3. Pagamento</h2>
-          <div class="paybox"><b>Mercado Pago</b><div class="note">Você será encaminhado ao ambiente seguro do Mercado Pago para escolher a forma de pagamento disponível na sua conta, como cartão, Pix e boleto.</div></div>
-          <div class="status" id="paymentStatus"></div>
-          <button class="btn" style="margin-top:14px;width:100%" id="payBtn" onclick="pay()">IR PARA PAGAMENTO</button>
         </div>
       </div>
       <aside class="checkout-card">
@@ -155,20 +114,10 @@ footer{border-top:1px solid #bdb9b2;padding:45px 22px;text-align:center;color:#5
           <div>Frete <strong id="chk_shipping" style="float:right">—</strong></div>
           <div class="total-row">Total <span id="chk_total" style="float:right">R$ 0,00</span></div>
         </div>
-        <p class="note" style="margin-top:14px">O valor do frete é calculado com base no CEP de origem, destino, peso e dimensões dos produtos.</p>
       </aside>
     </div>
   </div>
 </div>
-
-<a class="whatsapp" id="whatsappFloat" href="#" target="_blank">✆</a>
-
-<footer>
-  <h2>STUDIO 70 BRAND</h2>
-  <p>Moda urbana masculina e feminina. Estilo, atitude e identidade.</p>
-  <p><a href="https://instagram.com/use.studio70" target="_blank" rel="noopener">Instagram: @use.studio70</a></p>
-  <p>© 2026 STUDIO 70 BRAND</p>
-</footer>
 
 <div class="drawer" id="cartDrawer">
   <div class="drawer-panel">
@@ -177,21 +126,12 @@ footer{border-top:1px solid #bdb9b2;padding:45px 22px;text-align:center;color:#5
     <div id="cartItems"></div>
     <div class="total" id="cartTotal">R$ 0,00</div>
     <button class="btn" style="width:100%;margin-top:10px" onclick="goToCheckoutView()">FINALIZAR COMPRA</button>
-    <button class="btn" style="width:100%;margin-top:10px;background:#eceae6;color:#111" onclick="checkoutWhatsApp()">FINALIZAR NO WHATSAPP</button>
   </div>
 </div>
 
-<div class="modal" id="loginModal"><div class="modal-panel" style="max-width:420px"><button class="close" onclick="closeLogin()">×</button><h2 class="section-title">ACESSO RESTRITO</h2><p id="loginTitle">Digite a senha para continuar.</p><input class="field" id="loginPassword" type="password" inputmode="numeric" maxlength="6" placeholder="Senha" autocomplete="off"><div id="loginError" style="color:#ff6b8f;font-weight:700;min-height:22px;margin:8px 0"></div><button class="btn" style="width:100%" onclick="submitLogin()">ENTRAR</button></div></div>
-
-<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="admin-grid"><div><h3>Produtos cadastrados <span id="adminCount"></span></h3><div id="adminList" class="admin-list"></div></div></div></div></div>
-
-<div class="modal" id="pdvModal"><div class="modal-panel"><button class="close" onclick="closePDV()">×</button><h2 class="section-title">PDV — PONTO DE VENDA</h2><div class="pdv-layout"><div><div class="pdv-card"><div class="pdv-scan"><b>📟 BIPAR PRODUTO</b><input class="field" id="pdvScanner" placeholder="Passe o leitor..." autocomplete="off"><div id="pdvStatus" class="pdv-status"></div></div><div id="pdvItems" class="pdv-items"></div></div></div><div><div class="pdv-card"><h3 style="margin-top:0">Resumo da venda</h3><div class="pdv-total" id="pdvTotal">R$ 0,00</div><button class="btn" style="width:100%;margin-top:14px" onclick="finishSale()">✓ FINALIZAR VENDA</button></div></div></div></div></div>
-
-<div class="modal" id="productModal"><div class="modal-panel"><button class="close" onclick="closeProduct()">×</button><div id="productBody"></div></div></div>
-
 <script>
 const PRODUCTS_KEY='studio70_products_v3';
-const SEED_PRODUCTS = [{"id": "p0001", "name": "Body Janaína", "price": 20.0, "description": "Peça feminina moderna...", "sizes": ["M"], "colors": ["Preto"], "image": "https://acdn-us.mitiendanube.com/stores/001/672/511/products/suplex-3-8825c37d514432de1d17872574990853-1024-1024.webp", "sku": "ST70-0001", "barcode": "ST70000001", "category": "Bodies", "stock": 10, "active": true}, {"id": "p0002", "name": "Maiô Bruna", "price": 18.0, "description": "Maiô moderno...", "sizes": ["M"], "colors": ["Vermelho"], "image": "https://acdn-us.mitiendanube.com/stores/001/672/511/products/design-sem-nome-7-1282a5ca2e8250b0a917870828501206-1024-1024.webp", "sku": "ST70-0002", "barcode": "ST70000002", "category": "Maiôs", "stock": 10, "active": true}];
+const SEED_PRODUCTS = [{"id": "p0001", "name": "Body Janaína", "price": 20.0, "description": "Peça feminina moderna...", "sizes": ["M"], "colors": ["Preto"], "image": "https://acdn-us.mitiendanube.com/stores/001/672/511/products/suplex-3-8825c37d514432de1d17872574990853-1024-1024.webp", "sku": "ST70-0001", "barcode": "ST70000001", "category": "Bodies", "stock": 10, "active": true}];
 
 let products = JSON.parse(localStorage.getItem(PRODUCTS_KEY) || 'null') || SEED_PRODUCTS;
 let cart = JSON.parse(localStorage.getItem('studio70_cart') || '[]');
@@ -202,32 +142,20 @@ const money = n => fmt.format(Number(n||0));
 const digits = v => String(v||'').replace(/\D/g,'');
 const val = id => document.getElementById(id).value.trim();
 
-function saveProducts(){ localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products)); }
 function saveCart(){ localStorage.setItem('studio70_cart', JSON.stringify(cart)); updateCartCount(); }
-
-function updateCartCount(){
-  const count = cart.reduce((s,i)=>s+Number(i.qty||1),0);
-  document.getElementById('cartCount').textContent = count;
-}
+function updateCartCount(){ document.getElementById('cartCount').textContent = cart.reduce((s,i)=>s+Number(i.qty||1),0); }
 
 function renderStore(){
-  const grid = document.getElementById('productGrid');
-  grid.innerHTML = products.filter(p=>p.active).map(p => `
+  document.getElementById('productGrid').innerHTML = products.filter(p=>p.active).map(p => `
     <div class="product">
-      <img src="${p.image}" alt="${p.name}">
-      <div class="product-info">
+      <img src="${p.image}" alt="${p.name}" style="width:100%;height:250px;object-fit:contain">
+      <div class="product-info" style="padding:14px">
         <h3>${p.name}</h3>
         <div class="price">${money(p.price)}</div>
-        <div class="meta">SKU: ${p.sku}</div>
-        <div class="product-actions">
-          <button class="smallbtn primary" onclick="addToCart('${p.id}')">Adicionar</button>
-        </div>
+        <button class="smallbtn primary" style="width:100%;margin-top:8px" onclick="addToCart('${p.id}')">Adicionar</button>
       </div>
     </div>
   `).join('');
-  
-  const cats = [...new Set(products.map(p=>p.category))];
-  document.getElementById('categories').innerHTML = cats.map(c=>`<div class="cat">${c}</div>`).join('');
 }
 
 function addToCart(id){
@@ -237,10 +165,7 @@ function addToCart(id){
   openCart();
 }
 
-function openCart(){
-  document.getElementById('cartDrawer').classList.add('open');
-  renderCartModal();
-}
+function openCart(){ document.getElementById('cartDrawer').classList.add('open'); renderCartModal(); }
 function closeCart(){ document.getElementById('cartDrawer').classList.remove('open'); }
 
 function renderCartModal(){
@@ -250,39 +175,29 @@ function renderCartModal(){
     const p = products.find(x=>x.id===i.id)||{};
     return `<div class="cart-row"><span><b>${p.name||'Produto'}</b><br><small>${i.qty} × ${money(p.price)}</small></span><strong>${money((p.price||0)*i.qty)}</strong></div>`;
   }).join('');
-  const total = cart.reduce((s,i)=>{const p=products.find(x=>x.id===i.id)||{};return s+(p.price||0)*i.qty;},0);
-  document.getElementById('cartTotal').textContent = money(total);
+  document.getElementById('cartTotal').textContent = money(cart.reduce((s,i)=>{const p=products.find(x=>x.id===i.id)||{};return s+(p.price||0)*i.qty;},0));
 }
 
 function showStoreView(){
   document.getElementById('storeView').style.display = 'block';
   document.getElementById('checkoutView').style.display = 'none';
-  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function goToCheckoutView(){
   closeCart();
   document.getElementById('storeView').style.display = 'none';
   document.getElementById('checkoutView').style.display = 'block';
-  window.scrollTo({top:0,behavior:'smooth'});
   renderCheckoutPage();
 }
 
 function productObj(id){ return products.find(p=>p.id===id)||{}; }
-function dimensions(p){ return {weight:Number(p.weightKg||0.3), height:Number(p.heightCm||4), width:Number(p.widthCm||20), length:Number(p.lengthCm||30)}; }
 function checkoutSubtotal(){ return cart.reduce((s,i)=>s+(Number(productObj(i.id).price)||0)*Number(i.qty||1),0); }
 
 function renderCheckoutPage(){
-  if(!cart.length){
-    document.getElementById('checkoutGrid').style.display = 'none';
-    document.getElementById('checkoutEmpty').style.display = 'block';
-    return;
-  }
-  document.getElementById('checkoutGrid').style.display = 'grid';
-  document.getElementById('checkoutEmpty').style.display = 'none';
+  if(!cart.length) return;
   document.getElementById('chk_items').innerHTML = cart.map(i=>{
     const p = productObj(i.id);
-    return `<div class="summary-item"><span><b>${p.name||'Produto'}</b><br><small>${i.qty} × ${money(p.price)}</small></span><strong>${money((Number(p.price)||0)*i.qty)}</strong></div>`;
+    return `<div class="summary-item"><span><b>${p.name}</b><br><small>${i.qty}x</small></span><strong>${money(p.price*i.qty)}</strong></div>`;
   }).join('');
   document.getElementById('chk_subtotal').textContent = money(checkoutSubtotal());
   updateCheckoutTotal();
@@ -300,109 +215,70 @@ function selectShipping(idx){
   updateCheckoutTotal();
 }
 
+// COTAÇÃO DE FRETE INTEGRADA DIRETAMENTE COM O SUPERFRETE
 async function quoteShipping(){
   const cep = digits(val('chk_cep'));
   if(cep.length!==8){ document.getElementById('freightStatus').textContent='Informe um CEP válido.'; document.getElementById('freightStatus').className='status error'; return; }
-  const btn = document.getElementById('quoteBtn'); btn.disabled=true;
-  document.getElementById('freightStatus').textContent='Consultando frete...';
-  try{
-    const payload={to:cep, insurance_value:checkoutSubtotal(), products:cart.map(i=>{const d=dimensions(productObj(i.id));return {...d, quantity:Number(i.qty||1)}})};
-    const r=await fetch('/api/frete/cotacao',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    
-    // CORREÇÃO APLICADA: Valida se o retorno é JSON antes de processar (Evita o erro 405/HTML)
-    const contentType = r.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      throw new Error("Erro 405/404: O servidor não possui a API de frete configurada.");
-    }
-
-    const data=await r.json();
-    if(!r.ok) throw new Error(data.error||'Falha na cotação');
-    shippingOptions = Array.isArray(data)?data:(data?.shipping||data?.result||[]);
-    if(!shippingOptions.length) throw new Error('Nenhuma modalidade disponível para este CEP.');
-    document.getElementById('freightList').innerHTML = shippingOptions.map((x,i)=>`
-      <div class="freight ${i===0?'active':''}" onclick="selectShipping(${i})">
-        <span><b>${x.name||'Correios/Transportadora'}</b><small>${x.days?x.days+' dias úteis':''}</small></span>
-        <strong>${money(x.price||x.value||0)}</strong>
-      </div>`).join('');
-    selectedShipping = shippingOptions[0];
-    updateCheckoutTotal();
-    document.getElementById('freightStatus').textContent='Frete calculado com sucesso.';
-    document.getElementById('freightStatus').className='status ok';
-  }catch(e){
-    document.getElementById('freightStatus').textContent=e.message;
-    document.getElementById('freightStatus').className='status error';
-  }finally{ btn.disabled=false; }
-}
-
-async function cepLookup(){
-  const cep = digits(val('chk_cep'));
-  if(cep.length!==8) return;
-  try{
-    const r = await fetch('https://viacep.com.br/ws/'+cep+'/json/');
-    const d = await r.json();
-    if(!d.erro){
-      document.getElementById('chk_street').value = d.logradouro||'';
-      document.getElementById('chk_neighborhood').value = d.bairro||'';
-      document.getElementById('chk_city').value = d.localidade||'';
-      document.getElementById('chk_state').value = d.uf||'';
-    }
-  }catch(_){}
-}
-document.getElementById('chk_cep').addEventListener('input', e=>{
-  let d = digits(e.target.value);
-  if(d.length>5) d = d.slice(0,5)+'-'+d.slice(5,8);
-  e.target.value = d;
-  if(digits(d).length===8) cepLookup();
-});
-
-async function pay(){
-  if(!selectedShipping){ document.getElementById('paymentStatus').textContent='Selecione o frete antes de continuar.'; document.getElementById('paymentStatus').className='status error'; return; }
-  const name=val('chk_name'), email=val('chk_email'), cpf=digits(val('chk_cpf'));
-  if(!name || !email || cpf.length<11){ document.getElementById('paymentStatus').textContent='Preencha seus dados corretamente.'; document.getElementById('paymentStatus').className='status error'; return; }
   
-  const btn = document.getElementById('payBtn'); btn.disabled=true;
-  document.getElementById('paymentStatus').textContent='Criando checkout seguro...';
+  const btn = document.getElementById('quoteBtn'); 
+  btn.disabled=true;
+  document.getElementById('freightStatus').textContent='Consultando SuperFrete...';
+  
   try{
-    const payload = {
-      external_reference: 'ST70-'+Date.now(),
-      customer: {name, email, cpf},
-      shipping: {cep: digits(val('chk_cep')), street: val('chk_street'), number: val('chk_number'), city: val('chk_city'), state: val('chk_state')},
-      shipping_cost: Number(selectedShipping.price||0),
-      items: cart.map(i=>{const p=productObj(i.id);return {id:p.id, title:p.name, quantity:i.qty, unit_price:p.price}})
-    };
-    const r = await fetch('/api/mercadopago/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const SUPERFRETE_TOKEN = "eyJhbGciOiJlUzl1NilslnR5cCl6lkpXVCJ9.eyJpYXQiOjE3ODc4NTl5ODYslnN1Yil6lk4ycVNTdGdSbGtmRkgxZXBmZkltZWRs0N0MjligQ.mxbxVAxUbs0vglud94LXoP9oWcar2hKxlnPV3WFomrw";
     
-    // CORREÇÃO APLICADA: Valida se o retorno é JSON antes de processar
-    const contentType = r.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      throw new Error("Erro 405/404: O servidor não possui a API de pagamento configurada.");
-    }
+    // Payload padrão ajustado para o SuperFrete
+    const payload = {
+      to: cep,
+      from: "01001000", // Substitua pelo seu CEP de origem se necessário
+      services: "1,2", // 1: PAC, 2: SEDEX (exemplo)
+      products: cart.map(i => {
+        const p = productObj(i.id);
+        return {
+          id: p.id,
+          width: 20,
+          height: 10,
+          length: 20,
+          weight: 0.3,
+          insurance_value: Number(p.price || 0),
+          quantity: Number(i.qty || 1)
+        };
+      })
+    };
+
+    const r = await fetch('https://api.superfrete.com/api/v0/calculator', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPERFRETE_TOKEN}`,
+        'User-Agent': 'Studio70Brand (contato@studio70.com)'
+      },
+      body: JSON.stringify(payload)
+    });
 
     const data = await r.json();
-    if(!r.ok) throw new Error(data.error||'Erro ao iniciar pagamento.');
-    localStorage.removeItem('studio70_cart');
-    window.location.href = data.init_point;
+    if(!r.ok) throw new Error(data.message || 'Falha na cotação do SuperFrete.');
+    
+    shippingOptions = Array.isArray(data) ? data : (data?.shipping || data?.result || []);
+    if(!shippingOptions.length) throw new Error('Nenhuma modalidade disponível para este CEP.');
+
+    document.getElementById('freightList').innerHTML = shippingOptions.map((x,i)=>`
+      <div class="freight ${i===0?'active':''}" onclick="selectShipping(${i})">
+        <span><b>${x.name || 'Correios'}</b><small>${x.delivery_time ? x.delivery_time + ' dias úteis' : ''}</small></span>
+        <strong>${money(x.price || x.custom_price || 0)}</strong>
+      </div>`).join('');
+      
+    selectedShipping = shippingOptions[0];
+    updateCheckoutTotal();
+    document.getElementById('freightStatus').textContent='Frete calculado com sucesso!';
+    document.getElementById('freightStatus').className='status ok';
   }catch(e){
-    document.getElementById('paymentStatus').textContent = e.message;
-    document.getElementById('paymentStatus').className = 'status error';
-    btn.disabled = false;
+    document.getElementById('freightStatus').textContent = e.message;
+    document.getElementById('freightStatus').className = 'status error';
+  }finally{ 
+    btn.disabled=false; 
   }
 }
-
-function checkoutWhatsApp(){
-  if(!cart.length) return;
-  let text = "Olá! Gostaria de finalizar o meu pedido na Studio 70 Brand:\n\n";
-  cart.forEach(i=>{ const p=productObj(i.id); text += `- ${i.qty}x ${p.name} (${money(p.price)})\n`; });
-  const total = cart.reduce((s,i)=>{const p=productObj(i.id);return s+(p.price||0)*i.qty;},0);
-  text += `\n*Total:* ${money(total)}`;
-  window.open('https://wa.me/5511999999999?text='+encodeURIComponent(text), '_blank');
-}
-
-function openAdmin(){ document.getElementById('adminModal').classList.add('open'); }
-function closeAdmin(){ document.getElementById('adminModal').classList.remove('open'); }
-function openPDV(){ document.getElementById('pdvModal').classList.add('open'); }
-function closePDV(){ document.getElementById('pdvModal').classList.remove('open'); }
-function closeProduct(){}
 
 renderStore();
 updateCartCount();
