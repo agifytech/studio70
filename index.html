@@ -61,6 +61,13 @@ footer{border-top:1px solid #bdb9b2;padding:45px 22px;text-align:center;color:#5
       <a href="#produtos">MASCULINO</a>
     </nav>
     <div class="header-icons">
+      <button 
+  type="button" 
+  id="btn-pagar" 
+  onclick="startCardCheckout()"
+  style="background-color: #009ee3; color: #fff; padding: 12px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%;">
+  PAGAR COM CARTÃO / PIX
+</button>
       <button class="iconbtn" id="searchBtn" onclick="document.getElementById('searchInput').focus()">🔍</button>
       <button class="iconbtn" id="cartBtn" onclick="openCart()">🛒 <b id="cartCount">0</b></button>
       <button class="iconbtn" id="pdvBtn" onclick="openPDVAuth()">🧾 PDV</button>
