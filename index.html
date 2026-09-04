@@ -440,6 +440,15 @@ const CHECKOUT_API = (
   localStorage.getItem('studio70_checkout_api') ||
   'https://SEU-PROJETO.supabase.co/functions/v1/checkout-api'
 ).trim();
+
+// A Edge Function deve estar publicada com Verify JWT = OFF.
+// Não coloque MP_ACCESS_TOKEN, SUPERFRETE_TOKEN ou SERVICE_ROLE_KEY neste HTML.
+function checkoutApiUrl(){
+  if(!CHECKOUT_API || CHECKOUT_API.includes('SEU-PROJETO.supabase.co')){
+    throw new Error('Configure o endpoint real da Edge Function checkout-api no painel de administração.');
+  }
+  return CHECKOUT_API.replace(/\/$/,'');
+}
 const SHIPPING_KEY='studio70_shipping';
 function shippingSettings(){try{return JSON.parse(localStorage.getItem(SHIPPING_KEY)||'{}')}catch(_){return {}}}
 function loadShippingSettings(){const s=shippingSettings();const ep=document.getElementById('shippingEndpoint'),cep=document.getElementById('shippingOriginCep');if(ep)ep.value=s.endpoint||CHECKOUT_API;if(cep)cep.value=s.originCep||'';}
@@ -498,7 +507,7 @@ async function integratedQuoteShipping(){
   const btn=document.getElementById('quoteBtn');btn.disabled=true;setStatus('freightStatus','Consultando a SuperFrete...');
   try{
     const payload={to:cep,insurance_value:integratedSubtotal(),use_insurance_value:false,products:cart.map(i=>({...integratedDimensions(integratedProduct(i.id)),quantity:Number(i.qty||1)}))};
-    const r=await fetch(CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'shipping',...payload})});
+    const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'shipping',...payload})});
     const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha na cotação');
     const arr=Array.isArray(data)?data:(data?.shipping||data?.result||data?.services||[]);
     integratedShippingOptions=arr.filter(x=>x&&Number(x.price??x.custom_price??x.total??x.value)>=0).map(x=>({id:x.id??x.service??x.service_id,name:x.name??x.service_name??x.company?.name??'Opção de envio',price:Number(x.price??x.custom_price??x.total??x.value??0),days:Number(x.delivery_time??x.delivery_range?.max??x.delivery_time_in_days??0),raw:x}));
@@ -515,18 +524,18 @@ async function createPixPayment(){
   const total=integratedSubtotal()+Number(integratedSelectedShipping.price||0);const btn=document.getElementById('pixBtn');btn.disabled=true;integratedSetCheckoutStatus('Gerando Pix...');
   try{
     const payload={action:'pix',external_reference:'ST70-'+Date.now(),description:'Compra STUDIO 70 BRAND',transaction_amount:Number(total.toFixed(2)),customer:{name,email,cpf},items:cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:Number(p.price||0),sku:p.sku||''}}),shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement')},shipping_cost:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name};
-    const r=await fetch(CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao gerar Pix.');
+    const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao gerar Pix.');
     integratedPixPaymentId=data.payment_id||data.id;const qr=document.getElementById('pixQr');if(qr){qr.src=data.qr_code_base64?.startsWith('data:')?data.qr_code_base64:'data:image/png;base64,'+data.qr_code_base64;qr.style.display='block';}
     document.getElementById('pixCode').value=data.qr_code||'';document.getElementById('pixBox').classList.add('show');integratedSetCheckoutStatus('Pix gerado. Escaneie o QR Code ou copie o código.','ok');
     if(integratedPixTimer)clearInterval(integratedPixTimer);integratedPixTimer=setInterval(checkPixStatus,5000);localStorage.setItem('studio70_last_order',JSON.stringify(payload));
   }catch(e){integratedSetCheckoutStatus(e.message,'error');}finally{btn.disabled=false;}
 }
-async function checkPixStatus(){if(!integratedPixPaymentId)return;try{const r=await fetch(CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'pix_status',payment_id:integratedPixPaymentId})});const d=await r.json();if(d.status==='approved'){clearInterval(integratedPixTimer);integratedSetCheckoutStatus('Pagamento Pix aprovado!','ok');localStorage.removeItem('studio70_cart');cart.length=0;renderCart();setTimeout(closeIntegratedCheckout,1800);}else if(d.status==='rejected'||d.status==='cancelled'){clearInterval(integratedPixTimer);integratedSetCheckoutStatus('Pagamento não aprovado. Gere um novo Pix.','error');}}catch(_){} }
+async function checkPixStatus(){if(!integratedPixPaymentId)return;try{const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'pix_status',payment_id:integratedPixPaymentId})});const d=await r.json();if(d.status==='approved'){clearInterval(integratedPixTimer);integratedSetCheckoutStatus('Pagamento Pix aprovado!','ok');localStorage.removeItem('studio70_cart');cart.length=0;renderCart();setTimeout(closeIntegratedCheckout,1800);}else if(d.status==='rejected'||d.status==='cancelled'){clearInterval(integratedPixTimer);integratedSetCheckoutStatus('Pagamento não aprovado. Gere um novo Pix.','error');}}catch(_){} }
 async function integratedCardCheckout(){
   if(!integratedSelectedShipping)return integratedSetCheckoutStatus('Calcule e selecione o frete antes de continuar.','error');
   const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));if(!name||!email||cpf.length<11)return integratedSetCheckoutStatus('Preencha nome, e-mail e CPF.','error');
   const btn=document.getElementById('cardBtn');btn.disabled=true;integratedSetCheckoutStatus('Criando checkout seguro...');
-  try{const total=integratedSubtotal()+Number(integratedSelectedShipping.price||0);const payload={action:'card',external_reference:'ST70-'+Date.now(),max_installments:Number(paymentSettings().maxInstallments||12),customer:{name,email,cpf},shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement')},shipping_cost:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name,items:cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:Number(p.price||0),sku:p.sku||'',picture_url:p.image||''}}),total:Number(total.toFixed(2))};const r=await fetch(CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao criar checkout.');if(!data.init_point)throw new Error('Mercado Pago não retornou o link.');localStorage.setItem('studio70_last_order',JSON.stringify(payload));window.location.href=data.init_point;}catch(e){integratedSetCheckoutStatus(e.message,'error');btn.disabled=false;}
+  try{const total=integratedSubtotal()+Number(integratedSelectedShipping.price||0);const payload={action:'card',external_reference:'ST70-'+Date.now(),max_installments:Number(paymentSettings().maxInstallments||12),customer:{name,email,cpf},shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement')},shipping_cost:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name,items:cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:Number(p.price||0),sku:p.sku||'',picture_url:p.image||''}}),total:Number(total.toFixed(2))};const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao criar checkout.');if(!data.init_point)throw new Error('Mercado Pago não retornou o link.');localStorage.setItem('studio70_last_order',JSON.stringify(payload));window.location.href=data.init_point;}catch(e){integratedSetCheckoutStatus(e.message,'error');btn.disabled=false;}
 }
 async function createStoreOrder(){
   const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));
@@ -537,7 +546,7 @@ async function createStoreOrder(){
   integratedSetCheckoutStatus('Registrando sua reserva...');
   try{
     const payload={action:'store_order',payment_method:method,external_reference:'ST70-'+Date.now(),customer:{name,email,cpf},items:cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:Number(p.price||0),sku:p.sku||''}}),shipping:integratedSelectedShipping?{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement'),cost:Number(integratedSelectedShipping.price||0),service:integratedSelectedShipping.name}:null,total:Number(total.toFixed(2))};
-    const r=await fetch(CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const data=await r.json();if(!r.ok)throw new Error(data.error||'Não foi possível reservar o pedido.');
     localStorage.setItem('studio70_last_order',JSON.stringify({...payload,order_id:data.order_id||null,status:'pending_store_payment'}));
     localStorage.removeItem('studio70_cart');cart.length=0;renderCart();
