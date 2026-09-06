@@ -19,7 +19,7 @@ section{max-width:1280px;margin:auto;padding:42px 22px} .section-title{font:34px
 .badge{position:absolute;top:10px;left:10px;background:var(--accent);color:#fff;border-radius:3px;padding:6px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px} .badge.featured{left:auto;right:10px;background:#0d0d0f;border:1px solid var(--green);color:var(--green)} .empty{padding:40px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:15px}
 .drawer,.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;display:none} .drawer.open,.modal.open{display:block} .drawer-panel{margin-left:auto;width:min(480px,100%);height:100%;background:#111116;padding:22px;overflow:auto} .modal-panel{width:min(1100px,94vw);max-height:92vh;overflow:auto;margin:4vh auto;background:#111116;border:1px solid var(--line);border-radius:18px;padding:22px}
 .close{float:right;border:0;background:#292930;color:#fff;border-radius:9px;padding:8px 12px} .cart-row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)} .total{font-size:24px;font-weight:900;margin:20px 0}
-.admin-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px} .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px} label{font-size:12px;font-weight:800;color:#bbb} label.full{grid-column:1/-1} textarea{min-height:100px;resize:vertical} .checkrow{display:flex;gap:15px;align-items:center;padding:12px 0} .admin-list{display:grid;gap:8px} .admin-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px;background:#19191f;border:1px solid var(--line);border-radius:10px} .admin-item span{font-size:12px} .admin-tools{display:flex;gap:6px} .danger{background:#4b1722!important;color:#fff!important}
+.admin-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px} .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px} label{font-size:12px;font-weight:800;color:#bbb} label.full{grid-column:1/-1} textarea{min-height:100px;resize:vertical} .checkrow{display:flex;gap:15px;align-items:center;padding:12px 0} .admin-list{display:grid;gap:8px} .admin-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px;background:#19191f;border:1px solid var(--line);border-radius:10px} .admin-item span{font-size:12px}.admin-editing{outline:2px solid #111;outline-offset:2px}.admin-sticky-form{scroll-margin-top:20px} .admin-tools{display:flex;gap:6px} .danger{background:#4b1722!important;color:#fff!important}
 .scanner{background:#121216;border:1px solid var(--green);padding:18px;border-radius:14px;margin-bottom:20px} .scanner input{font-size:20px;font-weight:800} .scan-result{margin-top:10px;color:var(--green);font-weight:800} .label-preview{background:#fff;color:#111;padding:18px;border-radius:10px;text-align:center;margin-top:15px} .label-preview svg{max-width:100%;height:auto}
 .product-modal-image{width:100%;height:600px;display:flex;align-items:center;justify-content:center;background:#222;border-radius:15px;overflow:hidden}.product-modal-image img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;max-width:100%;max-height:100%}
 footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;color:#aaa} footer h2{font-family:var(--font-display);text-transform:uppercase;letter-spacing:1px;font-weight:400} .whatsapp{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border-radius:50%;background:var(--green);color:#07160e;display:grid;place-items:center;text-decoration:none;font-size:26px;font-weight:900;z-index:25;box-shadow:0 4px 18px rgba(34,212,119,.45);animation:wa-pulse 2.2s infinite}
@@ -197,9 +197,13 @@ footer a{color:#111!important}
 <label class="full">URL do produto<input class="field" id="pUrl" placeholder="https://..."></label>
 <label class="full">Descrição<textarea class="field" id="pDescription"></textarea></label></div><div class="checkrow"><label><input type="checkbox" id="pActive" checked> Ativo</label><label><input type="checkbox" id="pFeatured"> Destaque</label></div>
 <div class="payment-admin-box" style="margin:14px 0;padding:14px;background:#eceae6;border:1px solid #c8c5be;border-radius:12px">
-  <b>💳 Mercado Pago — Checkout Pro</b>
-  <p style="font-size:11px;color:#666;margin:6px 0 10px">O Access Token do Mercado Pago fica somente nos Secrets da Edge Function. Nunca coloque chave privada neste HTML.</p>
+  <b>💳 Mercado Pago — Configuração</b>
+  <p style="font-size:11px;color:#666;margin:6px 0 10px">
+    Configure aqui o endpoint e a chave pública. O Access Token privado deve ser enviado ao backend seguro e armazenado como Secret; não fica no HTML/localStorage.
+  </p>
   <label>URL do endpoint seguro de checkout<input class="field" id="mpEndpoint" placeholder="https://seu-backend-ou-edge-function/..."></label>
+  <label style="display:block;margin-top:8px">Public Key do Mercado Pago<input class="field" id="mpPublicKey" autocomplete="off" placeholder="APP_USR-..."></label>
+  <label style="display:block;margin-top:8px">Access Token privado (somente envio seguro)<input class="field" id="mpAccessToken" type="password" autocomplete="new-password" placeholder="Não será salvo no navegador"></label>
   <label style="display:block;margin-top:8px">Máximo de parcelas<select class="field" id="mpMaxInstallments">
     <option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="4">4x</option><option value="5">5x</option><option value="6">6x</option><option value="7">7x</option><option value="8">8x</option><option value="9">9x</option><option value="10">10x</option><option value="11">11x</option><option value="12" selected>12x</option><option value="18">18x</option><option value="24">24x</option>
   </select></label>
@@ -207,10 +211,13 @@ footer a{color:#111!important}
   <div id="paymentAdminStatus" style="font-size:11px;margin-top:6px"></div>
 </div>
 <div class="payment-admin-box" style="margin:14px 0;padding:14px;background:#eceae6;border:1px solid #c8c5be;border-radius:12px">
-  <b>🚚 SuperFrete</b>
-  <p style="font-size:11px;color:#666;margin:6px 0 10px">O token da SuperFrete fica somente nos Secrets da Edge Function. Aqui você informa apenas a URL da Edge Function e o CEP de origem.</p>
+  <b>🚚 SuperFrete — Configuração</b>
+  <p style="font-size:11px;color:#666;margin:6px 0 10px">
+    Configure endpoint, CEP de origem e token. O token privado é enviado ao backend e não é salvo no navegador.
+  </p>
   <label>URL do backend de frete<input class="field" id="shippingEndpoint" placeholder="/api/frete/cotacao"></label>
   <label style="display:block;margin-top:8px">CEP de origem<input class="field" id="shippingOriginCep" placeholder="00000-000"></label>
+  <label style="display:block;margin-top:8px">Token da SuperFrete (somente envio seguro)<input class="field" id="superfreteToken" type="password" autocomplete="new-password" placeholder="Não será salvo no navegador"></label>
   <button type="button" class="smallbtn" style="margin-top:8px" onclick="saveShippingSettings()">SALVAR FRETE</button>
   <div id="shippingAdminStatus" style="font-size:11px;margin-top:6px"></div>
 </div>
@@ -419,11 +426,90 @@ document.getElementById('pdvSearch').addEventListener('keydown',e=>{if(e.key==='
 document.getElementById('pdvDiscount').addEventListener('input',renderPDV);document.getElementById('pdvReceived').addEventListener('input',updateChange);
 document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
 function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',()=>{document.getElementById('adminModal').classList.add('open');renderAdmin();document.getElementById('scannerInput').focus()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open')} document.getElementById('adminBtn').onclick=openAdmin;
-function clearForm(){document.getElementById('productForm').reset();document.getElementById('editId').value='';document.getElementById('formTitle').textContent='Novo produto';document.getElementById('pActive').checked=true;document.getElementById('pBarcode').value='ST70'+String(products.length+1).padStart(6,'0');loadPaymentSettings();}
-function editProduct(id){const p=products.find(x=>x.id===id);if(!p)return;document.getElementById('editId').value=p.id;document.getElementById('pName').value=p.name||'';document.getElementById('pPrice').value=p.price??0;document.getElementById('pSku').value=p.sku||'';document.getElementById('pBarcode').value=p.barcode||'';document.getElementById('pCategory').value=p.category||'';document.getElementById('pStock').value=p.stock||0;document.getElementById('pSizes').value=(p.sizes||[]).join(', ');document.getElementById('pColors').value=(p.colors||[]).join(', ');document.getElementById('pWeight').value=p.weightKg??p.weight??0.3;document.getElementById('pHeight').value=p.heightCm??p.height??4;document.getElementById('pWidth').value=p.widthCm??p.width??20;document.getElementById('pLength').value=p.lengthCm??p.length??30;document.getElementById('pImage').value=p.image||'';document.getElementById('pSecondaryImages').value=(Array.isArray(p.secondaryImages)?p.secondaryImages:(p.secondaryImages?[p.secondaryImages]:[])).map(normalizeImageUrl).join('\n');document.getElementById('pUrl').value=p.url||'';document.getElementById('pDescription').value=p.description||'';document.getElementById('pActive').checked=p.active!==false;document.getElementById('pFeatured').checked=!!p.featured;loadPaymentSettings();document.getElementById('formTitle').textContent='Editar produto';document.getElementById('labelPreview').style.display='block';drawLabel(p);window.scrollTo({top:0,behavior:'smooth'})}
-document.getElementById('productForm').onsubmit=e=>{e.preventDefault();const id=document.getElementById('editId').value||'p'+Date.now();const old=products.find(p=>p.id===id);const p={id,name:document.getElementById('pName').value.trim(),price:Number(document.getElementById('pPrice').value),sku:document.getElementById('pSku').value.trim(),barcode:document.getElementById('pBarcode').value.trim(),category:document.getElementById('pCategory').value,stock:Number(document.getElementById('pStock').value||0),sizes:document.getElementById('pSizes').value.split(',').map(x=>x.trim()).filter(Boolean),colors:document.getElementById('pColors').value.split(',').map(x=>x.trim()).filter(Boolean),weightKg:Number(document.getElementById('pWeight').value||0.3),heightCm:Number(document.getElementById('pHeight').value||4),widthCm:Number(document.getElementById('pWidth').value||20),lengthCm:Number(document.getElementById('pLength').value||30),image:normalizeImageUrl(document.getElementById('pImage').value.trim()),secondaryImages:document.getElementById('pSecondaryImages').value.split(/\n|,/).map(x=>normalizeImageUrl(x.trim())).filter(Boolean),url:document.getElementById('pUrl').value.trim(),description:document.getElementById('pDescription').value.trim(),active:document.getElementById('pActive').checked,featured:document.getElementById('pFeatured').checked};if(old)products=products.map(x=>x.id===id?p:x);else products.unshift(p);save();renderProducts();renderAdmin();drawLabel(p);document.getElementById('labelPreview').style.display='block';alert('Produto salvo com sucesso.')};
-function deleteProduct(id){if(!confirm('Remover este produto?'))return;products=products.filter(p=>p.id!==id);save();renderProducts();renderAdmin();}
-function renderAdmin(){const q=(document.getElementById('adminSearch').value||'').toLowerCase();const list=products.filter(p=>[p.name,p.sku,p.barcode].join(' ').toLowerCase().includes(q));document.getElementById('adminCount').textContent=`(${products.length})`;document.getElementById('adminList').innerHTML=list.slice(0,100).map(p=>`<div class="admin-item"><span><b>${p.name}</b><br>${money(p.price)} · ${p.barcode} · estoque ${p.stock||0}</span><span class="admin-tools"><button class="smallbtn" onclick="editProduct('${p.id}')">Editar</button><button class="smallbtn" onclick="drawLabelFor('${p.id}')">Etiqueta</button><button class="smallbtn danger" onclick="deleteProduct('${p.id}')">Excluir</button></span></div>`).join('');}
+function clearForm(){
+  const form=document.getElementById('productForm');
+  form.reset();
+  document.getElementById('editId').value='';
+  document.getElementById('formTitle').textContent='Novo produto';
+  document.getElementById('pActive').checked=true;
+  document.getElementById('pFeatured').checked=false;
+  document.getElementById('pBarcode').value='ST70'+String(products.length+1).padStart(6,'0');
+  document.getElementById('labelPreview').style.display='none';
+  document.querySelectorAll('.admin-item').forEach(x=>x.classList.remove('admin-editing'));
+  loadPaymentSettings();
+  loadShippingSettings();
+}
+function editProduct(id){
+  const p=products.find(x=>String(x.id)===String(id));
+  if(!p)return alert('Produto não encontrado.');
+  const set=(id,val)=>{const e=document.getElementById(id);if(e)e.value=val??'';};
+  set('editId',p.id);set('pName',p.name);set('pPrice',p.price);set('pSku',p.sku);set('pBarcode',p.barcode);
+  set('pCategory',p.category);set('pStock',p.stock||0);
+  set('pSizes',(p.sizes||[]).join(', '));set('pColors',(p.colors||[]).join(', '));
+  set('pWeight',p.weightKg??p.weight??0.3);set('pHeight',p.heightCm??p.height??4);
+  set('pWidth',p.widthCm??p.width??20);set('pLength',p.lengthCm??p.length??30);
+  set('pImage',normalizeImageUrl(p.image||''));
+  set('pSecondaryImages',(Array.isArray(p.secondaryImages)?p.secondaryImages:(p.secondaryImages?[p.secondaryImages]:[])).map(normalizeImageUrl).filter(Boolean).join('\n'));
+  set('pUrl',p.url);set('pDescription',p.description);
+  document.getElementById('pActive').checked=p.active!==false;
+  document.getElementById('pFeatured').checked=!!p.featured;
+  loadPaymentSettings();loadShippingSettings();
+  document.getElementById('formTitle').textContent='Editar produto';
+  document.getElementById('labelPreview').style.display='block';
+  drawLabel(p);
+  document.querySelectorAll('.admin-item').forEach(x=>x.classList.remove('admin-editing'));
+  const row=document.querySelector('.admin-item[data-product-id="'+CSS.escape(String(p.id))+'"]');
+  if(row)row.classList.add('admin-editing');
+  const modalPanel=document.querySelector('#adminModal .modal-panel');
+  const form=document.getElementById('productForm');
+  if(modalPanel)modalPanel.scrollTo({top:Math.max(0,form.offsetTop-18),behavior:'smooth'});
+  setTimeout(()=>document.getElementById('pName')?.focus(),250);
+}
+document.getElementById('productForm').onsubmit=e=>{
+  e.preventDefault();
+  const id=document.getElementById('editId').value||'p'+Date.now();
+  const old=products.find(p=>String(p.id)===String(id));
+  const p={id,name:document.getElementById('pName').value.trim(),price:Number(document.getElementById('pPrice').value),
+    sku:document.getElementById('pSku').value.trim(),barcode:document.getElementById('pBarcode').value.trim(),
+    category:document.getElementById('pCategory').value,stock:Number(document.getElementById('pStock').value||0),
+    sizes:document.getElementById('pSizes').value.split(',').map(x=>x.trim()).filter(Boolean),
+    colors:document.getElementById('pColors').value.split(',').map(x=>x.trim()).filter(Boolean),
+    weightKg:Number(document.getElementById('pWeight').value||0.3),heightCm:Number(document.getElementById('pHeight').value||4),
+    widthCm:Number(document.getElementById('pWidth').value||20),lengthCm:Number(document.getElementById('pLength').value||30),
+    image:normalizeImageUrl(document.getElementById('pImage').value.trim()),
+    secondaryImages:document.getElementById('pSecondaryImages').value.split(/\n|,/).map(x=>normalizeImageUrl(x.trim())).filter(Boolean),
+    url:document.getElementById('pUrl').value.trim(),description:document.getElementById('pDescription').value.trim(),
+    active:document.getElementById('pActive').checked,featured:document.getElementById('pFeatured').checked};
+  if(old)products=products.map(x=>String(x.id)===String(id)?p:x);else products.unshift(p);
+  save();renderProducts();renderAdmin();drawLabel(p);
+  document.getElementById('labelPreview').style.display='block';
+  document.getElementById('formTitle').textContent='Editar produto';
+  alert('Produto salvo com sucesso.');
+};
+function deleteProduct(id){
+  if(!confirm('Remover este produto?'))return;
+  products=products.filter(p=>String(p.id)!==String(id));save();renderProducts();renderAdmin();clearForm();
+}
+function renderAdmin(){
+  const q=(document.getElementById('adminSearch').value||'').toLowerCase();
+  const list=products.filter(p=>[p.name,p.sku,p.barcode].join(' ').toLowerCase().includes(q));
+  document.getElementById('adminCount').textContent=`(${products.length})`;
+  document.getElementById('adminList').innerHTML=list.slice(0,100).map(p=>`<div class="admin-item" data-product-id="${escapeHtml(String(p.id))}">
+    <span><b>${escapeHtml(p.name||'')}</b><br>${money(p.price)} · ${escapeHtml(p.barcode||'')} · estoque ${p.stock||0}</span>
+    <span class="admin-tools">
+      <button type="button" class="smallbtn js-edit-product" data-id="${escapeHtml(String(p.id))}">Editar</button>
+      <button type="button" class="smallbtn js-label-product" data-id="${escapeHtml(String(p.id))}">Etiqueta</button>
+      <button type="button" class="smallbtn danger js-delete-product" data-id="${escapeHtml(String(p.id))}">Excluir</button>
+    </span>
+  </div>`).join('');
+}
+document.getElementById('adminList').addEventListener('click',e=>{
+  const btn=e.target.closest('button[data-id]');if(!btn)return;
+  const id=btn.dataset.id;
+  if(btn.classList.contains('js-edit-product'))editProduct(id);
+  else if(btn.classList.contains('js-label-product'))drawLabelFor(id);
+  else if(btn.classList.contains('js-delete-product'))deleteProduct(id);
+});
 document.getElementById('adminSearch').oninput=renderAdmin;
 function drawLabel(p){document.getElementById('labelName').textContent=`${p.name} · ${money(p.price)}`;document.getElementById('labelCode').textContent=p.barcode;if(window.JsBarcode)JsBarcode('#barcodeSvg',p.barcode,{format:'CODE128',displayValue:true,height:55,margin:8});}
 function drawLabelFor(id){const p=products.find(x=>x.id===id);if(!p)return;drawLabel(p);document.getElementById('labelPreview').style.display='block';document.getElementById('editId').value=p.id;}
@@ -452,7 +538,23 @@ function checkoutApiUrl(){
 const SHIPPING_KEY='studio70_shipping';
 function shippingSettings(){try{return JSON.parse(localStorage.getItem(SHIPPING_KEY)||'{}')}catch(_){return {}}}
 function loadShippingSettings(){const s=shippingSettings();const ep=document.getElementById('shippingEndpoint'),cep=document.getElementById('shippingOriginCep');if(ep)ep.value=s.endpoint||CHECKOUT_API;if(cep)cep.value=s.originCep||'';}
-function saveShippingSettings(){const endpoint=(document.getElementById('shippingEndpoint')?.value||CHECKOUT_API).trim();const originCep=(document.getElementById('shippingOriginCep')?.value||'').trim();localStorage.setItem(SHIPPING_KEY,JSON.stringify({endpoint,originCep}));const st=document.getElementById('shippingAdminStatus');if(st)st.textContent='Configuração de frete salva.';}
+async function saveShippingSettings(){
+  const endpoint=(document.getElementById('shippingEndpoint')?.value||CHECKOUT_API).trim();
+  const originCep=(document.getElementById('shippingOriginCep')?.value||'').replace(/\D/g,'');
+  const token=(document.getElementById('superfreteToken')?.value||'').trim();
+  localStorage.setItem(SHIPPING_KEY,JSON.stringify({endpoint,originCep}));
+  const st=document.getElementById('shippingAdminStatus');
+  if(!token){if(st)st.textContent='Frete salvo. Token não alterado.';return;}
+  if(!endpoint||endpoint.includes('SEU-PROJETO.supabase.co')){if(st)st.textContent='Informe primeiro o endpoint seguro do backend.';return;}
+  try{
+    if(st)st.textContent='Enviando token ao backend seguro...';
+    const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save_config',provider:'superfrete',token,originCep})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(d.error||'Falha ao salvar token no backend.');
+    document.getElementById('superfreteToken').value='';
+    if(st)st.textContent='Frete salvo e token enviado ao backend.';
+  }catch(e){if(st)st.textContent=e.message+' O token não foi salvo no navegador.';}
+}
 const PAYMENT_KEY='studio70_payment';
 function paymentSettings(){try{return JSON.parse(localStorage.getItem(PAYMENT_KEY)||'{}')}catch(_){return {}}}
 
@@ -568,8 +670,31 @@ function pay(){
 // Existing drawer payment now opens the integrated checkout.
 function startCardCheckout(){openIntegratedCheckout();selectIntegratedPayment('card');}
 // Existing shipping settings remain available for the admin; the secure API URL can be stored here.
-function savePaymentSettings(){const endpoint=(document.getElementById('mpEndpoint')?.value||CHECKOUT_API).trim();const maxInstallments=Number(document.getElementById('mpMaxInstallments')?.value||12);localStorage.setItem('studio70_checkout_api',endpoint);localStorage.setItem(PAYMENT_KEY,JSON.stringify({endpoint,maxInstallments}));renderInstallments();const st=document.getElementById('paymentAdminStatus');if(st)st.textContent='Endpoint do checkout salvo.';}
-function loadPaymentSettings(){const s=paymentSettings();const ep=document.getElementById('mpEndpoint'),mx=document.getElementById('mpMaxInstallments');if(ep)ep.value=s.endpoint||CHECKOUT_API;if(mx)mx.value=String(s.maxInstallments||12);renderInstallments();}
+async function savePaymentSettings(){
+  const endpoint=(document.getElementById('mpEndpoint')?.value||CHECKOUT_API).trim();
+  const publicKey=(document.getElementById('mpPublicKey')?.value||'').trim();
+  const accessToken=(document.getElementById('mpAccessToken')?.value||'').trim();
+  const maxInstallments=Number(document.getElementById('mpMaxInstallments')?.value||12);
+  localStorage.setItem('studio70_checkout_api',endpoint);
+  localStorage.setItem(PAYMENT_KEY,JSON.stringify({endpoint,publicKey,maxInstallments}));
+  renderInstallments();
+  const st=document.getElementById('paymentAdminStatus');
+  if(!accessToken){if(st)st.textContent='Configuração de pagamento salva. Access Token não alterado.';return;}
+  if(!endpoint||endpoint.includes('SEU-PROJETO.supabase.co')){if(st)st.textContent='Informe primeiro o endpoint seguro do backend.';return;}
+  try{
+    if(st)st.textContent='Enviando Access Token ao backend seguro...';
+    const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save_config',provider:'mercadopago',access_token:accessToken,public_key:publicKey,max_installments:maxInstallments})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(d.error||'Falha ao salvar Access Token no backend.');
+    document.getElementById('mpAccessToken').value='';
+    if(st)st.textContent='Pagamento salvo e Access Token enviado ao backend.';
+  }catch(e){if(st)st.textContent=e.message+' O token não foi salvo no navegador.';}
+}
+function loadPaymentSettings(){
+  const s=paymentSettings();
+  const ep=document.getElementById('mpEndpoint'),pk=document.getElementById('mpPublicKey'),mx=document.getElementById('mpMaxInstallments');
+  if(ep)ep.value=s.endpoint||CHECKOUT_API;if(pk)pk.value=s.publicKey||'';if(mx)mx.value=String(s.maxInstallments||12);renderInstallments();
+}
 function renderInstallments(){const sel=document.getElementById('installmentsSelect');if(!sel)return;const max=Math.min(24,Math.max(1,Number(paymentSettings().maxInstallments||12)));sel.innerHTML=Array.from({length:max},(_,i)=>`<option value="${i+1}">${i+1}x ${i===0?'à vista':'no cartão'}</option>`).join('');}
 
 renderCategories();clearForm();loadPaymentSettings();loadShippingSettings();renderProducts();renderCart();renderPDV();
