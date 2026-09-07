@@ -412,7 +412,7 @@ function closeLogin(){document.getElementById('loginModal').classList.remove('op
 async function submitLogin(){
   const value=document.getElementById('loginPassword').value.trim();
   const endpoint=(document.getElementById('loginEndpoint')?.value||'').trim();
-  if(endpoint) localStorage.setItem('studio70_checkout_api',endpoint.replace('/checkout-api','/checkout_api').replace(/\/$/,''));
+  if(endpoint) localStorage.setItem('studio70_checkout_api', DEFAULT_CHECKOUT_API);
   if(!value)return;
   if(!endpoint || endpoint.includes('SEU-PROJETO.supabase.co')){
     document.getElementById('loginError').textContent='Configure primeiro o endpoint da Edge Function.';
@@ -541,8 +541,12 @@ function goCheckout(){
 const DEFAULT_CHECKOUT_API = 'https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler';
 function currentCheckoutApi(){
   const saved=(localStorage.getItem('studio70_checkout_api')||'').trim();
-  if(!saved || saved.includes('/checkout-api') || saved.includes('SEU-PROJETO')) return DEFAULT_CHECKOUT_API;
-  return saved.replace(/\/$/,'');
+  const valid = saved && saved.includes('/functions/v1/super-handler') && !saved.includes('SEU-PROJETO');
+  if(!valid){
+    localStorage.setItem('studio70_checkout_api', DEFAULT_CHECKOUT_API);
+    return DEFAULT_CHECKOUT_API;
+  }
+  return DEFAULT_CHECKOUT_API;
 }
 const CHECKOUT_API = currentCheckoutApi();
 
@@ -559,7 +563,7 @@ const SHIPPING_KEY='studio70_shipping';
 function shippingSettings(){try{return JSON.parse(localStorage.getItem(SHIPPING_KEY)||'{}')}catch(_){return {}}}
 function loadShippingSettings(){const s=shippingSettings();const ep=document.getElementById('shippingEndpoint'),cep=document.getElementById('shippingOriginCep');if(ep)ep.value=s.endpoint||currentCheckoutApi();if(cep)cep.value=s.originCep||'';}
 async function saveShippingSettings(){
-  const endpoint=(document.getElementById('shippingEndpoint')?.value||currentCheckoutApi()).trim();
+  const endpoint=DEFAULT_CHECKOUT_API;
   const originCep=(document.getElementById('shippingOriginCep')?.value||'').replace(/\D/g,'');
   const token=(document.getElementById('superfreteToken')?.value||'').trim();
   localStorage.setItem(SHIPPING_KEY,JSON.stringify({endpoint,originCep}));
@@ -691,7 +695,7 @@ function pay(){
 function startCardCheckout(){openIntegratedCheckout();selectIntegratedPayment('card');}
 // Existing shipping settings remain available for the admin; the secure API URL can be stored here.
 async function savePaymentSettings(){
-  const endpoint=(document.getElementById('mpEndpoint')?.value||currentCheckoutApi()).trim();
+  const endpoint=DEFAULT_CHECKOUT_API;
   const publicKey=(document.getElementById('mpPublicKey')?.value||'').trim();
   const accessToken=(document.getElementById('mpAccessToken')?.value||'').trim();
   const maxInstallments=Number(document.getElementById('mpMaxInstallments')?.value||12);
