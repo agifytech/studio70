@@ -199,7 +199,7 @@ footer a{color:#111!important}
 <div class="payment-admin-box" style="margin:14px 0;padding:14px;background:#eceae6;border:1px solid #c8c5be;border-radius:12px">
   <b>💳 Mercado Pago — Configuração</b>
   <p style="font-size:11px;color:#666;margin:6px 0 10px">
-    Configure aqui o endpoint e a chave pública. O Access Token privado deve ser enviado ao backend seguro e armazenado como Secret; não fica no HTML/localStorage.
+    Configure aqui o endpoint e a chave pública. O Access Token privado é enviado diretamente ao backend seguro e armazenado criptografado. Ele nunca deve ser colocado no HTML, GitHub ou navegador.
   </p>
   <label>URL do endpoint seguro de checkout<input class="field" id="mpEndpoint" placeholder="https://seu-backend-ou-edge-function/..."></label>
   <label style="display:block;margin-top:8px">Public Key do Mercado Pago<input class="field" id="mpPublicKey" autocomplete="off" placeholder="APP_USR-..."></label>
@@ -211,17 +211,21 @@ footer a{color:#111!important}
   <div id="paymentAdminStatus" style="font-size:11px;margin-top:6px"></div>
 </div>
 <div class="payment-admin-box" style="margin:14px 0;padding:14px;background:#eceae6;border:1px solid #c8c5be;border-radius:12px">
-  <b>🚚 SuperFrete — Configuração</b>
+  <b>🚚 Frete PAC / SEDEX — estimativa</b>
   <p style="font-size:11px;color:#666;margin:6px 0 10px">
-    Informe o CEP de origem e o token. Ao clicar em SALVAR FRETE, o token é enviado ao backend seguro e não é salvo no navegador.
+    O site não usa token da SuperFrete. O frete é estimado localmente com base no CEP de origem, destino e peso do carrinho.
   </p>
-  <label>URL do backend de frete<input class="field" id="shippingEndpoint" placeholder="/api/frete/cotacao"></label>
-  <label style="display:block;margin-top:8px">CEP de origem<input class="field" id="shippingOriginCep" placeholder="00000-000"></label>
-  <label style="display:block;margin-top:8px">Token da SuperFrete (somente envio seguro)<input class="field" id="superfreteToken" type="password" autocomplete="new-password" placeholder="Não será salvo no navegador"></label>
+  <label>CEP de origem<input class="field" id="shippingOriginCep" placeholder="00000-000"></label>
+  <div class="form-grid" style="margin-top:8px">
+    <label>PAC — mínimo<input class="field" id="shippingPacMin" type="number" step="0.01" value="19.90"></label>
+    <label>PAC — máximo<input class="field" id="shippingPacMax" type="number" step="0.01" value="149.90"></label>
+    <label>SEDEX — mínimo<input class="field" id="shippingSedexMin" type="number" step="0.01" value="29.90"></label>
+    <label>SEDEX — máximo<input class="field" id="shippingSedexMax" type="number" step="0.01" value="249.90"></label>
+  </div>
   <button type="button" class="smallbtn" style="margin-top:8px" onclick="saveShippingSettings()">SALVAR FRETE</button>
-  <div id="shippingAdminStatus" style="font-size:11px;margin-top:6px"></div><div style="font-size:10px;color:#666;margin-top:6px">Se aparecer erro aqui, o token não foi salvo. Não avance para o checkout até aparecer “SuperFrete configurada e token salvo no backend”.</div>
+  <div id="shippingAdminStatus" style="font-size:11px;margin-top:6px"></div>
 </div>
-<button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><svg id="barcodeSvg"></svg><div id="labelCode"></div></div></div><div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" onclick="printSelectedLabel()">🖨️ Imprimir etiqueta</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden></label></div><div id="adminList" class="admin-list"></div></div></div></div></div>
+<button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><svg id="barcodeSvg"></svg><div id="labelCode"></div></div></div><div><h3>🔔 Vendas recebidas</h3><div id="adminOrders" class="admin-list" style="max-height:260px;overflow:auto;margin-bottom:18px"></div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" onclick="printSelectedLabel()">🖨️ Imprimir etiqueta</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden></label></div><div id="adminList" class="admin-list"></div></div></div></div></div>
 
 <div class="modal" id="pdvModal"><div class="modal-panel"><button class="close" onclick="closePDV()">×</button><h2 class="section-title">PDV — PONTO DE VENDA</h2>
 <div class="pdv-layout">
@@ -307,7 +311,7 @@ footer a{color:#111!important}
       <h2>Resumo do pedido</h2>
       <div id="items" class="summary"></div>
       <div class="totals"><div>Produtos <strong id="subtotal" style="float:right">R$ 0,00</strong></div><div>Frete <strong id="shipping" style="float:right">—</strong></div><div class="total">Total <span id="total" style="float:right">R$ 0,00</span></div></div>
-      <p class="note" style="margin-top:14px">O valor do frete é calculado pela SuperFrete com base no CEP de origem, CEP de destino, peso e dimensões dos produtos.</p>
+      <p class="note" style="margin-top:14px">O valor do frete é uma estimativa de PAC/SEDEX calculada pelo site com base no CEP de origem, destino e peso do carrinho.</p>
     </aside>
   </div>
 
@@ -367,7 +371,26 @@ function changePDVQty(id,delta){const i=pdvCart.find(x=>x.id===id),p=products.fi
 function renderPDV(){const items=document.getElementById('pdvItems');if(!items)return;items.innerHTML=pdvCart.length?pdvCart.map(i=>{const p=products.find(x=>x.id===i.id);if(!p)return '';return `<div class="pdv-item"><img src="${imageSrc(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><div><div class="pdv-item-name">${p.name}</div><div class="pdv-item-meta">${p.sku} · ${p.barcode}</div></div><div class="qtybox"><button onclick="changePDVQty('${p.id}',-1)">−</button><b>${i.qty}</b><button onclick="changePDVQty('${p.id}',1)">+</button></div><div class="lineprice"><b>${money(p.price*i.qty)}</b></div></div>`}).join(''):'<div class="empty">Nenhum produto na venda.</div>';const total=pdvTotal();document.getElementById('pdvTotal').textContent=money(total);document.getElementById('pdvSummary').innerHTML=`<div style="display:flex;justify-content:space-between"><span>Itens</span><b>${pdvCart.reduce((s,i)=>s+i.qty,0)}</b></div><div style="display:flex;justify-content:space-between"><span>Subtotal</span><b>${money(pdvCart.reduce((s,i)=>{const p=products.find(x=>x.id===i.id);return s+(p?p.price:0)*i.qty},0))}</b></div><div style="display:flex;justify-content:space-between"><span>Desconto</span><b>${money(Number(document.getElementById('pdvDiscount')?.value||0))}</b></div>`;updateChange();renderSales()}
 function updateChange(){const total=pdvTotal(),received=Number(document.getElementById('pdvReceived')?.value||0),change=Math.max(0,received-total);const el=document.getElementById('pdvChange');if(el)el.textContent=money(change)}
 function clearPDV(){pdvCart=[];document.getElementById('pdvDiscount').value='0';document.getElementById('pdvReceived').value='0';savePDV();renderPDV();setPDVStatus('Venda limpa','warn');document.getElementById('pdvScanner').focus()}
-function finishSale(){if(!pdvCart.length)return setPDVStatus('Adicione pelo menos um produto.','error');const total=pdvTotal(),payment=document.getElementById('pdvPayment').value,received=Number(document.getElementById('pdvReceived').value||0);if(payment==='Dinheiro'&&received<total)return setPDVStatus(`Valor recebido insuficiente. Faltam ${money(total-received)}.`,'error');for(const i of pdvCart){const p=products.find(x=>x.id===i.id);if(!p)continue;if((p.stock||0)>0 && i.qty>p.stock)return setPDVStatus(`Estoque insuficiente: ${p.name}.`,'error')}pdvCart.forEach(i=>{const p=products.find(x=>x.id===i.id);if(p&&(p.stock||0)>0)p.stock=Math.max(0,p.stock-i.qty)});const sale={id:'V'+Date.now(),date:new Date().toISOString(),items:pdvCart.map(i=>{const p=products.find(x=>x.id===i.id);return {id:p.id,name:p.name,sku:p.sku,barcode:p.barcode,qty:i.qty,unit:p.price,total:p.price*i.qty}}),subtotal:pdvCart.reduce((s,i)=>{const p=products.find(x=>x.id===i.id);return s+p.price*i.qty},0),discount:Number(document.getElementById('pdvDiscount').value||0),total,payment,received,change:Math.max(0,received-total)};sales.unshift(sale);sales=sales.slice(0,500);pdvCart=[];save();savePDV();renderProducts();renderAdmin();renderPDV();setPDVStatus(`✓ Venda ${sale.id} concluída — ${money(total)}`,'success');printSale(sale)}
+async function finishSale(){
+  if(!pdvCart.length)return setPDVStatus('Adicione pelo menos um produto.','error');
+  const total=pdvTotal(),payment=document.getElementById('pdvPayment').value,received=Number(document.getElementById('pdvReceived').value||0);
+  if(payment==='Dinheiro'&&received<total)return setPDVStatus(`Valor recebido insuficiente. Faltam ${money(total-received)}.`,'error');
+  for(const i of pdvCart){const p=products.find(x=>x.id===i.id);if(!p)continue;if((p.stock||0)>0&&i.qty>p.stock)return setPDVStatus(`Estoque insuficiente: ${p.name}.`,'error');}
+  pdvCart.forEach(i=>{const p=products.find(x=>x.id===i.id);if(p&&(p.stock||0)>0)p.stock=Math.max(0,p.stock-i.qty)});
+  const sale={id:'V'+Date.now(),date:new Date().toISOString(),items:pdvCart.map(i=>{const p=products.find(x=>x.id===i.id);return{id:p.id,name:p.name,sku:p.sku,barcode:p.barcode,qty:i.qty,unit:p.price,total:p.price*i.qty}}),subtotal:pdvCart.reduce((s,i)=>{const p=products.find(x=>x.id===i.id);return s+p.price*i.qty},0),discount:Number(document.getElementById('pdvDiscount').value||0),total,payment,received,change:Math.max(0,received-total)};
+  sales.unshift(sale);sales=sales.slice(0,500);pdvCart=[];save();savePDV();renderProducts();renderAdmin();renderPDV();
+  setPDVStatus(`✓ Venda ${sale.id} concluída — ${money(total)}. Sincronizando...`,'success');
+  try{
+    const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'store_sale',sale})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(d.error||'Venda salva apenas neste computador.');
+    setPDVStatus(`✓ Venda ${sale.id} registrada na loja e sincronizada.`,'success');
+    notifySale('Venda na loja',`Venda ${sale.id} — ${money(total)}`);
+  }catch(e){
+    setPDVStatus(`✓ Venda local concluída. ${e.message}`,'warn');
+  }
+  printSale(sale);
+}
 function printSale(sale){const w=window.open('','_blank','width=420,height=650');if(!w)return;const rows=sale.items.map(i=>`<tr><td>${i.name}<br><small>${i.qty} x ${money(i.unit)}</small></td><td style="text-align:right">${money(i.total)}</td></tr>`).join('');w.document.write(`<html><head><title>${sale.id}</title><style>body{font-family:Arial,sans-serif;width:320px;margin:20px auto;color:#111}h2{text-align:center;margin:0}.center{text-align:center}table{width:100%;border-collapse:collapse;margin-top:15px}td{padding:7px 0;border-bottom:1px dashed #bbb}small{color:#555}.tot{font-size:20px;font-weight:bold;text-align:right;margin-top:12px}
 /* CHECKOUT INTEGRADO — STUDIO 70 */
 #integratedCheckoutModal{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:100;display:none;overflow:auto;padding:18px}
@@ -436,7 +459,7 @@ document.getElementById('pdvScanner').addEventListener('keydown',e=>{if(e.key===
 document.getElementById('pdvSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();pdvSearchAdd()}});
 document.getElementById('pdvDiscount').addEventListener('input',renderPDV);document.getElementById('pdvReceived').addEventListener('input',updateChange);
 document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
-function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',()=>{document.getElementById('adminModal').classList.add('open');renderAdmin();document.getElementById('scannerInput').focus()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} document.getElementById('adminBtn').onclick=openAdmin;
+function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');renderAdmin();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} document.getElementById('adminBtn').onclick=openAdmin;
 function clearForm(){
   const form=document.getElementById('productForm');
   form.reset();
@@ -549,15 +572,44 @@ function checkoutApiUrl(){
   return api.replace(/\/$/,'');
 }
 const SHIPPING_KEY='studio70_shipping';
-function shippingSettings(){try{return JSON.parse(localStorage.getItem(SHIPPING_KEY)||'{}')}catch(_){return {}}}
-function loadShippingSettings(){const s=shippingSettings();const ep=document.getElementById('shippingEndpoint'),cep=document.getElementById('shippingOriginCep');if(ep)ep.value=currentCheckoutApi();if(cep)cep.value=s.originCep||'';}
+const SHIPPING_DEFAULTS={
+  originCep:'',
+  pacEnabled:true,sedexEnabled:true,
+  pacBase:19.90,sedexBase:29.90,
+  pacPer100Km:1.20,sedexPer100Km:1.80,
+  pacPerKg:4.50,sedexPerKg:6.50,
+  pacMin:19.90,pacMax:149.90,
+  sedexMin:29.90,sedexMax:249.90,
+  safetyMargin:10,
+  defaultWeight:0.30,packageWeight:0.10,
+  pacDaysMin:5,pacDaysMax:10,sedexDaysMin:2,sedexDaysMax:5
+};
+function shippingSettings(){
+  try{return {...SHIPPING_DEFAULTS,...JSON.parse(localStorage.getItem(SHIPPING_KEY)||'{}')}}
+  catch(_){return {...SHIPPING_DEFAULTS}}
+}
+function loadShippingSettings(){
+  const s=shippingSettings();
+  const cep=document.getElementById('shippingOriginCep');
+  if(cep)cep.value=s.originCep||'';
+  for(const [id,key] of [['shippingPacMin','pacMin'],['shippingPacMax','pacMax'],['shippingSedexMin','sedexMin'],['shippingSedexMax','sedexMax']]){
+    const e=document.getElementById(id); if(e)e.value=String(s[key]);
+  }
+}
 function saveShippingSettings(){
   const originCep=(document.getElementById('shippingOriginCep')?.value||'').replace(/\D/g,'');
   const st=document.getElementById('shippingAdminStatus');
   if(originCep.length!==8){if(st)st.textContent='Informe um CEP de origem válido com 8 dígitos.';return;}
   const old=shippingSettings();
-  localStorage.setItem(SHIPPING_KEY,JSON.stringify({...old,originCep,pacEnabled:true,sedexEnabled:true}));
-  if(st)st.innerHTML='<span style="color:#246b3b;font-weight:800">✓ Configuração de frete estimado salva neste navegador.</span>';
+  const next={...old,originCep,
+    pacMin:Number(document.getElementById('shippingPacMin')?.value||old.pacMin),
+    pacMax:Number(document.getElementById('shippingPacMax')?.value||old.pacMax),
+    sedexMin:Number(document.getElementById('shippingSedexMin')?.value||old.sedexMin),
+    sedexMax:Number(document.getElementById('shippingSedexMax')?.value||old.sedexMax),
+    pacEnabled:true,sedexEnabled:true
+  };
+  localStorage.setItem(SHIPPING_KEY,JSON.stringify(next));
+  if(st)st.innerHTML='<span style="color:#246b3b;font-weight:800">✓ Frete estimado salvo neste navegador.</span>';
 }
 const PAYMENT_KEY='studio70_payment';
 function paymentSettings(){try{return JSON.parse(localStorage.getItem(PAYMENT_KEY)||'{}')}catch(_){return {}}}
@@ -608,7 +660,7 @@ function selectIntegratedPayment(method){
   if(title) title.textContent=method==='store_cash'?'💵 Dinheiro na loja':'🏪 Pix na loja';
 }
 function integratedSelectShipping(idx){integratedSelectedShipping=integratedShippingOptions[idx];document.querySelectorAll('#integratedCheckoutModal .freight').forEach((e,i)=>e.classList.toggle('active',i===idx));integratedUpdateTotal();}
-async function calculateEstimatedShipping(cep, cartItems){
+function calculateEstimatedShipping(cep, cartItems){
   const s=shippingSettings();
   const origin=String(s.originCep||document.getElementById('shippingOriginCep')?.value||'').replace(/\D/g,'');
   const dest=String(cep||'').replace(/\D/g,'');
@@ -674,7 +726,7 @@ async function integratedCardCheckout(){
   if(!integratedSelectedShipping)return integratedSetCheckoutStatus('Calcule e selecione o frete antes de continuar.','error');
   const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));if(!name||!email||cpf.length<11)return integratedSetCheckoutStatus('Preencha nome, e-mail e CPF.','error');
   const btn=document.getElementById('cardBtn');btn.disabled=true;integratedSetCheckoutStatus('Criando checkout seguro...');
-  try{const total=integratedSubtotal()+Number(integratedSelectedShipping.price||0);const payload={action:'card',external_reference:'ST70-'+Date.now(),max_installments:Number(paymentSettings().maxInstallments||12),customer:{name,email,cpf},shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement')},shipping_cost:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name,items:cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:Number(p.price||0),sku:p.sku||'',picture_url:p.image||''}}),total:Number(total.toFixed(2))};const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao criar checkout.');if(!data.init_point)throw new Error('Mercado Pago não retornou o link.');localStorage.setItem('studio70_last_order',JSON.stringify(payload));window.location.href=data.init_point;}catch(e){integratedSetCheckoutStatus(e.message,'error');btn.disabled=false;}
+  try{const total=integratedSubtotal()+Number(integratedSelectedShipping.price||0);const payload={action:'card',external_reference:'ST70-'+Date.now(),max_installments:Number(paymentSettings().maxInstallments||12),customer:{name,email,cpf},shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement')},shipping_cost:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name,items:[...cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:Number(p.price||0),sku:p.sku||'',picture_url:p.image||''}}),{id:'frete',title:integratedSelectedShipping.name,quantity:1,unit_price:Number(integratedSelectedShipping.price||0),sku:'FRETE'}],total:Number(total.toFixed(2))};const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao criar checkout.');if(!data.init_point)throw new Error('Mercado Pago não retornou o link.');localStorage.setItem('studio70_last_order',JSON.stringify(payload));window.location.href=data.init_point;}catch(e){integratedSetCheckoutStatus(e.message,'error');btn.disabled=false;}
 }
 async function createStoreOrder(){
   const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));
@@ -755,5 +807,46 @@ function loadPaymentSettings(){
 }
 function renderInstallments(){const sel=document.getElementById('installmentsSelect');if(!sel)return;const max=Math.min(24,Math.max(1,Number(paymentSettings().maxInstallments||12)));sel.innerHTML=Array.from({length:max},(_,i)=>`<option value="${i+1}">${i+1}x ${i===0?'à vista':'no cartão'}</option>`).join('');}
 
+let lastOrderPoll=localStorage.getItem('studio70_last_order_poll')||'';
+let seenOrderRefs=new Set(JSON.parse(localStorage.getItem('studio70_seen_orders')||'[]'));
+function notifySale(title,body){
+  try{
+    if('Notification' in window && Notification.permission==='granted')new Notification(title,{body});
+  }catch(_){}
+  try{
+    const C=window.AudioContext||window.webkitAudioContext;
+    if(C){const c=new C(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.value=.04;o.start();o.stop(c.currentTime+.18);}
+  }catch(_){}
+}
+async function enableNotifications(){
+  try{if('Notification' in window&&Notification.permission==='default')await Notification.requestPermission()}catch(_){}
+}
+async function pollOrders(){
+  try{
+    const url=checkoutApiUrl();
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'orders',after:lastOrderPoll||null,limit:30})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!Array.isArray(d.orders))return;
+    for(const o of d.orders){
+      const ref=String(o.external_reference||o.id||'');
+      if(ref&&!seenOrderRefs.has(ref)){
+        seenOrderRefs.add(ref);
+        const source=o.payment_provider==='store'?'Loja':'Online';
+        notifySale(`Nova venda — ${source}`,`${ref} · ${money(o.total||0)} · ${o.payment_status||'pendente'}`);
+      }
+      if(o.updated_at&&( !lastOrderPoll || o.updated_at>lastOrderPoll))lastOrderPoll=o.updated_at;
+    }
+    const arr=[...seenOrderRefs].slice(-200);
+    localStorage.setItem('studio70_seen_orders',JSON.stringify(arr));
+    if(lastOrderPoll)localStorage.setItem('studio70_last_order_poll',lastOrderPoll);
+    if(document.getElementById('adminModal')?.classList.contains('open'))renderAdminOrders(d.orders);
+  }catch(_){}
+}
+function renderAdminOrders(orders){
+  let box=document.getElementById('adminOrders');
+  if(!box)return;
+  box.innerHTML=(orders||[]).map(o=>`<div class="admin-item"><span><b>${escapeHtml(o.external_reference||'Pedido')}</b><br>${money(o.total||0)} · ${escapeHtml(o.payment_status||'pendente')} · ${escapeHtml(o.payment_method||'')}</span><small>${o.updated_at?new Date(o.updated_at).toLocaleString('pt-BR'):''}</small></div>`).join('')||'<div class="empty">Nenhuma venda sincronizada.</div>';
+}
 renderCategories();clearForm();loadPaymentSettings();loadShippingSettings();renderProducts();renderCart();renderPDV();
+setInterval(pollOrders,10000);pollOrders();
 </script></body></html>
