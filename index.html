@@ -213,13 +213,13 @@ footer a{color:#111!important}
 <div class="payment-admin-box" style="margin:14px 0;padding:14px;background:#eceae6;border:1px solid #c8c5be;border-radius:12px">
   <b>🚚 SuperFrete — Configuração</b>
   <p style="font-size:11px;color:#666;margin:6px 0 10px">
-    Configure endpoint, CEP de origem e token. O token privado é enviado ao backend e não é salvo no navegador.
+    Informe o CEP de origem e o token. Ao clicar em SALVAR FRETE, o token é enviado ao backend seguro e não é salvo no navegador.
   </p>
   <label>URL do backend de frete<input class="field" id="shippingEndpoint" placeholder="/api/frete/cotacao"></label>
   <label style="display:block;margin-top:8px">CEP de origem<input class="field" id="shippingOriginCep" placeholder="00000-000"></label>
   <label style="display:block;margin-top:8px">Token da SuperFrete (somente envio seguro)<input class="field" id="superfreteToken" type="password" autocomplete="new-password" placeholder="Não será salvo no navegador"></label>
   <button type="button" class="smallbtn" style="margin-top:8px" onclick="saveShippingSettings()">SALVAR FRETE</button>
-  <div id="shippingAdminStatus" style="font-size:11px;margin-top:6px"></div>
+  <div id="shippingAdminStatus" style="font-size:11px;margin-top:6px"></div><div style="font-size:10px;color:#666;margin-top:6px">Se aparecer erro aqui, o token não foi salvo. Não avance para o checkout até aparecer “SuperFrete configurada e token salvo no backend”.</div>
 </div>
 <button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><svg id="barcodeSvg"></svg><div id="labelCode"></div></div></div><div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" onclick="printSelectedLabel()">🖨️ Imprimir etiqueta</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden></label></div><div id="adminList" class="admin-list"></div></div></div></div></div>
 
@@ -566,18 +566,57 @@ async function saveShippingSettings(){
   const endpoint=DEFAULT_CHECKOUT_API;
   const originCep=(document.getElementById('shippingOriginCep')?.value||'').replace(/\D/g,'');
   const token=(document.getElementById('superfreteToken')?.value||'').trim();
-  localStorage.setItem(SHIPPING_KEY,JSON.stringify({endpoint,originCep}));
   const st=document.getElementById('shippingAdminStatus');
-  if(!token){if(st)st.textContent='Frete salvo. Token não alterado.';return;}
-  if(!endpoint||endpoint.includes('SEU-PROJETO.supabase.co')){if(st)st.textContent='Informe primeiro o endpoint seguro do backend.';return;}
+
+  if(!adminAuthPassword){
+    if(st)st.textContent='Sessão administrativa não encontrada. Feche o ADM e entre novamente com a senha.';
+    return;
+  }
+  if(originCep.length!==8){
+    if(st)st.textContent='Informe um CEP de origem válido com 8 dígitos.';
+    document.getElementById('shippingOriginCep')?.focus();
+    return;
+  }
+  if(!token){
+    if(st)st.textContent='Digite o Token da SuperFrete antes de salvar.';
+    document.getElementById('superfreteToken')?.focus();
+    return;
+  }
+  if(!endpoint||endpoint.includes('SEU-PROJETO.supabase.co')){
+    if(st)st.textContent='Endpoint seguro inválido. O HTML deve usar a Edge Function super-handler.';
+    return;
+  }
+
+  localStorage.setItem(SHIPPING_KEY,JSON.stringify({endpoint,originCep}));
+
   try{
-    if(st)st.textContent='Enviando token ao backend seguro...';
-    const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save_config',provider:'superfrete',token,originCep,admin_password:adminAuthPassword})});
-    const d=await r.json().catch(()=>({}));
-    if(!r.ok)throw new Error(d.error||'Falha ao salvar token no backend.');
+    if(st)st.textContent='Salvando CEP e token no backend seguro...';
+    const r=await fetch(endpoint,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        action:'save_config',
+        provider:'superfrete',
+        token,
+        originCep,
+        admin_password:adminAuthPassword
+      })
+    });
+
+    const raw=await r.text();
+    let d={};
+    try{d=raw?JSON.parse(raw):{};}catch(_){}
+
+    if(!r.ok){
+      const detail=d.error||d.message||raw||('HTTP '+r.status);
+      throw new Error('Backend recusou o salvamento: '+detail);
+    }
+
     document.getElementById('superfreteToken').value='';
-    if(st)st.textContent='Frete salvo e token enviado ao backend.';
-  }catch(e){if(st)st.textContent=e.message+' O token não foi salvo no navegador.';}
+    if(st)st.innerHTML='<span style="color:#246b3b;font-weight:800">✓ SuperFrete configurada e token salvo no backend.</span>';
+  }catch(e){
+    if(st)st.innerHTML='<span style="color:#a52b2b;font-weight:800">✕ '+String(e.message||e).replace(/[<>]/g,'')+'</span>';
+  }
 }
 const PAYMENT_KEY='studio70_payment';
 function paymentSettings(){try{return JSON.parse(localStorage.getItem(PAYMENT_KEY)||'{}')}catch(_){return {}}}
