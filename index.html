@@ -561,7 +561,7 @@ function checkoutApiUrl(){
 }
 const SHIPPING_KEY='studio70_shipping';
 function shippingSettings(){try{return JSON.parse(localStorage.getItem(SHIPPING_KEY)||'{}')}catch(_){return {}}}
-function loadShippingSettings(){const s=shippingSettings();const ep=document.getElementById('shippingEndpoint'),cep=document.getElementById('shippingOriginCep');if(ep)ep.value=s.endpoint||currentCheckoutApi();if(cep)cep.value=s.originCep||'';}
+function loadShippingSettings(){const s=shippingSettings();const ep=document.getElementById('shippingEndpoint'),cep=document.getElementById('shippingOriginCep');if(ep)ep.value=currentCheckoutApi();if(cep)cep.value=s.originCep||'';}
 async function saveShippingSettings(){
   const endpoint=DEFAULT_CHECKOUT_API;
   const originCep=(document.getElementById('shippingOriginCep')?.value||'').replace(/\D/g,'');
@@ -643,7 +643,19 @@ async function integratedQuoteShipping(){
   }catch(e){setStatus('freightStatus',e.message,'error');}finally{btn.disabled=false;}
 }
 function integratedSetCheckoutStatus(msg,type=''){const e=document.getElementById('paymentStatus');if(e){e.textContent=msg;e.className='status '+type;}}
-async function integratedCepLookup(){const cep=integratedDigits(integratedVal('cep'));if(cep.length!==8)return;try{const r=await fetch('https://viacep.com.br/ws/'+cep+'/json/');const d=await r.json();if(!d.erro){for(const [id,v] of [['street',d.logradouro],['neighborhood',d.bairro],['city',d.localidade],['state',d.uf]]){const e=document.getElementById(id);if(e)e.value=v||'';}}}catch(_){} }
+async function integratedCepLookup(){
+  const cep=integratedDigits(integratedVal('cep'));
+  if(cep.length!==8)return;
+  try{
+    const r=await fetch('https://viacep.com.br/ws/'+cep+'/json/');
+    if(!r.ok)throw new Error('Falha ao consultar o CEP.');
+    const d=await r.json();
+    if(d.erro){setStatus('freightStatus','CEP não encontrado.','error');return;}
+    for(const [id,v] of [['street',d.logradouro],['neighborhood',d.bairro],['city',d.localidade],['state',d.uf]]){
+      const e=document.getElementById(id);if(e)e.value=v||'';
+    }
+  }catch(e){setStatus('freightStatus','Não foi possível consultar o CEP.','error');}
+}
 async function createPixPayment(){
   if(!integratedSelectedShipping)return integratedSetCheckoutStatus('Calcule e selecione o frete antes de pagar.','error');
   const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));if(!name||!email||cpf.length<11)return integratedSetCheckoutStatus('Preencha nome, e-mail e CPF.','error');
@@ -684,6 +696,27 @@ async function createStoreOrder(){
 async function copyPix(){const e=document.getElementById('pixCode');try{await navigator.clipboard.writeText(e.value);integratedSetCheckoutStatus('Código Pix copiado.','ok');}catch(_){e.select();document.execCommand('copy');integratedSetCheckoutStatus('Código Pix copiado.','ok');}}
 // Compatibility for existing checkout markup
 function setStatus(id,msg,type=''){const e=document.getElementById(id);if(e){e.textContent=msg;e.className='status '+type;}}
+// CEP: consulta automática ao completar 8 dígitos e ao sair do campo.
+(function initCepAutoLookup(){
+  const cepField = document.getElementById('cep');
+  if(!cepField) return;
+  let lastCep = '';
+  let lookupTimer = null;
+  const runLookup = () => {
+    const cep = integratedDigits(cepField.value);
+    if(cep.length !== 8 || cep === lastCep) return;
+    lastCep = cep;
+    integratedCepLookup();
+  };
+  cepField.addEventListener('input', () => {
+    const digitsOnly = integratedDigits(cepField.value).slice(0, 8);
+    cepField.value = digitsOnly.length > 5 ? digitsOnly.slice(0,5) + '-' + digitsOnly.slice(5) : digitsOnly;
+    if(lookupTimer) clearTimeout(lookupTimer);
+    lookupTimer = setTimeout(runLookup, 250);
+  });
+  cepField.addEventListener('blur', runLookup);
+})();
+
 function cepLookup(){integratedCepLookup()}
 function quoteShipping(){return integratedQuoteShipping()}
 function pay(){
