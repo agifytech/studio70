@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>STUDIO 70 - PDV Mobile</title>
+    <script src="https://tailwindcss.com"></script>
+    <script src="https://jsdelivr.net"></script>
+    <script src="https://unpkg.com"></script>
+</head>
+<body class="bg-stone-900 text-stone-100 min-h-screen flex flex-col font-sans antialiased selection:bg-red-600">
+
+    <!-- Header com a identidade da Studio 70 -->
+    <header class="p-4 border-b border-stone-800 bg-stone-950 flex items-center justify-between">
+        <div>
+            <h1 class="text-lg font-black tracking-wider text-white">STUDIO 70</h1>
+            <p class="text-[10px] uppercase tracking-widest text-red-500 font-bold">Mobile POS</p>
+        </div>
+        <div id="connectionStatus" class="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse"></div>
+    </header>
+
+    <main class="flex-1 p-4 flex flex-col justify-start max-w-md mx-auto w-full space-y-4">
+        
+        <!-- CONTAINER DO SCANNER (CÂMERA) -->
+        <div class="bg-stone-950 rounded-2xl p-3 border border-stone-800 shadow-xl">
+            <div id="interactiveScanner" class="overflow-hidden rounded-xl bg-stone-900 border border-stone-800" style="width: 100%;"></div>
+            <div class="grid grid-cols-2 gap-2 mt-3">
+                <button onclick="startMobileScanner()" class="bg-red-700 hover:bg-red-600 active:scale-95 text-white font-bold py-3 rounded-xl text-sm transition">
+                    📸 Abrir Câmera
+                </button>
+                <button onclick="stopMobileScanner()" class="bg-stone-800 hover:bg-stone-700 active:scale-95 text-stone-300 font-bold py-3 rounded-xl text-sm transition">
+                    ⏸ Pausar
+                </button>
+            </div>
+        </div>
+
+        <!-- LOG DE LEITURA / STATUS INTERMEDIÁRIO -->
+        <div id="mobileLog" class="text-center text-xs text-stone-500 py-1 font-mono">
+            Aguardando inicialização...
+        </div>
+
+        <!-- CARD DO PRODUTO (Preenchido dinamicamente após o bip) -->
+        <div id="mobileProductCard" class="bg-stone-950 rounded-2xl p-5 border border-stone-800 shadow-xl hidden">
+            <div class="flex justify-between items-start">
+                <span class="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-950/50 border border-emerald-900 px-2.5 py-1 rounded-md">
+                    Item Identificado
+                </span>
+                <span id="cardSKU" class="text-xs text-stone-500 font-mono">SKU: --</span>
+            </div>
+            
+            <h2 id="cardTitle" class="text-xl font-black text-white mt-3 leading-tight">Nome da Peça Urbana</h2>
+            <p id="cardBarcode" class="text-xs text-stone-500 font-mono mt-1">EAN: --</p>
+
+            <div class="grid grid-cols-3 gap-2 my-4">
+                <div class="bg-stone-900 p-2.5 rounded-xl border border-stone-800 text-center">
+                    <span class="text-[10px] text-stone-500 block uppercase font-bold">Tam/Cor</span>
+                    <span id="cardSpecs" class="text-sm font-black text-stone-200">M / Preto</span>
+                </div>
+                <div class="bg-stone-900 p-2.5 rounded-xl border border-stone-800 text-center">
+                    <span class="text-[10px] text-stone-500 block uppercase font-bold">Preço</span>
+                    <span id="cardPrice" class="text-sm font-black text-red-500">R$ 0,00</span>
+                </div>
+                <div class="bg-stone-900 p-2.5 rounded-xl border border-stone-800 text-center">
+                    <span class="text-[10px] text-stone-500 block uppercase font-bold">Estoque</span>
+                    <span id="cardStock" class="text-sm font-black text-stone-200">0 un</span>
+                </div>
+            </div>
+
+            <!-- ENTRADA DE QUANTIDADE DA VENDA -->
+            <div class="bg-stone-900 p-4 rounded-xl border border-stone-800 mb-5">
+                <label class="block text-xs font-black uppercase tracking-wider text-stone-400 mb-2">Quantidade Solicitada</label>
+                <div class="flex items-center justify-between">
+                    <button onclick="adjustQuantity(-1)" class="w-12 h-12 bg-stone-800 border border-stone-700 active:bg-stone-700 rounded-xl text-xl font-bold flex items-center justify-center text-stone-300">-</button>
+                    <input type="number" id="inputQty" value="1" min="1" class="w-20 text-center bg-transparent font-black text-2xl text-white outline-none focus:border-b focus:border-red-600 py-1">
+                    <button onclick="adjustQuantity(1)" class="w-12 h-12 bg-stone-800 border border-stone-700 active:bg-stone-700 rounded-xl text-xl font-bold flex items-center justify-center text-stone-300">+</button>
+                </div>
+            </div>
+
+            <button onclick="executeMobileSale()" class="w-full bg-red-700 hover:bg-red-600 text-white font-black py-4 rounded-xl shadow-lg transition active:scale-[0.98] uppercase tracking-wider text-sm">
+                ⚡ Processar Venda e Dar Baixa
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        // Configurações do ambiente Supabase do seu ecossistema
+        const DB_URL = "https://supabase.co"; 
+        const DB_KEY = "SUA_ANON_KEY_AQUI"; // Cole aqui a chave pública do seu projeto
+        const supabaseClient = supabase.createClient(DB_URL, DB_KEY);
+
+        let mobileScannerInstance;
+        let activeProductData = null;
+
+        // Testar Conexão Inicial
+        if(supabaseClient) {
+            document.getElementById('connectionStatus').classList.replace('bg-orange-500', 'bg-emerald-500');
+            document.getElementById('mobileLog').innerText = "Pronto para operação.";
+        }
+
+        function startMobileScanner() {
+            document.getElementById('mobileLog').innerText = "Iniciando captura de vídeo...";
+            mobileScannerInstance = new Html5Qrcode("interactiveScanner");
+            
+            mobileScannerInstance.start(
+                { facingMode: "environment" }, 
+                { fps: 12, qrbox: { width: 260, height: 160 } },
+                onBarcodeScanned
+            ).catch(err => {
+                document.getElementById('mobileLog').innerText = "Câmera não autorizada ou indisponível.";
+            });
+        }
+
+        function stopMobileScanner() {
+            if (mobileScannerInstance && mobileScannerInstance.isScanning) {
+                mobileScannerInstance.stop().then(() => {
+                    document.getElementById('mobileLog').innerText = "Scanner em pausa.";
+                });
+            }
+        }
+
+        async function onBarcodeScanned(barcodeText) {
+            stopMobileScanner();
+            document.getElementById('mobileLog').innerText = `Processando código: ${barcodeText}`;
+
+            try {
+                // Mapeia exatamente as colunas que constam na sua seção administrativa (Nome, Preço, SKU, Código de barras, Estoque, Tamanhos, Cores)
+                const { data, error } = await supabaseClient
+                    .from('produtos') 
+                    .select('*')
+                    .eq('codigo_barras', barcodeText) // Puxa usando o campo que você configurou no admin
+                    .single();
+
+                if (error || !data) {
+                    document.getElementById('mobileLog').innerText = "Código de barras não localizado no estoque.";
+                    return;
+                }
+
+                activeProductData = data;
+                renderProductDetails();
+
+            } catch (err) {
+                document.getElementById('mobileLog').innerText = "Falha crítica de comunicação.";
+            }
+        }
+
+        function renderProductDetails() {
+            document.getElementById('cardTitle').innerText = activeProductData.nome;
+            document.getElementById('cardSKU').innerText = `SKU: ${activeProductData.sku || 'N/A'}`;
+            document.getElementById('cardBarcode').innerText = `EAN: ${activeProductData.codigo_barras}`;
+            document.getElementById('cardPrice').innerText = `R$ ${parseFloat(activeProductData.preco).toFixed(2)}`;
+            document.getElementById('cardStock').innerText = `${activeProductData.estoque} un`;
+            
+            // Combina tamanho e cor cadastrados
+            const tam = activeProductData.tamanhos || 'N/A';
+            const cor = activeProductData.cores || 'N/A';
+            document.getElementById('cardSpecs').innerText = `${tam} / ${cor}`;
+            
+            document.getElementById('inputQty').value = 1;
+            document.getElementById('mobileProductCard').classList.remove('hidden');
+            document.getElementById('mobileLog').innerText = "Concluído!";
+        }
+
+        function adjustQuantity(amount) {
+            const input = document.getElementById('inputQty');
+            let nextVal = parseInt(input.value) + amount;
+            if (nextVal < 1) nextVal = 1;
+            input.value = nextVal;
+        }
+
+        async function executeMobileSale() {
+            const sellQty = parseInt(document.getElementById('inputQty').value);
+            
+            if (sellQty > activeProductData.estoque) {
+                alert(`Estoque insuficiente! Disponível apenas: ${activeProductData.estoque} unidades.`);
+                return;
+            }
+
+            const updatedStockValue = activeProductData.estoque - sellQty;
+            document.getElementById('mobileLog').innerText = "Processando baixa física...";
+
+            try {
+                const { error } = await supabaseClient
+                    .from('produtos')
+                    .update({ estoque: updatedStockValue })
+                    .eq('id', activeProductData.id);
+
+                if (error) throw error;
+
