@@ -979,15 +979,15 @@ function renderAdminOrders(orders){
   box.innerHTML=(orders||[]).map(o=>`<div class="admin-item"><span><b>${escapeHtml(o.external_reference||'Pedido')}</b><br>${money(o.total||0)} · ${escapeHtml(o.payment_status||'pendente')} · ${escapeHtml(o.payment_method||'')}</span><small>${o.updated_at?new Date(o.updated_at).toLocaleString('pt-BR'):''}</small></div>`).join('')||'<div class="empty">Nenhuma venda sincronizada.</div>';
 }
 (function installProductButtonHandlers(){
-  const grid=document.getElementById('productGrid');
-  if(grid && !grid.dataset.handlersInstalled){
-    grid.dataset.handlersInstalled='1';
-    grid.addEventListener('click',function(ev){
-      const details=ev.target.closest('.js-details');
-      const buy=ev.target.closest('.js-buy');
+  // Delegação no document: funciona mesmo quando renderProducts() recria o grid via innerHTML.
+  if(!document.documentElement.dataset.studio70ProductHandlers){
+    document.documentElement.dataset.studio70ProductHandlers='1';
+    document.addEventListener('click',function(ev){
+      const details=ev.target.closest?.('#productGrid .js-details');
+      const buy=ev.target.closest?.('#productGrid .js-buy');
       if(details){ev.preventDefault();ev.stopPropagation();openProduct(details.dataset.productId);return;}
       if(buy){ev.preventDefault();ev.stopPropagation();addCart(buy.dataset.productId);return;}
-    });
+    },true);
   }
   const pagination=document.getElementById('pagination');
   if(pagination && !pagination.dataset.handlersInstalled){
