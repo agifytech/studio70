@@ -348,23 +348,28 @@ function cleanProducts(list){
 function save(){localStorage.setItem(PRODUCTS_KEY,JSON.stringify(products));}
 function renderCategories(){document.getElementById('categories').innerHTML=CATEGORIES.map(c=>`<button class="cat" onclick="filterCat('${c}')">${c}</button>`).join(''); const sel=document.getElementById('categoryFilter'); sel.innerHTML='<option value="">Todas as categorias</option>'+CATEGORIES.map(c=>`<option>${c}</option>`).join(''); document.getElementById('pCategory').innerHTML=CATEGORIES.map(c=>`<option>${c}</option>`).join('');}
 function filtered(){const q=document.getElementById('searchInput').value.trim().toLowerCase(), c=document.getElementById('categoryFilter').value; return products.filter(p=>p.active!==false && (!c||p.category===c) && (!q||[p.name,p.sku,p.barcode,p.category].join(' ').toLowerCase().includes(q)));}
-function renderProducts(){const list=filtered(); const pages=Math.max(1,Math.ceil(list.length/perPage)); page=Math.min(page,pages); const slice=list.slice((page-1)*perPage,page*perPage); document.getElementById('productGrid').innerHTML=slice.length?slice.map(p=>`<article class="product"><img src="${imageSrc(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><span class="badge">${p.category}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${p.name}</h3><div class="price">${money(p.price)}</div><div class="meta">SKU: ${p.sku}<br>Código: ${p.barcode}</div><div class="product-actions"><button class="smallbtn" type="button" onclick="openProduct(${JSON.stringify(String(p.id))})">DETALHES</button><button class="smallbtn primary" type="button" onclick="addCart(${JSON.stringify(String(p.id))})">COMPRAR</button></div></div></article>`).join(''):'<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.</div>'; document.getElementById('pagination').innerHTML=Array.from({length:pages},(_,i)=>`<button class="smallbtn" onclick="page=${i+1};renderProducts()" ${i+1===page?'style="background:var(--accent)"':''}>${i+1}</button>`).join('');}
+function renderProducts(){const list=filtered(); const pages=Math.max(1,Math.ceil(list.length/perPage)); page=Math.min(page,pages); const slice=list.slice((page-1)*perPage,page*perPage); const grid=document.getElementById('productGrid'); if(!grid)return; grid.innerHTML=slice.length?slice.map(p=>{const pid=escapeHtml(String(p.id??''));return `<article class="product" data-product-id="${pid}"><img src="${imageSrc(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><span class="badge">${escapeHtml(p.category||'Outros')}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${escapeHtml(p.name||'Produto')}</h3><div class="price">${money(Number(p.price)||0)}</div><div class="meta">SKU: ${escapeHtml(p.sku||'')}<br>Código: ${escapeHtml(p.barcode||'')}</div><div class="product-actions"><button class="smallbtn js-details" type="button" data-product-id="${pid}">DETALHES</button><button class="smallbtn primary js-buy" type="button" data-product-id="${pid}">COMPRAR</button></div></div></article>`}).join(''):'<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.</div>'; const pagination=document.getElementById('pagination'); if(pagination)pagination.innerHTML=Array.from({length:pages},(_,i)=>`<button class="smallbtn js-page" type="button" data-page="${i+1}" ${i+1===page?'style="background:var(--accent)"':''}>${i+1}</button>`).join('');}
 function filterCat(c){document.getElementById('categoryFilter').value=c;page=1;document.getElementById('produtos').scrollIntoView({behavior:'smooth'});renderProducts();}
 function openProduct(id){
-  const key=String(id||'');
-  const p=products.find(x=>String(x.id)===key);
-  if(!p)return;
+  const key=String(id??'');
+  const p=products.find(x=>String(x.id??'')===key);
+  if(!p){console.warn('Produto não encontrado:',key);return;}
   const body=document.getElementById('productBody');
-  if(!body)return;
+  const modal=document.getElementById('productModal');
+  if(!body||!modal)return;
   const title=escapeHtml(p.name||'Produto');
   const desc=escapeHtml(p.description||'Descrição não cadastrada.').replace(/\n/g,'<br>');
   const image=imageSrc(p.image);
-  const pid=JSON.stringify(String(p.id));
-  body.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:25px"><div class="product-modal-image"><img src="${image}" alt="${title}" loading="eager" decoding="async" onerror="imageError(this)"></div><div><h1 class="section-title">${title}</h1><div class="price" style="font-size:30px;color:var(--accent)">${money(p.price)}</div><div class="product-description">${desc}</div><p><b>SKU:</b> ${escapeHtml(p.sku||'')}<br><b>Código:</b> ${escapeHtml(p.barcode||'')}<br><b>Estoque:</b> ${Number(p.stock||0)}</p><button class="btn" type="button" onclick="addCart(${pid});closeProduct()">ADICIONAR AO CARRINHO</button></div></div>`;
-  document.getElementById('productModal')?.classList.add('open');
+  const sizes=Array.isArray(p.sizes)?p.sizes.map(x=>String(x)).filter(Boolean):[];
+  const colors=Array.isArray(p.colors)?p.colors.map(x=>String(x)).filter(Boolean):[];
+  const secondary=Array.isArray(p.secondaryImages)?p.secondaryImages.map(x=>String(x)).filter(Boolean):[];
+  const gallery=[p.image,...secondary].map(x=>String(x||'').split(' | ')[0].trim()).filter(Boolean);
+  const pid=JSON.stringify(key);
+  body.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:25px"><div class="product-modal-image"><img src="${image}" alt="${title}" loading="eager" decoding="async" onerror="imageError(this)">${gallery.length>1?`<div style="display:flex;gap:8px;overflow:auto;margin-top:10px">${gallery.slice(0,8).map(src=>`<img src="${imageSrc(src)}" style="width:70px;height:70px;object-fit:cover;border:1px solid var(--line);border-radius:8px;cursor:pointer" onclick="this.closest('.product-modal-image').querySelector('img').src=this.src" onerror="imageError(this)">`).join('')}</div>`:''}</div><div><h1 class="section-title">${title}</h1><div class="price" style="font-size:30px;color:var(--accent)">${money(Number(p.price)||0)}</div><div class="product-description">${desc}</div><p><b>SKU:</b> ${escapeHtml(p.sku||'')}<br><b>Código:</b> ${escapeHtml(p.barcode||'')}<br><b>Estoque:</b> ${Number(p.stock||0)}${sizes.length?`<br><b>Tamanhos:</b> ${escapeHtml(sizes.join(', '))}`:''}${colors.length?`<br><b>Cores/variações:</b> ${escapeHtml(colors.join(', '))}`:''}</p><button class="btn js-modal-buy" type="button" data-product-id="${escapeHtml(key)}">ADICIONAR AO CARRINHO</button></div></div>`;
+  modal.classList.add('open');
 }
 function closeProduct(){document.getElementById('productModal').classList.remove('open')}
-function addCart(id){const key=String(id??'');const p=products.find(x=>String(x.id??'')===key);if(!p)return;const item=cart.find(x=>String(x.id??'')===key);if(item)item.qty++;else cart.push({id:key,qty:1});saveCart();renderCart();}
+function addCart(id){const key=String(id??'');const p=products.find(x=>String(x.id??'')===key);if(!p){console.warn('Não foi possível adicionar: produto não encontrado',key);return false;}const item=cart.find(x=>String(x.id??'')===key);if(item)item.qty++;else cart.push({id:key,qty:1});saveCart();renderCart();return true;}
 function saveCart(){localStorage.setItem('studio70_cart',JSON.stringify(cart));document.getElementById('cartCount').textContent=cart.reduce((a,b)=>a+b.qty,0);}
 function renderCart(){const el=document.getElementById('cartItems'); if(!cart.length)el.innerHTML='<div class="empty">Nenhum produto adicionado.</div>'; else el.innerHTML=cart.map(i=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return `<div class="cart-row"><div><b>${p.name}</b><br>${money(p.price)} × ${i.qty}</div><button class="smallbtn" onclick="removeCart('${i.id}')">−</button></div>`}).join('');const total=cart.reduce((s,i)=>s+(products.find(p=>String(p.id??'')===String(i.id??''))?.price||0)*i.qty,0);document.getElementById('cartTotal').textContent=money(total);saveCart();}
 function removeCart(id){const key=String(id??'');const i=cart.find(x=>String(x.id??'')===key);if(!i)return;if(i.qty>1)i.qty--;else cart=cart.filter(x=>String(x.id??'')!==key);renderCart();}
@@ -948,6 +953,32 @@ function renderAdminOrders(orders){
   if(!box)return;
   box.innerHTML=(orders||[]).map(o=>`<div class="admin-item"><span><b>${escapeHtml(o.external_reference||'Pedido')}</b><br>${money(o.total||0)} · ${escapeHtml(o.payment_status||'pendente')} · ${escapeHtml(o.payment_method||'')}</span><small>${o.updated_at?new Date(o.updated_at).toLocaleString('pt-BR'):''}</small></div>`).join('')||'<div class="empty">Nenhuma venda sincronizada.</div>';
 }
+(function installProductButtonHandlers(){
+  const grid=document.getElementById('productGrid');
+  if(grid && !grid.dataset.handlersInstalled){
+    grid.dataset.handlersInstalled='1';
+    grid.addEventListener('click',function(ev){
+      const details=ev.target.closest('.js-details');
+      const buy=ev.target.closest('.js-buy');
+      if(details){ev.preventDefault();ev.stopPropagation();openProduct(details.dataset.productId);return;}
+      if(buy){ev.preventDefault();ev.stopPropagation();addCart(buy.dataset.productId);return;}
+    });
+  }
+  const pagination=document.getElementById('pagination');
+  if(pagination && !pagination.dataset.handlersInstalled){
+    pagination.dataset.handlersInstalled='1';
+    pagination.addEventListener('click',function(ev){const b=ev.target.closest('.js-page');if(!b)return;ev.preventDefault();page=Number(b.dataset.page)||1;renderProducts();});
+  }
+  const modalBody=document.getElementById('productBody');
+  if(modalBody && !modalBody.dataset.handlersInstalled){
+    modalBody.dataset.handlersInstalled='1';
+    modalBody.addEventListener('click',function(ev){const b=ev.target.closest('.js-modal-buy');if(!b)return;ev.preventDefault();if(addCart(b.dataset.productId))closeProduct();});
+  }
+  window.openProduct=openProduct;
+  window.addCart=addCart;
+  window.closeProduct=closeProduct;
+  window.renderProducts=renderProducts;
+})();
 renderCategories();clearForm();loadPaymentSettings();loadShippingSettings();renderProducts();renderCart();renderPDV();
 loadCarmenattoCatalog();
 setInterval(pollOrders,10000);pollOrders();
