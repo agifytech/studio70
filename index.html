@@ -169,9 +169,6 @@ footer a{color:#111!important}
 #integratedCheckoutModal .status.ok{color:#246b3b}
 #integratedCheckoutModal .status.error{color:#a52b2b}
 @media(max-width:800px){#integratedCheckoutModal{padding:0}#integratedCheckoutModal .integrated-shell{border-radius:0}#integratedCheckoutModal .integrated-close{right:10px;top:10px}#integratedCheckoutModal .pay-methods{grid-template-columns:1fr}}
-
-/* CARMENATTO SYNC DASHBOARD */
-.carmenatto-dashboard{margin:14px 0;padding:16px;border:1px solid #c8c5be;border-radius:14px;background:#fff;color:#111}.carmenatto-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.carmenatto-head h3{margin:0;font-size:15px}.sync-badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;font-size:11px;font-weight:800;background:#eceae6}.sync-badge.ok{background:#e7f2ea;color:#246b3b}.sync-badge.warn{background:#fff4d6;color:#765d00}.sync-badge.error{background:#fbe8e8;color:#a52b2b}.sync-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.sync-stat{border:1px solid #d7d2c9;border-radius:10px;padding:10px}.sync-stat b{display:block;font-size:18px}.sync-stat small{color:#6b6862;font-size:10px}.sync-actions{display:flex;gap:8px;flex-wrap:wrap}.sync-actions .smallbtn{flex:0 0 auto}.sync-history{margin-top:12px;max-height:280px;overflow:auto;border-top:1px solid #ddd8d0}.sync-history-row{padding:10px 2px;border-bottom:1px solid #e3ded6;font-size:11px;display:grid;grid-template-columns:1.2fr .8fr 1fr 1fr;gap:8px;align-items:center}.sync-history-row small{color:#6b6862}@media(max-width:700px){.sync-stats{grid-template-columns:1fr 1fr}.sync-history-row{grid-template-columns:1fr 1fr}}
 </style></head>
 <body>
 <div class="announce">🔥 FRETE GRÁTIS ACIMA DE R$150 &nbsp;·&nbsp; ENTREGA PARA TODO O BRASIL &nbsp;·&nbsp; TROCA FÁCIL EM 7 DIAS</div>
@@ -628,53 +625,41 @@ async function loadCarmenattoCatalog(){
   }catch(_){/* catálogo remoto é opcional; o catálogo local continua funcionando */}
 }
 function ensureCarmenattoAdminControls(){
-  if(document.getElementById('carmenattoDashboard'))return;
+  if(document.getElementById('carmenattoSyncBtn'))return;
   const scanner=document.querySelector('#adminModal .scanner');
   if(!scanner)return;
   const box=document.createElement('div');
-  box.id='carmenattoDashboard';
-  box.className='carmenatto-dashboard';
-  box.innerHTML=`<div class="carmenatto-head"><h3>🔄 CATÁLOGO CARMENATTO</h3><span id="carmenattoSyncBadge" class="sync-badge">● verificando</span></div>
-    <p style="color:#666;font-size:11px;margin:6px 0 10px">Catálogo sincronizado no Supabase. O preço de venda do STUDIO 70 permanece separado do fornecedor.</p>
-    <div id="carmenattoSyncSummary" style="font-size:12px;color:#444">Carregando status...</div>
-    <div class="sync-stats"><div class="sync-stat"><b id="carStatProducts">—</b><small>Produtos ativos</small></div><div class="sync-stat"><b id="carStatImported">—</b><small>Última importação</small></div><div class="sync-stat"><b id="carStatErrors">—</b><small>Erros</small></div><div class="sync-stat"><b id="carStatPages">—</b><small>Páginas verificadas</small></div></div>
-    <div class="sync-actions"><button class="smallbtn primary" id="carmenattoSyncBtn" type="button">🔄 SINCRONIZAR AGORA</button><button class="smallbtn" id="carmenattoRefreshBtn" type="button">↻ ATUALIZAR STATUS</button></div>
-    <div id="carmenattoSyncStatus" style="margin-top:8px;color:#666;font-size:11px"></div>
-    <details style="margin-top:12px"><summary style="cursor:pointer;font-weight:800;font-size:12px">📋 Histórico de sincronizações</summary><div id="carmenattoSyncHistory" class="sync-history"></div></details>`;
+  box.style='margin-top:14px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:#111';
+  box.innerHTML='<b>🔄 CATÁLOGO CARMENATTO</b><p style="color:#aaa;font-size:12px;margin:6px 0 10px">Sincroniza preços, estoque, tamanhos, cores, descrições e fotos autorizadas.</p><button class="smallbtn primary" id="carmenattoSyncBtn" type="button">SINCRONIZAR AGORA</button><div id="carmenattoSyncStatus" style="margin-top:8px;color:#aaa;font-size:12px"></div>';
   scanner.appendChild(box);
   document.getElementById('carmenattoSyncBtn').onclick=syncCarmenattoCatalog;
-  document.getElementById('carmenattoRefreshBtn').onclick=refreshCarmenattoDashboard;
-  refreshCarmenattoDashboard();
-}
-function fmtSyncDate(v){return v?new Date(v).toLocaleString('pt-BR'):'—'}
-function syncStatusLabel(s){if(s==='success')return ['🟢 Atualizado','ok'];if(s==='running')return ['🟡 Sincronizando','warn'];if(s==='error')return ['🔴 Falha','error'];return ['⚪ Aguardando',''];}
-async function refreshCarmenattoDashboard(){
-  try{
-    const [sr,hr]=await Promise.all([
-      fetch(checkoutApiUrl(),{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'carmenatto_sync_status'})}),
-      fetch(checkoutApiUrl(),{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'carmenatto_sync_history',admin_password:adminAuthPassword,limit:20})})
-    ]);
-    const statusData=await sr.json().catch(()=>({})),historyData=await hr.json().catch(()=>({}));
-    if(!sr.ok||!statusData.ok)throw new Error(statusData.error||'Não foi possível consultar o status.');
-    const st=statusData.status||{};const [label,cls]=syncStatusLabel(st.status);const badge=document.getElementById('carmenattoSyncBadge');if(badge){badge.textContent=label;badge.className='sync-badge '+cls}
-    const summary=document.getElementById('carmenattoSyncSummary');if(summary)summary.innerHTML=st.started_at?`Última execução: <b>${fmtSyncDate(st.finished_at||st.started_at)}</b> · ${st.trigger==='automatic'?'automática':'manual'} · <b>${st.status}</b>`:'Nenhuma sincronização realizada ainda.';
-    const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};set('carStatProducts',statusData.active_products??0);set('carStatImported',st.imported??0);set('carStatErrors',st.errors_count??0);set('carStatPages',st.pages??0);
-    const box=document.getElementById('carmenattoSyncHistory');if(box&&Array.isArray(historyData.history)){box.innerHTML=historyData.history.map(h=>{const [lb,cl]=syncStatusLabel(h.status);return `<div class="sync-history-row"><span><b>${lb}</b><br><small>${h.trigger==='automatic'?'Automática':'Manual'} · ${fmtSyncDate(h.started_at)}</small></span><span>${Number(h.imported||0)} importados<br><small>${Number(h.errors_count||0)} erros</small></span><span>${Number(h.found||0)} encontrados<br><small>${Number(h.pages||0)} páginas</small></span><span><small>${fmtSyncDate(h.finished_at)}</small></span></div>`}).join('')||'<div class="empty">Nenhum histórico.</div>'}
-  }catch(e){const st=document.getElementById('carmenattoSyncStatus');if(st)st.textContent='⚠️ '+(e.message||e)}
 }
 async function syncCarmenattoCatalog(){
   const btn=document.getElementById('carmenattoSyncBtn'),status=document.getElementById('carmenattoSyncStatus');
   if(!btn||!status)return;
-  btn.disabled=true;status.textContent='Sincronizando Carmenatto...';
+  btn.disabled=true;
+  let startPage=1,totalImported=0,totalErrors=0,totalPages=0,batches=0;
+  const MAX_BATCHES=100;
   try{
-    const r=await fetch(checkoutApiUrl(),{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'carmenatto_sync',admin_password:adminAuthPassword,max_pages:50,max_products:2000,trigger:'manual'})});
-    const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||'Falha na sincronização.');
-    status.textContent=`✓ Sincronização concluída: ${d.imported||0} produtos processados · ${d.errors?.length||0} erros.`;
-    await loadCarmenattoCatalog();await refreshCarmenattoDashboard();
-  }catch(e){status.textContent='✕ '+(e.message||e);await refreshCarmenattoDashboard();}
+    while(batches<MAX_BATCHES){
+      batches++;
+      status.textContent=`Sincronizando Carmenatto... lote ${batches} · a partir da página ${startPage}`;
+      const r=await fetch(checkoutApiUrl(),{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'carmenatto_sync',admin_password:adminAuthPassword,max_pages:3,max_products:60,start_page:startPage})});
+      const d=await r.json().catch(()=>({}));
+      if(!r.ok||!d.ok)throw new Error(d.error||`Falha na sincronização (HTTP ${r.status}).`);
+      const imported=Number(d.imported||0), errors=Array.isArray(d.errors)?d.errors.length:0, pages=Number(d.pages||0);
+      totalImported+=imported; totalErrors+=errors; totalPages+=pages;
+      status.textContent=`✓ ${totalImported} produtos sincronizados · ${totalPages} páginas · ${totalErrors} erros`;
+      await loadCarmenattoCatalog();
+      if(!d.has_more || !d.next_page || Number(d.next_page)<=startPage)break;
+      startPage=Number(d.next_page);
+    }
+    if(batches>=MAX_BATCHES)throw new Error('Limite de lotes atingido; interrompida para segurança.');
+    status.textContent=`✓ Catálogo completo: ${totalImported} produtos · ${totalPages} páginas · ${totalErrors} erros.`;
+    alert(`Carmenatto sincronizada.\nProdutos sincronizados: ${totalImported}\nPáginas verificadas: ${totalPages}\nErros: ${totalErrors}`);
+  }catch(e){status.textContent='✕ '+e.message;alert('Falha na sincronização Carmenatto: '+e.message);}
   finally{btn.disabled=false;}
 }
-
 const SHIPPING_KEY='studio70_shipping';
 const SHIPPING_DEFAULTS={
   originCep:'',
