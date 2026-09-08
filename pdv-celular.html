@@ -36,6 +36,15 @@ input:focus{border-color:#dc2626}
 .modal h3{margin:0 0 8px}.modal p{font-size:12px;color:#a8a29e}.modal button{width:100%;margin-top:10px}
 .success{color:#6ee7b7}.error{color:#fca5a5}
 </style>
+
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#0c0a09">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="STUDIO 70 PDV">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+
 </head>
 <body>
 <header>
@@ -457,5 +466,15 @@ if(adminPassword){
   loadInitialProductCount();
 }
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js', {scope:'./'})
+      .catch(err => console.warn('[STUDIO70 PWA] Service Worker:', err));
+  });
+}
+</script>
+
 </body>
 </html>
