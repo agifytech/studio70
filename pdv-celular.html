@@ -161,7 +161,7 @@ async function lookupProduct(code){
   setStatus('Consultando produto...');
   try{
     const d=await api('pdv_product',{code});
-    if(!d.found || !d.product) throw new Error('Produto não encontrado para este código.');
+    if(!d.found || !d.product) throw new Error(apiError(d, `Produto não encontrado para este código: ${code}`));
     activeProduct=d.product;
     renderProduct();
     setStatus('Produto identificado. Confira a quantidade.','success');
@@ -250,6 +250,7 @@ async function startScanner(){
         scanning=false;
         scanner.stop().catch(()=>{});
         $('codeInput').value=code;
+        setStatus(`Código lido: ${code}. Consultando Supabase...`);
         lookupProduct(code);
       },
       ()=>{}
