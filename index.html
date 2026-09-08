@@ -584,7 +584,7 @@ function checkoutApiUrl(){
   return api.replace(/\/$/,'');
 }
 
-// ==================== CATÁLOGO CARMENATTO ====================
+// ==================== ESTOQUE DO FORNECEDOR ====================
 function mapSupplierCategory(name){
   const n=String(name||'').toLowerCase();
   if(n.includes('vestido'))return 'Vestidos';
@@ -609,7 +609,7 @@ async function loadCarmenattoCatalog(){
     if(!d.ok||!Array.isArray(d.products)||!d.products.length)return;
     const remote=d.products.map((p,i)=>({
       id:'car-'+String(p.external_id||p.sku||i),
-      name:String(p.name||'Produto Carmenatto'),
+      name:String(p.name||'Produto do fornecedor'),
       price:Number(p.price||0),
       pixPrice:Number(p.pix_price||0),
       description:String(p.description||''),
@@ -633,7 +633,7 @@ async function loadCarmenattoCatalog(){
     renderCategories();
     renderProducts();
     renderAdmin();
-    window.STUDIO70_CARMENATTO_SYNCED_AT=d.products.reduce((max,p)=>String(p.synced_at||'')>max?String(p.synced_at||''):max,'');
+    window.STUDIO70_FORNECEDOR_SYNCED_AT=d.products.reduce((max,p)=>String(p.synced_at||'')>max?String(p.synced_at||''):max,'');
   }catch(_){/* catálogo remoto é opcional; o catálogo local continua funcionando */}
 }
 function ensureCarmenattoAdminControls(){
@@ -642,7 +642,7 @@ function ensureCarmenattoAdminControls(){
   if(!scanner)return;
   const box=document.createElement('div');
   box.style='margin-top:14px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:#111';
-  box.innerHTML='<b>🔄 CATÁLOGO CARMENATTO</b><p style="color:#aaa;font-size:12px;margin:6px 0 10px">Sincroniza preços, estoque, tamanhos, cores, descrições e fotos autorizadas.</p><button class="smallbtn primary" id="carmenattoSyncBtn" type="button">SINCRONIZAR AGORA</button><div id="carmenattoSyncStatus" style="margin-top:8px;color:#aaa;font-size:12px"></div>';
+  box.innerHTML='<b>🔄 ESTOQUE DO FORNECEDOR</b><p style="color:#aaa;font-size:12px;margin:6px 0 10px">Sincroniza preços, estoque, tamanhos, cores, descrições e fotos do fornecedor.</p><button class="smallbtn primary" id="carmenattoSyncBtn" type="button">SINCRONIZAR AGORA</button><div id="carmenattoSyncStatus" style="margin-top:8px;color:#aaa;font-size:12px"></div>';
   scanner.appendChild(box);
   document.getElementById('carmenattoSyncBtn').onclick=syncCarmenattoCatalog;
 }
@@ -655,7 +655,7 @@ async function syncCarmenattoCatalog(){
   try{
     while(batches<MAX_BATCHES){
       batches++;
-      status.textContent=`Sincronizando Carmenatto... lote ${batches} · a partir da página ${startPage}`;
+      status.textContent=`Sincronizando estoque do fornecedor... lote ${batches} · a partir da página ${startPage}`;
       const r=await fetch(checkoutApiUrl(),{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'carmenatto_sync',admin_password:adminAuthPassword,max_pages:1,max_products:20,start_page:startPage})});
       const d=await r.json().catch(()=>({}));
       if(!r.ok||!d.ok)throw new Error(d.error||`Falha na sincronização (HTTP ${r.status}).`);
@@ -668,8 +668,8 @@ async function syncCarmenattoCatalog(){
     }
     if(batches>=MAX_BATCHES)throw new Error('Limite de lotes atingido; interrompida para segurança.');
     status.textContent=`✓ Catálogo completo: ${totalImported} produtos · ${totalPages} páginas · ${totalErrors} erros.`;
-    alert(`Carmenatto sincronizada.\nProdutos sincronizados: ${totalImported}\nPáginas verificadas: ${totalPages}\nErros: ${totalErrors}`);
-  }catch(e){status.textContent='✕ '+e.message;alert('Falha na sincronização Carmenatto: '+e.message);}
+    alert(`Estoque do fornecedor sincronizado.\nProdutos sincronizados: ${totalImported}\nPáginas verificadas: ${totalPages}\nErros: ${totalErrors}`);
+  }catch(e){status.textContent='✕ '+e.message;alert('Falha na sincronização do fornecedor: '+e.message);}
   finally{btn.disabled=false;}
 }
 const SHIPPING_KEY='studio70_shipping';
