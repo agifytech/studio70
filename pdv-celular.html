@@ -1,189 +1,281 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>STUDIO 70 - PDV Mobile</title>
-    <script src="https://tailwindcss.com"></script>
-    <script src="https://jsdelivr.net"></script>
-    <script src="https://unpkg.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0c0a09">
+<title>STUDIO 70 — PDV Móvel</title>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0c0a09;color:#f5f5f4;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+main{width:min(100%,520px);margin:auto;padding:16px}
+header{padding:16px;border-bottom:1px solid #292524;background:#090807;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+.brand{font-weight:900;letter-spacing:.12em}.sub{font-size:10px;color:#ef4444;font-weight:800;letter-spacing:.18em;text-transform:uppercase;margin-top:2px}
+.dot{width:11px;height:11px;border-radius:50%;background:#f59e0b}.dot.ok{background:#10b981}.dot.err{background:#ef4444}
+.card{background:#171412;border:1px solid #292524;border-radius:18px;padding:14px;margin-bottom:14px;box-shadow:0 12px 30px #0005}
+h2{font-size:18px;margin:0 0 10px}.muted{color:#a8a29e;font-size:12px}.status{min-height:22px;text-align:center;color:#a8a29e;font-size:12px;margin:8px 0 14px}
+#reader{width:100%;overflow:hidden;border-radius:14px;background:#0c0a09;min-height:40px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+button{border:0;border-radius:12px;padding:13px 12px;font-weight:900;font-size:13px;cursor:pointer}
+.primary{background:#b91c1c;color:#fff}.secondary{background:#292524;color:#e7e5e4}.danger{background:#3f1d1d;color:#fecaca}
+input{width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:13px;font-size:16px;outline:none}
+input:focus{border-color:#dc2626}
+.lookup{display:flex;gap:8px}.lookup input{flex:1}.lookup button{width:110px}
+.product{display:none}.product.show{display:block}
+.badge{display:inline-block;background:#052e1b;color:#6ee7b7;border:1px solid #065f46;border-radius:8px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.title{font-size:21px;font-weight:900;margin:12px 0 4px}.sku{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#78716c}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0}.stat{background:#0c0a09;border:1px solid #292524;border-radius:12px;padding:10px;text-align:center}.stat small{display:block;color:#78716c;text-transform:uppercase;font-size:9px;font-weight:800}.stat b{display:block;margin-top:3px}
+.qty{display:flex;align-items:center;justify-content:space-between;background:#0c0a09;border:1px solid #292524;border-radius:14px;padding:8px;margin:12px 0}.qty button{width:50px;height:48px;padding:0;font-size:22px;background:#292524;color:#fff}.qty input{width:80px;text-align:center;border:0;background:transparent;font-size:22px;font-weight:900}
+.notice{background:#2a1705;border:1px solid #854d0e;color:#fde68a;border-radius:12px;padding:10px;font-size:11px;line-height:1.45}
+.hidden{display:none!important}
+#loginBox{position:fixed;inset:0;background:#000b;z-index:20;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{width:min(100%,400px);background:#171412;border:1px solid #44403c;border-radius:18px;padding:18px}
+.modal h3{margin:0 0 8px}.modal p{font-size:12px;color:#a8a29e}.modal button{width:100%;margin-top:10px}
+.success{color:#6ee7b7}.error{color:#fca5a5}
+</style>
 </head>
-<body class="bg-stone-900 text-stone-100 min-h-screen flex flex-col font-sans antialiased selection:bg-red-600">
+<body>
+<header>
+  <div><div class="brand">STUDIO 70</div><div class="sub">PDV Móvel</div></div>
+  <div id="connectionStatus" class="dot"></div>
+</header>
 
-    <!-- Header com a identidade da Studio 70 -->
-    <header class="p-4 border-b border-stone-800 bg-stone-950 flex items-center justify-between">
-        <div>
-            <h1 class="text-lg font-black tracking-wider text-white">STUDIO 70</h1>
-            <p class="text-[10px] uppercase tracking-widest text-red-500 font-bold">Mobile POS</p>
-        </div>
-        <div id="connectionStatus" class="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse"></div>
-    </header>
+<main>
+  <div class="card">
+    <h2>Leitura do produto</h2>
+    <div id="reader"></div>
+    <div class="grid">
+      <button class="primary" onclick="startScanner()">📷 ABRIR CÂMERA</button>
+      <button class="secondary" onclick="stopScanner()">⏸ PAUSAR</button>
+    </div>
+    <div id="status" class="status">Carregando estoque do fornecedor...</div>
+    <div class="lookup">
+      <input id="codeInput" inputmode="text" autocomplete="off" placeholder="Código de barras ou SKU">
+      <button class="secondary" onclick="lookupProduct()">BUSCAR</button>
+    </div>
+  </div>
 
-    <main class="flex-1 p-4 flex flex-col justify-start max-w-md mx-auto w-full space-y-4">
-        
-        <!-- CONTAINER DO SCANNER (CÂMERA) -->
-        <div class="bg-stone-950 rounded-2xl p-3 border border-stone-800 shadow-xl">
-            <div id="interactiveScanner" class="overflow-hidden rounded-xl bg-stone-900 border border-stone-800" style="width: 100%;"></div>
-            <div class="grid grid-cols-2 gap-2 mt-3">
-                <button onclick="startMobileScanner()" class="bg-red-700 hover:bg-red-600 active:scale-95 text-white font-bold py-3 rounded-xl text-sm transition">
-                    📸 Abrir Câmera
-                </button>
-                <button onclick="stopMobileScanner()" class="bg-stone-800 hover:bg-stone-700 active:scale-95 text-stone-300 font-bold py-3 rounded-xl text-sm transition">
-                    ⏸ Pausar
-                </button>
-            </div>
-        </div>
+  <div id="productCard" class="card product">
+    <span class="badge">Item identificado</span>
+    <div id="productName" class="title">Produto</div>
+    <div id="productSku" class="sku">SKU: —</div>
+    <div id="productBarcode" class="sku">EAN: —</div>
 
-        <!-- LOG DE LEITURA / STATUS INTERMEDIÁRIO -->
-        <div id="mobileLog" class="text-center text-xs text-stone-500 py-1 font-mono">
-            Aguardando inicialização...
-        </div>
+    <div class="stats">
+      <div class="stat"><small>Preço</small><b id="productPrice">R$ 0,00</b></div>
+      <div class="stat"><small>Estoque</small><b id="productStock">0</b></div>
+      <div class="stat"><small>Tam/Cor</small><b id="productSpecs">—</b></div>
+    </div>
 
-        <!-- CARD DO PRODUTO (Preenchido dinamicamente após o bip) -->
-        <div id="mobileProductCard" class="bg-stone-950 rounded-2xl p-5 border border-stone-800 shadow-xl hidden">
-            <div class="flex justify-between items-start">
-                <span class="text-[10px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-950/50 border border-emerald-900 px-2.5 py-1 rounded-md">
-                    Item Identificado
-                </span>
-                <span id="cardSKU" class="text-xs text-stone-500 font-mono">SKU: --</span>
-            </div>
-            
-            <h2 id="cardTitle" class="text-xl font-black text-white mt-3 leading-tight">Nome da Peça Urbana</h2>
-            <p id="cardBarcode" class="text-xs text-stone-500 font-mono mt-1">EAN: --</p>
+    <label class="muted">Quantidade da venda</label>
+    <div class="qty">
+      <button onclick="changeQty(-1)">−</button>
+      <input id="qty" type="number" min="1" value="1">
+      <button onclick="changeQty(1)">+</button>
+    </div>
 
-            <div class="grid grid-cols-3 gap-2 my-4">
-                <div class="bg-stone-900 p-2.5 rounded-xl border border-stone-800 text-center">
-                    <span class="text-[10px] text-stone-500 block uppercase font-bold">Tam/Cor</span>
-                    <span id="cardSpecs" class="text-sm font-black text-stone-200">M / Preto</span>
-                </div>
-                <div class="bg-stone-900 p-2.5 rounded-xl border border-stone-800 text-center">
-                    <span class="text-[10px] text-stone-500 block uppercase font-bold">Preço</span>
-                    <span id="cardPrice" class="text-sm font-black text-red-500">R$ 0,00</span>
-                </div>
-                <div class="bg-stone-900 p-2.5 rounded-xl border border-stone-800 text-center">
-                    <span class="text-[10px] text-stone-500 block uppercase font-bold">Estoque</span>
-                    <span id="cardStock" class="text-sm font-black text-stone-200">0 un</span>
-                </div>
-            </div>
+    <button class="primary" style="width:100%" onclick="finishSale()">⚡ PROCESSAR VENDA E DAR BAIXA</button>
+  </div>
 
-            <!-- ENTRADA DE QUANTIDADE DA VENDA -->
-            <div class="bg-stone-900 p-4 rounded-xl border border-stone-800 mb-5">
-                <label class="block text-xs font-black uppercase tracking-wider text-stone-400 mb-2">Quantidade Solicitada</label>
-                <div class="flex items-center justify-between">
-                    <button onclick="adjustQuantity(-1)" class="w-12 h-12 bg-stone-800 border border-stone-700 active:bg-stone-700 rounded-xl text-xl font-bold flex items-center justify-center text-stone-300">-</button>
-                    <input type="number" id="inputQty" value="1" min="1" class="w-20 text-center bg-transparent font-black text-2xl text-white outline-none focus:border-b focus:border-red-600 py-1">
-                    <button onclick="adjustQuantity(1)" class="w-12 h-12 bg-stone-800 border border-stone-700 active:bg-stone-700 rounded-xl text-xl font-bold flex items-center justify-center text-stone-300">+</button>
-                </div>
-            </div>
+  <div class="card">
+    <div class="notice">
+      O PDV consulta o estoque do fornecedor no Supabase e a baixa é feita no servidor.
+      O acesso usa a senha administrativa do PDV; ela não fica gravada no HTML.
+    </div>
+  </div>
+</main>
 
-            <button onclick="executeMobileSale()" class="w-full bg-red-700 hover:bg-red-600 text-white font-black py-4 rounded-xl shadow-lg transition active:scale-[0.98] uppercase tracking-wider text-sm">
-                ⚡ Processar Venda e Dar Baixa
-            </button>
-        </div>
+<div id="loginBox">
+  <div class="modal">
+    <h3>Acesso ao PDV</h3>
+    <p>Digite a mesma senha usada para acessar o painel administrativo.</p>
+    <input id="pdvPassword" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Senha do PDV">
+    <button class="primary" onclick="unlockPdv()">ENTRAR NO PDV</button>
+    <div id="loginError" class="status error"></div>
+  </div>
+</div>
 
-    </main>
+<script>
+const API = 'https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler';
+let scanner = null;
+let scanning = false;
+let activeProduct = null;
+let adminPassword = sessionStorage.getItem('studio70_pdv_password') || '';
 
-    <script>
-        // Configurações do ambiente Supabase do seu ecossistema
-        const DB_URL = "https://supabase.co"; 
-        const DB_KEY = "SUA_ANON_KEY_AQUI"; // Cole aqui a chave pública do seu projeto
-        const supabaseClient = supabase.createClient(DB_URL, DB_KEY);
+const $ = id => document.getElementById(id);
+const money = n => Number(n || 0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 
-        let mobileScannerInstance;
-        let activeProductData = null;
+function setStatus(text, type=''){
+  $('status').textContent=text;
+  $('status').className='status '+(type==='success'?'success':type==='error'?'error':'');
+}
+function apiError(data, fallback){ return String(data?.error || data?.message || fallback || 'Erro desconhecido.'); }
 
-        // Testar Conexão Inicial
-        if(supabaseClient) {
-            document.getElementById('connectionStatus').classList.replace('bg-orange-500', 'bg-emerald-500');
-            document.getElementById('mobileLog').innerText = "Pronto para operação.";
-        }
+async function api(action, body={}){
+  const r=await fetch(API,{
+    method:'POST',
+    mode:'cors',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify({action,...body})
+  });
+  const text=await r.text();
+  let data={};
+  try{data=text?JSON.parse(text):{};}catch{throw new Error(`Resposta inválida da API (HTTP ${r.status}).`);}
+  if(!r.ok) throw new Error(apiError(data,`API HTTP ${r.status}`));
+  return data;
+}
 
-        function startMobileScanner() {
-            document.getElementById('mobileLog').innerText = "Iniciando captura de vídeo...";
-            mobileScannerInstance = new Html5Qrcode("interactiveScanner");
-            
-            mobileScannerInstance.start(
-                { facingMode: "environment" }, 
-                { fps: 12, qrbox: { width: 260, height: 160 } },
-                onBarcodeScanned
-            ).catch(err => {
-                document.getElementById('mobileLog').innerText = "Câmera não autorizada ou indisponível.";
-            });
-        }
+async function unlockPdv(){
+  const value=$('pdvPassword').value.trim();
+  if(!value){$('loginError').textContent='Digite a senha.';return;}
+  $('loginError').textContent='';
+  try{
+    // Ação administrativa simples para validar a senha sem alterar dados.
+    const data=await api('carmenatto_sync_history',{admin_password:value,limit:1});
+    if(!data.ok) throw new Error('Senha recusada.');
+    adminPassword=value;
+    sessionStorage.setItem('studio70_pdv_password',value);
+    $('loginBox').classList.add('hidden');
+    $('connectionStatus').classList.add('ok');
+    setStatus('PDV autorizado. Carregando estoque...');
+    loadInitialProductCount();
+  }catch(e){
+    $('loginError').textContent=e.message || 'Senha inválida.';
+  }
+}
 
-        function stopMobileScanner() {
-            if (mobileScannerInstance && mobileScannerInstance.isScanning) {
-                mobileScannerInstance.stop().then(() => {
-                    document.getElementById('mobileLog').innerText = "Scanner em pausa.";
-                });
-            }
-        }
+async function loadInitialProductCount(){
+  try{
+    const d=await api('carmenatto_products',{limit:2000});
+    const count=Array.isArray(d.products)?d.products.length:0;
+    setStatus(`${count} produtos disponíveis para consulta. Pronto para bipar.`,'success');
+  }catch(e){
+    setStatus('Falha ao carregar estoque: '+e.message,'error');
+  }
+}
 
-        async function onBarcodeScanned(barcodeText) {
-            stopMobileScanner();
-            document.getElementById('mobileLog').innerText = `Processando código: ${barcodeText}`;
+async function lookupProduct(code){
+  code=String(code ?? $('codeInput').value).trim();
+  if(!code){setStatus('Digite ou leia um código.','error');return;}
+  setStatus('Consultando produto...');
+  try{
+    const d=await api('pdv_product',{code});
+    if(!d.found || !d.product) throw new Error('Produto não encontrado para este código.');
+    activeProduct=d.product;
+    renderProduct();
+    setStatus('Produto identificado. Confira a quantidade.','success');
+  }catch(e){
+    activeProduct=null;
+    $('productCard').classList.remove('show');
+    setStatus(e.message,'error');
+  }
+}
 
-            try {
-                // Mapeia exatamente as colunas que constam na sua seção administrativa (Nome, Preço, SKU, Código de barras, Estoque, Tamanhos, Cores)
-                const { data, error } = await supabaseClient
-                    .from('produtos') 
-                    .select('*')
-                    .eq('codigo_barras', barcodeText) // Puxa usando o campo que você configurou no admin
-                    .single();
+function renderProduct(){
+  const p=activeProduct;
+  $('productName').textContent=p.name || 'Produto';
+  $('productSku').textContent='SKU: '+(p.sku || '—');
+  $('productBarcode').textContent='EAN: '+(p.barcode || 'não cadastrado');
+  $('productPrice').textContent=money(p.price);
+  $('productStock').textContent=String(Number(p.stock||0))+' un';
+  const sizes=Array.isArray(p.sizes)?p.sizes.join(', '):String(p.sizes||'—');
+  const colors=Array.isArray(p.colors)?p.colors.join(', '):String(p.colors||'—');
+  $('productSpecs').textContent=[sizes,colors].filter(x=>x&&x!=='—').join(' / ')||'—';
+  $('qty').value=1;
+  $('productCard').classList.add('show');
+}
 
-                if (error || !data) {
-                    document.getElementById('mobileLog').innerText = "Código de barras não localizado no estoque.";
-                    return;
-                }
+function changeQty(delta){
+  const input=$('qty');
+  let n=Math.trunc(Number(input.value||1))+delta;
+  n=Math.max(1,n);
+  if(activeProduct)n=Math.min(n,Math.max(1,Number(activeProduct.stock||0)));
+  input.value=n;
+}
 
-                activeProductData = data;
-                renderProductDetails();
+async function finishSale(){
+  if(!activeProduct)return setStatus('Nenhum produto selecionado.','error');
+  const qty=Math.max(1,Math.trunc(Number($('qty').value||1)));
+  const stock=Number(activeProduct.stock||0);
+  if(qty>stock)return setStatus(`Estoque insuficiente. Disponível: ${stock} unidade(s).`,'error');
+  if(!adminPassword){
+    $('loginBox').classList.remove('hidden');
+    return;
+  }
 
-            } catch (err) {
-                document.getElementById('mobileLog').innerText = "Falha crítica de comunicação.";
-            }
-        }
+  setStatus('Processando venda e baixando estoque...');
+  try{
+    const saleId='PDV-'+Date.now();
+    const d=await api('pdv_sale',{
+      admin_password:adminPassword,
+      sale_id:saleId,
+      payment:'store',
+      items:[{
+        id:activeProduct.id,
+        external_id:activeProduct.external_id,
+        sku:activeProduct.sku,
+        barcode:activeProduct.barcode,
+        name:activeProduct.name,
+        qty,
+        unit:Number(activeProduct.price||0)
+      }]
+    });
 
-        function renderProductDetails() {
-            document.getElementById('cardTitle').innerText = activeProductData.nome;
-            document.getElementById('cardSKU').innerText = `SKU: ${activeProductData.sku || 'N/A'}`;
-            document.getElementById('cardBarcode').innerText = `EAN: ${activeProductData.codigo_barras}`;
-            document.getElementById('cardPrice').innerText = `R$ ${parseFloat(activeProductData.preco).toFixed(2)}`;
-            document.getElementById('cardStock').innerText = `${activeProductData.estoque} un`;
-            
-            // Combina tamanho e cor cadastrados
-            const tam = activeProductData.tamanhos || 'N/A';
-            const cor = activeProductData.cores || 'N/A';
-            document.getElementById('cardSpecs').innerText = `${tam} / ${cor}`;
-            
-            document.getElementById('inputQty').value = 1;
-            document.getElementById('mobileProductCard').classList.remove('hidden');
-            document.getElementById('mobileLog').innerText = "Concluído!";
-        }
+    if(!d.ok)throw new Error(apiError(d,'Venda não concluída.'));
+    const after=Number(d.items?.[0]?.stock_after ?? (stock-qty));
+    activeProduct.stock=after;
+    renderProduct();
+    $('codeInput').value='';
+    setStatus(`✓ Venda ${saleId} concluída. Estoque atual: ${after} un.`,'success');
+  }catch(e){
+    setStatus('Venda não concluída: '+e.message,'error');
+  }
+}
 
-        function adjustQuantity(amount) {
-            const input = document.getElementById('inputQty');
-            let nextVal = parseInt(input.value) + amount;
-            if (nextVal < 1) nextVal = 1;
-            input.value = nextVal;
-        }
+async function startScanner(){
+  if(scanning)return;
+  if(typeof Html5Qrcode==='undefined'){
+    setStatus('Biblioteca da câmera não carregou. Verifique a internet.','error');return;
+  }
+  try{
+    scanner=scanner || new Html5Qrcode('reader');
+    scanning=true;
+    setStatus('Aponte a câmera para o código de barras...');
+    await scanner.start(
+      {facingMode:'environment'},
+      {fps:12,qrbox:{width:280,height:150}},
+      code=>{
+        if(!scanning)return;
+        scanning=false;
+        scanner.stop().catch(()=>{});
+        $('codeInput').value=code;
+        lookupProduct(code);
+      },
+      ()=>{}
+    );
+  }catch(e){
+    scanning=false;
+    setStatus('Não foi possível abrir a câmera. Autorize a câmera no navegador e tente novamente.','error');
+  }
+}
 
-        async function executeMobileSale() {
-            const sellQty = parseInt(document.getElementById('inputQty').value);
-            
-            if (sellQty > activeProductData.estoque) {
-                alert(`Estoque insuficiente! Disponível apenas: ${activeProductData.estoque} unidades.`);
-                return;
-            }
+async function stopScanner(){
+  if(!scanner || !scanning)return;
+  scanning=false;
+  try{await scanner.stop();}catch{}
+  setStatus('Scanner pausado.');
+}
 
-            const updatedStockValue = activeProductData.estoque - sellQty;
-            document.getElementById('mobileLog').innerText = "Processando baixa física...";
+$('codeInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();lookupProduct();}
+});
 
-            try {
-                const { error } = await supabaseClient
-                    .from('produtos')
-                    .update({ estoque: updatedStockValue })
-                    .eq('id', activeProductData.id);
-
-                if (error) throw error;
-
+if(adminPassword){
+  $('loginBox').classList.add('hidden');
+  $('connectionStatus').classList.add('ok');
+  loadInitialProductCount();
+}
+</script>
+</body>
+</html>
