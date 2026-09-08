@@ -27,6 +27,7 @@ input:focus{border-color:#dc2626}
 .title{font-size:21px;font-weight:900;margin:12px 0 4px}.sku{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#78716c}
 .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0}.stat{background:#0c0a09;border:1px solid #292524;border-radius:12px;padding:10px;text-align:center}.stat small{display:block;color:#78716c;text-transform:uppercase;font-size:9px;font-weight:800}.stat b{display:block;margin-top:3px}
 .qty{display:flex;align-items:center;justify-content:space-between;background:#0c0a09;border:1px solid #292524;border-radius:14px;padding:8px;margin:12px 0}.qty button{width:50px;height:48px;padding:0;font-size:22px;background:#292524;color:#fff}.qty input{width:80px;text-align:center;border:0;background:transparent;font-size:22px;font-weight:900}
+.variation-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.variation label{display:block;margin-bottom:6px}.variation select{width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:13px;font-size:15px;outline:none}.variation select:focus{border-color:#dc2626}.variant-stock{font-size:11px;color:#a8a29e;margin-top:6px}.variant-stock strong{color:#6ee7b7}
 .notice{background:#2a1705;border:1px solid #854d0e;color:#fde68a;border-radius:12px;padding:10px;font-size:11px;line-height:1.45}
 .hidden{display:none!important}
 #loginBox{position:fixed;inset:0;background:#000b;z-index:20;display:flex;align-items:center;justify-content:center;padding:20px}
@@ -64,9 +65,21 @@ input:focus{border-color:#dc2626}
 
     <div class="stats">
       <div class="stat"><small>Preço</small><b id="productPrice">R$ 0,00</b></div>
-      <div class="stat"><small>Estoque</small><b id="productStock">0</b></div>
-      <div class="stat"><small>Tam/Cor</small><b id="productSpecs">—</b></div>
+      <div class="stat"><small>Estoque total</small><b id="productStock">0</b></div>
+      <div class="stat"><small>Variação</small><b id="productSpecs">—</b></div>
     </div>
+
+    <div class="variation-grid">
+      <div class="variation">
+        <label class="muted" for="sizeSelect">Tamanho</label>
+        <select id="sizeSelect"><option value="">Selecione</option></select>
+      </div>
+      <div class="variation">
+        <label class="muted" for="colorSelect">Cor</label>
+        <select id="colorSelect"><option value="">Selecione</option></select>
+      </div>
+    </div>
+    <div id="variantStock" class="variant-stock"></div>
 
     <label class="muted">Quantidade da venda</label>
     <div class="qty">
@@ -161,7 +174,7 @@ async function lookupProduct(code){
   setStatus('Consultando produto...');
   try{
     const d=await api('pdv_product',{code});
-    if(!d.found || !d.product) throw new Error(apiError(d, `Produto não encontrado para este código: ${code}`));
+    if(!d.found || !d.product) throw new Error('Produto não encontrado para este código.');
     activeProduct=d.product;
     renderProduct();
     setStatus('Produto identificado. Confira a quantidade.','success');
@@ -172,25 +185,76 @@ async function lookupProduct(code){
   }
 }
 
+function asVariationLabel(v){
+  if(v==null)return '';
+  if(typeof v==='string'||typeof v==='number')return String(v).trim();
+  return String(v.name ?? v.label ?? v.value ?? v.color ?? v.size ?? '').trim();
+}
+function variationList(value){
+  if(Array.isArray(value))return value.map(asVariationLabel).filter(Boolean);
+  if(value && typeof value==='object')return Object.values(value).map(asVariationLabel).filter(Boolean);
+  const text=String(value||'').trim();
+  return text ? text.split(/\s*,\s*|\s*\/\s*/).map(x=>x.trim()).filter(Boolean) : [];
+}
+function getVariantStockList(p){
+  const raw=p?.raw||{};
+  const list=raw.variant_stock ?? p?.variant_stock ?? [];
+  return Array.isArray(list) ? list.map(v=>({size:asVariationLabel(v?.size),color:asVariationLabel(v?.color),stock:Math.max(0,Math.trunc(Number(v?.stock||0)))})).filter(v=>v.size||v.color) : [];
+}
+function selectedVariantStock(){
+  const p=activeProduct;if(!p)return Number.MAX_SAFE_INTEGER;
+  const size=$('sizeSelect').value.trim(), color=$('colorSelect').value.trim();
+  const list=getVariantStockList(p);
+  if(!list.length)return Number(p.stock||0);
+  const exact=list.find(v=>(!v.size||v.size===size)&&(!v.color||v.color===color));
+  if(exact)return exact.stock;
+  const candidates=list.filter(v=>(!size||!v.size||v.size===size)&&(!color||!v.color||v.color===color));
+  if(candidates.length)return Math.min(...candidates.map(v=>v.stock));
+  return Number(p.stock||0);
+}
+function updateVariationState(){
+  if(!activeProduct)return;
+  const size=$('sizeSelect').value.trim(), color=$('colorSelect').value.trim();
+  const labels=[size,color].filter(Boolean);
+  $('productSpecs').textContent=labels.length?labels.join(' / '):'Selecione';
+  const available=selectedVariantStock();
+  $('variantStock').innerHTML=labels.length ? `Estoque desta variação: <strong>${available} un</strong>` : 'Selecione tamanho e/ou cor para conferir a variação.';
+  const qty=$('qty');
+  let n=Math.max(1,Math.trunc(Number(qty.value||1)));
+  const max=Math.max(0,Number(available||0));
+  if(max>0)n=Math.min(n,max);
+  qty.value=n;
+}
+function populateVariationSelect(id, values){
+  const el=$(id);el.innerHTML='<option value="">Selecione</option>';
+  values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o);});
+}
 function renderProduct(){
   const p=activeProduct;
   $('productName').textContent=p.name || 'Produto';
-  $('productSku').textContent='SKU: '+(p.sku || '—');
+  $('productSku').textContent='STUDIO 70: '+(p.studio70_code || '—')+'  |  SKU: '+(p.sku || '—');
   $('productBarcode').textContent='EAN: '+(p.barcode || 'não cadastrado');
   $('productPrice').textContent=money(p.price);
   $('productStock').textContent=String(Number(p.stock||0))+' un';
-  const sizes=Array.isArray(p.sizes)?p.sizes.join(', '):String(p.sizes||'—');
-  const colors=Array.isArray(p.colors)?p.colors.join(', '):String(p.colors||'—');
-  $('productSpecs').textContent=[sizes,colors].filter(x=>x&&x!=='—').join(' / ')||'—';
+  const sizes=variationList(p.sizes);
+  const colors=variationList(p.colors);
+  populateVariationSelect('sizeSelect',sizes);
+  populateVariationSelect('colorSelect',colors);
+  $('variantStock').textContent=(sizes.length||colors.length)?'Selecione tamanho e/ou cor.':'';
+  $('productSpecs').textContent=(sizes.length||colors.length)?'Selecione':'Único';
   $('qty').value=1;
   $('productCard').classList.add('show');
+  updateVariationState();
 }
 
 function changeQty(delta){
   const input=$('qty');
   let n=Math.trunc(Number(input.value||1))+delta;
   n=Math.max(1,n);
-  if(activeProduct)n=Math.min(n,Math.max(1,Number(activeProduct.stock||0)));
+  if(activeProduct){
+    const max=selectedVariantStock();
+    n=Math.min(n,Math.max(1,Number(max||activeProduct.stock||0)));
+  }
   input.value=n;
 }
 
@@ -198,7 +262,15 @@ async function finishSale(){
   if(!activeProduct)return setStatus('Nenhum produto selecionado.','error');
   const qty=Math.max(1,Math.trunc(Number($('qty').value||1)));
   const stock=Number(activeProduct.stock||0);
-  if(qty>stock)return setStatus(`Estoque insuficiente. Disponível: ${stock} unidade(s).`,'error');
+  const size=$('sizeSelect').value.trim();
+  const color=$('colorSelect').value.trim();
+  const hasSizes=variationList(activeProduct.sizes).length>0;
+  const hasColors=variationList(activeProduct.colors).length>0;
+  if(hasSizes && !size)return setStatus('Selecione o tamanho antes de finalizar.','error');
+  if(hasColors && !color)return setStatus('Selecione a cor antes de finalizar.','error');
+  const variantStock=selectedVariantStock();
+  if(qty>stock)return setStatus(`Estoque total insuficiente. Disponível: ${stock} unidade(s).`,'error');
+  if(qty>variantStock)return setStatus(`Estoque da variação insuficiente. Disponível: ${variantStock} unidade(s).`,'error');
   if(!adminPassword){
     $('loginBox').classList.remove('hidden');
     return;
@@ -213,10 +285,14 @@ async function finishSale(){
       payment:'store',
       items:[{
         id:activeProduct.id,
+        studio70_code:activeProduct.studio70_code,
         external_id:activeProduct.external_id,
         sku:activeProduct.sku,
         barcode:activeProduct.barcode,
         name:activeProduct.name,
+        size,
+        color,
+        variation:{size,color},
         qty,
         unit:Number(activeProduct.price||0)
       }]
@@ -250,7 +326,6 @@ async function startScanner(){
         scanning=false;
         scanner.stop().catch(()=>{});
         $('codeInput').value=code;
-        setStatus(`Código lido: ${code}. Consultando Supabase...`);
         lookupProduct(code);
       },
       ()=>{}
@@ -267,6 +342,10 @@ async function stopScanner(){
   try{await scanner.stop();}catch{}
   setStatus('Scanner pausado.');
 }
+
+$('sizeSelect').addEventListener('change',updateVariationState);
+$('colorSelect').addEventListener('change',updateVariationState);
+$('qty').addEventListener('input',()=>{ if(activeProduct){ const max=selectedVariantStock(); let n=Math.max(1,Math.trunc(Number($('qty').value||1))); if(max>0)n=Math.min(n,max); $('qty').value=n; }});
 
 $('codeInput').addEventListener('keydown',e=>{
   if(e.key==='Enter'){e.preventDefault();lookupProduct();}
