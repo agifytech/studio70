@@ -1,52 +1,12 @@
-const CACHE_NAME = 'studio70-pdv-v1';
-const APP_SHELL = [
-  './',
-  './pdv-celular.html',
-  './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
-];
-
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(APP_SHELL))
-      .then(() => self.skipWaiting())
-  );
-});
-
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(
-        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
-      ))
-      .then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
-
-  // Supabase/API stays online and is never cached.
-  if (
-    url.hostname.endsWith('.supabase.co') ||
-    url.pathname.includes('/functions/v1/')
-  ) return;
-
-  if (event.request.method !== 'GET') return;
-
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-
-      return fetch(event.request).then(response => {
-        if (response && response.ok && response.type === 'basic') {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
-        }
-        return response;
-      }).catch(() => caches.match('./pdv-celular.html'));
-    })
-  );
+const CACHE_NAME='studio70-pdv-v1-exato';
+const APP_SHELL=['./','./pdv-celular.html','./manifest.json','./icons/icon-192.png','./icons/icon-512.png'];
+self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(APP_SHELL)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',e=>{
+  const u=new URL(e.request.url);
+  if(e.request.method!=='GET'||u.hostname.endsWith('.supabase.co')||u.pathname.includes('/functions/v1/')) return;
+  e.respondWith(caches.match(e.request).then(c=>c||fetch(e.request).then(r=>{
+    if(r&&r.ok&&r.type==='basic'){const cp=r.clone();caches.open(CACHE_NAME).then(x=>x.put(e.request,cp));}
+    return r;
+  }).catch(()=>caches.match('./pdv-celular.html'))));
 });
