@@ -30,6 +30,7 @@ input:focus{border-color:#dc2626}
 .variation-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.variation label{display:block;margin-bottom:6px}.variation select{width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:13px;font-size:15px;outline:none}.variation select:focus{border-color:#dc2626}.variant-stock{font-size:11px;color:#a8a29e;margin-top:6px}.variant-stock strong{color:#6ee7b7}
 .notice{background:#2a1705;border:1px solid #854d0e;color:#fde68a;border-radius:12px;padding:10px;font-size:11px;line-height:1.45}
 .hidden{display:none!important}
+.order-list{display:grid;gap:10px}.order-item{background:#0c0a09;border:1px solid #292524;border-radius:14px;padding:12px}.order-head{display:flex;justify-content:space-between;gap:8px;align-items:center}.order-ref{font:11px ui-monospace,SFMono-Regular,Menlo,monospace;color:#a8a29e}.order-total{font-weight:900}.order-customer{font-weight:800;margin:6px 0}.order-items{font-size:11px;color:#d6d3d1;line-height:1.5}.order-item button{width:100%;margin-top:10px}.new-order{border-color:#b91c1c;box-shadow:0 0 0 1px #b91c1c55}
 #loginBox{position:fixed;inset:0;background:#000b;z-index:20;display:flex;align-items:center;justify-content:center;padding:20px}
 .modal{width:min(100%,400px);background:#171412;border:1px solid #44403c;border-radius:18px;padding:18px}
 .modal h3{margin:0 0 8px}.modal p{font-size:12px;color:#a8a29e}.modal button{width:100%;margin-top:10px}
@@ -91,6 +92,15 @@ input:focus{border-color:#dc2626}
     <button class="primary" style="width:100%" onclick="finishSale()">⚡ PROCESSAR VENDA E DAR BAIXA</button>
   </div>
 
+  <div class="card" id="storeOrdersCard">
+    <div class="order-head">
+      <h2>🔔 Pedidos da loja</h2>
+      <span id="ordersBadge" class="badge">0 novos</span>
+    </div>
+    <div id="ordersStatus" class="status">Atualizando pedidos...</div>
+    <div id="storeOrderList" class="order-list"></div>
+  </div>
+
   <div class="card">
     <div class="notice">
       O PDV consulta o estoque do fornecedor no Supabase e a baixa é feita no servidor.
@@ -115,6 +125,10 @@ let scanner = null;
 let scanning = false;
 let activeProduct = null;
 let adminPassword = sessionStorage.getItem('studio70_pdv_password') || '';
+let pendingStoreOrders = new Map();
+let ordersPollTimer = null;
+let lastOrderSnapshot = new Set();
+let audioContext = null;
 
 const $ = id => document.getElementById(id);
 const money = n => Number(n || 0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
@@ -307,6 +321,92 @@ async function finishSale(){
   }catch(e){
     setStatus('Venda não concluída: '+e.message,'error');
   }
+}
+
+function orderCustomerName(order){
+  const c=order?.customer||{};
+  return String(c.name||c.full_name||c.nome||'Cliente').trim() || 'Cliente';
+}
+function orderItemsText(order){
+  const items=Array.isArray(order?.items)?order.items:[];
+  if(!items.length)return 'Itens não informados.';
+  return items.map(i=>{
+    const v=i?.variation||{};
+    const spec=[i?.size||v.size,i?.color||v.color].filter(Boolean).join(' / ');
+    return `${Number(i?.qty||0)}x ${i?.name||'Produto'}${spec?' — '+spec:''}`;
+  }).join(' · ');
+}
+function beepNewOrder(){
+  try{
+    audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();
+    const osc=audioContext.createOscillator(), gain=audioContext.createGain();
+    osc.frequency.value=880; gain.gain.value=.08;
+    osc.connect(gain);gain.connect(audioContext.destination);osc.start();
+    setTimeout(()=>{osc.frequency.value=1175},120);
+    setTimeout(()=>{osc.stop();gain.disconnect()},240);
+  }catch(_){ }
+}
+async function notifyNewOrder(){
+  beepNewOrder();
+  if('Notification' in window && Notification.permission==='granted'){
+    try{ new Notification('STUDIO 70 — Novo pedido',{body:'Há um pedido aguardando retirada no PDV da loja.'}); }catch(_){ }
+  }
+}
+async function enableOrderNotifications(){
+  if('Notification' in window && Notification.permission==='default'){
+    try{ await Notification.requestPermission(); }catch(_){ }
+  }
+}
+function renderStoreOrders(){
+  const list=$('storeOrderList');
+  const orders=Array.from(pendingStoreOrders.values());
+  $('ordersBadge').textContent=`${orders.length} ${orders.length===1?'novo':'novos'}`;
+  if(!orders.length){ list.innerHTML='<div class="muted">Nenhum pedido aguardando retirada.</div>'; return; }
+  list.innerHTML=orders.map(o=>{
+    const ref=String(o.external_reference||'—');
+    const total=money(o.total);
+    const method=String(o.payment_method||o.payment_provider||'pagamento').replaceAll('_',' ');
+    return `<div class="order-item" data-order-ref="${ref.replaceAll('"','&quot;')}">
+      <div class="order-head"><span class="order-ref">${ref}</span><span class="order-total">${total}</span></div>
+      <div class="order-customer">${orderCustomerName(o)}</div>
+      <div class="order-items">${orderItemsText(o)}</div>
+      <div class="muted" style="margin-top:6px">Pagamento: ${method}</div>
+      <button class="primary" onclick="clientAlreadyTook('${ref.replaceAll("'","\\'")}')">✅ CLIENTE JÁ LEVOU</button>
+    </div>`;
+  }).join('');
+}
+async function loadStoreOrders(initial=false){
+  if(!adminPassword){$('ordersStatus').textContent='Entre no PDV para acompanhar os pedidos.';return;}
+  try{
+    const d=await api('store_pending_orders',{admin_password:adminPassword,limit:50});
+    if(!d.ok)throw new Error(apiError(d,'Não foi possível carregar os pedidos.'));
+    const incoming=Array.isArray(d.orders)?d.orders:[];
+    const next=new Map(incoming.map(o=>[String(o.external_reference),o]));
+    const newRefs=incoming.map(o=>String(o.external_reference)).filter(r=>!lastOrderSnapshot.has(r));
+    pendingStoreOrders=next;
+    lastOrderSnapshot=new Set(incoming.map(o=>String(o.external_reference)));
+    renderStoreOrders();
+    $('ordersStatus').textContent=incoming.length?`Atualizado agora · ${incoming.length} pedido(s) aguardando retirada.`:'Nenhum pedido aguardando retirada.';
+    if(!initial && newRefs.length) await notifyNewOrder();
+  }catch(e){$('ordersStatus').textContent='Pedidos: '+e.message;}
+}
+async function clientAlreadyTook(reference){
+  if(!adminPassword){$('loginBox').classList.remove('hidden');return;}
+  const order=pendingStoreOrders.get(String(reference));
+  if(!confirm(`Confirmar que o cliente já levou o pedido ${reference}?`))return;
+  try{
+    $('ordersStatus').textContent='Registrando retirada...';
+    const d=await api('store_order_picked_up',{admin_password:adminPassword,external_reference:reference,picked_up_by:'PDV da loja'});
+    if(!d.ok)throw new Error(apiError(d,'Não foi possível confirmar a retirada.'));
+    pendingStoreOrders.delete(String(reference));
+    renderStoreOrders();
+    $('ordersStatus').textContent='✓ Cliente já levou. Pedido retirado do painel.';
+  }catch(e){$('ordersStatus').textContent='Retirada não registrada: '+e.message;}
+}
+function startStoreOrderPolling(){
+  clearInterval(ordersPollTimer);
+  loadStoreOrders(true);
+  ordersPollTimer=setInterval(()=>loadStoreOrders(false),5000);
 }
 
 async function startScanner(){
