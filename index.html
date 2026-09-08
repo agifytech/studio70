@@ -609,11 +609,27 @@ function mapSupplierCategory(name){
   return 'Outros';
 }
 async function loadCarmenattoCatalog(){
+  const apiUrl=checkoutApiUrl();
   try{
-    const r=await fetch(checkoutApiUrl(),{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'carmenatto_products',limit:2000})});
-    if(!r.ok)return;
-    const d=await r.json().catch(()=>({}));
-    if(!d.ok||!Array.isArray(d.products)||!d.products.length)return;
+    const r=await fetch(apiUrl,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'carmenatto_products',limit:2000})});
+    const rawText=await r.text();
+    let d={};
+    try{ d=rawText?JSON.parse(rawText):{}; }catch(_){ d={}; }
+    if(!r.ok){
+      const detail=String(d.error||d.message||rawText||`HTTP ${r.status}`).slice(0,500);
+      console.error('[STUDIO70] Falha ao carregar estoque do fornecedor:',r.status,detail);
+      const grid=document.getElementById('productGrid');
+      if(grid && !products.length) grid.innerHTML='<div class="empty" style="grid-column:1/-1">Não foi possível carregar o estoque do fornecedor. Abra o console (F12) para ver o erro.</div>';
+      return;
+    }
+    if(!d.ok||!Array.isArray(d.products)){
+      console.error('[STUDIO70] Resposta inválida do estoque do fornecedor:',d);
+      return;
+    }
+    if(!d.products.length){
+      console.warn('[STUDIO70] A API respondeu sem produtos.');
+      return;
+    }
     const remote=d.products.map((p,i)=>({
       id:'car-'+String(p.external_id||p.sku||i),
       name:String(p.name||'Produto do fornecedor'),
@@ -643,7 +659,12 @@ async function loadCarmenattoCatalog(){
     renderProducts();
     renderAdmin();
     window.STUDIO70_FORNECEDOR_SYNCED_AT=d.products.reduce((max,p)=>String(p.synced_at||'')>max?String(p.synced_at||''):max,'');
-  }catch(_){/* catálogo remoto é opcional; o catálogo local continua funcionando */}
+    console.info(`[STUDIO70] Estoque do fornecedor carregado: ${d.products.length} produtos.`);
+  }catch(e){
+    console.error('[STUDIO70] Erro de rede ao carregar estoque do fornecedor:',e);
+    const grid=document.getElementById('productGrid');
+    if(grid && !products.length) grid.innerHTML='<div class="empty" style="grid-column:1/-1">Falha de comunicação com o estoque do fornecedor. Abra o console (F12) para ver o erro.</div>';
+  }
 }
 function ensureCarmenattoAdminControls(){
   if(document.getElementById('carmenattoSyncBtn'))return;
