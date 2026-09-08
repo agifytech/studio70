@@ -358,7 +358,7 @@ function openProduct(id){
   const modal=document.getElementById('productModal');
   if(!body||!modal)return;
   const title=escapeHtml(p.name||'Produto');
-  const desc=escapeHtml(p.description||'Descrição não cadastrada.').replace(/\n/g,'<br>');
+  const rawDescription = p.description || p.raw?.description || p.raw?.product_description || p.raw?.description_text || '';\n  const desc=escapeHtml(rawDescription||'Descrição não cadastrada.').replace(/\n/g,'<br>');
   const image=imageSrc(p.image);
   const sizes=Array.isArray(p.sizes)?p.sizes.map(x=>String(x)).filter(Boolean):[];
   const colors=Array.isArray(p.colors)?p.colors.map(x=>String(x)).filter(Boolean):[];
