@@ -1,15 +1,20 @@
-{
-  "name":"STUDIO 70 — PDV",
-  "short_name":"STUDIO 70",
-  "description":"PDV móvel da STUDIO 70",
-  "start_url":"./pdv-celular.html",
-  "scope":"./",
-  "display":"standalone",
-  "orientation":"portrait",
-  "background_color":"#0c0a09",
-  "theme_color":"#0c0a09",
-  "icons":[
-    {"src":"./icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-    {"src":"./icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
-  ]
-}
+const produtosPDV = [
+  { id: "p0001", name: "Body Janaína", price: 20.00, costPrice: 10.00, sku: "ST70-0001", barcode: "ST70000001", category: "Bodies", stock: 10 },
+  { id: "p0002", name: "Maiô Bruna", price: 18.00, costPrice: 9.00, sku: "ST70-0002", barcode: "ST70000002", category: "Maiôs", stock: 10 },
+  { id: "p0003", name: "Vestido Eliana", price: 30.00, costPrice: 15.00, sku: "ST70-0003", barcode: "ST70000003", category: "Vestidos", stock: 10 },
+  { id: "p0004", name: "Macaquinho Cássia", price: 31.00, costPrice: 15.50, sku: "ST70-0004", barcode: "ST70000004", category: "Macacões", stock: 10 },
+  { id: "p0005", name: "Short-saia Suzana", price: 22.00, costPrice: 11.00, sku: "ST70-0005", barcode: "ST70000005", category: "Shorts", stock: 10 },
+  { id: "p0006", name: "Body Fernanda", price: 19.00, costPrice: 9.50, sku: "ST70-0006", barcode: "ST70000006", category: "Bodies", stock: 10 },
+  { id: "p0007", name: "Cropped Marta", price: 18.00, costPrice: 9.00, sku: "ST70-0007", barcode: "ST70000007", category: "Croppeds", stock: 10 },
+  { id: "p0008", name: "Biquíni Marina", price: 12.00, costPrice: 6.00, sku: "ST70-0008", barcode: "ST70000008", category: "Biquínis", stock: 10 },
+  { id: "p0009", name: "Biquíni Patrícia", price: 12.00, costPrice: 6.00, sku: "ST70-0009", barcode: "ST70000009", category: "Biquínis", stock: 10 },
+  { id: "p0010", name: "Macacão Carolina", price: 45.00, costPrice: 22.50, sku: "ST70-0010", barcode: "ST70000010", category: "Macacões", stock: 10 },
+  { id: "p0011", name: "Cropped Renata", price: 15.00, costPrice: 7.50, sku: "ST70-0011", barcode: "ST70000011", category: "Croppeds", stock: 10 },
+  { id: "p0012", name: "Vestido Aline", price: 39.00, costPrice: 19.50, sku: "ST70-0012", barcode: "ST70000012", category: "Vestidos", stock: 10 },
+  { id: "p0013", name: "Conjunto Natália", price: 25.00, costPrice: 12.50, sku: "ST70-0013", barcode: "ST70000013", category: "Conjuntos", stock: 10 },
+  { id: "p0014", name: "Macacão Cristina", price: 41.00, costPrice: 20.50, sku: "ST70-0014", barcode: "ST70000014", category: "Macacões", stock: 10 },
+  { id: "p0015", name: "Vestido Andreza", price: 38.00, costPrice: 19.00, sku: "ST70-0015", barcode: "ST70000015", category: "Vestidos", stock: 10 },
+  { id: "p0016", name: "Tule e cropped Cláudia", price: 24.00, costPrice: 12.00, sku: "ST70-0016", barcode: "ST70000016", category: "Croppeds", stock: 10 },
+  { id: "p0017", name: "Cropped Diana", price: 14.00, costPrice: 7.00, sku: "ST70-0017", barcode: "ST70000017", category: "Croppeds", stock: 10 },
+  { id: "p0018", name: "Vestido Raquel", price: 29.00, costPrice: 14.50, sku: "ST70-0018", barcode: "ST70000018", category: "Vestidos", stock: 10 }
+];
