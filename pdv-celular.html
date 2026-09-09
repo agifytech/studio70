@@ -199,7 +199,7 @@ input:focus{
 }
 
 .pricing-stats{
-  grid-template-columns:repeat(4,1fr)
+  grid-template-columns:repeat(3,1fr)
 }
 
 .sale-stat{
@@ -568,18 +568,18 @@ input:focus{
   display:none
 }
 
-/* IMPRESSÃO TÉRMICA 50 X 30 MM */
+/* IMPRESSÃO TÉRMICA 50 X 30 MM (E M MASSA EM FOLHA A4) */
 
 @media print{
 
   @page{
-    size:50mm 30mm;
-    margin:0
+    size:A4 portrait;
+    margin:5mm
   }
 
   html,body{
-    width:50mm!important;
-    height:30mm!important;
+    width:210mm!important;
+    height:auto!important;
     margin:0!important;
     padding:0!important;
     background:#fff!important
@@ -590,16 +590,18 @@ input:focus{
   }
 
   #thermalPrintRoot{
-    display:block!important;
-    width:50mm!important;
-    margin:0!important;
+    display:grid!important;
+    grid-template-columns:repeat(3, 1fr)!important;
+    gap:2mm!important;
+    width:200mm!important;
+    margin:0 auto!important;
     padding:0!important;
     background:#fff!important;
     color:#000!important
   }
 
   .thermal-print-label{
-    width:50mm;
+    width:63mm;
     height:30mm;
     box-sizing:border-box;
     padding:2mm 2.2mm 1.5mm;
@@ -608,21 +610,17 @@ input:focus{
     align-items:center;
     justify-content:space-between;
     overflow:hidden;
-    page-break-after:always;
-    break-after:page;
+    page-break-inside:avoid;
+    break-inside:avoid;
     font-family:Arial,Helvetica,sans-serif;
     color:#333;
-    background:#fff
-  }
-
-  .thermal-print-label:last-child{
-    page-break-after:auto;
-    break-after:auto
+    background:#fff;
+    border:1px dashed #ccc
   }
 
   .thermal-sku-top{
     width:100%;
-    font-size:4.2mm;
+    font-size:3.8mm;
     font-weight:900;
     line-height:1;
     text-align:center;
@@ -633,7 +631,7 @@ input:focus{
 
   .thermal-name{
     width:100%;
-    font-size:3.7mm;
+    font-size:3.4mm;
     font-weight:500;
     line-height:1.05;
     text-align:center;
@@ -643,7 +641,7 @@ input:focus{
   }
 
   .thermal-price{
-    font-size:6.4mm;
+    font-size:5.8mm;
     font-weight:900;
     line-height:1;
     white-space:nowrap;
@@ -652,7 +650,7 @@ input:focus{
 
   .thermal-barcode-wrap{
     width:100%;
-    height:8.6mm;
+    height:7.5mm;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -661,12 +659,12 @@ input:focus{
 
   .thermal-barcode{
     width:100%;
-    height:8.6mm;
+    height:7.5mm;
     display:block
   }
 
   .thermal-code{
-    font-size:2.3mm;
+    font-size:2.2mm;
     line-height:1;
     font-family:monospace;
     text-align:center
@@ -764,11 +762,6 @@ input:focus{
 
     <!-- PREÇOS -->
     <div class="stats pricing-stats">
-
-      <div class="stat">
-        <small>Preço de custo</small>
-        <b id="productCost">R$ 0,00</b>
-      </div>
 
       <div class="stat sale-stat">
         <small>Preço de venda ST70</small>
@@ -919,6 +912,10 @@ input:focus{
           20%
         </button>
 
+        <button type="button" onclick="setCashDiscount()">
+          💵 DINHEIRO
+        </button>
+
       </div>
 
 
@@ -943,8 +940,7 @@ input:focus{
 
       <div class="discount-hint">
         O desconto é aplicado somente nesta venda.
-        O preço cadastrado do produto continua sendo o preço
-        de venda ST70.
+        O preço padrão do produto permanece inalterado.
       </div>
 
     </div>
@@ -974,7 +970,7 @@ input:focus{
         class="secondary"
         onclick="printAllLabels()"
       >
-        🖨️ ETIQUETAS EM MASSA
+        🖨️ ETIQUETAS EM MASSA (A4)
       </button>
 
     </div>
@@ -989,7 +985,7 @@ input:focus{
 
     <div class="muted">
       Imprima a etiqueta do produto identificado
-      ou gere etiquetas de todo o estoque cadastrado.
+      ou gere etiquetas de todo o estoque cadastrado em formato otimizado para Folha A4.
     </div>
 
     <div class="grid">
@@ -1005,98 +1001,12 @@ input:focus{
         class="primary"
         onclick="printAllLabels()"
       >
-        🖨️ TODOS OS PRODUTOS
+        🖨️ TODOS OS PRODUTOS (A4)
       </button>
 
     </div>
 
     <div id="labelsStatus" class="status"></div>
-
-  </div>
-
-
-  <!-- ETIQUETA PROFISSIONAL -->
-  <div class="card label-print-card">
-
-    <div class="label-head">
-
-      <div>
-
-        <h2>
-          🏷️ Etiquetas profissionais
-        </h2>
-
-        <div class="muted">
-          Modelo para roupa 50 × 30 mm —
-          preço, descrição, SKU e código de barras
-        </div>
-
-      </div>
-
-      <span class="badge">
-        TÉRMICA
-      </span>
-
-    </div>
-
-
-    <div class="label-preview">
-
-      <div class="thermal-label-demo">
-
-        <div class="tl-brand">
-          ST70
-        </div>
-
-        <div class="tl-name">
-          Pré-visualização da etiqueta
-        </div>
-
-        <div class="tl-meta">
-          TAMANHO · COR
-        </div>
-
-        <div class="tl-price">
-          R$ 0,00
-        </div>
-
-        <div class="tl-bar">
-          ||||||||||||||||||||
-        </div>
-
-        <div class="tl-code">
-          SKU-CAM-PREMIUM
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="grid">
-
-      <button
-        class="primary"
-        onclick="printCurrentLabel()"
-      >
-        🖨️ IMPRIMIR ESTA ETIQUETA
-      </button>
-
-      <button
-        class="secondary"
-        onclick="printAllLabels()"
-      >
-        🏷️ IMPRIMIR TODAS AS ETIQUETAS
-      </button>
-
-    </div>
-
-
-    <div class="muted label-note">
-      Modelo para etiqueta de roupa: SKU no topo,
-      descrição, preço em destaque e código de barras.
-      A impressão em massa gera uma etiqueta por produto.
-    </div>
 
   </div>
 
@@ -1137,18 +1047,8 @@ input:focus{
 
       <br><br>
 
-      <strong>Preço de custo:</strong>
-      vem de supplier_price ou campo de custo equivalente.
-
-      <br>
-
-      <strong>Preço de venda ST70:</strong>
-      vem de sale_price.
-
-      <br><br>
-
-      O preço de custo é utilizado somente internamente
-      no PDV e não é utilizado como preço de venda ao cliente.
+      <strong>Margem de Lucro:</strong>
+      Os preços de venda são calculados automaticamente aplicando 150% sobre o preço de custo do fornecedor.
 
     </div>
 
@@ -1423,7 +1323,7 @@ async function unlockPdv(){
 
 
 /* =========================================================
-   CARREGAMENTO DO CATÁLOGO
+   CARREGAMENTO DO CATÁLOGO E CORREÇÃO DE CHAVES DE BUSCA
 ========================================================= */
 
 async function loadInitialProductCount(){
@@ -1452,7 +1352,10 @@ async function loadInitialProductCount(){
         p.sku,
         p.barcode,
         p.studio70_code,
-        p.external_id
+        p.external_id,
+        p.raw?.sku,
+        p.raw?.barcode,
+        p.raw?.studio70_code
       ]
       .filter(
         v =>
@@ -1474,7 +1377,7 @@ async function loadInitialProductCount(){
 
     setStatus(
       `${count} produtos disponíveis para consulta. `+
-      `Preço de custo e preço de venda ST70 sincronizados. `+
+      `Margem de lucro de 150% aplicada. `+
       `Pronto para bipar.`,
       'success'
     );
@@ -1724,7 +1627,7 @@ function updateVariationState(){
 
 
 /* =========================================================
-   PREÇOS (AJUSTADO PARA CAPTURAR TODAS AS CHAVES DO SUPABASE)
+   CÁLCULO DE PREÇO COM 150% DE LUCRO SOBRE O FORNECEDOR
 ========================================================= */
 
 function parsePriceValue(value){
@@ -1759,9 +1662,7 @@ function parsePriceValue(value){
         'preco_venda',
         'precoVenda',
         'valor_venda',
-        'valorVenda',
-        'preco_tabela',
-        'precoTabela'
+        'valorVenda'
       ]
     ){
 
@@ -1906,10 +1807,7 @@ function parseProductPrice(p){
     'unit_price',
     'unitPrice',
     'final_price',
-    'finalPrice',
-    'amount',
-    'preco_tabela',
-    'precoTabela'
+    'finalPrice'
   ];
 
   for(
@@ -1952,15 +1850,15 @@ function parseProductPrice(p){
 }
 
 
-/*
- * IMPORTANTE:
- * sale_price = preço de venda ST70
- * supplier_price = preço de custo
- */
-
 function parseSalePrice(p){
 
   p=p||{};
+
+  // Se houver preço de custo do fornecedor, aplica 150% de lucro automaticamente (Custo * 2.5)
+  const cost = parseCostPrice(p);
+  if(cost !== null && cost > 0){
+    return cost * 2.5;
+  }
 
   const raw=p.raw||{};
 
@@ -1977,8 +1875,6 @@ function parseSalePrice(p){
     'sellingPrice',
     'final_price',
     'finalPrice',
-    'preco_tabela',
-    'precoTabela',
     'preco',
     'price',
     'valor'
@@ -2026,7 +1922,7 @@ function parseSalePrice(p){
 
 
 /* =========================================================
-   BUSCA DO PRODUTO
+   BUSCA DO PRODUTO (RESOLVE PROBLEMA DE NOME DO SITE)
 ========================================================= */
 
 async function lookupProduct(code){
@@ -2077,6 +1973,8 @@ async function lookupProduct(code){
         backendProduct.barcode,
         backendProduct.studio70_code,
         backendProduct.external_id,
+        backendProduct.raw?.sku,
+        backendProduct.raw?.barcode,
         code
       ]
       .filter(
@@ -2096,34 +1994,16 @@ async function lookupProduct(code){
           .find(Boolean) ||
         null;
 
-      /*
-       * O produto do site tem prioridade para os preços,
-       * mas garantimos fallback para o backend se necessário.
-       */
-
+      // Mescla priorizando estritamente as propriedades do catálogo do site para que o nome e dados venham perfeitamente corretos
       activeProduct={
-        ...(siteProduct||{}),
-        ...backendProduct
+        ...backendProduct,
+        ...(siteProduct||{})
       };
-
-      if(siteProduct){
-
-        const sPrice = parseSalePrice(siteProduct);
-        if(sPrice > 0){
-          activeProduct.sale_price = sPrice;
-        }
-
-        const cPrice = parseCostPrice(siteProduct);
-        if(cPrice !== null){
-          activeProduct.supplier_price = cPrice;
-        }
-
-      }
 
       renderProduct();
 
       setStatus(
-        'Produto identificado no Supabase. Confira a quantidade.',
+        'Produto identificado com sucesso. Confira a quantidade.',
         'success'
       );
 
@@ -2176,7 +2056,7 @@ function renderProduct(){
 
   $('productSku').textContent=
     'STUDIO 70: '+
-    (p.studio70_code||'—')+
+    (p.studio70_code||p.sku||'—')+
     ' | SKU: '+
     (p.sku||'—');
 
@@ -2188,16 +2068,8 @@ function renderProduct(){
       :'não cadastrado'
     );
 
-  const cost=
-    parseCostPrice(p);
-
   const sale=
     parseSalePrice(p);
-
-  $('productCost').textContent=
-    cost!==null
-    ?money(cost)
-    :'Não cadastrado';
 
   $('productPrice').textContent=
     sale>0
@@ -2305,7 +2177,7 @@ function changeQty(delta){
 
 
 /* =========================================================
-   DESCONTO
+   DESCONTO E DESCONTO PARA DINHEIRO
 ========================================================= */
 
 function getDiscountPercent(){
@@ -2421,6 +2293,18 @@ function setDiscount(percent){
 
   updateDiscountPreview();
 
+}
+
+// Atalho configurável ou padrão para pagamento em dinheiro (ex: 10% ou ajuste conforme necessário)
+function setCashDiscount(){
+  // Permite configurar ou aplicar um valor padrão para dinheiro, ex: 10%
+  const cashPct = prompt("Informe a % de desconto para pagamento em dinheiro:", "10");
+  if(cashPct !== null){
+    const val = Number(cashPct);
+    if(!isNaN(val)){
+      setDiscount(val);
+    }
+  }
 }
 
 
@@ -2799,24 +2683,6 @@ async function notifyNewOrder(){
           'Há um pedido aguardando retirada no PDV da loja.'
         }
       );
-
-    }catch(_){}
-
-  }
-
-}
-
-
-async function enableOrderNotifications(){
-
-  if(
-    'Notification' in window &&
-    Notification.permission==='default'
-  ){
-
-    try{
-
-      await Notification.requestPermission();
 
     }catch(_){}
 
@@ -3296,6 +3162,7 @@ function labelData(
   const barcode=
     String(
       p?.barcode ||
+      p?.raw?.barcode ||
       ''
     ).trim() ||
     sku;
@@ -3422,10 +3289,10 @@ function drawThermalBarcodes(
 
             width:
               isEan
-              ?1.05
-              :1.15,
+              ?1.0
+              :1.1,
 
-            height:30,
+            height:28,
 
             background:'#ffffff',
 
@@ -3447,8 +3314,8 @@ function drawThermalBarcodes(
               format:'CODE128',
               displayValue:false,
               margin:0,
-              width:1.1,
-              height:30,
+              width:1.0,
+              height:28,
               background:'#ffffff',
               lineColor:'#000000'
             }
@@ -3497,7 +3364,7 @@ function openThermalPrint(
     document.title;
 
   document.title=
-    'ST70 — Etiquetas 50x30 mm';
+    'ST70 — Etiquetas A4';
 
   setTimeout(
     ()=>{
@@ -3595,7 +3462,7 @@ async function printAllLabels(){
   }
 
   setStatus(
-    'Carregando produtos para impressão...'
+    'Carregando produtos para impressão em massa (A4)...'
   );
 
   try{
@@ -3628,7 +3495,7 @@ async function printAllLabels(){
     );
 
     setStatus(
-      `${products.length} etiqueta(s) preparadas para impressão.`,
+      `${products.length} etiqueta(s) organizadas em formato A4.`,
       'success'
     );
 
