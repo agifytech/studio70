@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#0c0a09">
-<link rel="manifest" href="./manifest.json">
 <title>STUDIO 70 — PDV Móvel</title>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
@@ -37,12 +36,19 @@ input:focus{border-color:#dc2626}
 .modal h3{margin:0 0 8px}.modal p{font-size:12px;color:#a8a29e}.modal button{width:100%;margin-top:10px}
 .success{color:#6ee7b7}.error{color:#fca5a5}
 </style>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#0c0a09">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="STUDIO 70 PDV">
 </head>
 <body>
 <header>
   <div><div class="brand">STUDIO 70</div><div class="sub">PDV Móvel</div></div>
   <div id="connectionStatus" class="dot"></div>
 </header>
+
 <main>
   <div class="card">
     <h2>Leitura do produto</h2>
@@ -57,16 +63,19 @@ input:focus{border-color:#dc2626}
       <button class="secondary" onclick="lookupProduct()">BUSCAR</button>
     </div>
   </div>
+
   <div id="productCard" class="card product">
     <span class="badge">Item identificado</span>
     <div id="productName" class="title">Produto</div>
     <div id="productSku" class="sku">SKU: —</div>
     <div id="productBarcode" class="sku">EAN: —</div>
+
     <div class="stats">
       <div class="stat"><small>Preço</small><b id="productPrice">R$ 0,00</b></div>
       <div class="stat"><small>Estoque total</small><b id="productStock">0</b></div>
       <div class="stat"><small>Variação</small><b id="productSpecs">—</b></div>
     </div>
+
     <div class="variation-grid">
       <div class="variation">
         <label class="muted" for="sizeSelect">Tamanho</label>
@@ -78,24 +87,34 @@ input:focus{border-color:#dc2626}
       </div>
     </div>
     <div id="variantStock" class="variant-stock"></div>
+
     <label class="muted">Quantidade da venda</label>
     <div class="qty">
       <button onclick="changeQty(-1)">−</button>
       <input id="qty" type="number" min="1" value="1">
       <button onclick="changeQty(1)">+</button>
     </div>
+
     <button class="primary" style="width:100%" onclick="finishSale()">⚡ PROCESSAR VENDA E DAR BAIXA</button>
   </div>
+
   <div class="card" id="storeOrdersCard">
-    <div class="order-head"><h2>🔔 Pedidos da loja</h2><span id="ordersBadge" class="badge">0 novos</span></div>
+    <div class="order-head">
+      <h2>🔔 Pedidos da loja</h2>
+      <span id="ordersBadge" class="badge">0 novos</span>
+    </div>
     <div id="ordersStatus" class="status">Atualizando pedidos...</div>
     <div id="storeOrderList" class="order-list"></div>
   </div>
-  <div class="card"><div class="notice">
-    O PDV consulta estoque e preço de venda STUDIO 70 no Supabase; o preço do fornecedor é apenas custo e a baixa é feita no servidor.
-    O acesso usa a senha administrativa do PDV; ela não fica gravada no HTML.
-  </div></div>
+
+  <div class="card">
+    <div class="notice">
+      O PDV consulta o estoque do fornecedor no Supabase e a baixa é feita no servidor.
+      O acesso usa a senha administrativa do PDV; ela não fica gravada no HTML.
+    </div>
+  </div>
 </main>
+
 <div id="loginBox">
   <div class="modal">
     <h3>Acesso ao PDV</h3>
@@ -105,6 +124,7 @@ input:focus{border-color:#dc2626}
     <div id="loginError" class="status error"></div>
   </div>
 </div>
+
 <script>
 const API = 'https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler';
 let scanner = null;
@@ -115,57 +135,135 @@ let pendingStoreOrders = new Map();
 let ordersPollTimer = null;
 let lastOrderSnapshot = new Set();
 let audioContext = null;
+
 const $ = id => document.getElementById(id);
 const money = n => Number(n || 0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-function setStatus(text, type=''){ $('status').textContent=text; $('status').className='status '+(type==='success'?'success':type==='error'?'error':''); }
+
+function setStatus(text, type=''){
+  $('status').textContent=text;
+  $('status').className='status '+(type==='success'?'success':type==='error'?'error':'');
+}
 function apiError(data, fallback){ return String(data?.error || data?.message || fallback || 'Erro desconhecido.'); }
+
 async function api(action, body={}){
-  const r=await fetch(API,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action,...body})});
-  const text=await r.text(); let data={}; try{data=text?JSON.parse(text):{};}catch{throw new Error(`Resposta inválida da API (HTTP ${r.status}).`);}
-  if(!r.ok) throw new Error(apiError(data,`API HTTP ${r.status}`)); return data;
+  const r=await fetch(API,{
+    method:'POST',
+    mode:'cors',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify({action,...body})
+  });
+  const text=await r.text();
+  let data={};
+  try{data=text?JSON.parse(text):{};}catch{throw new Error(`Resposta inválida da API (HTTP ${r.status}).`);}
+  if(!r.ok) throw new Error(apiError(data,`API HTTP ${r.status}`));
+  return data;
 }
+
 async function unlockPdv(){
-  const value=$('pdvPassword').value.trim(); if(!value){$('loginError').textContent='Digite a senha.';return;}
+  const value=$('pdvPassword').value.trim();
+  if(!value){$('loginError').textContent='Digite a senha.';return;}
   $('loginError').textContent='';
-  try{const data=await api('carmenatto_sync_history',{admin_password:value,limit:1}); if(!data.ok)throw new Error('Senha recusada.');
-    adminPassword=value; sessionStorage.setItem('studio70_pdv_password',value); $('loginBox').classList.add('hidden'); $('connectionStatus').classList.add('ok'); setStatus('PDV autorizado. Carregando estoque...'); loadInitialProductCount();
-  }catch(e){$('loginError').textContent=e.message || 'Senha inválida.';}
-}
-async function loadInitialProductCount(){
-  try{const d=await api('carmenatto_products',{limit:2000}); const count=Array.isArray(d.products)?d.products.length:0; setStatus(`${count} produtos disponíveis para consulta. Pronto para bipar.`,'success');}
-  catch(e){setStatus('Falha ao carregar estoque: '+e.message,'error');}
-}
-async function lookupProduct(code){
-  code=String(code ?? $('codeInput').value).trim(); if(!code){setStatus('Digite ou leia um código.','error');return;} setStatus('Consultando produto...');
-  try{const d=await api('pdv_product',{code}); if(!d.found || !d.product) throw new Error('Produto não encontrado para este código.'); activeProduct=d.product; renderProduct(); setStatus('Produto identificado. Confira a quantidade.','success');}
-  catch(e){activeProduct=null; $('productCard').classList.remove('show'); setStatus(e.message,'error');}
-}
-function asVariationLabel(v){if(v==null)return '';if(typeof v==='string'||typeof v==='number')return String(v).trim();return String(v.name ?? v.label ?? v.value ?? v.color ?? v.size ?? '').trim();}
-function variationList(value){if(Array.isArray(value))return value.map(asVariationLabel).filter(Boolean);if(value && typeof value==='object')return Object.values(value).map(asVariationLabel).filter(Boolean);const text=String(value||'').trim();return text ? text.split(/\s*,\s*|\s*\/\s*/).map(x=>x.trim()).filter(Boolean) : [];}
-function getVariantStockList(p){const raw=p?.raw||{};const list=raw.variant_stock ?? p?.variant_stock ?? [];return Array.isArray(list) ? list.map(v=>({size:asVariationLabel(v?.size),color:asVariationLabel(v?.color),stock:Math.max(0,Math.trunc(Number(v?.stock||0)))})).filter(v=>v.size||v.color) : [];}
-function selectedVariantStock(){const p=activeProduct;if(!p)return Number.MAX_SAFE_INTEGER;const size=$('sizeSelect').value.trim(),color=$('colorSelect').value.trim();const list=getVariantStockList(p);if(!list.length)return Number(p.stock||0);const exact=list.find(v=>(!v.size||v.size===size)&&(!v.color||v.color===color));if(exact)return exact.stock;const candidates=list.filter(v=>(!size||!v.size||v.size===size)&&(!color||!v.color||v.color===color));if(candidates.length)return Math.min(...candidates.map(v=>v.stock));return Number(p.stock||0);}
-function updateVariationState(){if(!activeProduct)return;const size=$('sizeSelect').value.trim(),color=$('colorSelect').value.trim();const labels=[size,color].filter(Boolean);$('productSpecs').textContent=labels.length?labels.join(' / '):'Selecione';const available=selectedVariantStock();$('variantStock').innerHTML=labels.length ? `Estoque desta variação: <strong>${available} un</strong>` : 'Selecione tamanho e/ou cor para conferir a variação.';const qty=$('qty');let n=Math.max(1,Math.trunc(Number(qty.value||1)));const max=Math.max(0,Number(available||0));if(max>0)n=Math.min(n,max);qty.value=n;}
-function populateVariationSelect(id, values){const el=$(id);el.innerHTML='<option value="">Selecione</option>';values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o);});}
-function productPrice(p){
-  const candidates=[
-    p?.sale_price,p?.studio70_price,p?.price_studio70,p?.preco_venda,
-    p?.price,p?.preco,p?.selling_price,p?.valor,p?.price_brl,
-    p?.raw?.studio70_price,p?.raw?.sale_price,p?.raw?.preco_venda
-  ];
-  for(const v of candidates){
-    const n=Number(String(v??'').replace(',','.'));
-    if(Number.isFinite(n)&&n>0)return n;
+  try{
+    // Ação administrativa simples para validar a senha sem alterar dados.
+    const data=await api('carmenatto_sync_history',{admin_password:value,limit:1});
+    if(!data.ok) throw new Error('Senha recusada.');
+    adminPassword=value;
+    sessionStorage.setItem('studio70_pdv_password',value);
+    $('loginBox').classList.add('hidden');
+    $('connectionStatus').classList.add('ok');
+    setStatus('PDV autorizado. Carregando estoque...');
+    loadInitialProductCount();
+  }catch(e){
+    $('loginError').textContent=e.message || 'Senha inválida.';
   }
-  return 0;
+}
+
+async function loadInitialProductCount(){
+  try{
+    const d=await api('carmenatto_products',{limit:2000});
+    const count=Array.isArray(d.products)?d.products.length:0;
+    setStatus(`${count} produtos disponíveis para consulta. Pronto para bipar.`,'success');
+  }catch(e){
+    setStatus('Falha ao carregar estoque: '+e.message,'error');
+  }
+}
+
+async function lookupProduct(code){
+  code=String(code ?? $('codeInput').value).trim();
+  if(!code){setStatus('Digite ou leia um código.','error');return;}
+  setStatus('Consultando produto...');
+  try{
+    const d=await api('pdv_product',{code});
+
+    // O backend pode devolver found=true mesmo que algum campo visual
+    // (EAN, SKU ou preço) esteja vazio. Nunca trate EAN ausente como
+    // produto inexistente.
+    if(d && d.found && d.product){
+      activeProduct=d.product;
+      renderProduct();
+      setStatus('Produto identificado no Supabase. Confira a quantidade.','success');
+      return;
+    }
+
+    const msg=String(d?.error || d?.message || '').trim();
+    throw new Error(msg || 'Produto não encontrado para este código.');
+  }catch(e){
+    activeProduct=null;
+    $('productCard').classList.remove('show');
+    setStatus(e.message || 'Erro ao consultar produto.','error');
+  }
+}
+
+function asVariationLabel(v){
+  if(v==null)return '';
+  if(typeof v==='string'||typeof v==='number')return String(v).trim();
+  return String(v.name ?? v.label ?? v.value ?? v.color ?? v.size ?? '').trim();
+}
+function variationList(value){
+  if(Array.isArray(value))return value.map(asVariationLabel).filter(Boolean);
+  if(value && typeof value==='object')return Object.values(value).map(asVariationLabel).filter(Boolean);
+  const text=String(value||'').trim();
+  return text ? text.split(/\s*,\s*|\s*\/\s*/).map(x=>x.trim()).filter(Boolean) : [];
+}
+function getVariantStockList(p){
+  const raw=p?.raw||{};
+  const list=raw.variant_stock ?? p?.variant_stock ?? [];
+  return Array.isArray(list) ? list.map(v=>({size:asVariationLabel(v?.size),color:asVariationLabel(v?.color),stock:Math.max(0,Math.trunc(Number(v?.stock||0)))})).filter(v=>v.size||v.color) : [];
+}
+function selectedVariantStock(){
+  const p=activeProduct;if(!p)return Number.MAX_SAFE_INTEGER;
+  const size=$('sizeSelect').value.trim(), color=$('colorSelect').value.trim();
+  const list=getVariantStockList(p);
+  if(!list.length)return Number(p.stock||0);
+  const exact=list.find(v=>(!v.size||v.size===size)&&(!v.color||v.color===color));
+  if(exact)return exact.stock;
+  const candidates=list.filter(v=>(!size||!v.size||v.size===size)&&(!color||!v.color||v.color===color));
+  if(candidates.length)return Math.min(...candidates.map(v=>v.stock));
+  return Number(p.stock||0);
+}
+function updateVariationState(){
+  if(!activeProduct)return;
+  const size=$('sizeSelect').value.trim(), color=$('colorSelect').value.trim();
+  const labels=[size,color].filter(Boolean);
+  $('productSpecs').textContent=labels.length?labels.join(' / '):'Selecione';
+  const available=selectedVariantStock();
+  $('variantStock').innerHTML=labels.length ? `Estoque desta variação: <strong>${available} un</strong>` : 'Selecione tamanho e/ou cor para conferir a variação.';
+  const qty=$('qty');
+  let n=Math.max(1,Math.trunc(Number(qty.value||1)));
+  const max=Math.max(0,Number(available||0));
+  if(max>0)n=Math.min(n,max);
+  qty.value=n;
+}
+function populateVariationSelect(id, values){
+  const el=$(id);el.innerHTML='<option value="">Selecione</option>';
+  values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o);});
 }
 function renderProduct(){
   const p=activeProduct;
-  const price=productPrice(p);
-  p.price=price;
   $('productName').textContent=p.name || 'Produto';
   $('productSku').textContent='STUDIO 70: '+(p.studio70_code || '—')+'  |  SKU: '+(p.sku || '—');
-  $('productBarcode').textContent='EAN: '+(p.barcode || 'não cadastrado');
-  $('productPrice').textContent=price>0?money(price):'Preço não cadastrado';
+  $('productBarcode').textContent='EAN: '+(p.barcode ? p.barcode : 'não cadastrado (produto encontrado)');
+  $('productPrice').textContent=Number(p.price||0)>0 ? money(p.price) : 'Preço não cadastrado';
   $('productStock').textContent=String(Number(p.stock||0))+' un';
   const sizes=variationList(p.sizes);
   const colors=variationList(p.colors);
@@ -177,25 +275,210 @@ function renderProduct(){
   $('productCard').classList.add('show');
   updateVariationState();
 }
-function changeQty(delta){const input=$('qty');let n=Math.trunc(Number(input.value||1))+delta;n=Math.max(1,n);if(activeProduct){const max=selectedVariantStock();n=Math.min(n,Math.max(1,Number(max||activeProduct.stock||0)));}input.value=n;}
-async function finishSale(){if(!activeProduct)return setStatus('Nenhum produto selecionado.','error');const qty=Math.max(1,Math.trunc(Number($('qty').value||1)));const stock=Number(activeProduct.stock||0);const size=$('sizeSelect').value.trim();const color=$('colorSelect').value.trim();const hasSizes=variationList(activeProduct.sizes).length>0;const hasColors=variationList(activeProduct.colors).length>0;if(hasSizes&&!size)return setStatus('Selecione o tamanho antes de finalizar.','error');if(hasColors&&!color)return setStatus('Selecione a cor antes de finalizar.','error');const variantStock=selectedVariantStock();if(qty>stock)return setStatus(`Estoque total insuficiente. Disponível: ${stock} unidade(s).`,'error');if(qty>variantStock)return setStatus(`Estoque da variação insuficiente. Disponível: ${variantStock} unidade(s).`,'error');if(productPrice(activeProduct)<=0)return setStatus('Preço não cadastrado no produto. Verifique o preço no Supabase antes de vender.','error');if(!adminPassword){$('loginBox').classList.remove('hidden');return;}setStatus('Processando venda e baixando estoque...');
-try{const saleId='PDV-'+Date.now();const d=await api('pdv_sale',{admin_password:adminPassword,sale_id:saleId,payment:'store',items:[{id:activeProduct.id,studio70_code:activeProduct.studio70_code,external_id:activeProduct.external_id,sku:activeProduct.sku,barcode:activeProduct.barcode,name:activeProduct.name,size,color,variation:{size,color},qty,unit:productPrice(activeProduct)}]});if(!d.ok)throw new Error(apiError(d,'Venda não concluída.'));const after=Number(d.items?.[0]?.stock_after ?? (stock-qty));activeProduct.stock=after;renderProduct();$('codeInput').value='';setStatus(`✓ Venda ${saleId} concluída. Estoque atual: ${after} un.`,'success');}catch(e){setStatus('Venda não concluída: '+e.message,'error');}}
-function orderCustomerName(order){const c=order?.customer||{};return String(c.name||c.full_name||c.nome||'Cliente').trim()||'Cliente';}
-function orderItemsText(order){const items=Array.isArray(order?.items)?order.items:[];if(!items.length)return 'Itens não informados.';return items.map(i=>{const v=i?.variation||{};const spec=[i?.size||v.size,i?.color||v.color].filter(Boolean).join(' / ');return `${Number(i?.qty||0)}x ${i?.name||'Produto'}${spec?' — '+spec:''}`;}).join(' · ');}
-function beepNewOrder(){try{audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();const osc=audioContext.createOscillator(),gain=audioContext.createGain();osc.frequency.value=880;gain.gain.value=.08;osc.connect(gain);gain.connect(audioContext.destination);osc.start();setTimeout(()=>{osc.frequency.value=1175},120);setTimeout(()=>{osc.stop();gain.disconnect()},240);}catch(_){ }}
-async function notifyNewOrder(){beepNewOrder();if('Notification'in window&&Notification.permission==='granted'){try{new Notification('STUDIO 70 — Novo pedido',{body:'Há um pedido aguardando retirada no PDV da loja.'});}catch(_){}}}
-async function enableOrderNotifications(){if('Notification'in window&&Notification.permission==='default'){try{await Notification.requestPermission();}catch(_){}}}
-function renderStoreOrders(){const list=$('storeOrderList');const orders=Array.from(pendingStoreOrders.values());$('ordersBadge').textContent=`${orders.length} ${orders.length===1?'novo':'novos'}`;if(!orders.length){list.innerHTML='<div class="muted">Nenhum pedido aguardando retirada.</div>';return;}list.innerHTML=orders.map(o=>{const ref=String(o.external_reference||'—');const total=money(o.total);const method=String(o.payment_method||o.payment_provider||'pagamento').replaceAll('_',' ');return `<div class="order-item" data-order-ref="${ref.replaceAll('"','&quot;')}"><div class="order-head"><span class="order-ref">${ref}</span><span class="order-total">${total}</span></div><div class="order-customer">${orderCustomerName(o)}</div><div class="order-items">${orderItemsText(o)}</div><div class="muted" style="margin-top:6px">Pagamento: ${method}</div><button class="primary" onclick="clientAlreadyTook('${ref.replaceAll("'","\\'")}')">✅ CLIENTE JÁ LEVOU</button></div>`;}).join('');}
-async function loadStoreOrders(initial=false){if(!adminPassword){$('ordersStatus').textContent='Entre no PDV para acompanhar os pedidos.';return;}try{const d=await api('store_pending_orders',{admin_password:adminPassword,limit:50});if(!d.ok)throw new Error(apiError(d,'Não foi possível carregar os pedidos.'));const incoming=Array.isArray(d.orders)?d.orders:[];const next=new Map(incoming.map(o=>[String(o.external_reference),o]));const newRefs=incoming.map(o=>String(o.external_reference)).filter(r=>!lastOrderSnapshot.has(r));pendingStoreOrders=next;lastOrderSnapshot=new Set(incoming.map(o=>String(o.external_reference)));renderStoreOrders();$('ordersStatus').textContent=incoming.length?`Atualizado agora · ${incoming.length} pedido(s) aguardando retirada.`:'Nenhum pedido aguardando retirada.';if(!initial&&newRefs.length)await notifyNewOrder();}catch(e){$('ordersStatus').textContent='Pedidos: '+e.message;}}
-async function clientAlreadyTook(reference){if(!adminPassword){$('loginBox').classList.remove('hidden');return;}if(!confirm(`Confirmar que o cliente já levou o pedido ${reference}?`))return;try{$('ordersStatus').textContent='Registrando retirada...';const d=await api('store_order_picked_up',{admin_password:adminPassword,external_reference:reference,picked_up_by:'PDV da loja'});if(!d.ok)throw new Error(apiError(d,'Não foi possível confirmar a retirada.'));pendingStoreOrders.delete(String(reference));renderStoreOrders();$('ordersStatus').textContent='✓ Cliente já levou. Pedido retirado do painel.';}catch(e){$('ordersStatus').textContent='Retirada não registrada: '+e.message;}}
-function startStoreOrderPolling(){clearInterval(ordersPollTimer);loadStoreOrders(true);ordersPollTimer=setInterval(()=>loadStoreOrders(false),5000);}
-function startScanner(){if(scanning)return;if(typeof Html5Qrcode==='undefined'){setStatus('Biblioteca da câmera não carregou. Verifique a internet.','error');return;}try{scanner=scanner||new Html5Qrcode('reader');scanning=true;setStatus('Aponte a câmera para o código de barras...');scanner.start({facingMode:'environment'},{fps:12,qrbox:{width:280,height:150}},code=>{if(!scanning)return;scanning=false;scanner.stop().catch(()=>{});$('codeInput').value=code;lookupProduct(code);},()=>{});}catch(e){scanning=false;setStatus('Não foi possível abrir a câmera. Autorize a câmera no navegador e tente novamente.','error');}}
-async function stopScanner(){if(!scanner||!scanning)return;scanning=false;try{await scanner.stop();}catch{}setStatus('Scanner pausado.');}
-$('sizeSelect').addEventListener('change',updateVariationState);$('colorSelect').addEventListener('change',updateVariationState);$('qty').addEventListener('input',()=>{if(activeProduct){const max=selectedVariantStock();let n=Math.max(1,Math.trunc(Number($('qty').value||1)));if(max>0)n=Math.min(n,max);$('qty').value=n;}});
-$('codeInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();lookupProduct();}});
-if(adminPassword){$('loginBox').classList.add('hidden');$('connectionStatus').classList.add('ok');loadInitialProductCount();startStoreOrderPolling();}
-else{$('loginBox').classList.remove('hidden');}
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js',{scope:'./'}).catch(e=>console.warn('[STUDIO70 PWA]',e)));}
+
+function changeQty(delta){
+  const input=$('qty');
+  let n=Math.trunc(Number(input.value||1))+delta;
+  n=Math.max(1,n);
+  if(activeProduct){
+    const max=selectedVariantStock();
+    n=Math.min(n,Math.max(1,Number(max||activeProduct.stock||0)));
+  }
+  input.value=n;
+}
+
+async function finishSale(){
+  if(!activeProduct)return setStatus('Nenhum produto selecionado.','error');
+  const qty=Math.max(1,Math.trunc(Number($('qty').value||1)));
+  const stock=Number(activeProduct.stock||0);
+  const size=$('sizeSelect').value.trim();
+  const color=$('colorSelect').value.trim();
+  const hasSizes=variationList(activeProduct.sizes).length>0;
+  const hasColors=variationList(activeProduct.colors).length>0;
+  if(hasSizes && !size)return setStatus('Selecione o tamanho antes de finalizar.','error');
+  if(hasColors && !color)return setStatus('Selecione a cor antes de finalizar.','error');
+  const variantStock=selectedVariantStock();
+  if(qty>stock)return setStatus(`Estoque total insuficiente. Disponível: ${stock} unidade(s).`,'error');
+  if(qty>variantStock)return setStatus(`Estoque da variação insuficiente. Disponível: ${variantStock} unidade(s).`,'error');
+  if(!adminPassword){
+    $('loginBox').classList.remove('hidden');
+    return;
+  }
+
+  setStatus('Processando venda e baixando estoque...');
+  try{
+    const saleId='PDV-'+Date.now();
+    const d=await api('pdv_sale',{
+      admin_password:adminPassword,
+      sale_id:saleId,
+      payment:'store',
+      items:[{
+        id:activeProduct.id,
+        studio70_code:activeProduct.studio70_code,
+        external_id:activeProduct.external_id,
+        sku:activeProduct.sku,
+        barcode:activeProduct.barcode,
+        name:activeProduct.name,
+        size,
+        color,
+        variation:{size,color},
+        qty,
+        unit:Number(activeProduct.price||0)
+      }]
+    });
+
+    if(!d.ok)throw new Error(apiError(d,'Venda não concluída.'));
+    const after=Number(d.items?.[0]?.stock_after ?? (stock-qty));
+    activeProduct.stock=after;
+    renderProduct();
+    $('codeInput').value='';
+    setStatus(`✓ Venda ${saleId} concluída. Estoque atual: ${after} un.`,'success');
+  }catch(e){
+    setStatus('Venda não concluída: '+e.message,'error');
+  }
+}
+
+function orderCustomerName(order){
+  const c=order?.customer||{};
+  return String(c.name||c.full_name||c.nome||'Cliente').trim() || 'Cliente';
+}
+function orderItemsText(order){
+  const items=Array.isArray(order?.items)?order.items:[];
+  if(!items.length)return 'Itens não informados.';
+  return items.map(i=>{
+    const v=i?.variation||{};
+    const spec=[i?.size||v.size,i?.color||v.color].filter(Boolean).join(' / ');
+    return `${Number(i?.qty||0)}x ${i?.name||'Produto'}${spec?' — '+spec:''}`;
+  }).join(' · ');
+}
+function beepNewOrder(){
+  try{
+    audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();
+    const osc=audioContext.createOscillator(), gain=audioContext.createGain();
+    osc.frequency.value=880; gain.gain.value=.08;
+    osc.connect(gain);gain.connect(audioContext.destination);osc.start();
+    setTimeout(()=>{osc.frequency.value=1175},120);
+    setTimeout(()=>{osc.stop();gain.disconnect()},240);
+  }catch(_){ }
+}
+async function notifyNewOrder(){
+  beepNewOrder();
+  if('Notification' in window && Notification.permission==='granted'){
+    try{ new Notification('STUDIO 70 — Novo pedido',{body:'Há um pedido aguardando retirada no PDV da loja.'}); }catch(_){ }
+  }
+}
+async function enableOrderNotifications(){
+  if('Notification' in window && Notification.permission==='default'){
+    try{ await Notification.requestPermission(); }catch(_){ }
+  }
+}
+function renderStoreOrders(){
+  const list=$('storeOrderList');
+  const orders=Array.from(pendingStoreOrders.values());
+  $('ordersBadge').textContent=`${orders.length} ${orders.length===1?'novo':'novos'}`;
+  if(!orders.length){ list.innerHTML='<div class="muted">Nenhum pedido aguardando retirada.</div>'; return; }
+  list.innerHTML=orders.map(o=>{
+    const ref=String(o.external_reference||'—');
+    const total=money(o.total);
+    const method=String(o.payment_method||o.payment_provider||'pagamento').replaceAll('_',' ');
+    return `<div class="order-item" data-order-ref="${ref.replaceAll('"','&quot;')}">
+      <div class="order-head"><span class="order-ref">${ref}</span><span class="order-total">${total}</span></div>
+      <div class="order-customer">${orderCustomerName(o)}</div>
+      <div class="order-items">${orderItemsText(o)}</div>
+      <div class="muted" style="margin-top:6px">Pagamento: ${method}</div>
+      <button class="primary" onclick="clientAlreadyTook('${ref.replaceAll("'","\\'")}')">✅ CLIENTE JÁ LEVOU</button>
+    </div>`;
+  }).join('');
+}
+async function loadStoreOrders(initial=false){
+  if(!adminPassword){$('ordersStatus').textContent='Entre no PDV para acompanhar os pedidos.';return;}
+  try{
+    const d=await api('store_pending_orders',{admin_password:adminPassword,limit:50});
+    if(!d.ok)throw new Error(apiError(d,'Não foi possível carregar os pedidos.'));
+    const incoming=Array.isArray(d.orders)?d.orders:[];
+    const next=new Map(incoming.map(o=>[String(o.external_reference),o]));
+    const newRefs=incoming.map(o=>String(o.external_reference)).filter(r=>!lastOrderSnapshot.has(r));
+    pendingStoreOrders=next;
+    lastOrderSnapshot=new Set(incoming.map(o=>String(o.external_reference)));
+    renderStoreOrders();
+    $('ordersStatus').textContent=incoming.length?`Atualizado agora · ${incoming.length} pedido(s) aguardando retirada.`:'Nenhum pedido aguardando retirada.';
+    if(!initial && newRefs.length) await notifyNewOrder();
+  }catch(e){$('ordersStatus').textContent='Pedidos: '+e.message;}
+}
+async function clientAlreadyTook(reference){
+  if(!adminPassword){$('loginBox').classList.remove('hidden');return;}
+  const order=pendingStoreOrders.get(String(reference));
+  if(!confirm(`Confirmar que o cliente já levou o pedido ${reference}?`))return;
+  try{
+    $('ordersStatus').textContent='Registrando retirada...';
+    const d=await api('store_order_picked_up',{admin_password:adminPassword,external_reference:reference,picked_up_by:'PDV da loja'});
+    if(!d.ok)throw new Error(apiError(d,'Não foi possível confirmar a retirada.'));
+    pendingStoreOrders.delete(String(reference));
+    renderStoreOrders();
+    $('ordersStatus').textContent='✓ Cliente já levou. Pedido retirado do painel.';
+  }catch(e){$('ordersStatus').textContent='Retirada não registrada: '+e.message;}
+}
+function startStoreOrderPolling(){
+  clearInterval(ordersPollTimer);
+  loadStoreOrders(true);
+  ordersPollTimer=setInterval(()=>loadStoreOrders(false),5000);
+}
+
+async function startScanner(){
+  if(scanning)return;
+  if(typeof Html5Qrcode==='undefined'){
+    setStatus('Biblioteca da câmera não carregou. Verifique a internet.','error');return;
+  }
+  try{
+    scanner=scanner || new Html5Qrcode('reader');
+    scanning=true;
+    setStatus('Aponte a câmera para o código de barras...');
+    await scanner.start(
+      {facingMode:'environment'},
+      {fps:12,qrbox:{width:280,height:150}},
+      code=>{
+        if(!scanning)return;
+        scanning=false;
+        scanner.stop().catch(()=>{});
+        $('codeInput').value=code;
+        lookupProduct(code);
+      },
+      ()=>{}
+    );
+  }catch(e){
+    scanning=false;
+    setStatus('Não foi possível abrir a câmera. Autorize a câmera no navegador e tente novamente.','error');
+  }
+}
+
+async function stopScanner(){
+  if(!scanner || !scanning)return;
+  scanning=false;
+  try{await scanner.stop();}catch{}
+  setStatus('Scanner pausado.');
+}
+
+$('sizeSelect').addEventListener('change',updateVariationState);
+$('colorSelect').addEventListener('change',updateVariationState);
+$('qty').addEventListener('input',()=>{ if(activeProduct){ const max=selectedVariantStock(); let n=Math.max(1,Math.trunc(Number($('qty').value||1))); if(max>0)n=Math.min(n,max); $('qty').value=n; }});
+
+$('codeInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();lookupProduct();}
+});
+
+if(adminPassword){
+  $('loginBox').classList.add('hidden');
+  $('connectionStatus').classList.add('ok');
+  loadInitialProductCount();
+}
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js', {scope:'./'})
+      .catch(err => console.warn('[STUDIO70 PWA] Service Worker:', err));
+  });
+}
 </script>
 </body>
 </html>
