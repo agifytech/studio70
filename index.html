@@ -356,6 +356,8 @@ window.STUDIO70_SEED_PRODUCTS = [{"id": "p0001", "name": "Body Janaína", "price
 const CATEGORIES = ['Vestidos','Conjuntos','Croppeds','Bodies','Biquínis','Macacões','Blusas','Calças','Shorts','Saias','Maiôs','Duos','Tule','Outros'];
 const PRODUCTS_VERSION = 'v3';
 const PRODUCTS_KEY = 'studio70_products_' + PRODUCTS_VERSION;
+const ADMIN_OVERRIDES_KEY = 'studio70_admin_overrides_v1';
+let adminOverrides = JSON.parse(localStorage.getItem(ADMIN_OVERRIDES_KEY) || '{}');
 let products = cleanProducts(JSON.parse(localStorage.getItem(PRODUCTS_KEY) || 'null') || window.STUDIO70_SEED_PRODUCTS).map(p=>({...p,sale_price:Number(p.sale_price??p.price??0)}));
 save();
 let cart = JSON.parse(localStorage.getItem('studio70_cart') || '[]');
@@ -422,7 +424,16 @@ function cleanProducts(list){
   }).map(normalizeProductRecord);
 }
 
-function save(){localStorage.setItem(PRODUCTS_KEY,JSON.stringify(products));}
+function productOverrideKey(p){
+  return String(p?.supplierExternalId||p?.external_id||p?.sku||p?.barcode||p?.name||p?.id||'').trim().toLowerCase();
+}
+function applyAdminOverrides(list){
+  return (Array.isArray(list)?list:[]).map(p=>{
+    const override=adminOverrides[productOverrideKey(p)];
+    return override?normalizeProductRecord({...p,...override}):p;
+  });
+}
+function save(){localStorage.setItem(PRODUCTS_KEY,JSON.stringify(products));localStorage.setItem(ADMIN_OVERRIDES_KEY,JSON.stringify(adminOverrides));}
 function renderCategories(){document.getElementById('categories').innerHTML=CATEGORIES.map(c=>`<button class="cat" onclick="filterCat('${c}')">${c}</button>`).join(''); const sel=document.getElementById('categoryFilter'); sel.innerHTML='<option value="">Todas as categorias</option>'+CATEGORIES.map(c=>`<option>${c}</option>`).join(''); document.getElementById('pCategory').innerHTML=CATEGORIES.map(c=>`<option>${c}</option>`).join('');}
 function filtered(){const q=document.getElementById('searchInput').value.trim().toLowerCase(), c=document.getElementById('categoryFilter').value; return products.filter(p=>p.active!==false && (!c||p.category===c) && (!q||[p.name,p.sku,p.barcode,p.category].join(' ').toLowerCase().includes(q)));}
 function salePriceOf(p){const n=Number(p?.sale_price);if(Number.isFinite(n)&&n>0)return n;return 0;}
@@ -715,6 +726,7 @@ document.getElementById('productForm').onsubmit=async e=>{
       active:saved.active??payload.active,
       featured:saved.featured??payload.featured
     });
+    adminOverrides[productOverrideKey(local)]={...local};
     if(old){
       const replaced=products.map(x=>{
         const byId=String(x.id)===String(id)||String(x.id)===String(local.id);
@@ -905,7 +917,7 @@ async function loadCarmenattoCatalog(){
       });
     });
     const manual=products.filter(p=>p.supplier!=='carmenatto'&&!remote.some(rp=>sameProduct(p,rp)));
-    products=cleanProducts([...manual,...remote]);
+    products=cleanProducts(applyAdminOverrides([...manual,...remote]));
     save();
     renderCategories();
     renderProducts();
