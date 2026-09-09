@@ -207,12 +207,15 @@ footer a{color:#111!important}
   </p>
   <label>Regra de preço
     <select class="field" id="pricingMode">
-      <option value="code">Usar o preço cadastrado no código/ADM</option>
       <option value="margin">Calcular pelo custo + margem de lucro</option>
+      <option value="code">Usar o preço cadastrado no código/ADM</option>
     </select>
   </label>
   <label style="display:block;margin-top:8px">Margem de lucro (%)
-    <input class="field" id="pricingMargin" type="number" min="0" max="1000" step="0.01" value="50" placeholder="Ex.: 50">
+    <input class="field" id="pricingMargin" type="number" min="0" max="1000" step="0.01" value="100" placeholder="Ex.: 100">
+  </label>
+  <label style="display:block;margin-top:8px">Senha do painel ADM para alterar a margem
+    <input class="field" id="pricingAdminPassword" type="password" inputmode="numeric" maxlength="64" placeholder="Mesma senha do painel ADM" autocomplete="off">
   </label>
   <button type="button" class="smallbtn" style="margin-top:8px" onclick="savePricingConfig()">SALVAR REGRA DE PREÇO</button>
   <button type="button" class="smallbtn" style="margin-top:8px" onclick="applySeedPricesToSupabase()">APLICAR PREÇOS DO CÓDIGO AO SUPABASE</button>
@@ -503,25 +506,30 @@ document.getElementById('pdvDiscount').addEventListener('input',renderPDV);docum
 document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
 function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadPricingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} document.getElementById('adminBtn').onclick=openAdmin;
 async function loadPricingConfig(){
+  if(!adminAuthPassword)return;
   try{
-    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'pricing_config'})});
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'pricing_config',admin_password:adminAuthPassword})});
     const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok)throw new Error(d.error||'Não foi possível carregar a regra de preço.');
     const p=d.pricing||{};
     const mode=document.getElementById('pricingMode'),margin=document.getElementById('pricingMargin');
-    if(mode)mode.value=p.mode==='margin'?'margin':'code';
-    if(margin)margin.value=Number(p.margin_percent||50);
+    if(mode)mode.value=p.mode==='code'?'code':'margin';
+    if(margin)margin.value=Number.isFinite(Number(p.margin_percent))?Number(p.margin_percent):100;
     const st=document.getElementById('pricingAdminStatus'); if(st)st.textContent=`Regra atual: ${p.mode==='margin'?'custo + margem':'preço cadastrado no código/ADM'}${p.mode==='margin'?` (${Number(p.margin_percent||0)}%)`:''}.`;
   }catch(e){console.warn('pricing_config',e);}
 }
 async function savePricingConfig(){
-  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',savePricingConfig);
-  const mode=document.getElementById('pricingMode')?.value==='margin'?'margin':'code';
-  const margin=Math.max(0,Math.min(1000,Number(document.getElementById('pricingMargin')?.value||0)));
+  const localPassword=String(document.getElementById('pricingAdminPassword')?.value||'').trim();
+  const password=localPassword||adminAuthPassword;
+  if(!password)return requestLogin('PAINEL ADMINISTRATIVO',savePricingConfig);
+  const mode=document.getElementById('pricingMode')?.value==='code'?'code':'margin';
+  const margin=Math.max(0,Math.min(1000,Number(document.getElementById('pricingMargin')?.value||100)));
   const st=document.getElementById('pricingAdminStatus'); if(st)st.textContent='Salvando regra de preço...';
   try{
-    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save_pricing_config',admin_password:adminAuthPassword,mode,margin_percent:margin})});
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save_pricing_config',admin_password:password,mode,margin_percent:margin})});
     const d=await r.json().catch(()=>({})); if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao salvar regra de preço.');
     if(st)st.textContent=`✓ Regra salva: ${mode==='margin'?'custo + '+margin+'%':'preço cadastrado no código/ADM'}.`;
+    const pw=document.getElementById('pricingAdminPassword'); if(pw)pw.value='';
     await loadCarmenattoCatalog(); renderProducts();
   }catch(e){if(st)st.textContent=e.message;}
 }
