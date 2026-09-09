@@ -169,6 +169,10 @@ footer a{color:#111!important}
 #integratedCheckoutModal .status.ok{color:#246b3b}
 #integratedCheckoutModal .status.error{color:#a52b2b}
 @media(max-width:800px){#integratedCheckoutModal{padding:0}#integratedCheckoutModal .integrated-shell{border-radius:0}#integratedCheckoutModal .integrated-close{right:10px;top:10px}#integratedCheckoutModal .pay-methods{grid-template-columns:1fr}}
+
+.label-preview{margin-top:12px;position:relative;}
+.label-preview.label-flash{outline:2px solid currentColor;outline-offset:3px;}
+.admin-item .admin-tools{display:flex;gap:6px;align-items:center;justify-content:flex-end;flex-wrap:wrap;}
 </style></head>
 <body>
 <div class="announce">🔥 FRETE GRÁTIS ACIMA DE R$150 &nbsp;·&nbsp; ENTREGA PARA TODO O BRASIL &nbsp;·&nbsp; TROCA FÁCIL EM 7 DIAS</div>
@@ -574,30 +578,43 @@ function editProduct(id){
 }
 document.getElementById('productForm').onsubmit=async e=>{
   e.preventDefault();
-  const id=document.getElementById('editId').value||'p'+Date.now();
+  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>document.getElementById('productForm').requestSubmit());
+  const id=document.getElementById('editId').value||'';
   const old=products.find(p=>String(p.id)===String(id));
-  const p={id,name:document.getElementById('pName').value.trim(),price:Number(document.getElementById('pPrice').value),sale_price:Number(document.getElementById('pPrice').value),
-    sku:document.getElementById('pSku').value.trim(),barcode:document.getElementById('pBarcode').value.trim(),
-    category:document.getElementById('pCategory').value,stock:Number(document.getElementById('pStock').value||0),
+  const salePrice=Number(document.getElementById('pPrice').value||0);
+  if(!(salePrice>0))return alert('Informe o preço de venda STUDIO 70.');
+  const payload={
+    id:id && /^\d+$/.test(String(id))?Number(id):null,
+    name:document.getElementById('pName').value.trim(),
+    sale_price:salePrice,
+    supplier_price:Number(old?.supplier_price ?? old?.price ?? 0),
+    sku:document.getElementById('pSku').value.trim(),
+    barcode:document.getElementById('pBarcode').value.trim(),
+    category:document.getElementById('pCategory').value,
+    stock:Number(document.getElementById('pStock').value||0),
     sizes:document.getElementById('pSizes').value.split(',').map(x=>x.trim()).filter(Boolean),
     colors:document.getElementById('pColors').value.split(',').map(x=>x.trim()).filter(Boolean),
     weightKg:Number(document.getElementById('pWeight').value||0.3),heightCm:Number(document.getElementById('pHeight').value||4),
     widthCm:Number(document.getElementById('pWidth').value||20),lengthCm:Number(document.getElementById('pLength').value||30),
     image:normalizeImageUrl(document.getElementById('pImage').value.trim()),
-    secondaryImages:document.getElementById('pSecondaryImages').value.split(/\n|,/).map(x=>normalizeImageUrl(x.trim())).filter(Boolean),
-    url:document.getElementById('pUrl').value.trim(),description:document.getElementById('pDescription').value.trim(),
-    active:document.getElementById('pActive').checked,featured:document.getElementById('pFeatured').checked};
-  if(old)products=products.map(x=>String(x.id)===String(id)?p:x);else products.unshift(p);
-  save();renderProducts();renderAdmin();drawLabel(p);
-  if(adminAuthPassword){
-    try{
-      const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'admin_set_code_prices',admin_password:adminAuthPassword,products:[{sku:p.sku,barcode:p.barcode,name:p.name,sale_price:p.price}]})});
-      const d=await r.json().catch(()=>({})); if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao salvar preço no Supabase.');
-    }catch(err){alert('Produto salvo localmente, mas o preço não foi enviado ao Supabase: '+err.message);}
-  }
-  document.getElementById('labelPreview').style.display='block';
-  document.getElementById('formTitle').textContent='Editar produto';
-  alert('Produto salvo com sucesso.');
+    secondary_images:document.getElementById('pSecondaryImages').value.split(/\n|,/).map(x=>normalizeImageUrl(x.trim())).filter(Boolean),
+    source_url:document.getElementById('pUrl').value.trim(),description:document.getElementById('pDescription').value.trim(),
+    active:document.getElementById('pActive').checked
+  };
+  try{
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'admin_save_product',admin_password:adminAuthPassword,product:payload})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao salvar produto no Supabase.');
+    const saved=d.product||{};
+    const local={...old,...saved,id:saved.id??old?.id??('p'+Date.now()),sale_price:Number(saved.sale_price||salePrice),price:Number(saved.supplier_price??saved.price??payload.supplier_price??0),supplier_price:Number(saved.supplier_price??saved.price??payload.supplier_price??0),barcode:saved.barcode||payload.barcode};
+    if(old)products=products.map(x=>String(x.id)===String(id)?local:x);else products.unshift(local);
+    save();renderProducts();renderAdmin();drawLabel(local);
+    document.getElementById('editId').value=local.id;
+    document.getElementById('pBarcode').value=local.barcode||'';
+    document.getElementById('labelPreview').style.display='block';
+    document.getElementById('formTitle').textContent='Editar produto';
+    alert('Produto salvo no Supabase com sucesso.');
+  }catch(err){alert('Não foi possível salvar o produto: '+(err?.message||err));}
 };
 function deleteProduct(id){
   if(!confirm('Remover este produto?'))return;
@@ -625,7 +642,7 @@ document.getElementById('adminList').addEventListener('click',e=>{
 });
 document.getElementById('adminSearch').oninput=renderAdmin;
 function drawLabel(p){document.getElementById('labelName').textContent=`${p.name} · ${money(salePriceOf(p))}`;document.getElementById('labelCode').textContent=p.barcode;if(window.JsBarcode)JsBarcode('#barcodeSvg',p.barcode,{format:'CODE128',displayValue:true,height:55,margin:8});}
-function drawLabelFor(id){const p=products.find(x=>x.id===id);if(!p)return;drawLabel(p);document.getElementById('labelPreview').style.display='block';document.getElementById('editId').value=p.id;}
+function drawLabelFor(id){const p=products.find(x=>String(x.id)===String(id));if(!p)return;drawLabel(p);document.getElementById('labelPreview').style.display='block';document.getElementById('editId').value=p.id;const preview=document.getElementById('labelPreview');preview.scrollIntoView({behavior:'smooth',block:'nearest'});setTimeout(()=>preview.classList.add('label-flash'),20);setTimeout(()=>preview.classList.remove('label-flash'),900);}
 function printSelectedLabel(){const id=document.getElementById('editId').value;if(!id)return alert('Selecione/edite um produto primeiro.');const p=products.find(x=>x.id===id);if(!p)return;drawLabel(p);const w=window.open('','_blank','width=500,height=400');w.document.write(`<html><body style="font-family:Arial;text-align:center;padding:25px"><h3>${p.name}</h3><div>${money(salePriceOf(p))}</div><svg id="b"></svg><div>${p.barcode}</div><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"><\/script><script>setTimeout(()=>{JsBarcode('#b','${p.barcode}',{format:'CODE128',displayValue:true,height:70});window.print()},300)<\/script></body></html>`);w.document.close();}
 document.getElementById('scannerInput').addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();const code=e.target.value.trim();if(!code)return;const p=products.find(x=>String(x.barcode).toLowerCase()===code.toLowerCase()||String(x.sku).toLowerCase()===code.toLowerCase());const result=document.getElementById('scanResult');if(p){result.textContent=`✓ ${p.name} encontrado — estoque: ${totalStockOf(p)}`;}else result.textContent='✕ Código não cadastrado: '+code;e.target.value='';setTimeout(()=>e.target.focus(),50);});
 document.getElementById('importData').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{products=cleanProducts(JSON.parse(r.result));save();renderProducts();renderAdmin();alert('Backup restaurado.')}catch(_ ){alert('Arquivo inválido.')}};r.readAsText(f)};
