@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#0c0a09">
 <title>STUDIO 70 — PDV Móvel</title>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#0c0a09;color:#f5f5f4;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
@@ -25,6 +26,10 @@ input:focus{border-color:#dc2626}
 .product{display:none}.product.show{display:block}
 .badge{display:inline-block;background:#052e1b;color:#6ee7b7;border:1px solid #065f46;border-radius:8px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
 .title{font-size:21px;font-weight:900;margin:12px 0 4px}.sku{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#78716c}
+.pricing-stats{grid-template-columns:repeat(4,1fr)}
+.sale-stat{border-color:#777}
+.sale-stat b{font-size:20px}
+@media(max-width:650px){.pricing-stats{grid-template-columns:1fr 1fr}}
 .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0}.stat{background:#0c0a09;border:1px solid #292524;border-radius:12px;padding:10px;text-align:center}.stat small{display:block;color:#78716c;text-transform:uppercase;font-size:9px;font-weight:800}.stat b{display:block;margin-top:3px}
 .qty{display:flex;align-items:center;justify-content:space-between;background:#0c0a09;border:1px solid #292524;border-radius:14px;padding:8px;margin:12px 0}.qty button{width:50px;height:48px;padding:0;font-size:22px;background:#292524;color:#fff}.qty input{width:80px;text-align:center;border:0;background:transparent;font-size:22px;font-weight:900}
 .variation-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.variation label{display:block;margin-bottom:6px}.variation select{width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:13px;font-size:15px;outline:none}.variation select:focus{border-color:#dc2626}.variant-stock{font-size:11px;color:#a8a29e;margin-top:6px}.variant-stock strong{color:#6ee7b7}
@@ -35,6 +40,97 @@ input:focus{border-color:#dc2626}
 .modal{width:min(100%,400px);background:#171412;border:1px solid #44403c;border-radius:18px;padding:18px}
 .modal h3{margin:0 0 8px}.modal p{font-size:12px;color:#a8a29e}.modal button{width:100%;margin-top:10px}
 .success{color:#6ee7b7}.error{color:#fca5a5}
+
+/* Impressão de etiquetas */
+.print-actions{margin-top:8px}
+#printSheet{display:none}
+.label-page{display:grid;grid-template-columns:repeat(2,1fr);gap:8mm;padding:8mm;background:#fff;color:#000}
+.label{width:70mm;min-height:40mm;border:1px solid #111;padding:4mm;display:flex;flex-direction:column;justify-content:space-between;page-break-inside:avoid;background:#fff;color:#000}
+.label-brand{font-weight:900;letter-spacing:.14em;font-size:10px}
+.label-name{font-size:13px;font-weight:900;line-height:1.15;margin:3mm 0 1mm}
+.label-sku{font-family:monospace;font-size:10px}
+.label-price{font-size:18px;font-weight:900;margin-top:2mm}
+.label-ean{font-family:monospace;font-size:9px;letter-spacing:.05em}
+.label-barcode{height:13mm;display:flex;align-items:center;justify-content:center;margin-top:2mm}
+.label-barcode svg{max-width:100%;height:100%}
+@media print{
+  @page{size:A4;margin:0}
+  body *{visibility:hidden!important}
+  #printSheet,#printSheet *{visibility:visible!important}
+  #printSheet{display:block!important;position:absolute;left:0;top:0;width:100%;margin:0;padding:0}
+  .label-page{grid-template-columns:repeat(2,70mm);gap:5mm 8mm;padding:8mm}
+  .label{width:70mm;min-height:40mm}
+}
+
+/* =========================
+   ETIQUETAS PEQUENAS PARA ROUPAS — ST70
+   Modelo baseado na referência enviada: 50 × 30 mm
+   ========================= */
+.label-print-card{overflow:hidden}
+.label-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.label-preview{display:flex;justify-content:center;padding:14px 0}
+.thermal-label-demo{
+  width:min(100%,430px);aspect-ratio:50/30;background:#fff;color:#333;
+  border:2px dashed #3b82f6;border-radius:6px;padding:10px 14px;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  box-shadow:0 8px 20px #0004;text-align:center
+}
+.tl-brand{font-size:24px;font-weight:900;letter-spacing:.02em;line-height:1}
+.tl-name{font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.tl-price{font-size:25px;font-weight:900;line-height:1}
+.tl-bar{font-family:monospace;font-size:14px;letter-spacing:-1.5px;line-height:1;max-width:100%;overflow:hidden}
+.tl-code{font:9px ui-monospace,SFMono-Regular,Menlo,monospace}
+.label-note{margin-top:10px;line-height:1.45}
+
+/* Impressora térmica — etiqueta física 50 × 30 mm */
+@media print{
+  @page{size:50mm 30mm;margin:0}
+  html,body{width:50mm!important;height:30mm!important;margin:0!important;padding:0!important;background:#fff!important}
+  body>*{display:none!important}
+  #thermalPrintRoot{
+    display:block!important;width:50mm!important;height:30mm!important;
+    margin:0!important;padding:0!important;background:#fff!important;color:#000!important;
+  }
+  .thermal-print-label{
+    width:50mm;height:30mm;box-sizing:border-box;
+    padding:2.0mm 2.2mm 1.5mm 2.2mm;
+    display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+    overflow:hidden;page-break-after:always;break-after:page;
+    font-family:Arial,Helvetica,sans-serif;color:#333;background:#fff;
+    border:0.35mm dashed #555;
+  }
+  .thermal-print-label:last-child{page-break-after:auto;break-after:auto}
+  .thermal-sku-top{
+    width:100%;font-size:4.2mm;font-weight:900;line-height:1;text-align:center;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .thermal-name{
+    width:100%;font-size:3.7mm;font-weight:500;line-height:1.05;text-align:center;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .thermal-price{
+    font-size:6.4mm;font-weight:900;line-height:1;white-space:nowrap;text-align:center;
+  }
+  .thermal-barcode-wrap{width:100%;height:8.6mm;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .thermal-barcode{width:100%;height:8.6mm;display:block}
+  .thermal-code{font-size:2.3mm;line-height:1;font-family:monospace;text-align:center}
+}
+
+/* Fora da impressão, o recipiente fica invisível */
+#thermalPrintRoot{display:none}
+
+
+.discount-box{margin-top:12px;padding:12px;background:#0f0d0c;border:1px solid #292524;border-radius:12px}
+.discount-title{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.discount-title b{font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.discount-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end}
+.discount-field label{font-size:10px;color:#a8a29e;display:block;margin-bottom:5px}
+.discount-field input{width:100%;padding:11px;border:1px solid #44403c;border-radius:9px;background:#171412;color:#fff;font-size:16px;font-weight:800}
+.discount-presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.discount-presets button{border:1px solid #44403c;background:#171412;color:#fff;border-radius:8px;padding:7px 9px;font-size:11px;font-weight:800;cursor:pointer}
+.discount-result{margin-top:10px;display:flex;justify-content:space-between;gap:10px;padding-top:9px;border-top:1px dashed #44403c;font-size:12px}
+.discount-result strong{font-size:17px}
+.discount-hint{font-size:10px;color:#78716c;margin-top:6px}
 </style>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0c0a09">
@@ -42,6 +138,8 @@ input:focus{border-color:#dc2626}
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="STUDIO 70 PDV">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+128&display=swap" rel="stylesheet">
 </head>
 <body>
 <header>
@@ -70,8 +168,9 @@ input:focus{border-color:#dc2626}
     <div id="productSku" class="sku">SKU: —</div>
     <div id="productBarcode" class="sku">EAN: —</div>
 
-    <div class="stats">
-      <div class="stat"><small>Preço</small><b id="productPrice">R$ 0,00</b></div>
+    <div class="stats pricing-stats">
+      <div class="stat"><small>Preço de custo</small><b id="productCost">R$ 0,00</b></div>
+      <div class="stat sale-stat"><small>Preço de venda ST70</small><b id="productPrice">R$ 0,00</b></div>
       <div class="stat"><small>Estoque total</small><b id="productStock">0</b></div>
       <div class="stat"><small>Variação</small><b id="productSpecs">—</b></div>
     </div>
@@ -91,11 +190,84 @@ input:focus{border-color:#dc2626}
     <label class="muted">Quantidade da venda</label>
     <div class="qty">
       <button onclick="changeQty(-1)">−</button>
-      <input id="qty" type="number" min="1" value="1">
+      <input id="qty" type="number" min="1" value="1" oninput="updateDiscountPreview()">
       <button onclick="changeQty(1)">+</button>
     </div>
 
+    <div class="discount-box">
+      <div class="discount-title">
+        <b>🏷️ Desconto na venda</b>
+        <span class="muted">opcional</span>
+      </div>
+      <div class="discount-grid">
+        <div class="discount-field">
+          <label for="discountPercent">Desconto (%)</label>
+          <input id="discountPercent" type="number" min="0" max="100" step="0.01" value="0" oninput="updateDiscountPreview()">
+        </div>
+        <div class="discount-field">
+          <label>Preço final</label>
+          <input id="discountFinal" type="text" value="R$ 0,00" readonly>
+        </div>
+      </div>
+      <div class="discount-presets">
+        <button type="button" onclick="setDiscount(0)">SEM DESCONTO</button>
+        <button type="button" onclick="setDiscount(5)">5%</button>
+        <button type="button" onclick="setDiscount(10)">10%</button>
+        <button type="button" onclick="setDiscount(15)">15%</button>
+        <button type="button" onclick="setDiscount(20)">20%</button>
+      </div>
+      <div class="discount-result">
+        <span>Economia: <strong id="discountAmount">R$ 0,00</strong></span>
+        <span>Total: <strong id="discountTotal">R$ 0,00</strong></span>
+      </div>
+      <div class="discount-hint">O desconto é aplicado somente nesta venda. O preço cadastrado do produto continua sendo o preço de venda ST70.</div>
+    </div>
+
     <button class="primary" style="width:100%" onclick="finishSale()">⚡ PROCESSAR VENDA E DAR BAIXA</button>
+    <div class="grid print-actions">
+      <button class="secondary" onclick="printCurrentLabel()">🏷️ IMPRIMIR ETIQUETA</button>
+      <button class="secondary" onclick="openAllLabels()">🖨️ ETIQUETAS EM MASSA</button>
+    </div>
+  </div>
+
+  <div class="card" id="labelsCard">
+    <h2>🏷️ Etiquetas de produtos</h2>
+    <div class="muted">Imprima a etiqueta do produto identificado ou gere etiquetas de todo o estoque cadastrado.</div>
+    <div class="grid">
+      <button class="secondary" onclick="printCurrentLabel()">🏷️ PRODUTO ATUAL</button>
+      <button class="primary" onclick="openAllLabels()">🖨️ TODOS OS PRODUTOS</button>
+    </div>
+    <div id="labelsStatus" class="status"></div>
+  </div>
+
+
+  <div class="card label-print-card">
+    <div class="label-head">
+      <div>
+        <h2>🏷️ Etiquetas profissionais</h2>
+        <div class="muted">Modelo para roupa 50 × 30 mm — preço, descrição, SKU e código de barras</div>
+      </div>
+      <span class="badge">TÉRMICA</span>
+    </div>
+
+    <div class="label-preview">
+      <div class="thermal-label-demo">
+        <div class="tl-brand">ST70</div>
+        <div class="tl-name">Pré-visualização da etiqueta</div>
+        <div class="tl-meta">TAMANHO · COR</div>
+        <div class="tl-price">R$ 0,00</div>
+        <div class="tl-bar">||||||||||||||||||||</div>
+        <div class="tl-code">SKU-CAM-PREMIUM</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <button class="primary" onclick="printCurrentLabel()">🖨️ IMPRIMIR ESTA ETIQUETA</button>
+      <button class="secondary" onclick="printAllLabels()">🏷️ IMPRIMIR TODAS AS ETIQUETAS</button>
+    </div>
+    <div class="muted label-note">
+      Modelo inspirado na referência enviada: SKU no topo, descrição, preço em destaque e código de barras. A impressão em massa gera uma etiqueta por produto.
+    </div>
   </div>
 
   <div class="card" id="storeOrdersCard">
@@ -109,7 +281,7 @@ input:focus{border-color:#dc2626}
 
   <div class="card">
     <div class="notice">
-      O PDV consulta o estoque do fornecedor no Supabase e a baixa é feita no servidor.
+      O PDV consulta o estoque no Supabase. O <strong>Preço de custo</strong> vem do campo supplier_price (ou custo equivalente) e o <strong>Preço de venda ST70</strong> vem de sale_price, como no site.
       O acesso usa a senha administrativa do PDV; ela não fica gravada no HTML.
     </div>
   </div>
@@ -135,6 +307,8 @@ let pendingStoreOrders = new Map();
 let ordersPollTimer = null;
 let lastOrderSnapshot = new Set();
 let audioContext = null;
+let catalogProducts = [];
+let catalogByCode = new Map();
 
 const $ = id => document.getElementById(id);
 const money = n => Number(n || 0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
@@ -181,8 +355,13 @@ async function unlockPdv(){
 async function loadInitialProductCount(){
   try{
     const d=await api('carmenatto_products',{limit:2000});
-    const count=Array.isArray(d.products)?d.products.length:0;
-    setStatus(`${count} produtos disponíveis para consulta. Pronto para bipar.`,'success');
+    catalogProducts=Array.isArray(d.products)?d.products:[];
+    catalogByCode=new Map();
+    catalogProducts.forEach(p=>{
+      [p.id,p.sku,p.barcode,p.studio70_code,p.external_id].filter(v=>v!=null&&String(v).trim()).forEach(v=>catalogByCode.set(String(v).trim(),p));
+    });
+    const count=catalogProducts.length;
+    setStatus(`${count} produtos disponíveis para consulta. Preço de custo e venda sincronizados. Pronto para bipar.`,'success');
   }catch(e){
     setStatus('Falha ao carregar estoque: '+e.message,'error');
   }
@@ -199,7 +378,16 @@ async function lookupProduct(code){
     // (EAN, SKU ou preço) esteja vazio. Nunca trate EAN ausente como
     // produto inexistente.
     if(d && d.found && d.product){
-      activeProduct=d.product;
+      const backendProduct=d.product;
+      const keyCandidates=[backendProduct.id,backendProduct.sku,backendProduct.barcode,backendProduct.studio70_code,backendProduct.external_id,code].filter(v=>v!=null&&String(v).trim()).map(v=>String(v).trim());
+      const siteProduct=keyCandidates.map(k=>catalogByCode.get(k)).find(Boolean) || null;
+      // O catálogo do site é a fonte dos dois preços: supplier_price = custo e sale_price = venda ST70.
+      activeProduct={...(siteProduct||{}),...backendProduct};
+      if(siteProduct){
+        if(siteProduct.sale_price!=null) activeProduct.sale_price=siteProduct.sale_price;
+        if(siteProduct.supplier_price!=null) activeProduct.supplier_price=siteProduct.supplier_price;
+        if(siteProduct.price!=null && activeProduct.supplier_price==null) activeProduct.supplier_price=siteProduct.price;
+      }
       renderProduct();
       setStatus('Produto identificado no Supabase. Confira a quantidade.','success');
       return;
@@ -263,7 +451,10 @@ function renderProduct(){
   $('productName').textContent=p.name || 'Produto';
   $('productSku').textContent='STUDIO 70: '+(p.studio70_code || '—')+'  |  SKU: '+(p.sku || '—');
   $('productBarcode').textContent='EAN: '+(p.barcode ? p.barcode : 'não cadastrado (produto encontrado)');
-  $('productPrice').textContent=Number(p.price||0)>0 ? money(p.price) : 'Preço não cadastrado';
+  const cost=parseCostPrice(p);
+  const sale=parseSalePrice(p);
+  $('productCost').textContent=cost!==null ? money(cost) : 'Não cadastrado';
+  $('productPrice').textContent=sale>0 ? money(sale) : 'Preço não cadastrado';
   $('productStock').textContent=String(Number(p.stock||0))+' un';
   const sizes=variationList(p.sizes);
   const colors=variationList(p.colors);
@@ -274,9 +465,9 @@ function renderProduct(){
   $('qty').value=1;
   $('productCard').classList.add('show');
   updateVariationState();
+  updateDiscountPreview();
 }
 
-function changeQty(delta){
   const input=$('qty');
   let n=Math.trunc(Number(input.value||1))+delta;
   n=Math.max(1,n);
@@ -285,6 +476,38 @@ function changeQty(delta){
     n=Math.min(n,Math.max(1,Number(max||activeProduct.stock||0)));
   }
   input.value=n;
+}
+
+
+function getDiscountPercent(){
+  const el=$('discountPercent');
+  let v=Number(el?.value||0);
+  if(!Number.isFinite(v))v=0;
+  return Math.min(100,Math.max(0,v));
+}
+function getDiscountData(){
+  const qty=Math.max(1,Math.trunc(Number($('qty')?.value||1)));
+  const unit=activeProduct?parseSalePrice(activeProduct):0;
+  const percent=getDiscountPercent();
+  const gross=unit*qty;
+  const amount=gross*(percent/100);
+  const total=Math.max(0,gross-amount);
+  const discountedUnit=qty>0?total/qty:0;
+  return {qty,unit,percent,gross,amount,total,discountedUnit};
+}
+function updateDiscountPreview(){
+  const d=getDiscountData();
+  if($('discountFinal'))$('discountFinal').value=money(d.discountedUnit);
+  if($('discountAmount'))$('discountAmount').textContent=money(d.amount);
+  if($('discountTotal'))$('discountTotal').textContent=money(d.total);
+}
+function setDiscount(percent){
+  if($('discountPercent'))$('discountPercent').value=String(percent);
+  updateDiscountPreview();
+}
+function resetDiscount(){
+  if($('discountPercent'))$('discountPercent').value='0';
+  updateDiscountPreview();
 }
 
 async function finishSale(){
@@ -323,7 +546,11 @@ async function finishSale(){
         color,
         variation:{size,color},
         qty,
-        unit:Number(activeProduct.price||0)
+        unit:getDiscountData().discountedUnit,
+        original_unit:parseSalePrice(activeProduct),
+        discount_percent:getDiscountData().percent,
+        discount_amount:getDiscountData().amount,
+        total_after_discount:getDiscountData().total
       }]
     });
 
@@ -333,6 +560,7 @@ async function finishSale(){
     renderProduct();
     $('codeInput').value='';
     setStatus(`✓ Venda ${saleId} concluída. Estoque atual: ${after} un.`,'success');
+    resetDiscount();
   }catch(e){
     setStatus('Venda não concluída: '+e.message,'error');
   }
@@ -458,6 +686,224 @@ async function stopScanner(){
   setStatus('Scanner pausado.');
 }
 
+
+
+function parseCostPrice(p){
+  p=p||{}; const raw=p.raw||{};
+  const keys=['supplier_price','supplierPrice','preco_custo','precoCusto','custo','cost_price','costPrice','purchase_price','purchasePrice'];
+  for(const root of [p,raw]){
+    if(!root||typeof root!=='object')continue;
+    for(const k of keys){ if(Object.prototype.hasOwnProperty.call(root,k)){ const n=parsePriceValue(root[k]); if(n!==null&&n>=0)return n; }}
+  }
+  return null;
+}
+function parseSalePrice(p){
+  p=p||{}; const raw=p.raw||{};
+  const keys=['sale_price','salePrice','preco_venda','precoVenda','preco_de_venda','precoDeVenda','valor_venda','valorVenda','selling_price','sellingPrice','final_price','finalPrice'];
+  for(const root of [p,raw]){
+    if(!root||typeof root!=='object')continue;
+    for(const k of keys){ if(Object.prototype.hasOwnProperty.call(root,k)){ const n=parsePriceValue(root[k]); if(n!==null&&n>0)return n; }}
+  }
+  return parseProductPrice(p);
+}
+
+function parsePriceValue(value){
+  if(value===null || value===undefined || value==='') return null;
+  if(typeof value==='number' && Number.isFinite(value)) return value;
+  if(typeof value==='object'){
+    for(const k of ['amount','value','valor','price','preco','unit_price','sale_price','selling_price','preco_venda','precoVenda','valor_venda','valorVenda']){
+      if(Object.prototype.hasOwnProperty.call(value,k)){
+        const n=parsePriceValue(value[k]);
+        if(n!==null && n>0) return n;
+      }
+    }
+    return null;
+  }
+  let str=String(value).trim();
+  if(!str) return null;
+  str=str.replace(/R\$|BRL|\s/gi,'');
+  if(str.includes(',') && str.includes('.')) str=str.replace(/\./g,'').replace(',','.');
+  else if(str.includes(',')) str=str.replace(',','.');
+  const n=Number(str);
+  return Number.isFinite(n) ? n : null;
+}
+
+function parseProductPrice(p){
+  p=p||{};
+  // Primeiro tenta os nomes de venda mais comuns.
+  const directKeys=[
+    'price','preco','preco_venda','precoVenda','preco_de_venda','precoDeVenda',
+    'valor','valor_venda','valorVenda','sale_price','salePrice','selling_price',
+    'sellingPrice','unit_price','unitPrice','final_price','finalPrice','amount'
+  ];
+  const roots=[p, p.raw];
+  for(const root of roots){
+    if(!root) continue;
+    let obj=root;
+    if(typeof obj==='string'){
+      try{obj=JSON.parse(obj);}catch{obj=null;}
+    }
+    if(!obj || typeof obj!=='object') continue;
+    for(const key of directKeys){
+      if(Object.prototype.hasOwnProperty.call(obj,key)){
+        const n=parsePriceValue(obj[key]);
+        if(n!==null && n>0) return n;
+      }
+    }
+  }
+
+  // Algumas respostas vêm com o preço dentro de objetos aninhados.
+  // Procura somente chaves relacionadas a preço/venda, evitando custo.
+  const preferred=/(pre[cç]o|price|valor|amount)/i;
+  const venda=/(venda|sale|selling|final|unit|amount|price|pre[cç]o)/i;
+  const avoid=/(custo|cost|compra|purchase)/i;
+  const seen=new Set();
+  function walk(node, depth=0){
+    if(node===null || node===undefined || depth>5) return null;
+    if(typeof node!=='object') return null;
+    if(seen.has(node)) return null;
+    seen.add(node);
+    for(const [key,val] of Object.entries(node)){
+      const k=String(key);
+      if(avoid.test(k)) continue;
+      if(preferred.test(k) && venda.test(k)){
+        const n=parsePriceValue(val);
+        if(n!==null && n>0) return n;
+      }
+    }
+    for(const val of Object.values(node)){
+      const n=walk(val,depth+1);
+      if(n!==null && n>0) return n;
+    }
+    return null;
+  }
+  const found=walk(p);
+  return found!==null ? found : 0;
+}
+
+function normalizeLabelProduct(p){
+  p=p||{}; const raw=p.raw||{};
+  return {
+    name:String(p.name||raw.name||'Produto').trim(),
+    sku:String(p.sku||raw.sku||p.studio70_code||raw.studio70_code||'SEM-SKU').trim(),
+    code:String(p.studio70_code||raw.studio70_code||'').trim(),
+    barcode:String(p.barcode||raw.barcode||raw.ean||p.ean||'').trim(),
+    price:parseSalePrice(p),
+    size:String(p.size||p.variation?.size||'').trim(),
+    color:String(p.color||p.variation?.color||'').trim()
+  };
+}
+function escapeHtml(v){
+  return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function buildLabelData(p, variation=''){
+  const x=normalizeLabelProduct(p);
+  const code=x.barcode||x.sku||x.code||'SEM-CODIGO';
+  const v=variation || [x.size,x.color].filter(Boolean).join(' / ');
+  return {name:x.name,sku:x.sku,barcode:code,price:x.price,variation:v};
+}
+function popupLabelMarkup(d,index){
+  const price=d.price>0 ? money(d.price) : 'R$ 0,00';
+  return `<div class="label">
+    <div class="sku">${escapeHtml(d.sku)}</div>
+    <div class="desc">${escapeHtml(d.name)}${d.variation?' — '+escapeHtml(d.variation):''}</div>
+    <div class="price">${escapeHtml(price)}</div>
+    <svg id="bc${index}" class="barcode"></svg>
+    <div class="code">${escapeHtml(d.barcode)}</div>
+  </div>`;
+}
+function printLabels(products){
+  if(!Array.isArray(products)||!products.length){
+    setStatus('Nenhuma etiqueta disponível para impressão.','error');
+    return null;
+  }
+  // Abre a janela imediatamente, no mesmo clique, evitando bloqueio de pop-up.
+  const w=window.open('', '_blank', 'width=500,height=400,noopener,noreferrer');
+  if(!w){
+    setStatus('O navegador bloqueou a janela de impressão. Permita pop-ups para este site e tente novamente.','error');
+    return null;
+  }
+  const labels=products.map((p,i)=>popupLabelMarkup(p,i)).join('');
+  const data=products.map(p=>buildLabelData(p));
+  const json=JSON.stringify(data).replace(/</g,'\\u003c');
+  w.document.open();
+  w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>ST70 — Etiquetas</title>
+  <style>
+    @page{size:50mm 30mm;margin:0}
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:#fff;color:#000}
+    body{font-family:Arial,Helvetica,sans-serif}
+    .label{width:50mm;height:30mm;padding:2mm 2.2mm 1.5mm;display:flex;flex-direction:column;align-items:center;justify-content:space-between;overflow:hidden;border:.25mm dashed #777;page-break-after:always;break-after:page}
+    .label:last-child{page-break-after:auto;break-after:auto}
+    .sku{font-size:4.2mm;font-weight:900;line-height:1;text-align:center;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .desc{font-size:3.55mm;line-height:1.05;text-align:center;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .price{font-size:6.4mm;font-weight:900;line-height:1;white-space:nowrap}
+    .barcode{width:100%;height:8.2mm;display:block}
+    .code{font:2.2mm monospace;line-height:1;text-align:center;white-space:nowrap}
+  </style></head><body>${labels}
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"><\\/script>
+  <script>
+  const items=${json};
+  function go(){
+    items.forEach((d,i)=>{
+      const el=document.getElementById('bc'+i); if(!el)return;
+      try{JsBarcode(el,String(d.barcode),{format:/^\\d{13}$/.test(String(d.barcode))?'EAN13':'CODE128',displayValue:false,margin:0,width:1.05,height:30,background:'#fff',lineColor:'#000'});}
+      catch(e){try{JsBarcode(el,String(d.sku||'SEM-SKU'),{format:'CODE128',displayValue:false,margin:0,width:1.05,height:30,background:'#fff',lineColor:'#000'});}catch(_){}}
+    });
+    setTimeout(()=>{window.focus();window.print();},350);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();
+  window.onafterprint=()=>setTimeout(()=>window.close(),300);
+  <\\/script></body></html>`);
+  w.document.close();
+  return w;
+}
+function printCurrentLabel(){
+  if(!activeProduct){
+    setStatus('Primeiro identifique um produto para imprimir a etiqueta.','error');
+    return;
+  }
+  const size=$('sizeSelect').value.trim();
+  const color=$('colorSelect').value.trim();
+  const variation=[size,color].filter(Boolean).join(' / ');
+  printLabels([buildLabelData(activeProduct,variation)]);
+}
+async function openAllLabels(){
+  if(!adminPassword){
+    $('loginBox').classList.remove('hidden');
+    $('labelsStatus').textContent='Entre no PDV para imprimir as etiquetas.';
+    return;
+  }
+  // Abre antes do await para não ser bloqueado pelo navegador.
+  const w=window.open('', '_blank', 'width=500,height=400,noopener,noreferrer');
+  if(!w){
+    $('labelsStatus').textContent='O navegador bloqueou a janela de impressão. Permita pop-ups para este site.';
+    $('labelsStatus').className='status error';
+    return;
+  }
+  w.document.write('<p style="font-family:Arial;padding:20px">Preparando etiquetas...</p>');
+  w.document.close();
+  const status=$('labelsStatus');
+  status.textContent='Carregando produtos para impressão...'; status.className='status';
+  try{
+    const d=await api('carmenatto_products',{limit:2000});
+    const products=Array.isArray(d.products)?d.products:[];
+    if(!products.length)throw new Error('Nenhum produto retornado pelo estoque.');
+    const data=products.map(p=>buildLabelData(p));
+    const labels=data.map((x,i)=>popupLabelMarkup(x,i)).join('');
+    const json=JSON.stringify(data).replace(/</g,'\\u003c');
+    w.document.open();
+    w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>ST70 — Etiquetas</title>
+    <style>@page{size:50mm 30mm;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;color:#000}body{font-family:Arial,Helvetica,sans-serif}.label{width:50mm;height:30mm;padding:2mm 2.2mm 1.5mm;display:flex;flex-direction:column;align-items:center;justify-content:space-between;overflow:hidden;border:.25mm dashed #777;page-break-after:always;break-after:page}.label:last-child{page-break-after:auto;break-after:auto}.sku{font-size:4.2mm;font-weight:900;line-height:1;text-align:center;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.desc{font-size:3.55mm;line-height:1.05;text-align:center;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.price{font-size:6.4mm;font-weight:900;line-height:1;white-space:nowrap}.barcode{width:100%;height:8.2mm;display:block}.code{font:2.2mm monospace;line-height:1;text-align:center;white-space:nowrap}</style></head><body>${labels}<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"><\\/script><script>const items=${json};function go(){items.forEach((d,i)=>{const el=document.getElementById('bc'+i);if(!el)return;try{JsBarcode(el,String(d.barcode),{format:/^\\d{13}$/.test(String(d.barcode))?'EAN13':'CODE128',displayValue:false,margin:0,width:1.05,height:30,background:'#fff',lineColor:'#000'});}catch(e){try{JsBarcode(el,String(d.sku||'SEM-SKU'),{format:'CODE128',displayValue:false,margin:0,width:1.05,height:30,background:'#fff',lineColor:'#000'});}catch(_){}}});setTimeout(()=>{window.focus();window.print();},350)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();window.onafterprint=()=>setTimeout(()=>window.close(),300);<\\/script></body></html>`);
+    w.document.close();
+    status.textContent=`${products.length} etiqueta(s) preparada(s) para impressão.`; status.className='status success';
+  }catch(e){
+    try{w.close()}catch(_){ }
+    status.textContent='Não foi possível preparar as etiquetas: '+e.message; status.className='status error';
+  }
+}
+function printAllLabels(){ openAllLabels(); }
+
 $('sizeSelect').addEventListener('change',updateVariationState);
 $('colorSelect').addEventListener('change',updateVariationState);
 $('qty').addEventListener('input',()=>{ if(activeProduct){ const max=selectedVariantStock(); let n=Math.max(1,Math.trunc(Number($('qty').value||1))); if(max>0)n=Math.min(n,max); $('qty').value=n; }});
@@ -473,6 +919,111 @@ if(adminPassword){
 }
 </script>
 <script>
+
+function escHtml(v){
+  return String(v ?? '').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function labelVariation(p){
+  const size=asVariationLabel(p?.size || p?.variation?.size || '');
+  const color=asVariationLabel(p?.color || p?.variation?.color || '');
+  return [size,color].filter(Boolean).join(' / ') || '';
+}
+function labelData(p, extra={}){
+  const sku=String(p?.sku || p?.studio70_code || 'SEM-SKU').trim();
+  const barcode=String(p?.barcode || '').trim() || sku;
+  return {
+    name:String(p?.name || 'Produto').trim(),
+    sku,
+    barcode,
+    price:parseSalePrice(p),
+    variation:extra.variation || labelVariation(p)
+  };
+}
+function labelHtml(d, index=0){
+  const price=d.price>0 ? money(d.price) : 'R$ 0,00';
+  const code=escHtml(d.barcode);
+  const variation=d.variation ? ` · ${escHtml(d.variation)}` : '';
+  return `<div class="thermal-print-label">
+    <div class="thermal-sku-top">${escHtml(d.sku)}</div>
+    <div class="thermal-name">${escHtml(d.name)}${variation}</div>
+    <div class="thermal-price">${escHtml(price)}</div>
+    <div class="thermal-barcode-wrap"><svg class="thermal-barcode" id="thermal-bar-${index}"></svg></div>
+    <div class="thermal-code">${code}</div>
+  </div>`;
+}
+function drawThermalBarcodes(products){
+  products.forEach((d,i)=>{
+    const el=document.getElementById(`thermal-bar-${i}`);
+    if(!el || typeof JsBarcode==='undefined') return;
+    const raw=String(d.barcode||'').trim();
+    const isEan=/^\d{13}$/.test(raw);
+    try{
+      JsBarcode(el,raw,{
+        format:isEan?'EAN13':'CODE128',
+        displayValue:false,
+        margin:0,
+        width:isEan?1.05:1.15,
+        height:30,
+        background:'#ffffff',
+        lineColor:'#000000'
+      });
+    }catch(e){
+      // Se o código não for aceito, tenta CODE128 com o SKU.
+      try{
+        JsBarcode(el,String(d.sku||'SEM-SKU'),{
+          format:'CODE128',displayValue:false,margin:0,width:1.1,height:30,
+          background:'#ffffff',lineColor:'#000000'
+        });
+      }catch(_){}
+    }
+  });
+}
+function openThermalPrint(products){
+  if(!Array.isArray(products)||!products.length){
+    setStatus('Nenhum produto disponível para imprimir.','error');return;
+  }
+  const root=$('thermalPrintRoot');
+  root.innerHTML=products.map((d,i)=>labelHtml(d,i)).join('');
+  const oldTitle=document.title;
+  document.title='ST70 — Etiquetas 50x30 mm';
+  setTimeout(()=>{
+    drawThermalBarcodes(products);
+    setTimeout(()=>window.print(),150);
+    setTimeout(()=>{
+      root.innerHTML='';
+      document.title=oldTitle;
+    },1200);
+  },250);
+}
+function printCurrentLabel(){
+  if(!activeProduct){
+    setStatus('Bipe ou busque um produto antes de imprimir a etiqueta.','error');return;
+  }
+  const size=$('sizeSelect').value.trim();
+  const color=$('colorSelect').value.trim();
+  const variation=[size,color].filter(Boolean).join(' / ');
+  openThermalPrint([labelData(activeProduct,{variation})]);
+}
+async function printAllLabels(){
+  if(!adminPassword){
+    $('loginBox').classList.remove('hidden');
+    setStatus('Entre no PDV para imprimir as etiquetas.','error');
+    return;
+  }
+  setStatus('Carregando produtos para impressão...');
+  try{
+    const d=await api('carmenatto_products',{limit:2000});
+    const products=Array.isArray(d.products)?d.products:[];
+    if(!products.length) throw new Error('Nenhum produto retornado pelo Supabase.');
+    openThermalPrint(products.map(p=>labelData(p)));
+    setStatus(`${products.length} etiqueta(s) preparadas para impressão.`,'success');
+  }catch(e){
+    setStatus('Não foi possível carregar as etiquetas: '+e.message,'error');
+  }
+}
+
+</script>
+<script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./service-worker.js', {scope:'./'})
@@ -480,5 +1031,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+<div id="thermalPrintRoot"></div>
 </body>
 </html>
