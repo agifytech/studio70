@@ -3,3699 +3,497 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-
+<meta name="theme-color" content="#0c0a09">
+<title>STUDIO 70 — PDV Móvel</title>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0c0a09;color:#f5f5f4;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+main{width:min(100%,520px);margin:auto;padding:16px}
+header{padding:16px;border-bottom:1px solid #292524;background:#090807;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+.brand{font-weight:900;letter-spacing:.12em}.sub{font-size:10px;color:#ef4444;font-weight:800;letter-spacing:.18em;text-transform:uppercase;margin-top:2px}
+.dot{width:11px;height:11px;border-radius:50%;background:#f59e0b}.dot.ok{background:#10b981}.dot.err{background:#ef4444}
+.card{background:#171412;border:1px solid #292524;border-radius:18px;padding:14px;margin-bottom:14px;box-shadow:0 12px 30px #0005}
+h2{font-size:18px;margin:0 0 10px}.muted{color:#a8a29e;font-size:12px}.status{min-height:22px;text-align:center;color:#a8a29e;font-size:12px;margin:8px 0 14px}
+#reader{width:100%;overflow:hidden;border-radius:14px;background:#0c0a09;min-height:40px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+button{border:0;border-radius:12px;padding:13px 12px;font-weight:900;font-size:13px;cursor:pointer}
+.primary{background:#b91c1c;color:#fff}.secondary{background:#292524;color:#e7e5e4}.danger{background:#3f1d1d;color:#fecaca}
+input{width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:13px;font-size:16px;outline:none}
+input:focus{border-color:#dc2626}
+.lookup{display:flex;gap:8px}.lookup input{flex:1}.lookup button{width:110px}
+.product{display:none}.product.show{display:block}
+.badge{display:inline-block;background:#052e1b;color:#6ee7b7;border:1px solid #065f46;border-radius:8px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.title{font-size:21px;font-weight:900;margin:12px 0 4px}.sku{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#78716c}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0}.stat{background:#0c0a09;border:1px solid #292524;border-radius:12px;padding:10px;text-align:center}.stat small{display:block;color:#78716c;text-transform:uppercase;font-size:9px;font-weight:800}.stat b{display:block;margin-top:3px}
+.qty{display:flex;align-items:center;justify-content:space-between;background:#0c0a09;border:1px solid #292524;border-radius:14px;padding:8px;margin:12px 0}.qty button{width:50px;height:48px;padding:0;font-size:22px;background:#292524;color:#fff}.qty input{width:80px;text-align:center;border:0;background:transparent;font-size:22px;font-weight:900}
+.variation-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.variation label{display:block;margin-bottom:6px}.variation select{width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:13px;font-size:15px;outline:none}.variation select:focus{border-color:#dc2626}.variant-stock{font-size:11px;color:#a8a29e;margin-top:6px}.variant-stock strong{color:#6ee7b7}
+.notice{background:#2a1705;border:1px solid #854d0e;color:#fde68a;border-radius:12px;padding:10px;font-size:11px;line-height:1.45}
+.hidden{display:none!important}
+.order-list{display:grid;gap:10px}.order-item{background:#0c0a09;border:1px solid #292524;border-radius:14px;padding:12px}.order-head{display:flex;justify-content:space-between;gap:8px;align-items:center}.order-ref{font:11px ui-monospace,SFMono-Regular,Menlo,monospace;color:#a8a29e}.order-total{font-weight:900}.order-customer{font-weight:800;margin:6px 0}.order-items{font-size:11px;color:#d6d3d1;line-height:1.5}.order-item button{width:100%;margin-top:10px}.new-order{border-color:#b91c1c;box-shadow:0 0 0 1px #b91c1c55}
+#loginBox{position:fixed;inset:0;background:#000b;z-index:20;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{width:min(100%,400px);background:#171412;border:1px solid #44403c;border-radius:18px;padding:18px}
+.modal h3{margin:0 0 8px}.modal p{font-size:12px;color:#a8a29e}.modal button{width:100%;margin-top:10px}
+.success{color:#6ee7b7}.error{color:#fca5a5}
+</style>
+<link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0c0a09">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="STUDIO 70 PDV">
-
-<title>STUDIO 70 — PDV Móvel</title>
-
-<link rel="manifest" href="./manifest.json">
-
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
-
-<style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  background:#0c0a09;
-  color:#f5f5f4;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif
-}
-
-main{
-  width:min(100%,520px);
-  margin:auto;
-  padding:16px
-}
-
-header{
-  padding:16px;
-  border-bottom:1px solid #292524;
-  background:#090807;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  position:sticky;
-  top:0;
-  z-index:5
-}
-
-.brand{
-  font-weight:900;
-  letter-spacing:.12em
-}
-
-.sub{
-  font-size:10px;
-  color:#ef4444;
-  font-weight:800;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  margin-top:2px
-}
-
-.dot{
-  width:11px;
-  height:11px;
-  border-radius:50%;
-  background:#f59e0b
-}
-
-.dot.ok{background:#10b981}
-.dot.err{background:#ef4444}
-
-.card{
-  background:#171412;
-  border:1px solid #292524;
-  border-radius:18px;
-  padding:14px;
-  margin-bottom:14px;
-  box-shadow:0 12px 30px #0005
-}
-
-h2{
-  font-size:18px;
-  margin:0 0 10px
-}
-
-.muted{
-  color:#a8a29e;
-  font-size:12px
-}
-
-.status{
-  min-height:22px;
-  text-align:center;
-  color:#a8a29e;
-  font-size:12px;
-  margin:8px 0 14px
-}
-
-.success{color:#6ee7b7}
-.error{color:#fca5a5}
-
-#reader{
-  width:100%;
-  overflow:hidden;
-  border-radius:14px;
-  background:#0c0a09;
-  min-height:40px
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:10px
-}
-
-button{
-  border:0;
-  border-radius:12px;
-  padding:13px 12px;
-  font-weight:900;
-  font-size:13px;
-  cursor:pointer
-}
-
-.primary{
-  background:#b91c1c;
-  color:#fff
-}
-
-.secondary{
-  background:#292524;
-  color:#e7e5e4
-}
-
-.danger{
-  background:#3f1d1d;
-  color:#fecaca
-}
-
-input{
-  width:100%;
-  background:#0c0a09;
-  color:#fff;
-  border:1px solid #44403c;
-  border-radius:12px;
-  padding:13px;
-  font-size:16px;
-  outline:none
-}
-
-input:focus{
-  border-color:#dc2626
-}
-
-.lookup{
-  display:flex;
-  gap:8px
-}
-
-.lookup input{
-  flex:1
-}
-
-.lookup button{
-  width:110px
-}
-
-.product{
-  display:none
-}
-
-.product.show{
-  display:block
-}
-
-.badge{
-  display:inline-block;
-  background:#052e1b;
-  color:#6ee7b7;
-  border:1px solid #065f46;
-  border-radius:8px;
-  padding:5px 8px;
-  font-size:10px;
-  font-weight:900;
-  text-transform:uppercase;
-  letter-spacing:.08em
-}
-
-.title{
-  font-size:21px;
-  font-weight:900;
-  margin:12px 0 4px
-}
-
-.sku{
-  font:12px ui-monospace,SFMono-Regular,Menlo,monospace;
-  color:#78716c
-}
-
-.pricing-stats{
-  grid-template-columns:repeat(3,1fr)
-}
-
-.sale-stat{
-  border-color:#777
-}
-
-.sale-stat b{
-  font-size:20px
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:8px;
-  margin:14px 0
-}
-
-.stat{
-  background:#0c0a09;
-  border:1px solid #292524;
-  border-radius:12px;
-  padding:10px;
-  text-align:center
-}
-
-.stat small{
-  display:block;
-  color:#78716c;
-  text-transform:uppercase;
-  font-size:9px;
-  font-weight:800
-}
-
-.stat b{
-  display:block;
-  margin-top:3px
-}
-
-.qty{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:#0c0a09;
-  border:1px solid #292524;
-  border-radius:14px;
-  padding:8px;
-  margin:12px 0
-}
-
-.qty button{
-  width:50px;
-  height:48px;
-  padding:0;
-  font-size:22px;
-  background:#292524;
-  color:#fff
-}
-
-.qty input{
-  width:80px;
-  text-align:center;
-  border:0;
-  background:transparent;
-  font-size:22px;
-  font-weight:900
-}
-
-.variation-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin:12px 0
-}
-
-.variation label{
-  display:block;
-  margin-bottom:6px
-}
-
-.variation select{
-  width:100%;
-  background:#0c0a09;
-  color:#fff;
-  border:1px solid #44403c;
-  border-radius:12px;
-  padding:13px;
-  font-size:15px;
-  outline:none
-}
-
-.variation select:focus{
-  border-color:#dc2626
-}
-
-.variant-stock{
-  font-size:11px;
-  color:#a8a29e;
-  margin-top:6px
-}
-
-.variant-stock strong{
-  color:#6ee7b7
-}
-
-.notice{
-  background:#2a1705;
-  border:1px solid #854d0e;
-  color:#fde68a;
-  border-radius:12px;
-  padding:10px;
-  font-size:11px;
-  line-height:1.45
-}
-
-.hidden{
-  display:none!important
-}
-
-.order-list{
-  display:grid;
-  gap:10px
-}
-
-.order-item{
-  background:#0c0a09;
-  border:1px solid #292524;
-  border-radius:14px;
-  padding:12px
-}
-
-.order-head{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  align-items:center
-}
-
-.order-ref{
-  font:11px ui-monospace,SFMono-Regular,Menlo,monospace;
-  color:#a8a29e
-}
-
-.order-total{
-  font-weight:900
-}
-
-.order-customer{
-  font-weight:800;
-  margin:6px 0
-}
-
-.order-items{
-  font-size:11px;
-  color:#d6d3d1;
-  line-height:1.5
-}
-
-.order-item button{
-  width:100%;
-  margin-top:10px
-}
-
-#loginBox{
-  position:fixed;
-  inset:0;
-  background:#000b;
-  z-index:20;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px
-}
-
-.modal{
-  width:min(100%,400px);
-  background:#171412;
-  border:1px solid #44403c;
-  border-radius:18px;
-  padding:18px
-}
-
-.modal h3{
-  margin:0 0 8px
-}
-
-.modal p{
-  font-size:12px;
-  color:#a8a29e
-}
-
-.modal button{
-  width:100%;
-  margin-top:10px
-}
-
-/* DESCONTO */
-
-.discount-box{
-  margin-top:12px;
-  padding:12px;
-  background:#0f0d0c;
-  border:1px solid #292524;
-  border-radius:12px
-}
-
-.discount-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  margin-bottom:8px
-}
-
-.discount-title b{
-  font-size:12px;
-  text-transform:uppercase;
-  letter-spacing:.06em
-}
-
-.discount-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  align-items:end
-}
-
-.discount-field label{
-  font-size:10px;
-  color:#a8a29e;
-  display:block;
-  margin-bottom:5px
-}
-
-.discount-field input{
-  width:100%;
-  padding:11px;
-  border:1px solid #44403c;
-  border-radius:9px;
-  background:#171412;
-  color:#fff;
-  font-size:16px;
-  font-weight:800
-}
-
-.discount-presets{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-  margin-top:8px
-}
-
-.discount-presets button{
-  border:1px solid #44403c;
-  background:#171412;
-  color:#fff;
-  border-radius:8px;
-  padding:7px 9px;
-  font-size:11px;
-  font-weight:800
-}
-
-.discount-result{
-  margin-top:10px;
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  padding-top:9px;
-  border-top:1px dashed #44403c;
-  font-size:12px
-}
-
-.discount-result strong{
-  font-size:17px
-}
-
-.discount-hint{
-  font-size:10px;
-  color:#78716c;
-  margin-top:6px
-}
-
-/* ETIQUETAS */
-
-.label-print-card{
-  overflow:hidden
-}
-
-.label-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:10px
-}
-
-.label-preview{
-  display:flex;
-  justify-content:center;
-  padding:14px 0
-}
-
-.thermal-label-demo{
-  width:min(100%,430px);
-  aspect-ratio:50/30;
-  background:#fff;
-  color:#333;
-  border:2px dashed #3b82f6;
-  border-radius:6px;
-  padding:10px 14px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:space-between;
-  box-shadow:0 8px 20px #0004;
-  text-align:center
-}
-
-.tl-brand{
-  font-size:24px;
-  font-weight:900;
-  letter-spacing:.02em;
-  line-height:1
-}
-
-.tl-name{
-  font-size:15px;
-  font-weight:500;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  max-width:100%
-}
-
-.tl-meta{
-  font-size:11px
-}
-
-.tl-price{
-  font-size:25px;
-  font-weight:900;
-  line-height:1
-}
-
-.tl-bar{
-  font-family:monospace;
-  font-size:14px;
-  letter-spacing:-1.5px;
-  line-height:1;
-  max-width:100%;
-  overflow:hidden
-}
-
-.tl-code{
-  font:9px ui-monospace,SFMono-Regular,Menlo,monospace
-}
-
-.label-note{
-  margin-top:10px;
-  line-height:1.45
-}
-
-#printSheet{
-  display:none
-}
-
-#thermalPrintRoot{
-  display:none
-}
-
-/* IMPRESSÃO TÉRMICA 50 X 30 MM (E M MASSA EM FOLHA A4) */
-
-@media print{
-
-  @page{
-    size:A4 portrait;
-    margin:5mm
-  }
-
-  html,body{
-    width:210mm!important;
-    height:auto!important;
-    margin:0!important;
-    padding:0!important;
-    background:#fff!important
-  }
-
-  body>*{
-    display:none!important
-  }
-
-  #thermalPrintRoot{
-    display:grid!important;
-    grid-template-columns:repeat(3, 1fr)!important;
-    gap:2mm!important;
-    width:200mm!important;
-    margin:0 auto!important;
-    padding:0!important;
-    background:#fff!important;
-    color:#000!important
-  }
-
-  .thermal-print-label{
-    width:63mm;
-    height:30mm;
-    box-sizing:border-box;
-    padding:2mm 2.2mm 1.5mm;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:space-between;
-    overflow:hidden;
-    page-break-inside:avoid;
-    break-inside:avoid;
-    font-family:Arial,Helvetica,sans-serif;
-    color:#333;
-    background:#fff;
-    border:1px dashed #ccc
-  }
-
-  .thermal-sku-top{
-    width:100%;
-    font-size:3.8mm;
-    font-weight:900;
-    line-height:1;
-    text-align:center;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis
-  }
-
-  .thermal-name{
-    width:100%;
-    font-size:3.4mm;
-    font-weight:500;
-    line-height:1.05;
-    text-align:center;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis
-  }
-
-  .thermal-price{
-    font-size:5.8mm;
-    font-weight:900;
-    line-height:1;
-    white-space:nowrap;
-    text-align:center
-  }
-
-  .thermal-barcode-wrap{
-    width:100%;
-    height:7.5mm;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden
-  }
-
-  .thermal-barcode{
-    width:100%;
-    height:7.5mm;
-    display:block
-  }
-
-  .thermal-code{
-    font-size:2.2mm;
-    line-height:1;
-    font-family:monospace;
-    text-align:center
-  }
-}
-
-@media(max-width:650px){
-
-  .pricing-stats{
-    grid-template-columns:1fr 1fr
-  }
-
-}
-
-@media(max-width:400px){
-
-  main{
-    padding:10px
-  }
-
-  .card{
-    padding:12px
-  }
-
-  .discount-grid{
-    grid-template-columns:1fr
-  }
-
-}
-</style>
 </head>
-
 <body>
-
 <header>
-  <div>
-    <div class="brand">STUDIO 70</div>
-    <div class="sub">PDV Móvel</div>
-  </div>
-
+  <div><div class="brand">STUDIO 70</div><div class="sub">PDV Móvel</div></div>
   <div id="connectionStatus" class="dot"></div>
 </header>
 
 <main>
-
-  <!-- LEITOR -->
   <div class="card">
-
     <h2>Leitura do produto</h2>
-
     <div id="reader"></div>
-
     <div class="grid">
       <button class="primary" onclick="startScanner()">📷 ABRIR CÂMERA</button>
       <button class="secondary" onclick="stopScanner()">⏸ PAUSAR</button>
     </div>
-
-    <div id="status" class="status">
-      Aguardando acesso ao PDV...
-    </div>
-
+    <div id="status" class="status">Carregando estoque do fornecedor...</div>
     <div class="lookup">
-      <input
-        id="codeInput"
-        inputmode="text"
-        autocomplete="off"
-        placeholder="Código de barras ou SKU"
-      >
-
-      <button class="secondary" onclick="lookupProduct()">
-        BUSCAR
-      </button>
+      <input id="codeInput" inputmode="text" autocomplete="off" placeholder="Código de barras ou SKU">
+      <button class="secondary" onclick="lookupProduct()">BUSCAR</button>
     </div>
-
   </div>
 
-
-  <!-- PRODUTO -->
   <div id="productCard" class="card product">
-
     <span class="badge">Item identificado</span>
+    <div id="productName" class="title">Produto</div>
+    <div id="productSku" class="sku">SKU: —</div>
+    <div id="productBarcode" class="sku">EAN: —</div>
 
-    <div id="productName" class="title">
-      Produto
+    <div class="stats">
+      <div class="stat"><small>Preço</small><b id="productPrice">R$ 0,00</b></div>
+      <div class="stat"><small>Estoque total</small><b id="productStock">0</b></div>
+      <div class="stat"><small>Variação</small><b id="productSpecs">—</b></div>
     </div>
 
-    <div id="productSku" class="sku">
-      STUDIO 70: — | SKU: —
-    </div>
-
-    <div id="productBarcode" class="sku">
-      EAN: —
-    </div>
-
-
-    <!-- PREÇOS -->
-    <div class="stats pricing-stats">
-
-      <div class="stat sale-stat">
-        <small>Preço de venda ST70</small>
-        <b id="productPrice">R$ 0,00</b>
-      </div>
-
-      <div class="stat">
-        <small>Estoque total</small>
-        <b id="productStock">0</b>
-      </div>
-
-      <div class="stat">
-        <small>Variação</small>
-        <b id="productSpecs">—</b>
-      </div>
-
-    </div>
-
-
-    <!-- VARIAÇÕES -->
     <div class="variation-grid">
-
       <div class="variation">
-
-        <label class="muted" for="sizeSelect">
-          Tamanho
-        </label>
-
-        <select id="sizeSelect">
-          <option value="">Selecione</option>
-        </select>
-
+        <label class="muted" for="sizeSelect">Tamanho</label>
+        <select id="sizeSelect"><option value="">Selecione</option></select>
       </div>
-
       <div class="variation">
-
-        <label class="muted" for="colorSelect">
-          Cor
-        </label>
-
-        <select id="colorSelect">
-          <option value="">Selecione</option>
-        </select>
-
+        <label class="muted" for="colorSelect">Cor</label>
+        <select id="colorSelect"><option value="">Selecione</option></select>
       </div>
-
     </div>
-
     <div id="variantStock" class="variant-stock"></div>
 
-
-    <!-- QUANTIDADE -->
-    <label class="muted">
-      Quantidade da venda
-    </label>
-
+    <label class="muted">Quantidade da venda</label>
     <div class="qty">
-
-      <button onclick="changeQty(-1)">
-        −
-      </button>
-
-      <input
-        id="qty"
-        type="number"
-        min="1"
-        value="1"
-      >
-
-      <button onclick="changeQty(1)">
-        +
-      </button>
-
+      <button onclick="changeQty(-1)">−</button>
+      <input id="qty" type="number" min="1" value="1">
+      <button onclick="changeQty(1)">+</button>
     </div>
 
-
-    <!-- DESCONTO -->
-    <div class="discount-box">
-
-      <div class="discount-title">
-
-        <b>🏷️ Desconto na venda</b>
-
-        <span class="muted">
-          opcional
-        </span>
-
-      </div>
-
-
-      <div class="discount-grid">
-
-        <div class="discount-field">
-
-          <label for="discountPercent">
-            Desconto (%)
-          </label>
-
-          <input
-            id="discountPercent"
-            type="number"
-            min="0"
-            max="100"
-            step="0.01"
-            value="0"
-          >
-
-        </div>
-
-
-        <div class="discount-field">
-
-          <label for="discountFinal">
-            Preço final unitário
-          </label>
-
-          <input
-            id="discountFinal"
-            type="text"
-            value="R$ 0,00"
-            readonly
-          >
-
-        </div>
-
-      </div>
-
-
-      <div class="discount-presets">
-
-        <button type="button" onclick="setDiscount(0)">
-          SEM DESCONTO
-        </button>
-
-        <button type="button" onclick="setDiscount(5)">
-          5%
-        </button>
-
-        <button type="button" onclick="setDiscount(10)">
-          10%
-        </button>
-
-        <button type="button" onclick="setDiscount(15)">
-          15%
-        </button>
-
-        <button type="button" onclick="setDiscount(20)">
-          20%
-        </button>
-
-        <button type="button" onclick="setCashDiscount()">
-          💵 DINHEIRO
-        </button>
-
-      </div>
-
-
-      <div class="discount-result">
-
-        <span>
-          Economia:
-          <strong id="discountAmount">
-            R$ 0,00
-          </strong>
-        </span>
-
-        <span>
-          Total:
-          <strong id="discountTotal">
-            R$ 0,00
-          </strong>
-        </span>
-
-      </div>
-
-
-      <div class="discount-hint">
-        O desconto é aplicado somente nesta venda.
-        O preço padrão do produto permanece inalterado.
-      </div>
-
-    </div>
-
-
-    <!-- VENDA -->
-    <button
-      class="primary"
-      style="width:100%;margin-top:12px"
-      onclick="finishSale()"
-    >
-      ⚡ PROCESSAR VENDA E DAR BAIXA
-    </button>
-
-
-    <!-- ETIQUETAS -->
-    <div class="grid print-actions">
-
-      <button
-        class="secondary"
-        onclick="printCurrentLabel()"
-      >
-        🏷️ IMPRIMIR ETIQUETA
-      </button>
-
-      <button
-        class="secondary"
-        onclick="printAllLabels()"
-      >
-        🖨️ ETIQUETAS EM MASSA (A4)
-      </button>
-
-    </div>
-
+    <button class="primary" style="width:100%" onclick="finishSale()">⚡ PROCESSAR VENDA E DAR BAIXA</button>
   </div>
 
-
-  <!-- ETIQUETAS -->
-  <div class="card">
-
-    <h2>🏷️ Etiquetas de produtos</h2>
-
-    <div class="muted">
-      Imprima a etiqueta do produto identificado
-      ou gere etiquetas de todo o estoque cadastrado em formato otimizado para Folha A4.
-    </div>
-
-    <div class="grid">
-
-      <button
-        class="secondary"
-        onclick="printCurrentLabel()"
-      >
-        🏷️ PRODUTO ATUAL
-      </button>
-
-      <button
-        class="primary"
-        onclick="printAllLabels()"
-      >
-        🖨️ TODOS OS PRODUTOS (A4)
-      </button>
-
-    </div>
-
-    <div id="labelsStatus" class="status"></div>
-
-  </div>
-
-
-  <!-- PEDIDOS -->
-  <div class="card">
-
+  <div class="card" id="storeOrdersCard">
     <div class="order-head">
-
-      <h2>
-        🔔 Pedidos da loja
-      </h2>
-
-      <span id="ordersBadge" class="badge">
-        0 novos
-      </span>
-
+      <h2>🔔 Pedidos da loja</h2>
+      <span id="ordersBadge" class="badge">0 novos</span>
     </div>
-
-    <div id="ordersStatus" class="status">
-      Atualizando pedidos...
-    </div>
-
-    <div
-      id="storeOrderList"
-      class="order-list"
-    ></div>
-
+    <div id="ordersStatus" class="status">Atualizando pedidos...</div>
+    <div id="storeOrderList" class="order-list"></div>
   </div>
 
-
-  <!-- AVISO -->
   <div class="card">
-
     <div class="notice">
-
-      O PDV consulta o estoque no Supabase.
-
-      <br><br>
-
-      <strong>Margem de Lucro:</strong>
-      Os preços de venda são calculados automaticamente aplicando 150% sobre o preço de custo do fornecedor.
-
+      O PDV consulta o estoque do fornecedor no Supabase e a baixa é feita no servidor.
+      O acesso usa a senha administrativa do PDV; ela não fica gravada no HTML.
     </div>
-
   </div>
-
 </main>
 
-
-<!-- LOGIN -->
 <div id="loginBox">
-
   <div class="modal">
-
-    <h3>
-      Acesso ao PDV
-    </h3>
-
-    <p>
-      Digite a mesma senha usada para acessar
-      o painel administrativo.
-    </p>
-
-    <input
-      id="pdvPassword"
-      type="password"
-      inputmode="numeric"
-      autocomplete="current-password"
-      placeholder="Senha do PDV"
-    >
-
-    <button
-      class="primary"
-      onclick="unlockPdv()"
-    >
-      ENTRAR NO PDV
-    </button>
-
-    <div
-      id="loginError"
-      class="status error"
-    ></div>
-
+    <h3>Acesso ao PDV</h3>
+    <p>Digite a mesma senha usada para acessar o painel administrativo.</p>
+    <input id="pdvPassword" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Senha do PDV">
+    <button class="primary" onclick="unlockPdv()">ENTRAR NO PDV</button>
+    <div id="loginError" class="status error"></div>
   </div>
-
 </div>
 
-
-<!-- ÁREA DE IMPRESSÃO -->
-<div id="thermalPrintRoot"></div>
-
-
 <script>
-
-/* =========================================================
-   CONFIGURAÇÃO
-========================================================= */
-
-const API =
-'https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler';
-
+const API = 'https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler';
 let scanner = null;
 let scanning = false;
 let activeProduct = null;
-
-let adminPassword =
-sessionStorage.getItem('studio70_pdv_password') || '';
-
+let adminPassword = sessionStorage.getItem('studio70_pdv_password') || '';
 let pendingStoreOrders = new Map();
 let ordersPollTimer = null;
 let lastOrderSnapshot = new Set();
-
 let audioContext = null;
 
-let catalogProducts = [];
-let catalogByCode = new Map();
+const $ = id => document.getElementById(id);
+const money = n => Number(n || 0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 
-
-/* =========================================================
-   UTILITÁRIOS
-========================================================= */
-
-const $ = id =>
-document.getElementById(id);
-
-
-function money(n){
-
-  return Number(n || 0).toLocaleString(
-    'pt-BR',
-    {
-      style:'currency',
-      currency:'BRL'
-    }
-  );
-
+function setStatus(text, type=''){
+  $('status').textContent=text;
+  $('status'].className='status '+(type==='success'?'success':type==='error'?'error':'');
 }
+function apiError(data, fallback){ return String(data?.error || data?.message || fallback || 'Erro desconhecido.'); }
 
-
-function setStatus(text,type=''){
-
-  const el=$('status');
-
-  if(!el)return;
-
-  el.textContent=text;
-
-  el.className='status '+
-    (
-      type==='success'
-      ?'success'
-      :type==='error'
-      ?'error'
-      :''
-    );
-
-}
-
-
-function apiError(data,fallback){
-
-  return String(
-    data?.error ||
-    data?.message ||
-    fallback ||
-    'Erro desconhecido.'
-  );
-
-}
-
-
-/* =========================================================
-   API SUPABASE
-========================================================= */
-
-async function api(action,body={}){
-
-  const response=await fetch(
-    API,
-    {
-      method:'POST',
-      mode:'cors',
-      headers:{
-        'Content-Type':'application/json',
-        'Accept':'application/json'
-      },
-      body:JSON.stringify({
-        action,
-        ...body
-      })
-    }
-  );
-
-  const text=await response.text();
-
+async function api(action, body={}){
+  const r=await fetch(API,{
+    method:'POST',
+    mode:'cors',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify({action,...body})
+  });
+  const text=await r.text();
   let data={};
-
-  try{
-
-    data=text
-      ?JSON.parse(text)
-      :{};
-
-  }catch{
-
-    throw new Error(
-      `Resposta inválida da API (HTTP ${response.status}).`
-    );
-
-  }
-
-  if(!response.ok){
-
-    throw new Error(
-      apiError(
-        data,
-        `API HTTP ${response.status}`
-      )
-    );
-
-  }
-
+  try{data=text?JSON.parse(text):{};}catch{throw new Error(`Resposta inválida da API (HTTP ${r.status}).`);}
+  if(!r.ok) throw new Error(apiError(data,`API HTTP ${r.status}`));
   return data;
-
 }
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
 
 async function unlockPdv(){
-
-  const value=
-    $('pdvPassword').value.trim();
-
-  if(!value){
-
-    $('loginError').textContent=
-      'Digite a senha.';
-
-    return;
-
-  }
-
-  $('loginError').textContent=
-    'Validando acesso...';
-
+  const value=$('pdvPassword').value.trim();
+  if(!value){$('loginError').textContent='Digite a senha.';return;}
+  $('loginError').textContent='';
   try{
-
-    const data=await api(
-      'carmenatto_sync_history',
-      {
-        admin_password:value,
-        limit:1
-      }
-    );
-
-    if(!data.ok){
-
-      throw new Error(
-        'Senha recusada.'
-      );
-
-    }
-
+    const data=await api('carmenatto_sync_history',{admin_password:value,limit:1});
+    if(!data.ok) throw new Error('Senha recusada.');
     adminPassword=value;
-
-    sessionStorage.setItem(
-      'studio70_pdv_password',
-      value
-    );
-
-    $('loginBox')
-      .classList
-      .add('hidden');
-
-    $('connectionStatus')
-      .classList
-      .remove('err');
-
-    $('connectionStatus')
-      .classList
-      .add('ok');
-
-    $('loginError').textContent='';
-
-    setStatus(
-      'PDV autorizado. Carregando estoque...'
-    );
-
-    await loadInitialProductCount();
-
-    startStoreOrderPolling();
-
+    sessionStorage.setItem('studio70_pdv_password',value);
+    $('loginBox').classList.add('hidden');
+    $('connectionStatus').classList.add('ok');
+    setStatus('PDV autorizado. Carregando estoque...');
+    loadInitialProductCount();
   }catch(e){
-
-    $('loginError').textContent=
-      e.message ||
-      'Senha inválida.';
-
-    $('connectionStatus')
-      .classList
-      .remove('ok');
-
-    $('connectionStatus')
-      .classList
-      .add('err');
-
+    $('loginError').textContent=e.message || 'Senha inválida.';
   }
-
 }
-
-
-/* =========================================================
-   CARREGAMENTO DO CATÁLOGO E CORREÇÃO DE CHAVES DE BUSCA
-========================================================= */
 
 async function loadInitialProductCount(){
-
   try{
-
-    const d=await api(
-      'carmenatto_products',
-      {
-        limit:2000
-      }
-    );
-
-    catalogProducts=
-      Array.isArray(d.products)
-      ?d.products
-      :[];
-
-    catalogByCode=
-      new Map();
-
-    catalogProducts.forEach(p=>{
-
-      [
-        p.id,
-        p.sku,
-        p.barcode,
-        p.studio70_code,
-        p.external_id,
-        p.raw?.sku,
-        p.raw?.barcode,
-        p.raw?.studio70_code
-      ]
-      .filter(
-        v =>
-          v!=null &&
-          String(v).trim()
-      )
-      .forEach(
-        v =>
-          catalogByCode.set(
-            String(v).trim(),
-            p
-          )
-      );
-
-    });
-
-    const count=
-      catalogProducts.length;
-
-    setStatus(
-      `${count} produtos disponíveis para consulta. `+
-      `Margem de lucro de 150% aplicada. `+
-      `Pronto para bipar.`,
-      'success'
-    );
-
+    const d=await api('carmenatto_products',{limit:2000});
+    const count=Array.isArray(d.products)?d.products.length:0;
+    setStatus(`${count} produtos disponíveis para consulta. Pronto para bipar.`,'success');
   }catch(e){
-
-    setStatus(
-      'Falha ao carregar estoque: '+
-      e.message,
-      'error'
-    );
-
+    setStatus('Falha ao carregar estoque: '+e.message,'error');
   }
-
 }
-
-
-/* =========================================================
-   VARIAÇÕES
-========================================================= */
-
-function asVariationLabel(v){
-
-  if(v==null)return '';
-
-  if(
-    typeof v==='string' ||
-    typeof v==='number'
-  ){
-
-    return String(v).trim();
-
-  }
-
-  return String(
-    v.name ??
-    v.label ??
-    v.value ??
-    v.color ??
-    v.size ??
-    ''
-  ).trim();
-
-}
-
-
-function variationList(value){
-
-  if(Array.isArray(value)){
-
-    return value
-      .map(asVariationLabel)
-      .filter(Boolean);
-
-  }
-
-  if(
-    value &&
-    typeof value==='object'
-  ){
-
-    return Object.values(value)
-      .map(asVariationLabel)
-      .filter(Boolean);
-
-  }
-
-  const text=
-    String(value||'').trim();
-
-  if(!text)return [];
-
-  return text
-    .split(/\s*,\s*|\s*\/\s*/)
-    .map(x=>x.trim())
-    .filter(Boolean);
-
-}
-
-
-function getVariantStockList(p){
-
-  const raw=p?.raw||{};
-
-  const list=
-    raw.variant_stock ??
-    p?.variant_stock ??
-    [];
-
-  if(!Array.isArray(list))
-    return [];
-
-  return list
-    .map(v=>({
-
-      size:asVariationLabel(v?.size),
-
-      color:asVariationLabel(v?.color),
-
-      stock:Math.max(
-        0,
-        Math.trunc(
-          Number(v?.stock||0)
-        )
-      )
-
-    }))
-    .filter(
-      v=>v.size||v.color
-    );
-
-}
-
-
-function selectedVariantStock(){
-
-  const p=activeProduct;
-
-  if(!p)
-    return Number.MAX_SAFE_INTEGER;
-
-  const size=
-    $('sizeSelect')
-    .value
-    .trim();
-
-  const color=
-    $('colorSelect')
-    .value
-    .trim();
-
-  const list=
-    getVariantStockList(p);
-
-  if(!list.length)
-    return Number(p.stock||0);
-
-  const exact=
-    list.find(
-      v =>
-        (!v.size || v.size===size) &&
-        (!v.color || v.color===color)
-    );
-
-  if(exact)
-    return exact.stock;
-
-  const candidates=
-    list.filter(
-      v =>
-        (!size || !v.size || v.size===size) &&
-        (!color || !v.color || v.color===color)
-    );
-
-  if(candidates.length){
-
-    return Math.min(
-      ...candidates.map(
-        v=>v.stock
-      )
-    );
-
-  }
-
-  return Number(p.stock||0);
-
-}
-
-
-function populateVariationSelect(
-  id,
-  values
-){
-
-  const el=$(id);
-
-  el.innerHTML=
-    '<option value="">Selecione</option>';
-
-  values.forEach(v=>{
-
-    const o=
-      document.createElement('option');
-
-    o.value=v;
-    o.textContent=v;
-
-    el.appendChild(o);
-
-  });
-
-}
-
-
-function updateVariationState(){
-
-  if(!activeProduct)return;
-
-  const size=
-    $('sizeSelect').value.trim();
-
-  const color=
-    $('colorSelect').value.trim();
-
-  const labels=
-    [size,color].filter(Boolean);
-
-  $('productSpecs').textContent=
-    labels.length
-    ?labels.join(' / ')
-    :'Selecione';
-
-  const available=
-    selectedVariantStock();
-
-  $('variantStock').innerHTML=
-    labels.length
-    ?
-    `Estoque desta variação: <strong>${available} un</strong>`
-    :
-    'Selecione tamanho e/ou cor para conferir a variação.';
-
-  const qty=$('qty');
-
-  let n=
-    Math.max(
-      1,
-      Math.trunc(
-        Number(qty.value||1)
-      )
-    );
-
-  const max=
-    Math.max(
-      0,
-      Number(available||0)
-    );
-
-  if(max>0)
-    n=Math.min(n,max);
-
-  qty.value=n;
-
-  updateDiscountPreview();
-
-}
-
-
-/* =========================================================
-   CÁLCULO DE PREÇO COM 150% DE LUCRO SOBRE O FORNECEDOR
-========================================================= */
-
-function parsePriceValue(value){
-
-  if(
-    value===null ||
-    value===undefined ||
-    value===''
-  )
-    return null;
-
-  if(
-    typeof value==='number' &&
-    Number.isFinite(value)
-  )
-    return value;
-
-  if(
-    typeof value==='object'
-  ){
-
-    for(
-      const k of [
-        'amount',
-        'value',
-        'valor',
-        'price',
-        'preco',
-        'unit_price',
-        'sale_price',
-        'selling_price',
-        'preco_venda',
-        'precoVenda',
-        'valor_venda',
-        'valorVenda'
-      ]
-    ){
-
-      if(
-        Object.prototype.hasOwnProperty
-        .call(value,k)
-      ){
-
-        const n=
-          parsePriceValue(value[k]);
-
-        if(
-          n!==null &&
-          n>=0
-        )
-          return n;
-
-      }
-
-    }
-
-    return null;
-
-  }
-
-  let str=
-    String(value).trim();
-
-  if(!str)return null;
-
-  str=
-    str.replace(
-      /R\$|BRL|\s/gi,
-      ''
-    );
-
-  if(
-    str.includes(',') &&
-    str.includes('.')
-  ){
-
-    str=
-      str
-      .replace(/\./g,'')
-      .replace(',','.');
-
-  }else if(
-    str.includes(',')
-  ){
-
-    str=
-      str.replace(',','.');
-
-  }
-
-  const n=Number(str);
-
-  return Number.isFinite(n)
-    ?n
-    :null;
-
-}
-
-
-function parseCostPrice(p){
-
-  p=p||{};
-
-  const raw=p.raw||{};
-
-  const keys=[
-    'supplier_price',
-    'supplierPrice',
-    'preco_custo',
-    'precoCusto',
-    'custo',
-    'cost_price',
-    'costPrice',
-    'purchase_price',
-    'purchasePrice'
-  ];
-
-  for(
-    const root of [p,raw]
-  ){
-
-    if(
-      !root ||
-      typeof root!=='object'
-    )
-      continue;
-
-    for(
-      const k of keys
-    ){
-
-      if(
-        Object.prototype.hasOwnProperty
-        .call(root,k)
-      ){
-
-        const n=
-          parsePriceValue(
-            root[k]
-          );
-
-        if(
-          n!==null &&
-          n>=0
-        )
-          return n;
-
-      }
-
-    }
-
-  }
-
-  return null;
-
-}
-
-
-function parseProductPrice(p){
-
-  p=p||{};
-
-  const keys=[
-    'price',
-    'preco',
-    'preco_venda',
-    'precoVenda',
-    'preco_de_venda',
-    'precoDeVenda',
-    'valor',
-    'valor_venda',
-    'valorVenda',
-    'sale_price',
-    'salePrice',
-    'selling_price',
-    'sellingPrice',
-    'unit_price',
-    'unitPrice',
-    'final_price',
-    'finalPrice'
-  ];
-
-  for(
-    const root of [
-      p,
-      p.raw
-    ]
-  ){
-
-    if(!root)continue;
-
-    for(
-      const key of keys
-    ){
-
-      if(
-        Object.prototype.hasOwnProperty
-        .call(root,key)
-      ){
-
-        const n=
-          parsePriceValue(
-            root[key]
-          );
-
-        if(
-          n!==null &&
-          n>0
-        )
-          return n;
-
-      }
-
-    }
-
-  }
-
-  return 0;
-
-}
-
-
-function parseSalePrice(p){
-
-  p=p||{};
-
-  // Se houver preço de custo do fornecedor, aplica 150% de lucro automaticamente (Custo * 2.5)
-  const cost = parseCostPrice(p);
-  if(cost !== null && cost > 0){
-    return cost * 2.5;
-  }
-
-  const raw=p.raw||{};
-
-  const keys=[
-    'sale_price',
-    'salePrice',
-    'preco_venda',
-    'precoVenda',
-    'preco_de_venda',
-    'precoDeVenda',
-    'valor_venda',
-    'valorVenda',
-    'selling_price',
-    'sellingPrice',
-    'final_price',
-    'finalPrice',
-    'preco',
-    'price',
-    'valor'
-  ];
-
-  for(
-    const root of [p,raw]
-  ){
-
-    if(
-      !root ||
-      typeof root!=='object'
-    )
-      continue;
-
-    for(
-      const k of keys
-    ){
-
-      if(
-        Object.prototype.hasOwnProperty
-        .call(root,k)
-      ){
-
-        const n=
-          parsePriceValue(
-            root[k]
-          );
-
-        if(
-          n!==null &&
-          n>0
-        )
-          return n;
-
-      }
-
-    }
-
-  }
-
-  return parseProductPrice(p);
-
-}
-
-
-/* =========================================================
-   BUSCA DO PRODUTO (RESOLVE PROBLEMA DE NOME DO SITE)
-========================================================= */
 
 async function lookupProduct(code){
-
-  code=
-    String(
-      code ??
-      $('codeInput').value
-    ).trim();
-
-  if(!code){
-
-    setStatus(
-      'Digite ou leia um código.',
-      'error'
-    );
-
-    return;
-
-  }
-
-  setStatus(
-    'Consultando produto...'
-  );
-
+  code=String(code ?? $('codeInput').value).trim();
+  if(!code){setStatus('Digite ou leia um código.','error');return;}
+  setStatus('Consultando produto...');
   try{
+    const d=await api('pdv_product',{code});
 
-    const d=
-      await api(
-        'pdv_product',
-        {
-          code
-        }
-      );
+    // Correção: Verifica se o produto veio diretamente em `d.product` ou dentro de uma lista/resposta alternativa
+    let prod = d.product || d.item || (Array.isArray(d.products) ? d.products[0] : null);
 
-    if(
-      d &&
-      d.found &&
-      d.product
-    ){
-
-      const backendProduct=
-        d.product;
-
-      const keyCandidates=[
-        backendProduct.id,
-        backendProduct.sku,
-        backendProduct.barcode,
-        backendProduct.studio70_code,
-        backendProduct.external_id,
-        backendProduct.raw?.sku,
-        backendProduct.raw?.barcode,
-        code
-      ]
-      .filter(
-        v =>
-          v!=null &&
-          String(v).trim()
-      )
-      .map(
-        v=>String(v).trim()
-      );
-
-      const siteProduct=
-        keyCandidates
-          .map(
-            k=>catalogByCode.get(k)
-          )
-          .find(Boolean) ||
-        null;
-
-      // Mescla priorizando estritamente as propriedades do catálogo do site para que o nome e dados venham perfeitamente corretos
-      activeProduct={
-        ...backendProduct,
-        ...(siteProduct||{})
-      };
-
+    if ((d.found || d.ok || prod) && prod) {
+      activeProduct = prod;
       renderProduct();
-
-      setStatus(
-        'Produto identificado com sucesso. Confira a quantidade.',
-        'success'
-      );
-
+      setStatus('Produto identificado no Supabase. Confira a quantidade.','success');
       return;
-
     }
 
-    const msg=
-      String(
-        d?.error ||
-        d?.message ||
-        ''
-      ).trim();
+    // Fallback adicional: se a API retornar uma lista geral de produtos, tenta filtrar localmente pelo código/SKU/EAN
+    const allProd = await api('carmenatto_products',{limit:2000});
+    if(Array.isArray(allProd.products)) {
+      const foundLocal = allProd.products.find(p => 
+        String(p.barcode).trim() === code || 
+        String(p.sku).trim().toLowerCase() === code.toLowerCase() || 
+        String(p.studio70_code).trim().toLowerCase() === code.toLowerCase() ||
+        String(p.id).trim() === code
+      );
+      if(foundLocal) {
+        activeProduct = foundLocal;
+        renderProduct();
+        setStatus('Produto identificado no catálogo local. Confira a quantidade.','success');
+        return;
+      }
+    }
 
-    throw new Error(
-      msg ||
-      'Produto não encontrado para este código.'
-    );
-
+    throw new Error('Produto não encontrado para este código.');
   }catch(e){
-
     activeProduct=null;
-
-    $('productCard')
-      .classList
-      .remove('show');
-
-    setStatus(
-      e.message ||
-      'Erro ao consultar produto.',
-      'error'
-    );
-
+    $('productCard').classList.remove('show');
+    setStatus(e.message || 'Erro ao consultar produto.','error');
   }
-
 }
 
-
-/* =========================================================
-   RENDER DO PRODUTO
-========================================================= */
-
+function asVariationLabel(v){
+  if(v==null)return '';
+  if(typeof v==='string'||typeof v==='number')return String(v).trim();
+  return String(v.name ?? v.label ?? v.value ?? v.color ?? v.size ?? '').trim();
+}
+function variationList(value){
+  if(Array.isArray(value))return value.map(asVariationLabel).filter(Boolean);
+  if(value && typeof value==='object')return Object.values(value).map(asVariationLabel).filter(Boolean);
+  const text=String(value||'').trim();
+  return text ? text.split(/\s*,\s*|\s*\/\s*/).map(x=>x.trim()).filter(Boolean) : [];
+}
+function getVariantStockList(p){
+  const raw=p?.raw||{};
+  const list=raw.variant_stock ?? p?.variant_stock ?? [];
+  return Array.isArray(list) ? list.map(v=>({size:asVariationLabel(v?.size),color:asVariationLabel(v?.color),stock:Math.max(0,Math.trunc(Number(v?.stock||0)))})).filter(v=>v.size||v.color) : [];
+}
+function selectedVariantStock(){
+  const p=activeProduct;if(!p)return Number.MAX_SAFE_INTEGER;
+  const size=$('sizeSelect').value.trim(), color=$('colorSelect').value.trim();
+  const list=getVariantStockList(p);
+  if(!list.length)return Number(p.stock||0);
+  const exact=list.find(v=>(!v.size||v.size===size)&&(!v.color||v.color===color));
+  if(exact)return exact.stock;
+  const candidates=list.filter(v=>(!size||!v.size||v.size===size)&&(!color||!v.color||v.color===color));
+  if(candidates.length)return Math.min(...candidates.map(v=>v.stock));
+  return Number(p.stock||0);
+}
+function updateVariationState(){
+  if(!activeProduct)return;
+  const size=$('sizeSelect').value.trim(), color=$('colorSelect').value.trim();
+  const labels=[size,color].filter(Boolean);
+  $('productSpecs').textContent=labels.length?labels.join(' / '):'Selecione';
+  const available=selectedVariantStock();
+  $('variantStock').innerHTML=labels.length ? `Estoque desta variação: <strong>${available} un</strong>` : 'Selecione tamanho e/ou cor para conferir a variação.';
+  const qty=$('qty');
+  let n=Math.max(1,Math.trunc(Number(qty.value||1)));
+  const max=Math.max(0,Number(available||0));
+  if(max>0)n=Math.min(n,max);
+  qty.value=n;
+}
+function populateVariationSelect(id, values){
+  const el=$(id);el.innerHTML='<option value="">Selecione</option>';
+  values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o);});
+}
 function renderProduct(){
-
   const p=activeProduct;
-
-  $('productName').textContent=
-    p.name ||
-    'Produto';
-
-  $('productSku').textContent=
-    'STUDIO 70: '+
-    (p.studio70_code||p.sku||'—')+
-    ' | SKU: '+
-    (p.sku||'—');
-
-  $('productBarcode').textContent=
-    'EAN: '+
-    (
-      p.barcode
-      ?p.barcode
-      :'não cadastrado'
-    );
-
-  const sale=
-    parseSalePrice(p);
-
-  $('productPrice').textContent=
-    sale>0
-    ?money(sale)
-    :'Preço não cadastrado';
-
-  $('productStock').textContent=
-    String(
-      Number(p.stock||0)
-    )+
-    ' un';
-
-  const sizes=
-    variationList(p.sizes);
-
-  const colors=
-    variationList(p.colors);
-
-  populateVariationSelect(
-    'sizeSelect',
-    sizes
-  );
-
-  populateVariationSelect(
-    'colorSelect',
-    colors
-  );
-
-  $('variantStock').textContent=
-    (
-      sizes.length ||
-      colors.length
-    )
-    ?
-    'Selecione tamanho e/ou cor.'
-    :
-    '';
-
-  $('productSpecs').textContent=
-    (
-      sizes.length ||
-      colors.length
-    )
-    ?
-    'Selecione'
-    :
-    'Único';
-
+  $('productName').textContent=p.name || 'Produto';
+  $('productSku').textContent='STUDIO 70: '+(p.studio70_code || '—')+'  |  SKU: '+(p.sku || '—');
+  $('productBarcode').textContent='EAN: '+(p.barcode ? p.barcode : 'não cadastrado (produto encontrado)');
+  $('productPrice').textContent=Number(p.price||0)>0 ? money(p.price) : 'Preço não cadastrado';
+  $('productStock').textContent=String(Number(p.stock||0))+' un';
+  const sizes=variationList(p.sizes);
+  const colors=variationList(p.colors);
+  populateVariationSelect('sizeSelect',sizes);
+  populateVariationSelect('colorSelect',colors);
+  $('variantStock').textContent=(sizes.length||colors.length)?'Selecione tamanho e/ou cor.':'';
+  $('productSpecs').textContent=(sizes.length||colors.length)?'Selecione':'Único';
   $('qty').value=1;
-
-  $('productCard')
-    .classList
-    .add('show');
-
+  $('productCard').classList.add('show');
   updateVariationState();
-
-  updateDiscountPreview();
-
 }
-
-
-/* =========================================================
-   QUANTIDADE
-========================================================= */
 
 function changeQty(delta){
-
-  if(!activeProduct)return;
-
-  const input=
-    $('qty');
-
-  let n=
-    Math.trunc(
-      Number(
-        input.value||1
-      )
-    )+
-    delta;
-
-  n=
-    Math.max(
-      1,
-      n
-    );
-
-  const max=
-    selectedVariantStock();
-
-  if(max>0){
-
-    n=
-      Math.min(
-        n,
-        max
-      );
-
+  const input=$('qty');
+  let n=Math.trunc(Number(input.value||1))+delta;
+  n=Math.max(1,n);
+  if(activeProduct){
+    const max=selectedVariantStock();
+    n=Math.min(n,Math.max(1,Number(max||activeProduct.stock||0)));
   }
-
   input.value=n;
-
-  updateDiscountPreview();
-
 }
-
-
-/* =========================================================
-   DESCONTO E DESCONTO PARA DINHEIRO
-========================================================= */
-
-function getDiscountPercent(){
-
-  const el=
-    $('discountPercent');
-
-  let v=
-    Number(
-      el?.value||0
-    );
-
-  if(
-    !Number.isFinite(v)
-  )
-    v=0;
-
-  return Math.min(
-    100,
-    Math.max(
-      0,
-      v
-    )
-  );
-
-}
-
-
-function getDiscountData(){
-
-  const qty=
-    Math.max(
-      1,
-      Math.trunc(
-        Number(
-          $('qty')?.value||1
-        )
-      )
-    );
-
-  const unit=
-    activeProduct
-    ?parseSalePrice(activeProduct)
-    :0;
-
-  const percent=
-    getDiscountPercent();
-
-  const gross=
-    unit*qty;
-
-  const amount=
-    gross*
-    (
-      percent/100
-    );
-
-  const total=
-    Math.max(
-      0,
-      gross-amount
-    );
-
-  const discountedUnit=
-    qty>0
-    ?total/qty
-    :0;
-
-  return {
-    qty,
-    unit,
-    percent,
-    gross,
-    amount,
-    total,
-    discountedUnit
-  };
-
-}
-
-
-function updateDiscountPreview(){
-
-  const d=
-    getDiscountData();
-
-  if($('discountFinal'))
-    $('discountFinal').value=
-      money(
-        d.discountedUnit
-      );
-
-  if($('discountAmount'))
-    $('discountAmount').textContent=
-      money(
-        d.amount
-      );
-
-  if($('discountTotal'))
-    $('discountTotal').textContent=
-      money(
-        d.total
-      );
-
-}
-
-
-function setDiscount(percent){
-
-  if($('discountPercent'))
-    $('discountPercent').value=
-      String(percent);
-
-  updateDiscountPreview();
-
-}
-
-// Atalho configurável ou padrão para pagamento em dinheiro (ex: 10% ou ajuste conforme necessário)
-function setCashDiscount(){
-  // Permite configurar ou aplicar um valor padrão para dinheiro, ex: 10%
-  const cashPct = prompt("Informe a % de desconto para pagamento em dinheiro:", "10");
-  if(cashPct !== null){
-    const val = Number(cashPct);
-    if(!isNaN(val)){
-      setDiscount(val);
-    }
-  }
-}
-
-
-function resetDiscount(){
-
-  if($('discountPercent'))
-    $('discountPercent').value='0';
-
-  updateDiscountPreview();
-
-}
-
-
-/* =========================================================
-   VENDA
-========================================================= */
 
 async function finishSale(){
-
-  if(!activeProduct){
-
-    setStatus(
-      'Nenhum produto selecionado.',
-      'error'
-    );
-
-    return;
-
-  }
-
-  const qty=
-    Math.max(
-      1,
-      Math.trunc(
-        Number(
-          $('qty').value||1
-        )
-      )
-    );
-
-  const stock=
-    Number(
-      activeProduct.stock||0
-    );
-
-  const size=
-    $('sizeSelect')
-    .value
-    .trim();
-
-  const color=
-    $('colorSelect')
-    .value
-    .trim();
-
-  const hasSizes=
-    variationList(
-      activeProduct.sizes
-    ).length>0;
-
-  const hasColors=
-    variationList(
-      activeProduct.colors
-    ).length>0;
-
-  if(
-    hasSizes &&
-    !size
-  ){
-
-    setStatus(
-      'Selecione o tamanho antes de finalizar.',
-      'error'
-    );
-
-    return;
-
-  }
-
-  if(
-    hasColors &&
-    !color
-  ){
-
-    setStatus(
-      'Selecione a cor antes de finalizar.',
-      'error'
-    );
-
-    return;
-
-  }
-
-  const variantStock=
-    selectedVariantStock();
-
-  if(qty>stock){
-
-    setStatus(
-      `Estoque total insuficiente. Disponível: ${stock} unidade(s).`,
-      'error'
-    );
-
-    return;
-
-  }
-
-  if(qty>variantStock){
-
-    setStatus(
-      `Estoque da variação insuficiente. Disponível: ${variantStock} unidade(s).`,
-      'error'
-    );
-
-    return;
-
-  }
-
+  if(!activeProduct)return setStatus('Nenhum produto selecionado.','error');
+  const qty=Math.max(1,Math.trunc(Number($('qty').value||1)));
+  const stock=Number(activeProduct.stock||0);
+  const size=$('sizeSelect').value.trim();
+  const color=$('colorSelect').value.trim();
+  const hasSizes=variationList(activeProduct.sizes).length>0;
+  const hasColors=variationList(activeProduct.colors).length>0;
+  if(hasSizes && !size)return setStatus('Selecione o tamanho antes de finalizar.','error');
+  if(hasColors && !color)return setStatus('Selecione a cor antes de finalizar.','error');
+  const variantStock=selectedVariantStock();
+  if(qty>stock)return setStatus(`Estoque total insuficiente. Disponível: ${stock} unidade(s).`,'error');
+  if(qty>variantStock)return setStatus(`Estoque da variação insuficiente. Disponível: ${variantStock} unidade(s).`,'error');
   if(!adminPassword){
-
-    $('loginBox')
-      .classList
-      .remove('hidden');
-
+    $('loginBox').classList.remove('hidden');
     return;
-
   }
 
-  const discount=
-    getDiscountData();
-
-  setStatus(
-    'Processando venda e baixando estoque...'
-  );
-
+  setStatus('Processando venda e baixando estoque...');
   try{
+    const saleId='PDV-'+Date.now();
+    const d=await api('pdv_sale',{
+      admin_password:adminPassword,
+      sale_id:saleId,
+      payment:'store',
+      items:[{
+        id:activeProduct.id,
+        studio70_code:activeProduct.studio70_code,
+        external_id:activeProduct.external_id,
+        sku:activeProduct.sku,
+        barcode:activeProduct.barcode,
+        name:activeProduct.name,
+        size,
+        color,
+        variation:{size,color},
+        qty,
+        unit:Number(activeProduct.price||0)
+      }]
+    });
 
-    const saleId=
-      'PDV-'+Date.now();
-
-    const d=
-      await api(
-        'pdv_sale',
-        {
-          admin_password:
-            adminPassword,
-
-          sale_id:
-            saleId,
-
-          payment:
-            'store',
-
-          items:[
-            {
-              id:
-                activeProduct.id,
-
-              studio70_code:
-                activeProduct.studio70_code,
-
-              external_id:
-                activeProduct.external_id,
-
-              sku:
-                activeProduct.sku,
-
-              barcode:
-                activeProduct.barcode,
-
-              name:
-                activeProduct.name,
-
-              size,
-
-              color,
-
-              variation:{
-                size,
-                color
-              },
-
-              qty,
-
-              unit:
-                discount.discountedUnit,
-
-              original_unit:
-                discount.unit,
-
-              discount_percent:
-                discount.percent,
-
-              discount_amount:
-                discount.amount,
-
-              total_after_discount:
-                discount.total
-            }
-          ]
-
-        }
-      );
-
-    if(!d.ok){
-
-      throw new Error(
-        apiError(
-          d,
-          'Venda não concluída.'
-        )
-      );
-
-    }
-
-    const after=
-      Number(
-        d.items?.[0]?.stock_after ??
-        (
-          stock-qty
-        )
-      );
-
-    activeProduct.stock=
-      after;
-
+    if(!d.ok)throw new Error(apiError(d,'Venda não concluída.'));
+    const after=Number(d.items?.[0]?.stock_after ?? (stock-qty));
+    activeProduct.stock=after;
     renderProduct();
-
     $('codeInput').value='';
-
-    setStatus(
-      `✓ Venda ${saleId} concluída. `+
-      `Estoque atual: ${after} un.`,
-      'success'
-    );
-
-    resetDiscount();
-
+    setStatus(`✓ Venda ${saleId} concluída. Estoque atual: ${after} un.`,'success');
   }catch(e){
-
-    setStatus(
-      'Venda não concluída: '+
-      e.message,
-      'error'
-    );
-
+    setStatus('Venda não concluída: '+e.message,'error');
   }
-
 }
-
-
-/* =========================================================
-   PEDIDOS
-========================================================= */
 
 function orderCustomerName(order){
-
-  const c=
-    order?.customer||{};
-
-  return String(
-    c.name ||
-    c.full_name ||
-    c.nome ||
-    'Cliente'
-  ).trim() ||
-  'Cliente';
-
+  const c=order?.customer||{};
+  return String(c.name||c.full_name||c.nome||'Cliente').trim() || 'Cliente';
 }
-
-
 function orderItemsText(order){
-
-  const items=
-    Array.isArray(order?.items)
-    ?order.items
-    :[];
-
-  if(!items.length)
-    return 'Itens não informados.';
-
-  return items
-    .map(i=>{
-
-      const v=
-        i?.variation||{};
-
-      const spec=
-        [
-          i?.size||v.size,
-          i?.color||v.color
-        ]
-        .filter(Boolean)
-        .join(' / ');
-
-      return (
-        `${Number(i?.qty||0)}x `+
-        `${i?.name||'Produto'}`+
-        (
-          spec
-          ?' — '+spec
-          :''
-        )
-      );
-
-    })
-    .join(' · ');
-
+  const items=Array.isArray(order?.items)?order.items:[];
+  if(!items.length)return 'Itens não informados.';
+  return items.map(i=>{
+    const v=i?.variation||{};
+    const spec=[i?.size||v.size,i?.color||v.color].filter(Boolean).join(' / ');
+    return `${Number(i?.qty||0)}x ${i?.name||'Produto'}${spec?' — '+spec:''}`;
+  }).join(' · ');
 }
-
-
 function beepNewOrder(){
-
   try{
-
-    audioContext=
-      audioContext ||
-      new (
-        window.AudioContext ||
-        window.webkitAudioContext
-      )();
-
-    const osc=
-      audioContext.createOscillator();
-
-    const gain=
-      audioContext.createGain();
-
-    osc.frequency.value=880;
-
-    gain.gain.value=.08;
-
-    osc.connect(gain);
-
-    gain.connect(
-      audioContext.destination
-    );
-
-    osc.start();
-
-    setTimeout(
-      ()=>{
-        osc.frequency.value=1175;
-      },
-      120
-    );
-
-    setTimeout(
-      ()=>{
-        osc.stop();
-        gain.disconnect();
-      },
-      240
-    );
-
-  }catch(_){}
-
+    audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();
+    const osc=audioContext.createOscillator(), gain=audioContext.createGain();
+    osc.frequency.value=880; gain.gain.value=.08;
+    osc.connect(gain);gain.connect(audioContext.destination);osc.start();
+    setTimeout(()=>{osc.frequency.value=1175},120);
+    setTimeout(()=>{osc.stop();gain.disconnect()},240);
+  }catch(_){ }
 }
-
-
 async function notifyNewOrder(){
-
   beepNewOrder();
-
-  if(
-    'Notification' in window &&
-    Notification.permission==='granted'
-  ){
-
-    try{
-
-      new Notification(
-        'STUDIO 70 — Novo pedido',
-        {
-          body:
-          'Há um pedido aguardando retirada no PDV da loja.'
-        }
-      );
-
-    }catch(_){}
-
+  if('Notification' in window && Notification.permission==='granted'){
+    try{ new Notification('STUDIO 70 — Novo pedido',{body:'Há um pedido aguardando retirada no PDV da loja.'}); }catch(_){ }
   }
-
 }
-
-
+async function enableOrderNotifications(){
+  if('Notification' in window && Notification.permission==='default'){
+    try{ await Notification.requestPermission(); }catch(_){ }
+  }
+}
 function renderStoreOrders(){
-
-  const list=
-    $('storeOrderList');
-
-  const orders=
-    Array.from(
-      pendingStoreOrders.values()
-    );
-
-  $('ordersBadge').textContent=
-    `${orders.length} ${
-      orders.length===1
-      ?'novo'
-      :'novos'
-    }`;
-
-  if(!orders.length){
-
-    list.innerHTML=
-      '<div class="muted">'+
-      'Nenhum pedido aguardando retirada.'+
-      '</div>';
-
-    return;
-
-  }
-
-  list.innerHTML=
-    orders
-    .map(o=>{
-
-      const ref=
-        String(
-          o.external_reference||'—'
-        );
-
-      const total=
-        money(o.total);
-
-      const method=
-        String(
-          o.payment_method ||
-          o.payment_provider ||
-          'pagamento'
-        )
-        .replaceAll(
-          '_',
-          ' '
-        );
-
-      return `
-      <div class="order-item">
-
-        <div class="order-head">
-
-          <span class="order-ref">
-            ${escapeHtml(ref)}
-          </span>
-
-          <span class="order-total">
-            ${total}
-          </span>
-
-        </div>
-
-        <div class="order-customer">
-          ${escapeHtml(
-            orderCustomerName(o)
-          )}
-        </div>
-
-        <div class="order-items">
-          ${escapeHtml(
-            orderItemsText(o)
-          )}
-        </div>
-
-        <div
-          class="muted"
-          style="margin-top:6px"
-        >
-          Pagamento:
-          ${escapeHtml(method)}
-        </div>
-
-        <button
-          class="primary"
-          onclick="clientAlreadyTook(${JSON.stringify(ref)})"
-        >
-          ✅ CLIENTE JÁ LEVOU
-        </button>
-
-      </div>
-      `;
-
-    })
-    .join('');
-
+  const list=$('storeOrderList');
+  const orders=Array.from(pendingStoreOrders.values());
+  $('ordersBadge').textContent=`${orders.length} ${orders.length===1?'novo':'novos'}`;
+  if(!orders.length){ list.innerHTML='<div class="muted">Nenhum pedido aguardando retirada.</div>'; return; }
+  list.innerHTML=orders.map(o=>{
+    const ref=String(o.external_reference||'—');
+    const total=money(o.total);
+    const method=String(o.payment_method||o.payment_provider||'pagamento').replaceAll('_',' ');
+    return `<div class="order-item" data-order-ref="${ref.replaceAll('"','&quot;')}">
+      <div class="order-head"><span class="order-ref">${ref}</span><span class="order-total">${total}</span></div>
+      <div class="order-customer">${orderCustomerName(o)}</div>
+      <div class="order-items">${orderItemsText(o)}</div>
+      <div class="muted" style="margin-top:6px">Pagamento: ${method}</div>
+      <button class="primary" onclick="clientAlreadyTook('${ref.replaceAll("'","\\'")}')">✅ CLIENTE JÁ LEVOU</button>
+    </div>`;
+  }).join('');
 }
-
-
 async function loadStoreOrders(initial=false){
-
-  if(!adminPassword){
-
-    $('ordersStatus').textContent=
-      'Entre no PDV para acompanhar os pedidos.';
-
-    return;
-
-  }
-
+  if(!adminPassword){$('ordersStatus').textContent='Entre no PDV para acompanhar os pedidos.';return;}
   try{
-
-    const d=
-      await api(
-        'store_pending_orders',
-        {
-          admin_password:
-            adminPassword,
-
-          limit:50
-        }
-      );
-
-    if(!d.ok){
-
-      throw new Error(
-        apiError(
-          d,
-          'Não foi possível carregar os pedidos.'
-        )
-      );
-
-    }
-
-    const incoming=
-      Array.isArray(d.orders)
-      ?d.orders
-      :[];
-
-    const next=
-      new Map(
-        incoming.map(
-          o=>[
-            String(
-              o.external_reference
-            ),
-            o
-          ]
-        )
-      );
-
-    const newRefs=
-      incoming
-      .map(
-        o =>
-          String(
-            o.external_reference
-          )
-      )
-      .filter(
-        r =>
-          !lastOrderSnapshot
-          .has(r)
-      );
-
-    pendingStoreOrders=
-      next;
-
-    lastOrderSnapshot=
-      new Set(
-        incoming.map(
-          o =>
-            String(
-              o.external_reference
-            )
-        )
-      );
-
+    const d=await api('store_pending_orders',{admin_password:adminPassword,limit:50});
+    if(!d.ok)throw new Error(apiError(d,'Não foi possível carregar os pedidos.'));
+    const incoming=Array.isArray(d.orders)?d.orders:[];
+    const next=new Map(incoming.map(o=>[String(o.external_reference),o]));
+    const newRefs=incoming.map(o=>String(o.external_reference)).filter(r=>!lastOrderSnapshot.has(r));
+    pendingStoreOrders=next;
+    lastOrderSnapshot=new Set(incoming.map(o=>String(o.external_reference)));
     renderStoreOrders();
-
-    $('ordersStatus').textContent=
-      incoming.length
-      ?
-      `Atualizado agora · ${incoming.length} pedido(s) aguardando retirada.`
-      :
-      'Nenhum pedido aguardando retirada.';
-
-    if(
-      !initial &&
-      newRefs.length
-    ){
-
-      await notifyNewOrder();
-
-    }
-
-  }catch(e){
-
-    $('ordersStatus').textContent=
-      'Pedidos: '+
-      e.message;
-
-  }
-
+    $('ordersStatus').textContent=incoming.length?`Atualizado agora · ${incoming.length} pedido(s) aguardando retirada.`:'Nenhum pedido aguardando retirada.';
+    if(!initial && newRefs.length) await notifyNewOrder();
+  }catch(e){$('ordersStatus').textContent='Pedidos: '+e.message;}
 }
-
-
 async function clientAlreadyTook(reference){
-
-  if(!adminPassword){
-
-    $('loginBox')
-      .classList
-      .remove('hidden');
-
-    return;
-
-  }
-
-  if(
-    !confirm(
-      `Confirmar que o cliente já levou o pedido ${reference}?`
-    )
-  )
-    return;
-
+  if(!adminPassword){$('loginBox').classList.remove('hidden');return;}
+  const order=pendingStoreOrders.get(String(reference));
+  if(!confirm(`Confirmar que o cliente já levou o pedido ${reference}?`))return;
   try{
-
-    $('ordersStatus').textContent=
-      'Registrando retirada...';
-
-    const d=
-      await api(
-        'store_order_picked_up',
-        {
-          admin_password:
-            adminPassword,
-
-          external_reference:
-            reference,
-
-          picked_up_by:
-            'PDV da loja'
-        }
-      );
-
-    if(!d.ok){
-
-      throw new Error(
-        apiError(
-          d,
-          'Não foi possível confirmar a retirada.'
-        )
-      );
-
-    }
-
-    pendingStoreOrders.delete(
-      String(reference)
-    );
-
+    $('ordersStatus').textContent='Registrando retirada...';
+    const d=await api('store_order_picked_up',{admin_password:adminPassword,external_reference:reference,picked_up_by:'PDV da loja'});
+    if(!d.ok)throw new Error(apiError(d,'Não foi possível confirmar a retirada.'));
+    pendingStoreOrders.delete(String(reference));
     renderStoreOrders();
-
-    $('ordersStatus').textContent=
-      '✓ Cliente já levou. Pedido retirado do painel.';
-
-  }catch(e){
-
-    $('ordersStatus').textContent=
-      'Retirada não registrada: '+
-      e.message;
-
-  }
-
+    $('ordersStatus').textContent='✓ Cliente já levou. Pedido retirado do painel.';
+  }catch(e){$('ordersStatus').textContent='Retirada não registrada: '+e.message;}
 }
-
-
 function startStoreOrderPolling(){
-
-  clearInterval(
-    ordersPollTimer
-  );
-
+  clearInterval(ordersPollTimer);
   loadStoreOrders(true);
-
-  ordersPollTimer=
-    setInterval(
-      ()=>{
-        loadStoreOrders(false);
-      },
-      5000
-    );
-
+  ordersPollTimer=setInterval(()=>loadStoreOrders(false),5000);
 }
-
-
-/* =========================================================
-   SCANNER
-========================================================= */
 
 async function startScanner(){
-
   if(scanning)return;
-
-  if(
-    typeof Html5Qrcode===
-    'undefined'
-  ){
-
-    setStatus(
-      'Biblioteca da câmera não carregou. Verifique a internet.',
-      'error'
-    );
-
-    return;
-
+  if(typeof Html5Qrcode==='undefined'){
+    setStatus('Biblioteca da câmera não carregou. Verifique a internet.','error');return;
   }
-
   try{
-
-    scanner=
-      scanner ||
-      new Html5Qrcode(
-        'reader'
-      );
-
+    scanner=scanner || new Html5Qrcode('reader');
     scanning=true;
-
-    setStatus(
-      'Aponte a câmera para o código de barras...'
-    );
-
+    setStatus('Aponte a câmera para o código de barras...');
     await scanner.start(
-
-      {
-        facingMode:'environment'
-      },
-
-      {
-        fps:12,
-        qrbox:{
-          width:280,
-          height:150
-        }
-      },
-
+      {facingMode:'environment'},
+      {fps:12,qrbox:{width:280,height:150}},
       code=>{
-
         if(!scanning)return;
-
         scanning=false;
-
-        scanner
-          .stop()
-          .catch(()=>{});
-
-        $('codeInput').value=
-          code;
-
+        scanner.stop().catch(()=>{});
+        $('codeInput').value=code;
         lookupProduct(code);
-
       },
-
       ()=>{}
-
     );
-
   }catch(e){
-
     scanning=false;
-
-    setStatus(
-      'Não foi possível abrir a câmera. '+
-      'Autorize a câmera no navegador e tente novamente.',
-      'error'
-    );
-
+    setStatus('Não foi possível abrir a câmera. Autorize a câmera no navegador e tente novamente.','error');
   }
-
 }
-
 
 async function stopScanner(){
-
-  if(
-    !scanner ||
-    !scanning
-  )
-    return;
-
+  if(!scanner || !scanning)return;
   scanning=false;
-
-  try{
-
-    await scanner.stop();
-
-  }catch{}
-
-  setStatus(
-    'Scanner pausado.'
-  );
-
+  try{await scanner.stop();}catch{}
+  setStatus('Scanner pausado.');
 }
 
+$('sizeSelect').addEventListener('change',updateVariationState);
+$('colorSelect').addEventListener('change',updateVariationState);
+$('qty').addEventListener('input',()=>{ if(activeProduct){ const max=selectedVariantStock(); let n=Math.max(1,Math.trunc(Number($('qty').value||1))); if(max>0)n=Math.min(n,max); $('qty').value=n; }});
 
-/* =========================================================
-   ETIQUETAS
-========================================================= */
+$('codeInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();lookupProduct();}
+});
 
-function escapeHtml(v){
-
-  return String(
-    v??''
-  ).replace(
-    /[&<>"']/g,
-    c=>({
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;',
-      "'":'&#39;'
-    }[c])
-  );
-
+if(adminPassword){
+  $('loginBox').classList.add('hidden');
+  $('connectionStatus').classList.add('ok');
+  loadInitialProductCount();
 }
-
-
-function labelVariation(p){
-
-  const size=
-    asVariationLabel(
-      p?.size ||
-      p?.variation?.size ||
-      ''
-    );
-
-  const color=
-    asVariationLabel(
-      p?.color ||
-      p?.variation?.color ||
-      ''
-    );
-
-  return [
-    size,
-    color
-  ]
-  .filter(Boolean)
-  .join(' / ');
-
-}
-
-
-function labelData(
-  p,
-  extra={}
-){
-
-  const sku=
-    String(
-      p?.sku ||
-      p?.studio70_code ||
-      'SEM-SKU'
-    ).trim();
-
-  const barcode=
-    String(
-      p?.barcode ||
-      p?.raw?.barcode ||
-      ''
-    ).trim() ||
-    sku;
-
-  return {
-
-    name:
-      String(
-        p?.name ||
-        'Produto'
-      ).trim(),
-
-    sku,
-
-    barcode,
-
-    price:
-      parseSalePrice(p),
-
-    variation:
-      extra.variation ||
-      labelVariation(p)
-
-  };
-
-}
-
-
-function labelHtml(
-  d,
-  index=0
-){
-
-  const price=
-    d.price>0
-    ?money(d.price)
-    :'R$ 0,00';
-
-  const variation=
-    d.variation
-    ?
-    ` · ${escapeHtml(
-      d.variation
-    )}`
-    :
-    '';
-
-  return `
-  <div class="thermal-print-label">
-
-    <div class="thermal-sku-top">
-      ${escapeHtml(d.sku)}
-    </div>
-
-    <div class="thermal-name">
-      ${escapeHtml(d.name)}
-      ${variation}
-    </div>
-
-    <div class="thermal-price">
-      ${escapeHtml(price)}
-    </div>
-
-    <div class="thermal-barcode-wrap">
-
-      <svg
-        class="thermal-barcode"
-        id="thermal-bar-${index}"
-      ></svg>
-
-    </div>
-
-    <div class="thermal-code">
-      ${escapeHtml(d.barcode)}
-    </div>
-
-  </div>
-  `;
-
-}
-
-
-function drawThermalBarcodes(
-  products
-){
-
-  products.forEach(
-    (d,i)=>{
-
-      const el=
-        document.getElementById(
-          `thermal-bar-${i}`
-        );
-
-      if(
-        !el ||
-        typeof JsBarcode===
-        'undefined'
-      )
-        return;
-
-      const raw=
-        String(
-          d.barcode||''
-        ).trim();
-
-      const isEan=
-        /^\d{13}$/.test(raw);
-
-      try{
-
-        JsBarcode(
-          el,
-          raw,
-          {
-            format:
-              isEan
-              ?'EAN13'
-              :'CODE128',
-
-            displayValue:false,
-
-            margin:0,
-
-            width:
-              isEan
-              ?1.0
-              :1.1,
-
-            height:28,
-
-            background:'#ffffff',
-
-            lineColor:'#000000'
-          }
-        );
-
-      }catch(e){
-
-        try{
-
-          JsBarcode(
-            el,
-            String(
-              d.sku ||
-              'SEM-SKU'
-            ),
-            {
-              format:'CODE128',
-              displayValue:false,
-              margin:0,
-              width:1.0,
-              height:28,
-              background:'#ffffff',
-              lineColor:'#000000'
-            }
-          );
-
-        }catch(_){}
-
-      }
-
-    }
-  );
-
-}
-
-
-function openThermalPrint(
-  products
-){
-
-  if(
-    !Array.isArray(products) ||
-    !products.length
-  ){
-
-    setStatus(
-      'Nenhum produto disponível para imprimir.',
-      'error'
-    );
-
-    return;
-
-  }
-
-  const root=
-    $('thermalPrintRoot');
-
-  root.innerHTML=
-    products
-      .map(
-        (d,i)=>
-          labelHtml(d,i)
-      )
-      .join('');
-
-  const oldTitle=
-    document.title;
-
-  document.title=
-    'ST70 — Etiquetas A4';
-
-  setTimeout(
-    ()=>{
-
-      drawThermalBarcodes(
-        products
-      );
-
-      setTimeout(
-        ()=>{
-          window.print();
-        },
-        150
-      );
-
-      setTimeout(
-        ()=>{
-
-          root.innerHTML='';
-
-          document.title=
-            oldTitle;
-
-        },
-        1500
-      );
-
-    },
-    250
-  );
-
-}
-
-
-function printCurrentLabel(){
-
-  if(!activeProduct){
-
-    setStatus(
-      'Bipe ou busque um produto antes de imprimir a etiqueta.',
-      'error'
-    );
-
-    return;
-
-  }
-
-  const size=
-    $('sizeSelect')
-    .value
-    .trim();
-
-  const color=
-    $('colorSelect')
-    .value
-    .trim();
-
-  const variation=
-    [
-      size,
-      color
-    ]
-    .filter(Boolean)
-    .join(' / ');
-
-  openThermalPrint(
-    [
-      labelData(
-        activeProduct,
-        {
-          variation
-        }
-      )
-    ]
-  );
-
-}
-
-
-async function printAllLabels(){
-
-  if(!adminPassword){
-
-    $('loginBox')
-      .classList
-      .remove('hidden');
-
-    setStatus(
-      'Entre no PDV para imprimir as etiquetas.',
-      'error'
-    );
-
-    return;
-
-  }
-
-  setStatus(
-    'Carregando produtos para impressão em massa (A4)...'
-  );
-
-  try{
-
-    const d=
-      await api(
-        'carmenatto_products',
-        {
-          limit:2000
-        }
-      );
-
-    const products=
-      Array.isArray(d.products)
-      ?d.products
-      :[];
-
-    if(!products.length){
-
-      throw new Error(
-        'Nenhum produto retornado pelo Supabase.'
-      );
-
-    }
-
-    openThermalPrint(
-      products.map(
-        p=>labelData(p)
-      )
-    );
-
-    setStatus(
-      `${products.length} etiqueta(s) organizadas em formato A4.`,
-      'success'
-    );
-
-  }catch(e){
-
-    setStatus(
-      'Não foi possível carregar as etiquetas: '+
-      e.message,
-      'error'
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   EVENTOS
-========================================================= */
-
-$('sizeSelect')
-.addEventListener(
-  'change',
-  updateVariationState
-);
-
-$('colorSelect')
-.addEventListener(
-  'change',
-  updateVariationState
-);
-
-$('qty')
-.addEventListener(
-  'input',
-  ()=>{
-    if(!activeProduct){
-
-      updateDiscountPreview();
-
-      return;
-
-    }
-
-    const max=
-      selectedVariantStock();
-
-    let n=
-      Math.max(
-        1,
-        Math.trunc(
-          Number(
-            $('qty').value||1
-          )
-        )
-      );
-
-    if(max>0)
-      n=Math.min(n,max);
-
-    $('qty').value=n;
-
-    updateDiscountPreview();
-
-  }
-);
-
-$('discountPercent')
-.addEventListener(
-  'input',
-  updateDiscountPreview
-);
-
-$('codeInput')
-.addEventListener(
-  'keydown',
-  e=>{
-
-    if(
-      e.key==='Enter'
-    ){
-
-      e.preventDefault();
-
-      lookupProduct();
-
-    }
-
-  }
-);
-
-$('pdvPassword')
-.addEventListener(
-  'keydown',
-  e=>{
-
-    if(
-      e.key==='Enter'
-    ){
-
-      e.preventDefault();
-
-      unlockPdv();
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   INICIALIZAÇÃO
-========================================================= */
-
-async function initializePdv(){
-
-  if(adminPassword){
-
-    $('loginBox')
-      .classList
-      .add('hidden');
-
-    $('connectionStatus')
-      .classList
-      .add('ok');
-
-    setStatus(
-      'Restaurando sessão do PDV...'
-    );
-
-    await loadInitialProductCount();
-
-    startStoreOrderPolling();
-
-  }else{
-
-    $('loginBox')
-      .classList
-      .remove('hidden');
-
-    $('connectionStatus')
-      .classList
-      .remove('ok');
-
-    $('connectionStatus')
-      .classList
-      .remove('err');
-
-    setStatus(
-      'Faça login para acessar o PDV.'
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   PWA / SERVICE WORKER
-========================================================= */
-
-if(
-  'serviceWorker' in navigator
-){
-
-  window.addEventListener(
-    'load',
-    ()=>{
-      navigator.serviceWorker
-        .register(
-          './service-worker.js',
-          {
-            scope:'./'
-          }
-        )
-        .catch(
-          err =>
-            console.warn(
-              '[STUDIO70 PWA] Service Worker:',
-              err
-            )
-        );
-    }
-  );
-
-}
-
-
-/* =========================================================
-   INICIAR
-========================================================= */
-
-document.addEventListener(
-  'DOMContentLoaded',
-  ()=>{
-    initializePdv();
-  }
-);
-
 </script>
-
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js', {scope:'./'})
+      .catch(err => console.warn('[STUDIO70 PWA] Service Worker:', err));
+  });
+}
+</script>
 </body>
 </html>
