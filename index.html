@@ -225,7 +225,24 @@ footer a{color:#111!important}
   <button type="button" class="smallbtn" style="margin-top:8px" onclick="saveShippingSettings()">SALVAR FRETE</button>
   <div id="shippingAdminStatus" style="font-size:11px;margin-top:6px"></div>
 </div>
-<button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><svg id="barcodeSvg"></svg><div id="labelCode"></div></div></div><div><h3>🔔 Vendas recebidas</h3><div id="adminOrders" class="admin-list" style="max-height:260px;overflow:auto;margin-bottom:18px"></div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" onclick="printSelectedLabel()">🖨️ Imprimir etiqueta</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden></label></div><div id="adminList" class="admin-list"></div></div></div></div></div>
+<button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><svg id="barcodeSvg"></svg><div id="labelCode"></div></div></div><div><h3>🔔 Vendas recebidas</h3><div id="adminOrders" class="admin-list" style="max-height:260px;overflow:auto;margin-bottom:18px"></div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" onclick="printSelectedLabel()">🖨️ Imprimir etiqueta</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden></label></div>
+<div id="bulkImportBox" class="payment-admin-box" style="margin:14px 0;padding:14px;background:#eceae6;border:1px solid #c8c5be;border-radius:12px">
+  <b>📦 IMPORTAR PRODUTOS EM MASSA</b>
+  <p style="font-size:11px;color:#666;margin:6px 0 10px">
+    Cadastre vários produtos de uma vez usando <b>Excel (.xlsx/.xls) ou CSV</b>. O arquivo é validado antes de gravar no banco.
+    O código STUDIO 70 é gerado automaticamente pelo Supabase.
+  </p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <label class="smallbtn" style="display:inline-block;text-align:center">
+      📁 Escolher Excel/CSV
+      <input id="bulkImportFile" type="file" accept=".xlsx,.xls,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" hidden>
+    </label>
+    <button type="button" class="smallbtn" id="bulkTemplateBtn">⬇️ Baixar modelo</button>
+    <button type="button" class="smallbtn" id="bulkImportBtn" disabled>⬆️ Importar no banco</button>
+  </div>
+  <div id="bulkImportInfo" style="font-size:11px;margin-top:8px"></div>
+  <div id="bulkImportPreview" style="margin-top:10px;max-height:260px;overflow:auto"></div>
+</div><div id="adminList" class="admin-list"></div></div></div></div></div>
 
 <div class="modal" id="pdvModal"><div class="modal-panel"><button class="close" onclick="closePDV()">×</button><h2 class="section-title">PDV — PONTO DE VENDA</h2>
 <div class="pdv-layout">
@@ -1007,4 +1024,273 @@ function renderAdminOrders(orders){
 renderCategories();clearForm();loadPaymentSettings();loadShippingSettings();renderProducts();renderCart();renderPDV();
 loadCarmenattoCatalog();
 setInterval(pollOrders,10000);pollOrders();
+
+/* ==================== IMPORTAÇÃO EM MASSA — STUDIO 70 ==================== */
+const BULK_IMPORT_API = 'https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler';
+let bulkImportRows = [];
+
+function bulkText(v){
+  return String(v ?? '').trim();
+}
+function bulkNumber(v, fallback=0){
+  if(v===null || v===undefined || v==='') return fallback;
+  if(typeof v === 'number') return Number.isFinite(v) ? v : fallback;
+  let s=String(v).trim().replace(/\s/g,'');
+  if(s.includes(',') && s.includes('.')) s=s.replace(/\./g,'').replace(',','.');
+  else if(s.includes(',')) s=s.replace(',','.');
+  const n=Number(s);
+  return Number.isFinite(n) ? n : fallback;
+}
+function bulkArray(v){
+  if(Array.isArray(v)) return v.map(bulkText).filter(Boolean);
+  return String(v??'').split(/[,\n;|]/).map(x=>x.trim()).filter(Boolean);
+}
+function bulkBool(v, fallback=true){
+  const s=bulkText(v).toLowerCase();
+  if(!s) return fallback;
+  if(['false','0','não','nao','inativo','inactive','no'].includes(s)) return false;
+  if(['true','1','sim','ativo','active','yes'].includes(s)) return true;
+  return fallback;
+}
+function bulkNormalizeRow(r, index){
+  const get=(...keys)=>{
+    for(const k of keys){
+      if(Object.prototype.hasOwnProperty.call(r,k) && bulkText(r[k])!=='') return r[k];
+    }
+    return '';
+  };
+  const name=bulkText(get('nome','name','produto','product'));
+  const sku=bulkText(get('sku','SKU'));
+  const barcode=bulkText(get('codigo_de_barras','código_de_barras','codigo','barcode','ean'));
+  const category=bulkText(get('categoria','category')) || 'Outros';
+  const sizes=bulkArray(get('tamanhos','tamanho','sizes'));
+  const colors=bulkArray(get('cores','cor','colors'));
+  const secondary=bulkArray(get('fotos_secundarias','fotos','secondary_images','secondaryImages'));
+  const row={
+    _line:index+2,
+    supplier:bulkText(get('fornecedor','supplier')) || 'manual',
+    external_id:bulkText(get('external_id','id_externo','referencia','referência')),
+    sku,
+    barcode,
+    name,
+    price:bulkNumber(get('preco','preço','price'),0),
+    pix_price:bulkNumber(get('preco_pix','preço_pix','pix_price','pix'),0),
+    description:bulkText(get('descricao','descrição','description')),
+    sizes, colors,
+    image:bulkText(get('imagem','foto','image')),
+    secondary_images:secondary,
+    category,
+    stock:Math.max(0,Math.trunc(bulkNumber(get('estoque','stock','quantidade','qtd'),0))),
+    active:bulkBool(get('ativo','active'),true),
+    source_url:bulkText(get('url','source_url','link')),
+    weightKg:bulkNumber(get('peso','peso_kg','weightKg','weight'),0.3),
+    heightCm:bulkNumber(get('altura','altura_cm','heightCm'),4),
+    widthCm:bulkNumber(get('largura','largura_cm','widthCm'),20),
+    lengthCm:bulkNumber(get('comprimento','comprimento_cm','lengthCm'),30)
+  };
+  return row;
+}
+function bulkValidate(rows){
+  const errors=[];
+  const seenSku=new Map();
+  rows.forEach((r,i)=>{
+    if(!r.name) errors.push(`Linha ${r._line}: Nome é obrigatório.`);
+    if(!(r.price>=0)) errors.push(`Linha ${r._line}: Preço inválido.`);
+    if(r.sku){
+      const key=r.sku.toUpperCase();
+      if(seenSku.has(key)) errors.push(`Linhas ${seenSku.get(key)} e ${r._line}: SKU duplicado no arquivo (${r.sku}).`);
+      else seenSku.set(key,r._line);
+    }
+    if(r.barcode && r.barcode.length>80) errors.push(`Linha ${r._line}: Código de barras muito longo.`);
+  });
+  return errors;
+}
+function bulkShowPreview(rows, errors=[]){
+  const info=document.getElementById('bulkImportInfo');
+  const preview=document.getElementById('bulkImportPreview');
+  const btn=document.getElementById('bulkImportBtn');
+  if(!info||!preview||!btn)return;
+  if(errors.length){
+    info.innerHTML='<span style="color:#a52b2b;font-weight:800">❌ Arquivo rejeitado:</span> '+errors.slice(0,8).map(escapeHtml).join('<br>');
+    if(errors.length>8) info.innerHTML+=`<br>… e mais ${errors.length-8} erro(s).`;
+    preview.innerHTML='';
+    btn.disabled=true;
+    return;
+  }
+  info.innerHTML=`<span style="color:#246b3b;font-weight:800">✓ ${rows.length} produto(s) prontos para importação.</span>`;
+  const show=rows.slice(0,25);
+  preview.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:10px;background:#fff"><thead><tr>
+    <th style="padding:6px;border-bottom:1px solid #ddd;text-align:left">Linha</th>
+    <th style="padding:6px;border-bottom:1px solid #ddd;text-align:left">Nome</th>
+    <th style="padding:6px;border-bottom:1px solid #ddd;text-align:left">SKU</th>
+    <th style="padding:6px;border-bottom:1px solid #ddd;text-align:right">Preço</th>
+    <th style="padding:6px;border-bottom:1px solid #ddd;text-align:right">Estoque</th>
+  </tr></thead><tbody>${show.map(r=>`<tr>
+    <td style="padding:6px;border-bottom:1px solid #eee">${r._line}</td>
+    <td style="padding:6px;border-bottom:1px solid #eee">${escapeHtml(r.name)}</td>
+    <td style="padding:6px;border-bottom:1px solid #eee">${escapeHtml(r.sku||'—')}</td>
+    <td style="padding:6px;border-bottom:1px solid #eee;text-align:right">${money(r.price)}</td>
+    <td style="padding:6px;border-bottom:1px solid #eee;text-align:right">${r.stock}</td>
+  </tr>`).join('')}</tbody></table>${rows.length>25?`<div style="font-size:10px;color:#666;margin-top:5px">Mostrando 25 de ${rows.length} linhas.</div>`:''}`;
+  btn.disabled=false;
+}
+async function bulkReadFile(file){
+  const ext=file.name.toLowerCase().split('.').pop();
+  if(ext==='csv'){
+    const text=await file.text();
+    const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(x=>x.trim());
+    if(!lines.length) throw new Error('CSV vazio.');
+    const parseLine=(line)=>{
+      const out=[];let cur='',q=false;
+      for(let i=0;i<line.length;i++){
+        const ch=line[i];
+        if(ch==='"' && line[i+1]==='"'){cur+='"';i++;continue;}
+        if(ch==='"'){q=!q;continue;}
+        if((ch===','||ch===';')&&!q){out.push(cur);cur='';}else cur+=ch;
+      }
+      out.push(cur);return out;
+    };
+    const headers=parseLine(lines[0]).map(h=>h.trim().toLowerCase());
+    return lines.slice(1).map(line=>{
+      const vals=parseLine(line), o={};
+      headers.forEach((h,i)=>o[h]=vals[i]??'');
+      return o;
+    });
+  }
+  if(!window.XLSX) throw new Error('Leitor Excel ainda não carregou. Tente novamente em alguns segundos.');
+  const ab=await file.arrayBuffer();
+  const wb=XLSX.read(ab,{type:'array'});
+  const ws=wb.Sheets[wb.SheetNames[0]];
+  return XLSX.utils.sheet_to_json(ws,{defval:''});
+}
+async function bulkHandleFile(file){
+  const info=document.getElementById('bulkImportInfo');
+  const btn=document.getElementById('bulkImportBtn');
+  try{
+    if(!file) return;
+    if(info)info.textContent='Lendo arquivo…';
+    if(btn)btn.disabled=true;
+    const raw=await bulkReadFile(file);
+    bulkImportRows=raw.map((r,i)=>bulkNormalizeRow(r,i));
+    const errors=bulkValidate(bulkImportRows);
+    bulkShowPreview(bulkImportRows,errors);
+  }catch(e){
+    bulkImportRows=[];
+    if(info)info.innerHTML='<span style="color:#a52b2b;font-weight:800">❌ '+escapeHtml(String(e?.message||e))+'</span>';
+    if(btn)btn.disabled=true;
+    document.getElementById('bulkImportPreview').innerHTML='';
+  }
+}
+async function bulkSendToDatabase(){
+  if(!bulkImportRows.length)return;
+  if(!adminAuthPassword){alert('Abra o ADM e autentique novamente.');return;}
+  const info=document.getElementById('bulkImportInfo');
+  const btn=document.getElementById('bulkImportBtn');
+  const payload=bulkImportRows.map(r=>({
+    supplier:r.supplier,
+    external_id:r.external_id,
+    sku:r.sku,
+    barcode:r.barcode,
+    name:r.name,
+    price:r.price,
+    pix_price:r.pix_price,
+    description:r.description,
+    sizes:r.sizes,
+    colors:r.colors,
+    image:r.image,
+    secondary_images:r.secondary_images,
+    category:r.category,
+    stock:r.stock,
+    active:r.active,
+    source_url:r.source_url,
+    weightKg:r.weightKg,
+    heightCm:r.heightCm,
+    widthCm:r.widthCm,
+    lengthCm:r.lengthCm
+  }));
+  try{
+    btn.disabled=true;
+    info.innerHTML='<span style="font-weight:800">⏳ Gravando '+payload.length+' produto(s) no Supabase…</span>';
+    const r=await fetch(BULK_IMPORT_API,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({
+      action:'admin_bulk_upsert_products',
+      admin_password:adminAuthPassword,
+      products:payload
+    })});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok) throw new Error(d.error||`HTTP ${r.status}`);
+    info.innerHTML=`<span style="color:#246b3b;font-weight:800">✓ Importação concluída: ${d.inserted||0} novos, ${d.updated||0} atualizados.</span>`;
+    if(d.errors?.length) info.innerHTML+=`<br><span style="color:#a52b2b">${d.errors.length} linha(s) com erro.</span>`;
+    bulkImportRows=[];
+    btn.disabled=true;
+    document.getElementById('bulkImportPreview').innerHTML='';
+    // Mantém a cópia local para a interface e tenta carregar novamente os produtos manuais do banco.
+    if(typeof loadManualCatalog==='function') await loadManualCatalog();
+    renderProducts(); renderAdmin();
+  }catch(e){
+    info.innerHTML='<span style="color:#a52b2b;font-weight:800">❌ Falha na importação:</span> '+escapeHtml(String(e?.message||e));
+    btn.disabled=false;
+  }
+}
+function bulkDownloadTemplate(){
+  const header=['nome','sku','codigo_de_barras','categoria','preco','preco_pix','estoque','tamanhos','cores','peso_kg','altura_cm','largura_cm','comprimento_cm','imagem','fotos_secundarias','url','descricao','ativo','fornecedor','external_id'];
+  const example=['Camiseta STUDIO 70','CAM-001','','Camisetas','59.90','56.90','10','P, M, G, GG','Preto, Branco','0.300','4','20','30','https://...','https://foto2... | https://foto3...','https://...','Descrição do produto','sim','manual','CAM-001'];
+  const csv=[header,example].map(row=>row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));a.download='studio70-modelo-importacao-produtos.csv';a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+document.getElementById('bulkImportFile')?.addEventListener('change',e=>bulkHandleFile(e.target.files?.[0]));
+document.getElementById('bulkImportBtn')?.addEventListener('click',bulkSendToDatabase);
+document.getElementById('bulkTemplateBtn')?.addEventListener('click',bulkDownloadTemplate);
+
+// Excel via CDN; CSV funciona mesmo sem esta biblioteca.
+(function loadXlsxLibrary(){
+  const s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+  s.async=true;
+  s.onload=()=>console.log('[STUDIO70] Leitor Excel carregado.');
+  s.onerror=()=>console.warn('[STUDIO70] Não foi possível carregar o leitor Excel; CSV continua disponível.');
+  document.head.appendChild(s);
+})();
+
+
+/* ==================== CATÁLOGO MANUAL / IMPORTADO ==================== */
+async function loadManualCatalog(){
+  try{
+    const r=await fetch(BULK_IMPORT_API,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({action:'manual_products',limit:5000})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok||!Array.isArray(d.products)) return;
+    const manuals=d.products.map(p=>({
+      id:p.id??('db-'+(p.sku||Date.now())),
+      supplier:p.supplier||'manual',
+      external_id:p.external_id||'',
+      studio70_code:p.studio70_code||'',
+      sku:p.sku||'',
+      barcode:p.barcode||p.studio70_code||'',
+      name:p.name||'Produto',
+      price:Number(p.price)||0,
+      pix_price:Number(p.pix_price)||0,
+      description:p.description||'',
+      sizes:Array.isArray(p.sizes)?p.sizes:[],
+      colors:Array.isArray(p.colors)?p.colors:[],
+      image:p.image||'',
+      secondaryImages:Array.isArray(p.secondary_images)?p.secondary_images:[],
+      category:p.category||'Outros',
+      stock:Number(p.stock)||0,
+      active:p.active!==false,
+      featured:false,
+      weightKg:Number(p.raw?.weightKg??p.weightKg??0.3)||0.3,
+      heightCm:Number(p.raw?.heightCm??p.heightCm??4)||4,
+      widthCm:Number(p.raw?.widthCm??p.widthCm??20)||20,
+      lengthCm:Number(p.raw?.lengthCm??p.lengthCm??30)||30
+    }));
+    const keys=new Set(manuals.map(p=>`${p.supplier}|${p.id}`));
+    products=products.filter(p=>!(String(p.supplier||'')==='manual' || String(p.id||'').startsWith('db-')));
+    products=[...manuals,...products];
+    save();
+  }catch(e){ console.warn('[STUDIO70] Falha ao carregar catálogo manual:',e); }
+}
+
+
+loadManualCatalog().then(()=>{renderProducts();renderAdmin();});
 </script></body></html>
