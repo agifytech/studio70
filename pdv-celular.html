@@ -146,10 +146,39 @@ function getVariantStockList(p){const raw=p?.raw||{};const list=raw.variant_stoc
 function selectedVariantStock(){const p=activeProduct;if(!p)return Number.MAX_SAFE_INTEGER;const size=$('sizeSelect').value.trim(),color=$('colorSelect').value.trim();const list=getVariantStockList(p);if(!list.length)return Number(p.stock||0);const exact=list.find(v=>(!v.size||v.size===size)&&(!v.color||v.color===color));if(exact)return exact.stock;const candidates=list.filter(v=>(!size||!v.size||v.size===size)&&(!color||!v.color||v.color===color));if(candidates.length)return Math.min(...candidates.map(v=>v.stock));return Number(p.stock||0);}
 function updateVariationState(){if(!activeProduct)return;const size=$('sizeSelect').value.trim(),color=$('colorSelect').value.trim();const labels=[size,color].filter(Boolean);$('productSpecs').textContent=labels.length?labels.join(' / '):'Selecione';const available=selectedVariantStock();$('variantStock').innerHTML=labels.length ? `Estoque desta variação: <strong>${available} un</strong>` : 'Selecione tamanho e/ou cor para conferir a variação.';const qty=$('qty');let n=Math.max(1,Math.trunc(Number(qty.value||1)));const max=Math.max(0,Number(available||0));if(max>0)n=Math.min(n,max);qty.value=n;}
 function populateVariationSelect(id, values){const el=$(id);el.innerHTML='<option value="">Selecione</option>';values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o);});}
-function renderProduct(){const p=activeProduct;$('productName').textContent=p.name || 'Produto';$('productSku').textContent='STUDIO 70: '+(p.studio70_code || '—')+'  |  SKU: '+(p.sku || '—');$('productBarcode').textContent='EAN: '+(p.barcode || 'não cadastrado');$('productPrice').textContent=money(p.price);$('productStock').textContent=String(Number(p.stock||0))+' un';const sizes=variationList(p.sizes);const colors=variationList(p.colors);populateVariationSelect('sizeSelect',sizes);populateVariationSelect('colorSelect',colors);$('variantStock').textContent=(sizes.length||colors.length)?'Selecione tamanho e/ou cor.':'';$('productSpecs').textContent=(sizes.length||colors.length)?'Selecione':'Único';$('qty').value=1;$('productCard').classList.add('show');updateVariationState();}
+function productPrice(p){
+  const candidates=[
+    p?.price,p?.preco,p?.sale_price,p?.selling_price,p?.valor,p?.price_brl,
+    p?.pix_price,p?.preco_pix,p?.raw?.price,p?.raw?.preco,p?.raw?.sale_price
+  ];
+  for(const v of candidates){
+    const n=Number(String(v??'').replace(',','.'));
+    if(Number.isFinite(n)&&n>0)return n;
+  }
+  return 0;
+}
+function renderProduct(){
+  const p=activeProduct;
+  const price=productPrice(p);
+  p.price=price;
+  $('productName').textContent=p.name || 'Produto';
+  $('productSku').textContent='STUDIO 70: '+(p.studio70_code || '—')+'  |  SKU: '+(p.sku || '—');
+  $('productBarcode').textContent='EAN: '+(p.barcode || 'não cadastrado');
+  $('productPrice').textContent=price>0?money(price):'Preço não cadastrado';
+  $('productStock').textContent=String(Number(p.stock||0))+' un';
+  const sizes=variationList(p.sizes);
+  const colors=variationList(p.colors);
+  populateVariationSelect('sizeSelect',sizes);
+  populateVariationSelect('colorSelect',colors);
+  $('variantStock').textContent=(sizes.length||colors.length)?'Selecione tamanho e/ou cor.':'';
+  $('productSpecs').textContent=(sizes.length||colors.length)?'Selecione':'Único';
+  $('qty').value=1;
+  $('productCard').classList.add('show');
+  updateVariationState();
+}
 function changeQty(delta){const input=$('qty');let n=Math.trunc(Number(input.value||1))+delta;n=Math.max(1,n);if(activeProduct){const max=selectedVariantStock();n=Math.min(n,Math.max(1,Number(max||activeProduct.stock||0)));}input.value=n;}
-async function finishSale(){if(!activeProduct)return setStatus('Nenhum produto selecionado.','error');const qty=Math.max(1,Math.trunc(Number($('qty').value||1)));const stock=Number(activeProduct.stock||0);const size=$('sizeSelect').value.trim();const color=$('colorSelect').value.trim();const hasSizes=variationList(activeProduct.sizes).length>0;const hasColors=variationList(activeProduct.colors).length>0;if(hasSizes&&!size)return setStatus('Selecione o tamanho antes de finalizar.','error');if(hasColors&&!color)return setStatus('Selecione a cor antes de finalizar.','error');const variantStock=selectedVariantStock();if(qty>stock)return setStatus(`Estoque total insuficiente. Disponível: ${stock} unidade(s).`,'error');if(qty>variantStock)return setStatus(`Estoque da variação insuficiente. Disponível: ${variantStock} unidade(s).`,'error');if(!adminPassword){$('loginBox').classList.remove('hidden');return;}setStatus('Processando venda e baixando estoque...');
-try{const saleId='PDV-'+Date.now();const d=await api('pdv_sale',{admin_password:adminPassword,sale_id:saleId,payment:'store',items:[{id:activeProduct.id,studio70_code:activeProduct.studio70_code,external_id:activeProduct.external_id,sku:activeProduct.sku,barcode:activeProduct.barcode,name:activeProduct.name,size,color,variation:{size,color},qty,unit:Number(activeProduct.price||0)}]});if(!d.ok)throw new Error(apiError(d,'Venda não concluída.'));const after=Number(d.items?.[0]?.stock_after ?? (stock-qty));activeProduct.stock=after;renderProduct();$('codeInput').value='';setStatus(`✓ Venda ${saleId} concluída. Estoque atual: ${after} un.`,'success');}catch(e){setStatus('Venda não concluída: '+e.message,'error');}}
+async function finishSale(){if(!activeProduct)return setStatus('Nenhum produto selecionado.','error');const qty=Math.max(1,Math.trunc(Number($('qty').value||1)));const stock=Number(activeProduct.stock||0);const size=$('sizeSelect').value.trim();const color=$('colorSelect').value.trim();const hasSizes=variationList(activeProduct.sizes).length>0;const hasColors=variationList(activeProduct.colors).length>0;if(hasSizes&&!size)return setStatus('Selecione o tamanho antes de finalizar.','error');if(hasColors&&!color)return setStatus('Selecione a cor antes de finalizar.','error');const variantStock=selectedVariantStock();if(qty>stock)return setStatus(`Estoque total insuficiente. Disponível: ${stock} unidade(s).`,'error');if(qty>variantStock)return setStatus(`Estoque da variação insuficiente. Disponível: ${variantStock} unidade(s).`,'error');if(productPrice(activeProduct)<=0)return setStatus('Preço não cadastrado no produto. Verifique o preço no Supabase antes de vender.','error');if(!adminPassword){$('loginBox').classList.remove('hidden');return;}setStatus('Processando venda e baixando estoque...');
+try{const saleId='PDV-'+Date.now();const d=await api('pdv_sale',{admin_password:adminPassword,sale_id:saleId,payment:'store',items:[{id:activeProduct.id,studio70_code:activeProduct.studio70_code,external_id:activeProduct.external_id,sku:activeProduct.sku,barcode:activeProduct.barcode,name:activeProduct.name,size,color,variation:{size,color},qty,unit:productPrice(activeProduct)}]});if(!d.ok)throw new Error(apiError(d,'Venda não concluída.'));const after=Number(d.items?.[0]?.stock_after ?? (stock-qty));activeProduct.stock=after;renderProduct();$('codeInput').value='';setStatus(`✓ Venda ${saleId} concluída. Estoque atual: ${after} un.`,'success');}catch(e){setStatus('Venda não concluída: '+e.message,'error');}}
 function orderCustomerName(order){const c=order?.customer||{};return String(c.name||c.full_name||c.nome||'Cliente').trim()||'Cliente';}
 function orderItemsText(order){const items=Array.isArray(order?.items)?order.items:[];if(!items.length)return 'Itens não informados.';return items.map(i=>{const v=i?.variation||{};const spec=[i?.size||v.size,i?.color||v.color].filter(Boolean).join(' / ');return `${Number(i?.qty||0)}x ${i?.name||'Produto'}${spec?' — '+spec:''}`;}).join(' · ');}
 function beepNewOrder(){try{audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();const osc=audioContext.createOscillator(),gain=audioContext.createGain();osc.frequency.value=880;gain.gain.value=.08;osc.connect(gain);gain.connect(audioContext.destination);osc.start();setTimeout(()=>{osc.frequency.value=1175},120);setTimeout(()=>{osc.stop();gain.disconnect()},240);}catch(_){ }}
