@@ -180,10 +180,10 @@ footer a{color:#111!important}
 @media(max-width:900px){.pdv-item{grid-template-columns:48px minmax(0,1fr)}.pdv-item>.qtybox,.pdv-item>.lineprice,.pdv-item>.pdv-label-action{grid-column:2}}
 </style></head>
 <body>
-<div class="announce">🔥 FRETE GRÁTIS ACIMA DE R$250 &nbsp;·&nbsp; ENTREGA PARA TODO O BRASIL &nbsp;·&nbsp; TROCA FÁCIL</div>
-<header><div class="header-container"><div class="logo">STUDIO 70</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><a href="#produtos">FEMININO</a><a href="#produtos">MASCULINO</a><a href="#produtos">LANÇAMENTOS</a></nav><div class="header-icons"><button class="iconbtn" id="searchBtn">🔍</button><button class="iconbtn" id="cartBtn">🛒 <b id="cartCount">0</b></button><button class="iconbtn" id="pdvBtn">🧾 PDV</button><button class="iconbtn" id="adminBtn">⚙️ ADM</button></div></div></header>
+<div class="announce">🔥 FRETE GRÁTIS ACIMA DE R$150 &nbsp;·&nbsp; ENTREGA PARA TODO O BRASIL &nbsp;·&nbsp; TROCA FÁCIL EM 7 DIAS</div>
+<header><div class="header-container"><div class="logo">STUDIO 70 BRAND</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><a href="#produtos">FEMININO</a><a href="#produtos">MASCULINO</a><a href="#produtos">LANÇAMENTOS</a></nav><div class="header-icons"><button class="iconbtn" id="searchBtn">🔍</button><button class="iconbtn" id="cartBtn">🛒 <b id="cartCount">0</b></button><button class="iconbtn" id="pdvBtn">🧾 PDV</button><button class="iconbtn" id="adminBtn">⚙️ ADM</button></div></div></header>
 <main id="inicio"><section class="hero" style="padding:0 22px"><div><span class="eyebrow">NOVA COLEÇÃO 2026</span><h1>STUDIO 70</h1><h2>URBAN STYLE</h2><a class="btn" href="#produtos">VER LANÇAMENTOS →</a></div></section>
-<div class="trustbar"><span>🚚 Frete grátis acima de R$250</span><span>🔄 Troca fácil</span><span>🔒 Compra 100% segura</span><span>💳 Parcele suas compras</span></div>
+<div class="trustbar"><span>🚚 Frete grátis acima de R$150</span><span>🔄 Troca fácil em 7 dias</span><span>🔒 Compra 100% segura</span><span>💳 Parcele suas compras</span></div>
 <section><h2 class="section-title">CATEGORIAS</h2><div class="category-grid" id="categories"></div></section>
 <section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section></main>
 <a class="whatsapp" id="whatsappFloat" href="#" target="_blank">✆</a><footer><h2>STUDIO 70 BRAND</h2><p>Moda urbana masculina e feminina. Estilo, atitude e identidade.</p><p><a href="https://instagram.com/use.studio70" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-weight:700">Instagram: @use.studio70</a></p><p>© 2026 STUDIO 70 BRAND</p></footer>
@@ -662,8 +662,14 @@ document.getElementById('productForm').onsubmit=async e=>{
   if(!(salePrice>0))return alert('Informe o preço de venda STUDIO 70.');
   const payload={
     id:id && /^\d+$/.test(String(id))?Number(id):null,
+    supplier:old?.supplier||'studio70',
+    external_id:old?.supplierExternalId||'',
     name:document.getElementById('pName').value.trim(),
     sale_price:salePrice,
+    salePrice:salePrice,
+    selling_price:salePrice,
+    studio70_sale_price:salePrice,
+    price:salePrice,
     supplier_price:Number(old?.supplier_price ?? old?.price ?? 0),
     sku:document.getElementById('pSku').value.trim(),
     barcode:document.getElementById('pBarcode').value.trim(),
@@ -680,7 +686,7 @@ document.getElementById('productForm').onsubmit=async e=>{
     featured:document.getElementById('pFeatured').checked
   };
   try{
-    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'admin_save_product',admin_password:adminAuthPassword,product:payload})});
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'admin_save_product',admin_password:adminAuthPassword,...payload,product:payload})});
     const d=await r.json().catch(()=>({}));
     if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao salvar produto no Supabase.');
     const saved=d.product||{};
