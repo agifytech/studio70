@@ -180,10 +180,10 @@ footer a{color:#111!important}
 @media(max-width:900px){.pdv-item{grid-template-columns:48px minmax(0,1fr)}.pdv-item>.qtybox,.pdv-item>.lineprice,.pdv-item>.pdv-label-action{grid-column:2}}
 </style></head>
 <body>
-<div class="announce">🔥 FRETE GRÁTIS ACIMA DE R$150 &nbsp;·&nbsp; ENTREGA PARA TODO O BRASIL &nbsp;·&nbsp; TROCA FÁCIL EM 7 DIAS</div>
-<header><div class="header-container"><div class="logo">STUDIO 70 BRAND</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><a href="#produtos">FEMININO</a><a href="#produtos">MASCULINO</a><a href="#produtos">LANÇAMENTOS</a></nav><div class="header-icons"><button class="iconbtn" id="searchBtn">🔍</button><button class="iconbtn" id="cartBtn">🛒 <b id="cartCount">0</b></button><button class="iconbtn" id="pdvBtn">🧾 PDV</button><button class="iconbtn" id="adminBtn">⚙️ ADM</button></div></div></header>
+<div class="announce">🔥 FRETE GRÁTIS ACIMA DE R$250 &nbsp;·&nbsp; ENTREGA PARA TODO O BRASIL &nbsp;·&nbsp; TROCA FÁCIL</div>
+<header><div class="header-container"><div class="logo">STUDIO 70</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><a href="#produtos">FEMININO</a><a href="#produtos">MASCULINO</a><a href="#produtos">LANÇAMENTOS</a></nav><div class="header-icons"><button class="iconbtn" id="searchBtn">🔍</button><button class="iconbtn" id="cartBtn">🛒 <b id="cartCount">0</b></button><button class="iconbtn" id="pdvBtn">🧾 PDV</button><button class="iconbtn" id="adminBtn">⚙️ ADM</button></div></div></header>
 <main id="inicio"><section class="hero" style="padding:0 22px"><div><span class="eyebrow">NOVA COLEÇÃO 2026</span><h1>STUDIO 70</h1><h2>URBAN STYLE</h2><a class="btn" href="#produtos">VER LANÇAMENTOS →</a></div></section>
-<div class="trustbar"><span>🚚 Frete grátis acima de R$150</span><span>🔄 Troca fácil em 7 dias</span><span>🔒 Compra 100% segura</span><span>💳 Parcele suas compras</span></div>
+<div class="trustbar"><span>🚚 Frete grátis acima de R$250</span><span>🔄 Troca fácil</span><span>🔒 Compra 100% segura</span><span>💳 Parcele suas compras</span></div>
 <section><h2 class="section-title">CATEGORIAS</h2><div class="category-grid" id="categories"></div></section>
 <section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section></main>
 <a class="whatsapp" id="whatsappFloat" href="#" target="_blank">✆</a><footer><h2>STUDIO 70 BRAND</h2><p>Moda urbana masculina e feminina. Estilo, atitude e identidade.</p><p><a href="https://instagram.com/use.studio70" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-weight:700">Instagram: @use.studio70</a></p><p>© 2026 STUDIO 70 BRAND</p></footer>
@@ -629,7 +629,7 @@ function editProduct(id){
   const p=products.find(x=>String(x.id)===String(id));
   if(!p)return alert('Produto não encontrado.');
   const set=(id,val)=>{const e=document.getElementById(id);if(e)e.value=val??'';};
-  set('editId',p.id);set('pName',p.name);set('pPrice',p.sale_price ?? p.price);set('pSku',p.sku);set('pBarcode',p.barcode);
+  set('editId',p.id);set('pName',p.name);set('pPrice',firstPositiveNumber(p.sale_price,p.salePrice,p.price,p.supplier_price));set('pSku',p.sku);set('pBarcode',p.barcode);
   set('pCategory',p.category);set('pStock',p.stock||0);
   set('pSizes',(p.sizes||[]).join(', '));set('pColors',(p.colors||[]).join(', '));
   set('pWeight',p.weightKg??p.weight??0.3);set('pHeight',p.heightCm??p.height??4);
@@ -656,7 +656,9 @@ document.getElementById('productForm').onsubmit=async e=>{
   if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>document.getElementById('productForm').requestSubmit());
   const id=document.getElementById('editId').value||'';
   const old=products.find(p=>String(p.id)===String(id));
-  const salePrice=Number(document.getElementById('pPrice').value||0);
+  const typedPrice=Number(String(document.getElementById('pPrice').value||'').trim().replace(',','.'));
+  const previousPrice=firstPositiveNumber(old?.sale_price,old?.salePrice,old?.price,old?.supplier_price);
+  const salePrice=typedPrice>0?typedPrice:previousPrice;
   if(!(salePrice>0))return alert('Informe o preço de venda STUDIO 70.');
   const payload={
     id:id && /^\d+$/.test(String(id))?Number(id):null,
