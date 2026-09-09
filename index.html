@@ -608,7 +608,7 @@ async function applySeedPricesToSupabase(){
     const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'admin_set_code_prices',admin_password:adminAuthPassword,products})});
     const d=await r.json().catch(()=>({})); if(!r.ok||(!d.ok&&!(Number(d.updated)>0)))throw new Error(d.error||d.message||'Falha ao aplicar preços.');
     const missing=Array.isArray(d.errors)?d.errors.length:0;
-    if(st)st.textContent=`✓ ${d.updated||0} preço(s) do código aplicados ao Supabase${missing?` — ${missing} não encontrado(s)`:''}.`;
+    if(st)st.textContent=`✓ ${d.updated||0} preço(s) do código aplicados ao Supabase${missing?` — ${missing} não encontrado(s)`:''}. Busca por SKU, código e nome.`;
     await loadCarmenattoCatalog(); renderProducts(); renderAdmin();
   }catch(e){if(st)st.textContent=e.message;}
 }
@@ -715,7 +715,13 @@ document.getElementById('productForm').onsubmit=async e=>{
       active:saved.active??payload.active,
       featured:saved.featured??payload.featured
     });
-    if(old)products=products.map(x=>String(x.id)===String(id)?local:x);else products.unshift(local);
+    if(old){
+      const replaced=products.map(x=>{
+        const byId=String(x.id)===String(id)||String(x.id)===String(local.id);
+        return byId||sameProduct(x,local)?local:x;
+      });
+      products=replaced.some((x)=>x===local)?replaced:[...replaced,local];
+    }else products.unshift(local);
     save();renderProducts();renderAdmin();drawLabel(local);
     document.getElementById('editId').value=local.id;
     document.getElementById('pBarcode').value=local.barcode||'';
