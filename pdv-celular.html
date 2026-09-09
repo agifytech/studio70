@@ -1724,7 +1724,7 @@ function updateVariationState(){
 
 
 /* =========================================================
-   PREÇOS
+   PREÇOS (AJUSTADO PARA CAPTURAR TODAS AS CHAVES DO SUPABASE)
 ========================================================= */
 
 function parsePriceValue(value){
@@ -1759,7 +1759,9 @@ function parsePriceValue(value){
         'preco_venda',
         'precoVenda',
         'valor_venda',
-        'valorVenda'
+        'valorVenda',
+        'preco_tabela',
+        'precoTabela'
       ]
     ){
 
@@ -1905,7 +1907,9 @@ function parseProductPrice(p){
     'unitPrice',
     'final_price',
     'finalPrice',
-    'amount'
+    'amount',
+    'preco_tabela',
+    'precoTabela'
   ];
 
   for(
@@ -1972,7 +1976,12 @@ function parseSalePrice(p){
     'selling_price',
     'sellingPrice',
     'final_price',
-    'finalPrice'
+    'finalPrice',
+    'preco_tabela',
+    'precoTabela',
+    'preco',
+    'price',
+    'valor'
   ];
 
   for(
@@ -2088,10 +2097,8 @@ async function lookupProduct(code){
         null;
 
       /*
-       * O produto do site tem prioridade para os preços.
-       *
-       * supplier_price = custo
-       * sale_price = venda ST70
+       * O produto do site tem prioridade para os preços,
+       * mas garantimos fallback para o backend se necessário.
        */
 
       activeProduct={
@@ -2101,22 +2108,14 @@ async function lookupProduct(code){
 
       if(siteProduct){
 
-        if(
-          siteProduct.sale_price!=null
-        ){
-
-          activeProduct.sale_price=
-            siteProduct.sale_price;
-
+        const sPrice = parseSalePrice(siteProduct);
+        if(sPrice > 0){
+          activeProduct.sale_price = sPrice;
         }
 
-        if(
-          siteProduct.supplier_price!=null
-        ){
-
-          activeProduct.supplier_price=
-            siteProduct.supplier_price;
-
+        const cPrice = parseCostPrice(siteProduct);
+        if(cPrice !== null){
+          activeProduct.supplier_price = cPrice;
         }
 
       }
