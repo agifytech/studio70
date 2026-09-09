@@ -739,7 +739,7 @@ document.getElementById('productForm').onsubmit=async e=>{
     document.getElementById('pBarcode').value=local.barcode||'';
     document.getElementById('labelPreview').style.display='block';
     document.getElementById('formTitle').textContent='Editar produto';
-    alert('Produto salvo no Supabase com sucesso.');
+    alert(`${d.created?'Produto criado':'Produto atualizado'} no Supabase com sucesso. O site foi atualizado com os novos dados.`);
   }catch(err){alert('Não foi possível salvar o produto: '+(err?.message||err));}
 };
 function deleteProduct(id){
