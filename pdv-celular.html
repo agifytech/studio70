@@ -141,7 +141,7 @@ const money = n => Number(n || 0).toLocaleString('pt-BR',{style:'currency',curre
 
 function setStatus(text, type=''){
   $('status').textContent=text;
-  $('status'].className='status '+(type==='success'?'success':type==='error'?'error':'');
+  $('status').className='status '+(type==='success'?'success':type==='error'?'error':'');
 }
 function apiError(data, fallback){ return String(data?.error || data?.message || fallback || 'Erro desconhecido.'); }
 
@@ -193,8 +193,6 @@ async function lookupProduct(code){
   setStatus('Consultando produto...');
   try{
     const d=await api('pdv_product',{code});
-
-    // Correção: Verifica se o produto veio diretamente em `d.product` ou dentro de uma lista/resposta alternativa
     let prod = d.product || d.item || (Array.isArray(d.products) ? d.products[0] : null);
 
     if ((d.found || d.ok || prod) && prod) {
@@ -204,7 +202,6 @@ async function lookupProduct(code){
       return;
     }
 
-    // Fallback adicional: se a API retornar uma lista geral de produtos, tenta filtrar localmente pelo código/SKU/EAN
     const allProd = await api('carmenatto_products',{limit:2000});
     if(Array.isArray(allProd.products)) {
       const foundLocal = allProd.products.find(p => 
@@ -273,20 +270,32 @@ function populateVariationSelect(id, values){
   const el=$(id);el.innerHTML='<option value="">Selecione</option>';
   values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o);});
 }
+
 function renderProduct(){
-  const p=activeProduct;
-  $('productName').textContent=p.name || 'Produto';
-  $('productSku').textContent='STUDIO 70: '+(p.studio70_code || '—')+'  |  SKU: '+(p.sku || '—');
-  $('productBarcode').textContent='EAN: '+(p.barcode ? p.barcode : 'não cadastrado (produto encontrado)');
-  $('productPrice').textContent=Number(p.price||0)>0 ? money(p.price) : 'Preço não cadastrado';
-  $('productStock').textContent=String(Number(p.stock||0))+' un';
-  const sizes=variationList(p.sizes);
-  const colors=variationList(p.colors);
-  populateVariationSelect('sizeSelect',sizes);
-  populateVariationSelect('colorSelect',colors);
-  $('variantStock').textContent=(sizes.length||colors.length)?'Selecione tamanho e/ou cor.':'';
-  $('productSpecs').textContent=(sizes.length||colors.length)?'Selecione':'Único';
-  $('qty').value=1;
+  const p = activeProduct;
+  
+  // Mapeamento robusto para garantir que pegue o preço correto configurado no admin/banco
+  const rawPrice = p.price ?? p.valor_venda ?? p.preco ?? p.sale_price ?? p.valor ?? 0;
+  const numericPrice = Number(rawPrice);
+
+  $('productName').textContent = p.name || 'Produto';
+  $('productSku').textContent = 'STUDIO 70: ' + (p.studio70_code || '—') + '  |  SKU: ' + (p.sku || '—');
+  $('productBarcode').textContent = 'EAN: ' + (p.barcode ? p.barcode : 'não cadastrado (produto encontrado)');
+  
+  // Exibe o preço correto formatado na tela
+  $('productPrice').textContent = numericPrice > 0 ? money(numericPrice) : 'Preço não cadastrado';
+  
+  // Padroniza a propriedade price para uso interno na venda
+  p.price = numericPrice;
+
+  $('productStock').textContent = String(Number(p.stock||0)) + ' un';
+  const sizes = variationList(p.sizes);
+  const colors = variationList(p.colors);
+  populateVariationSelect('sizeSelect', sizes);
+  populateVariationSelect('colorSelect', colors);
+  $('variantStock').textContent = (sizes.length || colors.length) ? 'Selecione tamanho e/ou cor.' : '';
+  $('productSpecs').textContent = (sizes.length || colors.length) ? 'Selecione' : 'Único';
+  $('qty').value = 1;
   $('productCard').classList.add('show');
   updateVariationState();
 }
