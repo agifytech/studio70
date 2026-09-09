@@ -192,10 +192,28 @@ footer a{color:#111!important}
 </div>
 <button class="btn" style="width:100%;margin-top:10px" onclick="goCheckout()">FINALIZAR COMPRA</button><button class="btn" style="width:100%;margin-top:10px;background:#eceae6;color:#111" onclick="checkoutWhatsApp()">FINALIZAR NO WHATSAPP</button></div></div>
 <div class="modal" id="loginModal"><div class="modal-panel" style="max-width:420px"><button class="close" onclick="closeLogin()">×</button><h2 class="section-title">ACESSO RESTRITO</h2><p id="loginTitle">Digite a senha para continuar.</p><label style="display:block;font-size:12px;margin-bottom:8px">URL da Edge Function<input class="field" id="loginEndpoint" value="https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler" placeholder="URL da Edge Function" autocomplete="url"></label><input class="field" id="loginPassword" type="password" inputmode="numeric" maxlength="64" placeholder="Senha do painel" autocomplete="off"><div id="loginError" style="color:#ff6b8f;font-weight:700;min-height:22px;margin:8px 0"></div><button class="btn" style="width:100%" onclick="submitLogin()">ENTRAR</button></div></div>
-<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU<input class="field" id="pSku" required></label><label>Código de barras<input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Link da foto principal<input class="field" id="pImage" placeholder="https://..."></label>
+<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço de venda<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU<input class="field" id="pSku" required></label><label>Código de barras<input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Link da foto principal<input class="field" id="pImage" placeholder="https://..."></label>
 <label class="full">Links das fotos secundárias<textarea class="field" id="pSecondaryImages" placeholder="Um link por linha"></textarea></label>
 <label class="full">URL do produto<input class="field" id="pUrl" placeholder="https://..."></label>
 <label class="full">Descrição<textarea class="field" id="pDescription"></textarea></label></div><div class="checkrow"><label><input type="checkbox" id="pActive" checked> Ativo</label><label><input type="checkbox" id="pFeatured"> Destaque</label></div>
+<div class="payment-admin-box" id="pricingAdminBox" style="margin:14px 0;padding:14px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px">
+  <b>💰 PREÇO DE VENDA — STUDIO 70</b>
+  <p style="font-size:11px;color:#666;margin:6px 0 10px">
+    O preço do fornecedor é tratado como custo. O cliente verá e pagará o <b>Preço de venda STUDIO 70</b>.
+  </p>
+  <label>Regra de preço
+    <select class="field" id="pricingMode">
+      <option value="code">Usar o preço cadastrado no código/ADM</option>
+      <option value="margin">Calcular pelo custo + margem de lucro</option>
+    </select>
+  </label>
+  <label style="display:block;margin-top:8px">Margem de lucro (%)
+    <input class="field" id="pricingMargin" type="number" min="0" max="1000" step="0.01" value="50" placeholder="Ex.: 50">
+  </label>
+  <button type="button" class="smallbtn" style="margin-top:8px" onclick="savePricingConfig()">SALVAR REGRA DE PREÇO</button>
+  <button type="button" class="smallbtn" style="margin-top:8px" onclick="applySeedPricesToSupabase()">APLICAR PREÇOS DO CÓDIGO AO SUPABASE</button>
+  <div id="pricingAdminStatus" style="font-size:11px;margin-top:6px"></div>
+</div>
 <div class="payment-admin-box" style="margin:14px 0;padding:14px;background:#eceae6;border:1px solid #c8c5be;border-radius:12px">
   <b>💳 Mercado Pago — Configuração</b>
   <p style="font-size:11px;color:#666;margin:6px 0 10px">
@@ -225,24 +243,7 @@ footer a{color:#111!important}
   <button type="button" class="smallbtn" style="margin-top:8px" onclick="saveShippingSettings()">SALVAR FRETE</button>
   <div id="shippingAdminStatus" style="font-size:11px;margin-top:6px"></div>
 </div>
-<button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><svg id="barcodeSvg"></svg><div id="labelCode"></div></div></div><div><h3>🔔 Vendas recebidas</h3><div id="adminOrders" class="admin-list" style="max-height:260px;overflow:auto;margin-bottom:18px"></div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" onclick="printSelectedLabel()">🖨️ Imprimir etiqueta</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden></label></div>
-<div id="bulkImportBox" class="payment-admin-box" style="margin:14px 0;padding:14px;background:#eceae6;border:1px solid #c8c5be;border-radius:12px">
-  <b>📦 IMPORTAR PRODUTOS EM MASSA</b>
-  <p style="font-size:11px;color:#666;margin:6px 0 10px">
-    Cadastre vários produtos de uma vez usando <b>Excel (.xlsx/.xls) ou CSV</b>. O arquivo é validado antes de gravar no banco.
-    O código STUDIO 70 é gerado automaticamente pelo Supabase.
-  </p>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-    <label class="smallbtn" style="display:inline-block;text-align:center">
-      📁 Escolher Excel/CSV
-      <input id="bulkImportFile" type="file" accept=".xlsx,.xls,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" hidden>
-    </label>
-    <button type="button" class="smallbtn" id="bulkTemplateBtn">⬇️ Baixar modelo</button>
-    <button type="button" class="smallbtn" id="bulkImportBtn" disabled>⬆️ Importar no banco</button>
-  </div>
-  <div id="bulkImportInfo" style="font-size:11px;margin-top:8px"></div>
-  <div id="bulkImportPreview" style="margin-top:10px;max-height:260px;overflow:auto"></div>
-</div><div id="adminList" class="admin-list"></div></div></div></div></div>
+<button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><svg id="barcodeSvg"></svg><div id="labelCode"></div></div></div><div><h3>🔔 Vendas recebidas</h3><div id="adminOrders" class="admin-list" style="max-height:260px;overflow:auto;margin-bottom:18px"></div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" onclick="printSelectedLabel()">🖨️ Imprimir etiqueta</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden></label></div><div id="adminList" class="admin-list"></div></div></div></div></div>
 
 <div class="modal" id="pdvModal"><div class="modal-panel"><button class="close" onclick="closePDV()">×</button><h2 class="section-title">PDV — PONTO DE VENDA</h2>
 <div class="pdv-layout">
@@ -339,7 +340,7 @@ window.STUDIO70_SEED_PRODUCTS = [{"id": "p0001", "name": "Body Janaína", "price
 const CATEGORIES = ['Vestidos','Conjuntos','Croppeds','Bodies','Biquínis','Macacões','Blusas','Calças','Shorts','Saias','Maiôs','Duos','Tule','Outros'];
 const PRODUCTS_VERSION = 'v3';
 const PRODUCTS_KEY = 'studio70_products_' + PRODUCTS_VERSION;
-let products = cleanProducts(JSON.parse(localStorage.getItem(PRODUCTS_KEY) || 'null') || window.STUDIO70_SEED_PRODUCTS);
+let products = cleanProducts(JSON.parse(localStorage.getItem(PRODUCTS_KEY) || 'null') || window.STUDIO70_SEED_PRODUCTS).map(p=>({...p,sale_price:Number(p.sale_price??p.price??0)}));
 save();
 let cart = JSON.parse(localStorage.getItem('studio70_cart') || '[]');
 let pdvCart = JSON.parse(localStorage.getItem('studio70_pdv_cart') || '[]');
@@ -365,7 +366,8 @@ function cleanProducts(list){
 function save(){localStorage.setItem(PRODUCTS_KEY,JSON.stringify(products));}
 function renderCategories(){document.getElementById('categories').innerHTML=CATEGORIES.map(c=>`<button class="cat" onclick="filterCat('${c}')">${c}</button>`).join(''); const sel=document.getElementById('categoryFilter'); sel.innerHTML='<option value="">Todas as categorias</option>'+CATEGORIES.map(c=>`<option>${c}</option>`).join(''); document.getElementById('pCategory').innerHTML=CATEGORIES.map(c=>`<option>${c}</option>`).join('');}
 function filtered(){const q=document.getElementById('searchInput').value.trim().toLowerCase(), c=document.getElementById('categoryFilter').value; return products.filter(p=>p.active!==false && (!c||p.category===c) && (!q||[p.name,p.sku,p.barcode,p.category].join(' ').toLowerCase().includes(q)));}
-function renderProducts(){const list=filtered(); const pages=Math.max(1,Math.ceil(list.length/perPage)); page=Math.min(page,pages); const slice=list.slice((page-1)*perPage,page*perPage); const grid=document.getElementById('productGrid'); if(!grid)return; grid.innerHTML=slice.length?slice.map(p=>{const pid=escapeHtml(String(p.id??''));return `<article class="product" data-product-id="${pid}"><img src="${imageSrc(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><span class="badge">${escapeHtml(p.category||'Outros')}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${escapeHtml(p.name||'Produto')}</h3><div class="price">${money(Number(p.price)||0)}</div><div class="meta">SKU: ${escapeHtml(p.sku||'')}<br>Código: ${escapeHtml(p.barcode||'')}</div><div class="product-actions"><button class="smallbtn js-details" type="button" data-product-id="${pid}">DETALHES</button><button class="smallbtn primary js-buy" type="button" data-product-id="${pid}">COMPRAR</button></div></div></article>`}).join(''):'<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.</div>'; const pagination=document.getElementById('pagination'); if(pagination)pagination.innerHTML=Array.from({length:pages},(_,i)=>`<button class="smallbtn js-page" type="button" data-page="${i+1}" ${i+1===page?'style="background:var(--accent)"':''}>${i+1}</button>`).join('');}
+function salePriceOf(p){const n=Number(p?.sale_price);if(Number.isFinite(n)&&n>0)return n;return 0;}
+function renderProducts(){const list=filtered(); const pages=Math.max(1,Math.ceil(list.length/perPage)); page=Math.min(page,pages); const slice=list.slice((page-1)*perPage,page*perPage); const grid=document.getElementById('productGrid'); if(!grid)return; grid.innerHTML=slice.length?slice.map(p=>{const pid=escapeHtml(String(p.id??''));return `<article class="product" data-product-id="${pid}"><img src="${imageSrc(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><span class="badge">${escapeHtml(p.category||'Outros')}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${escapeHtml(p.name||'Produto')}</h3><div class="price">${money(salePriceOf(p))}</div><div class="meta">SKU: ${escapeHtml(p.sku||'')}<br>Código: ${escapeHtml(p.barcode||'')}</div><div class="product-actions"><button class="smallbtn js-details" type="button" data-product-id="${pid}">DETALHES</button><button class="smallbtn primary js-buy" type="button" data-product-id="${pid}">COMPRAR</button></div></div></article>`}).join(''):'<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.</div>'; const pagination=document.getElementById('pagination'); if(pagination)pagination.innerHTML=Array.from({length:pages},(_,i)=>`<button class="smallbtn js-page" type="button" data-page="${i+1}" ${i+1===page?'style="background:var(--accent)"':''}>${i+1}</button>`).join('');}
 function filterCat(c){document.getElementById('categoryFilter').value=c;page=1;document.getElementById('produtos').scrollIntoView({behavior:'smooth'});renderProducts();}
 function openProduct(id){
   const key=String(id??'');
@@ -384,36 +386,36 @@ function openProduct(id){
   const secondary=Array.isArray(p.secondaryImages)?p.secondaryImages.map(x=>String(x)).filter(Boolean):[];
   const gallery=[p.image,...secondary].map(x=>String(x||'').split(' | ')[0].trim()).filter(Boolean);
   const pid=JSON.stringify(key);
-  body.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:25px"><div class="product-modal-image"><img src="${image}" alt="${title}" loading="eager" decoding="async" onerror="imageError(this)">${gallery.length>1?`<div style="display:flex;gap:8px;overflow:auto;margin-top:10px">${gallery.slice(0,8).map(src=>`<img src="${imageSrc(src)}" style="width:70px;height:70px;object-fit:cover;border:1px solid var(--line);border-radius:8px;cursor:pointer" onclick="this.closest('.product-modal-image').querySelector('img').src=this.src" onerror="imageError(this)">`).join('')}</div>`:''}</div><div><h1 class="section-title">${title}</h1><div class="price" style="font-size:30px;color:var(--accent)">${money(Number(p.price)||0)}</div><div class="product-description">${desc}</div><p><b>SKU:</b> ${escapeHtml(p.sku||'')}<br><b>Código:</b> ${escapeHtml(p.barcode||'')}<br><b>Estoque total:</b> ${Number(p.stock||0)}${sizes.length?`<br><b>Tamanhos:</b> ${escapeHtml(sizes.join(', '))}`:''}${colors.length?`<br><b>Cores/variações:</b> ${escapeHtml(colors.join(', '))}`:''}</p>${variantStock.length?`<div style="margin:10px 0;padding:10px;border:1px solid var(--line);border-radius:10px"><b>Estoque por variação</b><div style="margin-top:6px;display:grid;gap:4px">${variantStock.map(v=>`<div>${escapeHtml(v.size||'—')} · ${escapeHtml(v.color||'—')} — <b>${Number(v.stock||0)}</b></div>`).join('')}</div></div>`:''}<button class="btn js-modal-buy" type="button" data-product-id="${escapeHtml(key)}">ADICIONAR AO CARRINHO</button></div></div>`;
+  body.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:25px"><div class="product-modal-image"><img src="${image}" alt="${title}" loading="eager" decoding="async" onerror="imageError(this)">${gallery.length>1?`<div style="display:flex;gap:8px;overflow:auto;margin-top:10px">${gallery.slice(0,8).map(src=>`<img src="${imageSrc(src)}" style="width:70px;height:70px;object-fit:cover;border:1px solid var(--line);border-radius:8px;cursor:pointer" onclick="this.closest('.product-modal-image').querySelector('img').src=this.src" onerror="imageError(this)">`).join('')}</div>`:''}</div><div><h1 class="section-title">${title}</h1><div class="price" style="font-size:30px;color:var(--accent)">${money(salePriceOf(p))}</div><div class="product-description">${desc}</div><p><b>SKU:</b> ${escapeHtml(p.sku||'')}<br><b>Código:</b> ${escapeHtml(p.barcode||'')}<br><b>Estoque total:</b> ${totalStockOf(p)}${sizes.length?`<br><b>Tamanhos:</b> ${escapeHtml(sizes.join(', '))}`:''}${colors.length?`<br><b>Cores/variações:</b> ${escapeHtml(colors.join(', '))}`:''}</p>${variantStock.length?`<div style="margin:10px 0;padding:10px;border:1px solid var(--line);border-radius:10px"><b>Estoque por variação</b><div style="margin-top:6px;display:grid;gap:4px">${variantStock.map(v=>`<div>${escapeHtml(v.size||'—')} · ${escapeHtml(v.color||'—')} — <b>${Number(v.stock||0)}</b></div>`).join('')}</div></div>`:''}<button class="btn js-modal-buy" type="button" data-product-id="${escapeHtml(key)}">ADICIONAR AO CARRINHO</button></div></div>`;
   modal.classList.add('open');
 }
 function closeProduct(){document.getElementById('productModal').classList.remove('open')}
 function addCart(id){const key=String(id??'');const p=products.find(x=>String(x.id??'')===key);if(!p){console.warn('Não foi possível adicionar: produto não encontrado',key);return false;}const item=cart.find(x=>String(x.id??'')===key);if(item)item.qty++;else cart.push({id:key,qty:1});saveCart();renderCart();return true;}
 function saveCart(){localStorage.setItem('studio70_cart',JSON.stringify(cart));document.getElementById('cartCount').textContent=cart.reduce((a,b)=>a+b.qty,0);}
-function renderCart(){const el=document.getElementById('cartItems'); if(!cart.length)el.innerHTML='<div class="empty">Nenhum produto adicionado.</div>'; else el.innerHTML=cart.map(i=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return `<div class="cart-row"><div><b>${p.name}</b><br>${money(p.price)} × ${i.qty}</div><button class="smallbtn" onclick="removeCart('${i.id}')">−</button></div>`}).join('');const total=cart.reduce((s,i)=>s+(products.find(p=>String(p.id??'')===String(i.id??''))?.price||0)*i.qty,0);document.getElementById('cartTotal').textContent=money(total);saveCart();}
+function renderCart(){const el=document.getElementById('cartItems'); if(!cart.length)el.innerHTML='<div class="empty">Nenhum produto adicionado.</div>'; else el.innerHTML=cart.map(i=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return `<div class="cart-row"><div><b>${p.name}</b><br>${money(salePriceOf(p))} × ${i.qty}</div><button class="smallbtn" onclick="removeCart('${i.id}')">−</button></div>`}).join('');const total=cart.reduce((s,i)=>s+(salePriceOf(products.find(p=>String(p.id??'')===String(i.id??'')))||0)*i.qty,0);document.getElementById('cartTotal').textContent=money(total);saveCart();}
 function removeCart(id){const key=String(id??'');const i=cart.find(x=>String(x.id??'')===key);if(!i)return;if(i.qty>1)i.qty--;else cart=cart.filter(x=>String(x.id??'')!==key);renderCart();}
-function checkoutWhatsApp(){const phone='5521980507823';if(!phone)return alert('Cadastre o WhatsApp no painel ou configure studio70_whatsapp no navegador.');let msg='Olá! Quero comprar:%0A'+cart.map(i=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return `• ${p.name} — ${i.qty}x — ${money(p.price*i.qty)}`}).join('%0A');window.open(`https://wa.me/${phone.replace(/\D/g,'')}?text=${msg}`,'_blank');}
+function checkoutWhatsApp(){const phone='5521980507823';if(!phone)return alert('Cadastre o WhatsApp no painel ou configure studio70_whatsapp no navegador.');let msg='Olá! Quero comprar:%0A'+cart.map(i=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return `• ${p.name} — ${i.qty}x — ${money(salePriceOf(p)*i.qty)}`}).join('%0A');window.open(`https://wa.me/${phone.replace(/\D/g,'')}?text=${msg}`,'_blank');}
 function closeCart(){document.getElementById('cartDrawer').classList.remove('open')}
 document.getElementById('cartBtn').onclick=()=>document.getElementById('cartDrawer').classList.add('open'); document.getElementById('searchBtn').onclick=()=>{document.getElementById('searchInput').focus();document.getElementById('produtos').scrollIntoView({behavior:'smooth'})}; document.getElementById('searchInput').oninput=()=>{page=1;renderProducts()}; document.getElementById('categoryFilter').onchange=()=>{page=1;renderProducts()};
 
 function savePDV(){localStorage.setItem('studio70_pdv_cart',JSON.stringify(pdvCart));localStorage.setItem('studio70_sales',JSON.stringify(sales));}
-function pdvTotal(){const subtotal=pdvCart.reduce((s,i)=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return s+(p?p.price:0)*i.qty},0);const discount=Math.max(0,Number(document.getElementById('pdvDiscount')?.value||0));return Math.max(0,subtotal-discount)}
+function pdvTotal(){const subtotal=pdvCart.reduce((s,i)=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return s+(p?salePriceOf(p):0)*i.qty},0);const discount=Math.max(0,Number(document.getElementById('pdvDiscount')?.value||0));return Math.max(0,subtotal-discount)}
 function pdvFind(code){const c=String(code||'').trim().toLowerCase();return products.find(p=>String(p.barcode||'').toLowerCase()===c||String(p.sku||'').toLowerCase()===c)||products.find(p=>String(p.name||'').toLowerCase()===c)}
 function setPDVStatus(msg,type='success'){const el=document.getElementById('pdvStatus');el.textContent=msg;el.className='pdv-status '+type}
-function addPDVProduct(id){const p=products.find(x=>x.id===id);if(!p)return;const current=pdvCart.find(x=>x.id===id);const qty=current?current.qty:0;if((p.stock||0)>0 && qty>=p.stock){setPDVStatus(`Estoque insuficiente: ${p.name} (${p.stock} disponível)`, 'error');return}if(current)current.qty++;else pdvCart.push({id,qty:1});savePDV();renderPDV();setPDVStatus(`✓ ${p.name} adicionado`, 'success');document.getElementById('pdvScanner').focus()}
+function addPDVProduct(id){const p=products.find(x=>x.id===id);if(!p)return;const current=pdvCart.find(x=>x.id===id);const stock=totalStockOf(p);const qty=current?current.qty:0;if(stock>0 && qty>=stock){setPDVStatus(`Estoque insuficiente: ${p.name} (${stock} disponível)`, 'error');return}if(current)current.qty++;else pdvCart.push({id,qty:1});savePDV();renderPDV();setPDVStatus(`✓ ${p.name} adicionado`, 'success');document.getElementById('pdvScanner').focus()}
 function scanPDV(){const input=document.getElementById('pdvScanner');const code=input.value.trim();if(!code)return;const p=pdvFind(code);if(p)addPDVProduct(p.id);else setPDVStatus(`✕ Produto não cadastrado: ${code}`,'error');input.value='';input.focus()}
 function pdvSearchAdd(){const q=document.getElementById('pdvSearch').value.trim().toLowerCase();if(!q)return;const p=products.find(x=>[x.name,x.sku,x.barcode].join(' ').toLowerCase().includes(q));if(p){addPDVProduct(p.id);document.getElementById('pdvSearch').value=''}else setPDVStatus('Nenhum produto encontrado','error')}
-function changePDVQty(id,delta){const i=pdvCart.find(x=>x.id===id),p=products.find(x=>x.id===id);if(!i||!p)return;const next=i.qty+delta;if(next<=0)pdvCart=pdvCart.filter(x=>x.id!==id);else if((p.stock||0)===0||next<=p.stock)i.qty=next;else return setPDVStatus(`Estoque insuficiente para ${p.name}`,'error');savePDV();renderPDV()}
-function renderPDV(){const items=document.getElementById('pdvItems');if(!items)return;items.innerHTML=pdvCart.length?pdvCart.map(i=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));if(!p)return '';return `<div class="pdv-item"><img src="${imageSrc(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><div><div class="pdv-item-name">${p.name}</div><div class="pdv-item-meta">${p.sku} · ${p.barcode}</div></div><div class="qtybox"><button onclick="changePDVQty('${p.id}',-1)">−</button><b>${i.qty}</b><button onclick="changePDVQty('${p.id}',1)">+</button></div><div class="lineprice"><b>${money(p.price*i.qty)}</b></div></div>`}).join(''):'<div class="empty">Nenhum produto na venda.</div>';const total=pdvTotal();document.getElementById('pdvTotal').textContent=money(total);document.getElementById('pdvSummary').innerHTML=`<div style="display:flex;justify-content:space-between"><span>Itens</span><b>${pdvCart.reduce((s,i)=>s+i.qty,0)}</b></div><div style="display:flex;justify-content:space-between"><span>Subtotal</span><b>${money(pdvCart.reduce((s,i)=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return s+(p?p.price:0)*i.qty},0))}</b></div><div style="display:flex;justify-content:space-between"><span>Desconto</span><b>${money(Number(document.getElementById('pdvDiscount')?.value||0))}</b></div>`;updateChange();renderSales()}
+function changePDVQty(id,delta){const i=pdvCart.find(x=>x.id===id),p=products.find(x=>x.id===id);if(!i||!p)return;const next=i.qty+delta;if(next<=0)pdvCart=pdvCart.filter(x=>x.id!==id);else if(totalStockOf(p)===0||next<=totalStockOf(p))i.qty=next;else return setPDVStatus(`Estoque insuficiente para ${p.name}`,'error');savePDV();renderPDV()}
+function renderPDV(){const items=document.getElementById('pdvItems');if(!items)return;items.innerHTML=pdvCart.length?pdvCart.map(i=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));if(!p)return '';return `<div class="pdv-item"><img src="${imageSrc(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><div><div class="pdv-item-name">${p.name}</div><div class="pdv-item-meta">${p.sku} · ${p.barcode}</div></div><div class="qtybox"><button onclick="changePDVQty('${p.id}',-1)">−</button><b>${i.qty}</b><button onclick="changePDVQty('${p.id}',1)">+</button></div><div class="lineprice"><b>${money(salePriceOf(p)*i.qty)}</b></div></div>`}).join(''):'<div class="empty">Nenhum produto na venda.</div>';const total=pdvTotal();document.getElementById('pdvTotal').textContent=money(total);document.getElementById('pdvSummary').innerHTML=`<div style="display:flex;justify-content:space-between"><span>Itens</span><b>${pdvCart.reduce((s,i)=>s+i.qty,0)}</b></div><div style="display:flex;justify-content:space-between"><span>Subtotal</span><b>${money(pdvCart.reduce((s,i)=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return s+(p?salePriceOf(p):0)*i.qty},0))}</b></div><div style="display:flex;justify-content:space-between"><span>Desconto</span><b>${money(Number(document.getElementById('pdvDiscount')?.value||0))}</b></div>`;updateChange();renderSales()}
 function updateChange(){const total=pdvTotal(),received=Number(document.getElementById('pdvReceived')?.value||0),change=Math.max(0,received-total);const el=document.getElementById('pdvChange');if(el)el.textContent=money(change)}
 function clearPDV(){pdvCart=[];document.getElementById('pdvDiscount').value='0';document.getElementById('pdvReceived').value='0';savePDV();renderPDV();setPDVStatus('Venda limpa','warn');document.getElementById('pdvScanner').focus()}
 async function finishSale(){
   if(!pdvCart.length)return setPDVStatus('Adicione pelo menos um produto.','error');
   const total=pdvTotal(),payment=document.getElementById('pdvPayment').value,received=Number(document.getElementById('pdvReceived').value||0);
   if(payment==='Dinheiro'&&received<total)return setPDVStatus(`Valor recebido insuficiente. Faltam ${money(total-received)}.`,'error');
-  for(const i of pdvCart){const p=products.find(x=>String(x.id??'')===String(i.id??''));if(!p)continue;if((p.stock||0)>0&&i.qty>p.stock)return setPDVStatus(`Estoque insuficiente: ${p.name}.`,'error');}
-  pdvCart.forEach(i=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));if(p&&(p.stock||0)>0)p.stock=Math.max(0,p.stock-i.qty)});
-  const sale={id:'V'+Date.now(),date:new Date().toISOString(),items:pdvCart.map(i=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return{id:p.id,name:p.name,sku:p.sku,barcode:p.barcode,qty:i.qty,unit:p.price,total:p.price*i.qty}}),subtotal:pdvCart.reduce((s,i)=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return s+p.price*i.qty},0),discount:Number(document.getElementById('pdvDiscount').value||0),total,payment,received,change:Math.max(0,received-total)};
+  for(const i of pdvCart){const p=products.find(x=>String(x.id??'')===String(i.id??''));if(!p)continue;const stock=totalStockOf(p);if(stock>0&&i.qty>stock)return setPDVStatus(`Estoque insuficiente: ${p.name}.`,'error');}
+  pdvCart.forEach(i=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));if(p){const stock=totalStockOf(p);if(stock>0)p.stock=Math.max(0,stock-i.qty)}});
+  const sale={id:'V'+Date.now(),date:new Date().toISOString(),items:pdvCart.map(i=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return{id:p.id,name:p.name,sku:p.sku,barcode:p.barcode,qty:i.qty,unit:salePriceOf(p),total:salePriceOf(p)*i.qty}}),subtotal:pdvCart.reduce((s,i)=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return s+salePriceOf(p)*i.qty},0),discount:Number(document.getElementById('pdvDiscount').value||0),total,payment,received,change:Math.max(0,received-total)};
   sales.unshift(sale);sales=sales.slice(0,500);pdvCart=[];save();savePDV();renderProducts();renderAdmin();renderPDV();
   setPDVStatus(`✓ Venda ${sale.id} concluída — ${money(total)}. Sincronizando...`,'success');
   try{
@@ -495,7 +497,42 @@ document.getElementById('pdvScanner').addEventListener('keydown',e=>{if(e.key===
 document.getElementById('pdvSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();pdvSearchAdd()}});
 document.getElementById('pdvDiscount').addEventListener('input',renderPDV);document.getElementById('pdvReceived').addEventListener('input',updateChange);
 document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
-function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} document.getElementById('adminBtn').onclick=openAdmin;
+function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadPricingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} document.getElementById('adminBtn').onclick=openAdmin;
+async function loadPricingConfig(){
+  try{
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'pricing_config'})});
+    const d=await r.json().catch(()=>({}));
+    const p=d.pricing||{};
+    const mode=document.getElementById('pricingMode'),margin=document.getElementById('pricingMargin');
+    if(mode)mode.value=p.mode==='margin'?'margin':'code';
+    if(margin)margin.value=Number(p.margin_percent||50);
+    const st=document.getElementById('pricingAdminStatus'); if(st)st.textContent=`Regra atual: ${p.mode==='margin'?'custo + margem':'preço cadastrado no código/ADM'}${p.mode==='margin'?` (${Number(p.margin_percent||0)}%)`:''}.`;
+  }catch(e){console.warn('pricing_config',e);}
+}
+async function savePricingConfig(){
+  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',savePricingConfig);
+  const mode=document.getElementById('pricingMode')?.value==='margin'?'margin':'code';
+  const margin=Math.max(0,Math.min(1000,Number(document.getElementById('pricingMargin')?.value||0)));
+  const st=document.getElementById('pricingAdminStatus'); if(st)st.textContent='Salvando regra de preço...';
+  try{
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save_pricing_config',admin_password:adminAuthPassword,mode,margin_percent:margin})});
+    const d=await r.json().catch(()=>({})); if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao salvar regra de preço.');
+    if(st)st.textContent=`✓ Regra salva: ${mode==='margin'?'custo + '+margin+'%':'preço cadastrado no código/ADM'}.`;
+    await loadCarmenattoCatalog(); renderProducts();
+  }catch(e){if(st)st.textContent=e.message;}
+}
+async function applySeedPricesToSupabase(){
+  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',applySeedPricesToSupabase);
+  const st=document.getElementById('pricingAdminStatus'); if(st)st.textContent='Aplicando preços que estão no código ao Supabase...';
+  try{
+    const products=(window.STUDIO70_SEED_PRODUCTS||[]).map(p=>({sku:p.sku,barcode:p.barcode,name:p.name,sale_price:Number(p.price||0)})).filter(p=>p.sale_price>0);
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'admin_set_code_prices',admin_password:adminAuthPassword,products})});
+    const d=await r.json().catch(()=>({})); if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao aplicar preços.');
+    if(st)st.textContent=`✓ ${d.updated||0} preço(s) do código aplicados ao Supabase.`;
+    await loadCarmenattoCatalog(); renderProducts(); renderAdmin();
+  }catch(e){if(st)st.textContent=e.message;}
+}
+
 function clearForm(){
   const form=document.getElementById('productForm');
   form.reset();
@@ -513,7 +550,7 @@ function editProduct(id){
   const p=products.find(x=>String(x.id)===String(id));
   if(!p)return alert('Produto não encontrado.');
   const set=(id,val)=>{const e=document.getElementById(id);if(e)e.value=val??'';};
-  set('editId',p.id);set('pName',p.name);set('pPrice',p.price);set('pSku',p.sku);set('pBarcode',p.barcode);
+  set('editId',p.id);set('pName',p.name);set('pPrice',p.sale_price ?? p.price);set('pSku',p.sku);set('pBarcode',p.barcode);
   set('pCategory',p.category);set('pStock',p.stock||0);
   set('pSizes',(p.sizes||[]).join(', '));set('pColors',(p.colors||[]).join(', '));
   set('pWeight',p.weightKg??p.weight??0.3);set('pHeight',p.heightCm??p.height??4);
@@ -535,11 +572,11 @@ function editProduct(id){
   if(modalPanel)modalPanel.scrollTo({top:Math.max(0,form.offsetTop-18),behavior:'smooth'});
   setTimeout(()=>document.getElementById('pName')?.focus(),250);
 }
-document.getElementById('productForm').onsubmit=e=>{
+document.getElementById('productForm').onsubmit=async e=>{
   e.preventDefault();
   const id=document.getElementById('editId').value||'p'+Date.now();
   const old=products.find(p=>String(p.id)===String(id));
-  const p={id,name:document.getElementById('pName').value.trim(),price:Number(document.getElementById('pPrice').value),
+  const p={id,name:document.getElementById('pName').value.trim(),price:Number(document.getElementById('pPrice').value),sale_price:Number(document.getElementById('pPrice').value),
     sku:document.getElementById('pSku').value.trim(),barcode:document.getElementById('pBarcode').value.trim(),
     category:document.getElementById('pCategory').value,stock:Number(document.getElementById('pStock').value||0),
     sizes:document.getElementById('pSizes').value.split(',').map(x=>x.trim()).filter(Boolean),
@@ -552,6 +589,12 @@ document.getElementById('productForm').onsubmit=e=>{
     active:document.getElementById('pActive').checked,featured:document.getElementById('pFeatured').checked};
   if(old)products=products.map(x=>String(x.id)===String(id)?p:x);else products.unshift(p);
   save();renderProducts();renderAdmin();drawLabel(p);
+  if(adminAuthPassword){
+    try{
+      const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'admin_set_code_prices',admin_password:adminAuthPassword,products:[{sku:p.sku,barcode:p.barcode,name:p.name,sale_price:p.price}]})});
+      const d=await r.json().catch(()=>({})); if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao salvar preço no Supabase.');
+    }catch(err){alert('Produto salvo localmente, mas o preço não foi enviado ao Supabase: '+err.message);}
+  }
   document.getElementById('labelPreview').style.display='block';
   document.getElementById('formTitle').textContent='Editar produto';
   alert('Produto salvo com sucesso.');
@@ -565,7 +608,7 @@ function renderAdmin(){
   const list=products.filter(p=>[p.name,p.sku,p.barcode].join(' ').toLowerCase().includes(q));
   document.getElementById('adminCount').textContent=`(${products.length})`;
   document.getElementById('adminList').innerHTML=list.slice(0,100).map(p=>`<div class="admin-item" data-product-id="${escapeHtml(String(p.id))}">
-    <span><b>${escapeHtml(p.name||'')}</b><br>${money(p.price)} · ${escapeHtml(p.barcode||'')} · estoque ${p.stock||0}</span>
+    <span><b>${escapeHtml(p.name||'')}</b><br>${money(salePriceOf(p))} · ${escapeHtml(p.barcode||'')} · estoque ${totalStockOf(p)}</span>
     <span class="admin-tools">
       <button type="button" class="smallbtn js-edit-product" data-id="${escapeHtml(String(p.id))}">Editar</button>
       <button type="button" class="smallbtn js-label-product" data-id="${escapeHtml(String(p.id))}">Etiqueta</button>
@@ -581,10 +624,10 @@ document.getElementById('adminList').addEventListener('click',e=>{
   else if(btn.classList.contains('js-delete-product'))deleteProduct(id);
 });
 document.getElementById('adminSearch').oninput=renderAdmin;
-function drawLabel(p){document.getElementById('labelName').textContent=`${p.name} · ${money(p.price)}`;document.getElementById('labelCode').textContent=p.barcode;if(window.JsBarcode)JsBarcode('#barcodeSvg',p.barcode,{format:'CODE128',displayValue:true,height:55,margin:8});}
+function drawLabel(p){document.getElementById('labelName').textContent=`${p.name} · ${money(salePriceOf(p))}`;document.getElementById('labelCode').textContent=p.barcode;if(window.JsBarcode)JsBarcode('#barcodeSvg',p.barcode,{format:'CODE128',displayValue:true,height:55,margin:8});}
 function drawLabelFor(id){const p=products.find(x=>x.id===id);if(!p)return;drawLabel(p);document.getElementById('labelPreview').style.display='block';document.getElementById('editId').value=p.id;}
-function printSelectedLabel(){const id=document.getElementById('editId').value;if(!id)return alert('Selecione/edite um produto primeiro.');const p=products.find(x=>x.id===id);if(!p)return;drawLabel(p);const w=window.open('','_blank','width=500,height=400');w.document.write(`<html><body style="font-family:Arial;text-align:center;padding:25px"><h3>${p.name}</h3><div>${money(p.price)}</div><svg id="b"></svg><div>${p.barcode}</div><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"><\/script><script>setTimeout(()=>{JsBarcode('#b','${p.barcode}',{format:'CODE128',displayValue:true,height:70});window.print()},300)<\/script></body></html>`);w.document.close();}
-document.getElementById('scannerInput').addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();const code=e.target.value.trim();if(!code)return;const p=products.find(x=>String(x.barcode).toLowerCase()===code.toLowerCase()||String(x.sku).toLowerCase()===code.toLowerCase());const result=document.getElementById('scanResult');if(p){result.textContent=`✓ ${p.name} encontrado — estoque: ${p.stock||0}`;}else result.textContent='✕ Código não cadastrado: '+code;e.target.value='';setTimeout(()=>e.target.focus(),50);});
+function printSelectedLabel(){const id=document.getElementById('editId').value;if(!id)return alert('Selecione/edite um produto primeiro.');const p=products.find(x=>x.id===id);if(!p)return;drawLabel(p);const w=window.open('','_blank','width=500,height=400');w.document.write(`<html><body style="font-family:Arial;text-align:center;padding:25px"><h3>${p.name}</h3><div>${money(salePriceOf(p))}</div><svg id="b"></svg><div>${p.barcode}</div><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"><\/script><script>setTimeout(()=>{JsBarcode('#b','${p.barcode}',{format:'CODE128',displayValue:true,height:70});window.print()},300)<\/script></body></html>`);w.document.close();}
+document.getElementById('scannerInput').addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();const code=e.target.value.trim();if(!code)return;const p=products.find(x=>String(x.barcode).toLowerCase()===code.toLowerCase()||String(x.sku).toLowerCase()===code.toLowerCase());const result=document.getElementById('scanResult');if(p){result.textContent=`✓ ${p.name} encontrado — estoque: ${totalStockOf(p)}`;}else result.textContent='✕ Código não cadastrado: '+code;e.target.value='';setTimeout(()=>e.target.focus(),50);});
 document.getElementById('importData').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{products=cleanProducts(JSON.parse(r.result));save();renderProducts();renderAdmin();alert('Backup restaurado.')}catch(_ ){alert('Arquivo inválido.')}};r.readAsText(f)};
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(products,null,2)],{type:'application/json'}));a.download='studio70-produtos-backup.json';a.click();}
 
@@ -609,6 +652,17 @@ function checkoutApiUrl(){
 }
 
 // ==================== ESTOQUE DO FORNECEDOR ====================
+function totalStockOf(p){
+  const explicit = Number(p?.stock);
+  if(Number.isFinite(explicit) && explicit > 0) return Math.max(0, Math.floor(explicit));
+  const variants = Array.isArray(p?.variantStock) ? p.variantStock : (Array.isArray(p?.raw?.variant_stock) ? p.raw.variant_stock : []);
+  if(!variants.length) return Math.max(0, Math.floor(Number.isFinite(explicit) ? explicit : 0));
+  return variants.reduce((sum,v)=>{
+    const n = Number(v?.stock);
+    return sum + (Number.isFinite(n) && n > 0 ? Math.floor(n) : 0);
+  },0);
+}
+
 function mapSupplierCategory(name){
   const n=String(name||'').toLowerCase();
   if(n.includes('vestido'))return 'Vestidos';
@@ -650,7 +704,7 @@ async function loadCarmenattoCatalog(){
     const remote=d.products.map((p,i)=>({
       id:'car-'+String(p.external_id||p.sku||i),
       name:String(p.name||'Produto do fornecedor'),
-      price:Number(p.price||0),
+      price:salePriceOf(p),
       pixPrice:Number(p.pix_price||0),
       description:String(p.description||''),
       raw:p.raw && typeof p.raw==='object' ? p.raw : {},
@@ -773,14 +827,14 @@ const integratedDigits=v=>String(v||'').replace(/\D/g,'');
 const integratedVal=id=>document.getElementById(id)?.value.trim()||'';
 function integratedProduct(id){return products.find(p=>p.id===id)||{};}
 function integratedDimensions(p){return {weight:Number(p.weightKg??p.weight??0.3)||0.3,height:Number(p.heightCm??p.height??4)||4,width:Number(p.widthCm??p.width??20)||20,length:Number(p.lengthCm??p.length??30)||30};}
-function integratedSubtotal(){return cart.reduce((s,i)=>s+(Number(integratedProduct(i.id).price)||0)*Number(i.qty||1),0)}
+function integratedSubtotal(){return cart.reduce((s,i)=>s+salePriceOf(integratedProduct(i.id))*Number(i.qty||1),0)}
 function integratedSetStatus(msg,type=''){const e=document.getElementById('paymentStatus');if(e){e.textContent=msg;e.className='status '+type;}}
 function integratedUpdateTotal(){const f=integratedSelectedShipping?Number(integratedSelectedShipping.price||0):0;const sub=integratedSubtotal();const se=document.getElementById('shipping');const te=document.getElementById('total');if(se)se.textContent=integratedSelectedShipping?integratedMoney(f):'—';if(te)te.textContent=integratedMoney(sub+f);}
 function openIntegratedCheckout(){
   document.getElementById('integratedCheckoutModal').classList.add('open');
   document.getElementById('integratedCheckoutModal').scrollTop=0;
   const el=document.getElementById('items');
-  if(el)el.innerHTML=cart.map(i=>{const p=integratedProduct(i.id);return `<div class="item"><span><b>${escapeHtml(p.name||'Produto')}</b><br><small>${i.qty} × ${integratedMoney(p.price)}</small></span><strong>${integratedMoney((Number(p.price)||0)*i.qty)}</strong></div>`}).join('');
+  if(el)el.innerHTML=cart.map(i=>{const p=integratedProduct(i.id);return `<div class="item"><span><b>${escapeHtml(p.name||'Produto')}</b><br><small>${i.qty} × ${integratedMoney(salePriceOf(p))}</small></span><strong>${integratedMoney((salePriceOf(p)||0)*i.qty)}</strong></div>`}).join('');
   const sub=document.getElementById('subtotal');if(sub)sub.textContent=integratedMoney(integratedSubtotal());
   integratedUpdateTotal();
   integratedSetStatus('');
@@ -862,7 +916,7 @@ async function createPixPayment(){
   const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));if(!name||!email||cpf.length<11)return integratedSetCheckoutStatus('Preencha nome, e-mail e CPF.','error');
   const total=integratedSubtotal()+Number(integratedSelectedShipping.price||0);const btn=document.getElementById('pixBtn');btn.disabled=true;integratedSetCheckoutStatus('Gerando Pix...');
   try{
-    const payload={action:'pix',external_reference:'ST70-'+Date.now(),description:'Compra STUDIO 70 BRAND',transaction_amount:Number(total.toFixed(2)),customer:{name,email,cpf},items:cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:Number(p.price||0),sku:p.sku||''}}),shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement')},shipping_cost:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name};
+    const payload={action:'pix',external_reference:'ST70-'+Date.now(),description:'Compra STUDIO 70 BRAND',transaction_amount:Number(total.toFixed(2)),customer:{name,email,cpf},items:cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||''}}),shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement')},shipping_cost:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name};
     const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao gerar Pix.');
     integratedPixPaymentId=data.payment_id||data.id;const qr=document.getElementById('pixQr');if(qr){qr.src=data.qr_code_base64?.startsWith('data:')?data.qr_code_base64:'data:image/png;base64,'+data.qr_code_base64;qr.style.display='block';}
     document.getElementById('pixCode').value=data.qr_code||'';document.getElementById('pixBox').classList.add('show');integratedSetCheckoutStatus('Pix gerado. Escaneie o QR Code ou copie o código.','ok');
@@ -874,7 +928,7 @@ async function integratedCardCheckout(){
   if(!integratedSelectedShipping)return integratedSetCheckoutStatus('Calcule e selecione o frete antes de continuar.','error');
   const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));if(!name||!email||cpf.length<11)return integratedSetCheckoutStatus('Preencha nome, e-mail e CPF.','error');
   const btn=document.getElementById('cardBtn');btn.disabled=true;integratedSetCheckoutStatus('Criando checkout seguro...');
-  try{const total=integratedSubtotal()+Number(integratedSelectedShipping.price||0);const payload={action:'card',external_reference:'ST70-'+Date.now(),max_installments:Number(paymentSettings().maxInstallments||12),customer:{name,email,cpf},shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement')},shipping_cost:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name,items:[...cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:Number(p.price||0),sku:p.sku||'',picture_url:p.image||''}}),{id:'frete',title:integratedSelectedShipping.name,quantity:1,unit_price:Number(integratedSelectedShipping.price||0),sku:'FRETE'}],total:Number(total.toFixed(2))};const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao criar checkout.');if(!data.init_point)throw new Error('Mercado Pago não retornou o link.');localStorage.setItem('studio70_last_order',JSON.stringify(payload));window.location.href=data.init_point;}catch(e){integratedSetCheckoutStatus(e.message,'error');btn.disabled=false;}
+  try{const total=integratedSubtotal()+Number(integratedSelectedShipping.price||0);const payload={action:'card',external_reference:'ST70-'+Date.now(),max_installments:Number(paymentSettings().maxInstallments||12),customer:{name,email,cpf},shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement')},shipping_cost:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name,items:[...cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||'',picture_url:p.image||''}}),{id:'frete',title:integratedSelectedShipping.name,quantity:1,unit_price:Number(integratedSelectedShipping.price||0),sku:'FRETE'}],total:Number(total.toFixed(2))};const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao criar checkout.');if(!data.init_point)throw new Error('Mercado Pago não retornou o link.');localStorage.setItem('studio70_last_order',JSON.stringify(payload));window.location.href=data.init_point;}catch(e){integratedSetCheckoutStatus(e.message,'error');btn.disabled=false;}
 }
 async function createStoreOrder(){
   const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));
@@ -884,7 +938,7 @@ async function createStoreOrder(){
   const btn=document.getElementById('storePayBtn');if(btn)btn.disabled=true;
   integratedSetCheckoutStatus('Registrando sua reserva...');
   try{
-    const payload={action:'store_order',payment_method:method,external_reference:'ST70-'+Date.now(),customer:{name,email,cpf},items:cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:Number(p.price||0),sku:p.sku||''}}),shipping:integratedSelectedShipping?{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement'),cost:Number(integratedSelectedShipping.price||0),service:integratedSelectedShipping.name}:null,total:Number(total.toFixed(2))};
+    const payload={action:'store_order',payment_method:method,external_reference:'ST70-'+Date.now(),customer:{name,email,cpf},items:cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||''}}),shipping:integratedSelectedShipping?{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement'),cost:Number(integratedSelectedShipping.price||0),service:integratedSelectedShipping.name}:null,total:Number(total.toFixed(2))};
     const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const data=await r.json();if(!r.ok)throw new Error(data.error||'Não foi possível reservar o pedido.');
     localStorage.setItem('studio70_last_order',JSON.stringify({...payload,order_id:data.order_id||null,status:'pending_store_payment'}));
@@ -1024,273 +1078,4 @@ function renderAdminOrders(orders){
 renderCategories();clearForm();loadPaymentSettings();loadShippingSettings();renderProducts();renderCart();renderPDV();
 loadCarmenattoCatalog();
 setInterval(pollOrders,10000);pollOrders();
-
-/* ==================== IMPORTAÇÃO EM MASSA — STUDIO 70 ==================== */
-const BULK_IMPORT_API = 'https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler';
-let bulkImportRows = [];
-
-function bulkText(v){
-  return String(v ?? '').trim();
-}
-function bulkNumber(v, fallback=0){
-  if(v===null || v===undefined || v==='') return fallback;
-  if(typeof v === 'number') return Number.isFinite(v) ? v : fallback;
-  let s=String(v).trim().replace(/\s/g,'');
-  if(s.includes(',') && s.includes('.')) s=s.replace(/\./g,'').replace(',','.');
-  else if(s.includes(',')) s=s.replace(',','.');
-  const n=Number(s);
-  return Number.isFinite(n) ? n : fallback;
-}
-function bulkArray(v){
-  if(Array.isArray(v)) return v.map(bulkText).filter(Boolean);
-  return String(v??'').split(/[,\n;|]/).map(x=>x.trim()).filter(Boolean);
-}
-function bulkBool(v, fallback=true){
-  const s=bulkText(v).toLowerCase();
-  if(!s) return fallback;
-  if(['false','0','não','nao','inativo','inactive','no'].includes(s)) return false;
-  if(['true','1','sim','ativo','active','yes'].includes(s)) return true;
-  return fallback;
-}
-function bulkNormalizeRow(r, index){
-  const get=(...keys)=>{
-    for(const k of keys){
-      if(Object.prototype.hasOwnProperty.call(r,k) && bulkText(r[k])!=='') return r[k];
-    }
-    return '';
-  };
-  const name=bulkText(get('nome','name','produto','product'));
-  const sku=bulkText(get('sku','SKU'));
-  const barcode=bulkText(get('codigo_de_barras','código_de_barras','codigo','barcode','ean'));
-  const category=bulkText(get('categoria','category')) || 'Outros';
-  const sizes=bulkArray(get('tamanhos','tamanho','sizes'));
-  const colors=bulkArray(get('cores','cor','colors'));
-  const secondary=bulkArray(get('fotos_secundarias','fotos','secondary_images','secondaryImages'));
-  const row={
-    _line:index+2,
-    supplier:bulkText(get('fornecedor','supplier')) || 'manual',
-    external_id:bulkText(get('external_id','id_externo','referencia','referência')),
-    sku,
-    barcode,
-    name,
-    price:bulkNumber(get('preco','preço','price'),0),
-    pix_price:bulkNumber(get('preco_pix','preço_pix','pix_price','pix'),0),
-    description:bulkText(get('descricao','descrição','description')),
-    sizes, colors,
-    image:bulkText(get('imagem','foto','image')),
-    secondary_images:secondary,
-    category,
-    stock:Math.max(0,Math.trunc(bulkNumber(get('estoque','stock','quantidade','qtd'),0))),
-    active:bulkBool(get('ativo','active'),true),
-    source_url:bulkText(get('url','source_url','link')),
-    weightKg:bulkNumber(get('peso','peso_kg','weightKg','weight'),0.3),
-    heightCm:bulkNumber(get('altura','altura_cm','heightCm'),4),
-    widthCm:bulkNumber(get('largura','largura_cm','widthCm'),20),
-    lengthCm:bulkNumber(get('comprimento','comprimento_cm','lengthCm'),30)
-  };
-  return row;
-}
-function bulkValidate(rows){
-  const errors=[];
-  const seenSku=new Map();
-  rows.forEach((r,i)=>{
-    if(!r.name) errors.push(`Linha ${r._line}: Nome é obrigatório.`);
-    if(!(r.price>=0)) errors.push(`Linha ${r._line}: Preço inválido.`);
-    if(r.sku){
-      const key=r.sku.toUpperCase();
-      if(seenSku.has(key)) errors.push(`Linhas ${seenSku.get(key)} e ${r._line}: SKU duplicado no arquivo (${r.sku}).`);
-      else seenSku.set(key,r._line);
-    }
-    if(r.barcode && r.barcode.length>80) errors.push(`Linha ${r._line}: Código de barras muito longo.`);
-  });
-  return errors;
-}
-function bulkShowPreview(rows, errors=[]){
-  const info=document.getElementById('bulkImportInfo');
-  const preview=document.getElementById('bulkImportPreview');
-  const btn=document.getElementById('bulkImportBtn');
-  if(!info||!preview||!btn)return;
-  if(errors.length){
-    info.innerHTML='<span style="color:#a52b2b;font-weight:800">❌ Arquivo rejeitado:</span> '+errors.slice(0,8).map(escapeHtml).join('<br>');
-    if(errors.length>8) info.innerHTML+=`<br>… e mais ${errors.length-8} erro(s).`;
-    preview.innerHTML='';
-    btn.disabled=true;
-    return;
-  }
-  info.innerHTML=`<span style="color:#246b3b;font-weight:800">✓ ${rows.length} produto(s) prontos para importação.</span>`;
-  const show=rows.slice(0,25);
-  preview.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:10px;background:#fff"><thead><tr>
-    <th style="padding:6px;border-bottom:1px solid #ddd;text-align:left">Linha</th>
-    <th style="padding:6px;border-bottom:1px solid #ddd;text-align:left">Nome</th>
-    <th style="padding:6px;border-bottom:1px solid #ddd;text-align:left">SKU</th>
-    <th style="padding:6px;border-bottom:1px solid #ddd;text-align:right">Preço</th>
-    <th style="padding:6px;border-bottom:1px solid #ddd;text-align:right">Estoque</th>
-  </tr></thead><tbody>${show.map(r=>`<tr>
-    <td style="padding:6px;border-bottom:1px solid #eee">${r._line}</td>
-    <td style="padding:6px;border-bottom:1px solid #eee">${escapeHtml(r.name)}</td>
-    <td style="padding:6px;border-bottom:1px solid #eee">${escapeHtml(r.sku||'—')}</td>
-    <td style="padding:6px;border-bottom:1px solid #eee;text-align:right">${money(r.price)}</td>
-    <td style="padding:6px;border-bottom:1px solid #eee;text-align:right">${r.stock}</td>
-  </tr>`).join('')}</tbody></table>${rows.length>25?`<div style="font-size:10px;color:#666;margin-top:5px">Mostrando 25 de ${rows.length} linhas.</div>`:''}`;
-  btn.disabled=false;
-}
-async function bulkReadFile(file){
-  const ext=file.name.toLowerCase().split('.').pop();
-  if(ext==='csv'){
-    const text=await file.text();
-    const lines=text.replace(/^\uFEFF/,'').split(/\r?\n/).filter(x=>x.trim());
-    if(!lines.length) throw new Error('CSV vazio.');
-    const parseLine=(line)=>{
-      const out=[];let cur='',q=false;
-      for(let i=0;i<line.length;i++){
-        const ch=line[i];
-        if(ch==='"' && line[i+1]==='"'){cur+='"';i++;continue;}
-        if(ch==='"'){q=!q;continue;}
-        if((ch===','||ch===';')&&!q){out.push(cur);cur='';}else cur+=ch;
-      }
-      out.push(cur);return out;
-    };
-    const headers=parseLine(lines[0]).map(h=>h.trim().toLowerCase());
-    return lines.slice(1).map(line=>{
-      const vals=parseLine(line), o={};
-      headers.forEach((h,i)=>o[h]=vals[i]??'');
-      return o;
-    });
-  }
-  if(!window.XLSX) throw new Error('Leitor Excel ainda não carregou. Tente novamente em alguns segundos.');
-  const ab=await file.arrayBuffer();
-  const wb=XLSX.read(ab,{type:'array'});
-  const ws=wb.Sheets[wb.SheetNames[0]];
-  return XLSX.utils.sheet_to_json(ws,{defval:''});
-}
-async function bulkHandleFile(file){
-  const info=document.getElementById('bulkImportInfo');
-  const btn=document.getElementById('bulkImportBtn');
-  try{
-    if(!file) return;
-    if(info)info.textContent='Lendo arquivo…';
-    if(btn)btn.disabled=true;
-    const raw=await bulkReadFile(file);
-    bulkImportRows=raw.map((r,i)=>bulkNormalizeRow(r,i));
-    const errors=bulkValidate(bulkImportRows);
-    bulkShowPreview(bulkImportRows,errors);
-  }catch(e){
-    bulkImportRows=[];
-    if(info)info.innerHTML='<span style="color:#a52b2b;font-weight:800">❌ '+escapeHtml(String(e?.message||e))+'</span>';
-    if(btn)btn.disabled=true;
-    document.getElementById('bulkImportPreview').innerHTML='';
-  }
-}
-async function bulkSendToDatabase(){
-  if(!bulkImportRows.length)return;
-  if(!adminAuthPassword){alert('Abra o ADM e autentique novamente.');return;}
-  const info=document.getElementById('bulkImportInfo');
-  const btn=document.getElementById('bulkImportBtn');
-  const payload=bulkImportRows.map(r=>({
-    supplier:r.supplier,
-    external_id:r.external_id,
-    sku:r.sku,
-    barcode:r.barcode,
-    name:r.name,
-    price:r.price,
-    pix_price:r.pix_price,
-    description:r.description,
-    sizes:r.sizes,
-    colors:r.colors,
-    image:r.image,
-    secondary_images:r.secondary_images,
-    category:r.category,
-    stock:r.stock,
-    active:r.active,
-    source_url:r.source_url,
-    weightKg:r.weightKg,
-    heightCm:r.heightCm,
-    widthCm:r.widthCm,
-    lengthCm:r.lengthCm
-  }));
-  try{
-    btn.disabled=true;
-    info.innerHTML='<span style="font-weight:800">⏳ Gravando '+payload.length+' produto(s) no Supabase…</span>';
-    const r=await fetch(BULK_IMPORT_API,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({
-      action:'admin_bulk_upsert_products',
-      admin_password:adminAuthPassword,
-      products:payload
-    })});
-    const d=await r.json().catch(()=>({}));
-    if(!r.ok||!d.ok) throw new Error(d.error||`HTTP ${r.status}`);
-    info.innerHTML=`<span style="color:#246b3b;font-weight:800">✓ Importação concluída: ${d.inserted||0} novos, ${d.updated||0} atualizados.</span>`;
-    if(d.errors?.length) info.innerHTML+=`<br><span style="color:#a52b2b">${d.errors.length} linha(s) com erro.</span>`;
-    bulkImportRows=[];
-    btn.disabled=true;
-    document.getElementById('bulkImportPreview').innerHTML='';
-    // Mantém a cópia local para a interface e tenta carregar novamente os produtos manuais do banco.
-    if(typeof loadManualCatalog==='function') await loadManualCatalog();
-    renderProducts(); renderAdmin();
-  }catch(e){
-    info.innerHTML='<span style="color:#a52b2b;font-weight:800">❌ Falha na importação:</span> '+escapeHtml(String(e?.message||e));
-    btn.disabled=false;
-  }
-}
-function bulkDownloadTemplate(){
-  const header=['nome','sku','codigo_de_barras','categoria','preco','preco_pix','estoque','tamanhos','cores','peso_kg','altura_cm','largura_cm','comprimento_cm','imagem','fotos_secundarias','url','descricao','ativo','fornecedor','external_id'];
-  const example=['Camiseta STUDIO 70','CAM-001','','Camisetas','59.90','56.90','10','P, M, G, GG','Preto, Branco','0.300','4','20','30','https://...','https://foto2... | https://foto3...','https://...','Descrição do produto','sim','manual','CAM-001'];
-  const csv=[header,example].map(row=>row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\r\n');
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));a.download='studio70-modelo-importacao-produtos.csv';a.click();
-  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-}
-document.getElementById('bulkImportFile')?.addEventListener('change',e=>bulkHandleFile(e.target.files?.[0]));
-document.getElementById('bulkImportBtn')?.addEventListener('click',bulkSendToDatabase);
-document.getElementById('bulkTemplateBtn')?.addEventListener('click',bulkDownloadTemplate);
-
-// Excel via CDN; CSV funciona mesmo sem esta biblioteca.
-(function loadXlsxLibrary(){
-  const s=document.createElement('script');
-  s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
-  s.async=true;
-  s.onload=()=>console.log('[STUDIO70] Leitor Excel carregado.');
-  s.onerror=()=>console.warn('[STUDIO70] Não foi possível carregar o leitor Excel; CSV continua disponível.');
-  document.head.appendChild(s);
-})();
-
-
-/* ==================== CATÁLOGO MANUAL / IMPORTADO ==================== */
-async function loadManualCatalog(){
-  try{
-    const r=await fetch(BULK_IMPORT_API,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({action:'manual_products',limit:5000})});
-    const d=await r.json().catch(()=>({}));
-    if(!r.ok||!d.ok||!Array.isArray(d.products)) return;
-    const manuals=d.products.map(p=>({
-      id:p.id??('db-'+(p.sku||Date.now())),
-      supplier:p.supplier||'manual',
-      external_id:p.external_id||'',
-      studio70_code:p.studio70_code||'',
-      sku:p.sku||'',
-      barcode:p.barcode||p.studio70_code||'',
-      name:p.name||'Produto',
-      price:Number(p.price)||0,
-      pix_price:Number(p.pix_price)||0,
-      description:p.description||'',
-      sizes:Array.isArray(p.sizes)?p.sizes:[],
-      colors:Array.isArray(p.colors)?p.colors:[],
-      image:p.image||'',
-      secondaryImages:Array.isArray(p.secondary_images)?p.secondary_images:[],
-      category:p.category||'Outros',
-      stock:Number(p.stock)||0,
-      active:p.active!==false,
-      featured:false,
-      weightKg:Number(p.raw?.weightKg??p.weightKg??0.3)||0.3,
-      heightCm:Number(p.raw?.heightCm??p.heightCm??4)||4,
-      widthCm:Number(p.raw?.widthCm??p.widthCm??20)||20,
-      lengthCm:Number(p.raw?.lengthCm??p.lengthCm??30)||30
-    }));
-    const keys=new Set(manuals.map(p=>`${p.supplier}|${p.id}`));
-    products=products.filter(p=>!(String(p.supplier||'')==='manual' || String(p.id||'').startsWith('db-')));
-    products=[...manuals,...products];
-    save();
-  }catch(e){ console.warn('[STUDIO70] Falha ao carregar catálogo manual:',e); }
-}
-
-
-loadManualCatalog().then(()=>{renderProducts();renderAdmin();});
 </script></body></html>
