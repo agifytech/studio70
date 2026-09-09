@@ -92,7 +92,7 @@ input:focus{border-color:#dc2626}
     <div id="storeOrderList" class="order-list"></div>
   </div>
   <div class="card"><div class="notice">
-    O PDV consulta o estoque do fornecedor no Supabase e a baixa é feita no servidor.
+    O PDV consulta estoque e preço de venda STUDIO 70 no Supabase; o preço do fornecedor é apenas custo e a baixa é feita no servidor.
     O acesso usa a senha administrativa do PDV; ela não fica gravada no HTML.
   </div></div>
 </main>
@@ -148,8 +148,9 @@ function updateVariationState(){if(!activeProduct)return;const size=$('sizeSelec
 function populateVariationSelect(id, values){const el=$(id);el.innerHTML='<option value="">Selecione</option>';values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o);});}
 function productPrice(p){
   const candidates=[
-    p?.price,p?.preco,p?.sale_price,p?.selling_price,p?.valor,p?.price_brl,
-    p?.pix_price,p?.preco_pix,p?.raw?.price,p?.raw?.preco,p?.raw?.sale_price
+    p?.sale_price,p?.studio70_price,p?.price_studio70,p?.preco_venda,
+    p?.price,p?.preco,p?.selling_price,p?.valor,p?.price_brl,
+    p?.raw?.studio70_price,p?.raw?.sale_price,p?.raw?.preco_venda
   ];
   for(const v of candidates){
     const n=Number(String(v??'').replace(',','.'));
