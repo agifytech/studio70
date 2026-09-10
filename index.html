@@ -426,8 +426,19 @@ function normalizeImageList(value){
   return [...new Set(values.flatMap(v=>String(v??'').split(/\s*\|\s*/)).map(normalizeImageUrl).filter(Boolean))];
 }
 function normalizeList(value){
-  const values=Array.isArray(value)?value:[value];
+  const values=Array.isArray(value)?value:(value==null?[]:[value]);
   return values.flatMap(v=>String(v??'').split(',')).map(v=>v.trim()).filter(Boolean);
+}
+function normalizeSizeOptions(value,description=''){
+  const source=[...(Array.isArray(value)?value:[value]),String(description||'')];
+  const found=[];
+  const add=(size)=>{const s=String(size||'').trim().toUpperCase().replace(/Ú/g,'U');if(!s)return;const label=s==='U'||s==='UNICO'||s==='UNICA'?'Único':s;if(!found.includes(label))found.push(label)};
+  source.forEach(raw=>{const text=String(raw??'').trim().toUpperCase().replace(/Ú/g,'U');if(!text)return;
+    if(/^(UNICO|UNICA|U|TAMANHO UNICO|TAMANHO UNICA)$/.test(text)){add('Único');return;}
+    const matches=text.match(/\b(PP|GG|XG|EG|G|M|P)\b/g)||[];matches.forEach(add);
+    const numeric=text.match(/\b(3[4-9]|[4-5]\d|60)\b/g)||[];numeric.forEach(add);
+  });
+  return found.length?found:['Único'];
 }
 function numberOr(value,fallback=0){const n=Number(value);return Number.isFinite(n)?n:fallback;}
 function firstPositiveNumber(...values){for(const value of values){const n=Number(value);if(Number.isFinite(n)&&n>0)return n;}return 0;}
@@ -445,7 +456,7 @@ function normalizeProductRecord(p){
   const description=String(p.description??p.raw?.description??p.raw?.product_description??p.raw?.description_text??'');
   const stock=numberOr(p.stock??p.quantity??p.raw?.stock,0);
   return {...p,sale_price:sale,image,secondaryImages,url,description,
-    sizes:normalizeList(p.sizes??p.raw?.sizes??[]),colors:normalizeList(p.colors??p.raw?.colors??[]),
+    sizes:normalizeSizeOptions(p.sizes??p.raw?.sizes??[],description),colors:normalizeList(p.colors??p.raw?.colors??[]),
     stock,active:p.active!==false,weightKg:numberOr(p.weightKg??p.weight,0.3)||0.3,
     heightCm:numberOr(p.heightCm??p.height,4)||4,widthCm:numberOr(p.widthCm??p.width,20)||20,
     lengthCm:numberOr(p.lengthCm??p.length,30)||30};
