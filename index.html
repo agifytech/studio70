@@ -268,8 +268,6 @@ repeating-linear-gradient(115deg,rgba(0,0,0,.025) 0 2px,transparent 2px 7px);col
  .banner-caption{bottom:28px}.banner-caption h3{font-size:23px}.banner-caption p{display:none}
  .banner-fallback{padding:20px}.banner-fallback h1{font-size:52px}.banner-fallback h2{font-size:13px;letter-spacing:3px}
 }
-
-body.product-route #productGrid, body.product-route #pagination, body.product-route #categoryFilter, body.product-route #catalog, body.product-route .catalog, body.product-route .storefront-main{display:none!important}
 </style>
 <style id="studio70-font-overrides">
 @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Permanent+Marker&display=swap');
@@ -329,27 +327,8 @@ footer a{color:#111!important}
 .change-box strong,.pdv-total{color:#111!important}
 /* Selo ST70: tecido cinza + letras pretas, acabamento de bordado arredondado */
 </style>
-<style id="studio70-product-page-fix">
-.studio70-product-page{position:fixed;inset:0;z-index:99990;overflow:auto;background:#e7e7e7;color:#111}
-.studio70-product-page-head{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 22px;background:rgba(255,255,255,.97);border-bottom:1px solid #bbb;backdrop-filter:blur(8px)}
-.studio70-product-page-brand{font-family:'Black Ops One','Stencil Army','Stencil Std',Impact,sans-serif;font-size:25px;letter-spacing:1px}
-.studio70-product-page-body{max-width:1250px;margin:0 auto;padding:28px 22px 60px}
-.studio70-product-page .product-detail-layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(360px,.9fr);gap:42px;align-items:start}
-.studio70-product-page .product-detail-info h1{font-size:clamp(28px,4vw,48px);line-height:1.02;margin:8px 0 12px}
-.studio70-product-page .product-detail-price{font-size:30px;font-weight:900;margin:12px 0}
-.studio70-product-page .product-main-image{background:#fff;min-height:520px;border:1px solid #c6c6c6;border-radius:18px;display:grid;place-items:center;overflow:hidden;cursor:zoom-in}
-.studio70-product-page .product-main-image img{width:100%;height:520px;object-fit:contain;transition:transform .2s ease}
-.studio70-product-page .product-thumbs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:12px}
-.studio70-product-page .product-thumb{width:72px;height:72px;border:2px solid #c5c5c5;border-radius:10px;background:#fff;padding:3px;cursor:pointer}
-.studio70-product-page .product-thumb.active{border-color:#111}
-.studio70-product-page .product-thumb img{width:100%;height:100%;object-fit:cover;border-radius:7px}
-.studio70-product-page .detail-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
-@media(max-width:850px){.studio70-product-page .product-detail-layout{grid-template-columns:1fr;gap:24px}.studio70-product-page .product-main-image,.studio70-product-page .product-main-image img{height:390px;min-height:390px}.studio70-product-page-head{padding:11px 14px}.studio70-product-page-body{padding:18px 14px 45px}.studio70-product-page-brand{font-size:19px}}
-</style>
 </head>
 <body>
-<script>try{if(new URLSearchParams(location.search).has('produto'))document.body.classList.add('product-route')}catch(e){}</script>
-
 <div class="announce">🔥 FRETE GRÁTIS ACIMA DE R$150 &nbsp;·&nbsp; ENTREGA PARA TODO O BRASIL &nbsp;·&nbsp; TROCA FÁCIL EM 7 DIAS</div>
 <header><div class="header-container"><div class="logo">STUDIO 70 BRAND</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><a href="#produtos">FEMININO</a><a href="#produtos">MASCULINO</a><a href="#produtos">LANÇAMENTOS</a></nav><div class="header-icons"><button class="iconbtn" id="searchBtn">🔍</button><button class="iconbtn" id="cartBtn">🛒 <b id="cartCount">0</b></button></div></div></header>
 <main id="inicio">
@@ -489,13 +468,6 @@ footer a{color:#111!important}
   <div class="pdv-card" style="margin-top:18px"><h3 style="margin-top:0">Últimas vendas</h3><div id="pdvHistory" class="pdv-history"></div></div>
  </div>
 </div></div></div>
-<div id="productPage" class="studio70-product-page" style="display:none" aria-hidden="true">
-  <div class="studio70-product-page-head">
-    <button id="productPageBack" class="smallbtn" type="button">← VOLTAR PARA A LOJA</button>
-    <div class="studio70-product-page-brand">STUDIO 70</div>
-  </div>
-  <main id="productPageBody" class="studio70-product-page-body"></main>
-</div>
 <div class="modal" id="productModal" aria-hidden="true"><div class="modal-panel"><button class="close" onclick="closeProduct()">×</button><div id="productBody"></div></div></div><div class="product-lightbox" id="productLightbox" onclick="closeProductLightbox()"><button class="close-lightbox" type="button" onclick="event.stopPropagation();closeProductLightbox()">×</button><img id="productLightboxImage" src="" alt=""></div>
 <div class="modal" id="virtualFittingModal"><div class="modal-panel" style="max-width:560px"><button class="close" onclick="closeVirtualFitting()">×</button><div id="virtualFittingBody"></div></div></div>
 <div id="integratedCheckoutModal">
@@ -675,28 +647,14 @@ function save(){localStorage.setItem(PRODUCTS_KEY,JSON.stringify(products));loca
 function renderCategories(){document.getElementById('categories').innerHTML=CATEGORIES.map(c=>`<button class="cat" onclick="filterCat('${c}')">${c}</button>`).join(''); const sel=document.getElementById('categoryFilter'); sel.innerHTML='<option value="">Todas as categorias</option>'+CATEGORIES.map(c=>`<option>${c}</option>`).join(''); document.getElementById('pCategory').innerHTML=CATEGORIES.map(c=>`<option>${c}</option>`).join('');}
 function filtered(){const q=document.getElementById('searchInput').value.trim().toLowerCase(), c=document.getElementById('categoryFilter').value; return products.filter(p=>p.active!==false && (!c||p.category===c) && (!q||[p.name,p.sku,p.barcode,p.category].join(' ').toLowerCase().includes(q)));}
 function salePriceOf(p){const n=Number(p?.sale_price);if(Number.isFinite(n)&&n>0)return n;return 0;}
-function renderProducts(){const list=filtered(); const pages=Math.max(1,Math.ceil(list.length/perPage)); page=Math.min(page,pages); const slice=list.slice((page-1)*perPage,page*perPage); const grid=document.getElementById('productGrid'); if(!grid)return; grid.innerHTML=slice.length?slice.map(p=>{const pid=escapeHtml(String(p.id??''));return `<article class="product" data-product-id="${pid}" ><img src="${imageSrc(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)" style="cursor:pointer"><span class="badge">${escapeHtml(p.category||'Outros')}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${escapeHtml(p.name||'Produto')}</h3><div class="price">${money(salePriceOf(p))}</div><div class="meta">SKU: ${escapeHtml(p.sku||'')}<br>Código: ${escapeHtml(p.barcode||'')}</div><div class="product-actions"><button class="smallbtn js-details" type="button" data-product-id="${pid}" onclick="event.preventDefault();event.stopPropagation();return window.openProduct&&window.openProduct(this.getAttribute('data-product-id'))" >DETALHES</button><button class="smallbtn primary js-buy" type="button" data-product-id="${pid}">COMPRAR</button></div></div></article>`}).join(''):'<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.</div>'; const pagination=document.getElementById('pagination'); if(pagination)pagination.innerHTML=Array.from({length:pages},(_,i)=>`<button class="smallbtn js-page" type="button" data-page="${i+1}" ${i+1===page?'style="background:var(--accent)"':''}>${i+1}</button>`).join('');}
+function renderProducts(){const list=filtered(); const pages=Math.max(1,Math.ceil(list.length/perPage)); page=Math.min(page,pages); const slice=list.slice((page-1)*perPage,page*perPage); const grid=document.getElementById('productGrid'); if(!grid)return; grid.innerHTML=slice.length?slice.map(p=>{const pid=escapeHtml(String(p.id??''));return `<article class="product" data-product-id="${pid}" ><img src="${imageSrc(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)" style="cursor:pointer"><span class="badge">${escapeHtml(p.category||'Outros')}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${escapeHtml(p.name||'Produto')}</h3><div class="price">${money(salePriceOf(p))}</div><div class="meta">SKU: ${escapeHtml(p.sku||'')}<br>Código: ${escapeHtml(p.barcode||'')}</div><div class="product-actions"><button class="smallbtn js-details" type="button" data-product-id="${pid}" >DETALHES</button><button class="smallbtn primary js-buy" type="button" data-product-id="${pid}">COMPRAR</button></div></div></article>`}).join(''):'<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.</div>'; const pagination=document.getElementById('pagination'); if(pagination)pagination.innerHTML=Array.from({length:pages},(_,i)=>`<button class="smallbtn js-page" type="button" data-page="${i+1}" ${i+1===page?'style="background:var(--accent)"':''}>${i+1}</button>`).join('');}
 function filterCat(c){document.getElementById('categoryFilter').value=c;page=1;document.getElementById('produtos').scrollIntoView({behavior:'smooth'});renderProducts();}
 function openProduct(id){
   const key=String(id??'').trim();
-  if(!key){console.warn('ID do produto ausente');return false;}
-  const url=new URL(window.location.href);
-  url.searchParams.set('produto',key);
-  window.location.assign(url.href);
-  return true;
-}
-
-function renderProductPageFromUrl(){
-  const key=String(new URLSearchParams(window.location.search).get('produto')||'').trim();
-  if(!key) return false;
   const p=products.find(x=>String(x.id??'')===key);
-  const body=document.getElementById('productPageBody'), pageEl=document.getElementById('productPage');
-  document.body.classList.add('product-route');
-  if(!p || !body || !pageEl){console.warn('Produto não encontrado na página:',key);return false;}
-  pageEl.style.display='block';
-  pageEl.setAttribute('aria-hidden','false');
-  document.body.style.overflow='hidden';
-  document.title='STUDIO 70 — '+(p.name||'Produto');
+  if(!p){console.warn('Produto não encontrado:',key);return;}
+  const body=document.getElementById('productBody'), modal=document.getElementById('productModal');
+  if(!body||!modal)return;
   const esc=escapeHtml, title=esc(p.name||'Produto');
   const raw=p.raw&&typeof p.raw==='object'?p.raw:{};
   const rawDescription=String(p.description||raw.description||raw.product_description||raw.description_text||raw.info?.description||'').trim();
@@ -711,17 +669,29 @@ function renderProductPageFromUrl(){
   const stock=totalStockOf(p);
   const sizeButtons=sizes.length?sizes.map((x,i)=>`<button type="button" class="detail-choice js-detail-size${i===0?' selected':''}" data-size="${esc(x)}">${esc(x)}</button>`).join(''):'<span style="color:#777">Tamanho único</span>';
   const colorButtons=colors.length?colors.map((x,i)=>`<button type="button" class="detail-choice js-detail-color${i===0?' selected':''}" data-color="${esc(x)}">${esc(x)}</button>`).join(''):'';
-  const thumbs=images.map((src,i)=>`<button type="button" class="product-thumb${i===0?' active':''}" data-gallery-index="${i}"><img src="${imageSrc(src)}" alt="${title} - foto ${i+1}" onerror="imageError(this)"></button>`).join('');
+  const thumbs=images.map((src,i)=>`<button type="button" class="product-thumb${i===0?' active':''}" data-gallery-index="${i}" aria-label="Ver foto ${i+1}"><img src="${imageSrc(src)}" alt="${title} - foto ${i+1}" onerror="imageError(this)"></button>`).join('');
   const variantRows=variantStock.map(v=>`<div class="detail-variant-row"><span>${esc(v.size||'—')}</span><span>${esc(v.color||'—')}</span><strong>${Number(v.stock||0)} un.</strong></div>`).join('');
-  body.innerHTML=`<div class="product-detail-layout"><div><div class="product-gallery"><div class="product-thumbs">${thumbs}</div><div><div class="product-main-image" id="productMainImage"><img id="productMainImageEl" src="${first}" alt="${title}" loading="eager" decoding="async" onerror="imageError(this)"></div><div class="product-zoom-hint">Passe o mouse para ampliar · clique na foto para tela cheia</div></div></div></div><div class="product-detail-info"><div class="detail-kicker">${esc(p.category||'Produto')}</div><h1>${title}</h1><div class="product-detail-price">${money(salePriceOf(p))}</div><div class="product-detail-meta"><b>SKU:</b> ${esc(p.sku||'Não informado')} &nbsp; · &nbsp; <b>Código:</b> ${esc(p.barcode||'Não informado')}</div>${colors.length?`<div class="detail-section"><h3>CORES</h3><div class="detail-choices">${colorButtons}</div></div>`:''}<div class="detail-section"><h3>TAMANHOS</h3><div class="detail-choices">${sizeButtons}</div></div><div class="detail-stock">${stock>0?`Disponível: ${stock} unidade(s)`: 'Produto esgotado'}</div>${variantRows?`<div class="detail-section"><h3>VARIAÇÕES E ESTOQUE</h3><div class="detail-variant-table"><div class="detail-variant-row head"><strong>Tamanho</strong><strong>Cor</strong><strong>Estoque</strong></div>${variantRows}</div></div>`:''}<div class="detail-section"><h3>DESCRIÇÃO</h3><div class="detail-description">${desc}</div></div><div class="detail-actions"><button type="button" class="smallbtn primary js-page-buy" data-product-id="${esc(String(p.id))}">COMPRAR</button><button type="button" class="smallbtn js-page-fitting" data-product-id="${esc(String(p.id))}">PROVADOR VIRTUAL</button></div></div></div>`;
-  body.querySelectorAll('.product-thumb').forEach(btn=>btn.addEventListener('click',()=>{const img=images[Number(btn.dataset.galleryIndex)||0];const el=document.getElementById('productMainImageEl');if(el)el.src=imageSrc(img);body.querySelectorAll('.product-thumb').forEach(x=>x.classList.remove('active'));btn.classList.add('active');}));
-  body.querySelectorAll('.js-detail-size').forEach(btn=>btn.addEventListener('click',()=>{body.querySelectorAll('.js-detail-size').forEach(x=>x.classList.remove('selected'));btn.classList.add('selected');}));
-  body.querySelectorAll('.js-detail-color').forEach(btn=>btn.addEventListener('click',()=>{body.querySelectorAll('.js-detail-color').forEach(x=>x.classList.remove('selected'));btn.classList.add('selected');}));
-  const buy=body.querySelector('.js-page-buy'); if(buy) buy.addEventListener('click',()=>{if(addCart(buy.dataset.productId)){} });
-  const fitting=body.querySelector('.js-page-fitting'); if(fitting) fitting.addEventListener('click',()=>openVirtualFitting(fitting.dataset.productId));
-  return true;
+  body.innerHTML=`<div class="product-detail-layout">
+    <div><div class="product-gallery"><div class="product-thumbs">${thumbs}</div><div><div class="product-main-image" id="productMainImage" data-image-index="0"><img id="productMainImageEl" src="${first}" alt="${title}" loading="eager" decoding="async" onerror="imageError(this)"></div><div class="product-zoom-hint">Passe o mouse para ampliar · clique na foto para abrir em tela cheia</div></div></div></div>
+    <div class="product-detail-info">
+      <div class="detail-kicker">${esc(p.category||'Produto')}</div><h1>${title}</h1>
+      <div class="product-detail-price">${money(salePriceOf(p))}</div>
+      <div class="product-detail-meta"><b>SKU:</b> ${esc(p.sku||'Não informado')} &nbsp; · &nbsp; <b>Código:</b> ${esc(p.barcode||'Não informado')}</div>
+      ${colors.length?`<strong class="detail-choice-title">Escolha a cor</strong><div class="detail-choices">${colorButtons}</div>`:''}
+      <strong class="detail-choice-title">Escolha o tamanho</strong><div class="detail-choices">${sizeButtons}</div>
+      <div class="detail-stock">${Number(stock)>0?`✓ ${stock} unidade(s) disponíveis`:'Produto esgotado'}</div>
+      ${variantStock.length?`<div class="detail-description-box"><b>Disponibilidade por variação</b><div class="detail-variant-table"><div class="detail-variant-row" style="background:#f2f0ec;font-weight:700"><span>Tamanho</span><span>Cor</span><span>Estoque</span></div>${variantRows}</div></div>`:''}
+      <div class="detail-description-box"><b>Descrição</b><div style="margin-top:9px">${desc}</div></div>
+      <div class="detail-actions"><button class="btn detail-buy js-modal-buy" type="button" data-product-id="${esc(key)}">ADICIONAR AO CARRINHO</button><button class="smallbtn detail-fitting js-fitting" type="button" data-product-id="${esc(key)}" onclick="event.preventDefault();event.stopPropagation();openVirtualFitting(this.dataset.productId)">⌁ PROVADOR VIRTUAL</button></div>
+    </div></div>`;
+  modal.classList.add('open'); modal.style.display='block'; modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
+  const main=document.getElementById('productMainImage'), mainImg=document.getElementById('productMainImageEl');
+  body.querySelectorAll('.product-thumb').forEach(btn=>btn.addEventListener('click',()=>{const i=Number(btn.dataset.galleryIndex)||0;mainImg.src=imageSrc(images[i]);mainImg.alt=`${p.name||'Produto'} - foto ${i+1}`;main.dataset.imageIndex=String(i);body.querySelectorAll('.product-thumb').forEach(x=>x.classList.remove('active'));btn.classList.add('active');}));
+  body.querySelectorAll('.js-detail-size,.js-detail-color').forEach(btn=>btn.addEventListener('click',()=>{const group=btn.classList.contains('js-detail-size')?'.js-detail-size':'.js-detail-color';body.querySelectorAll(group).forEach(x=>x.classList.remove('selected'));btn.classList.add('selected');}));
+  main?.addEventListener('mousemove',ev=>{const r=main.getBoundingClientRect();mainImg.style.transformOrigin=`${((ev.clientX-r.left)/r.width)*100}% ${((ev.clientY-r.top)/r.height)*100}%`;mainImg.style.transform='scale(1.035)';});
+  main?.addEventListener('mouseleave',()=>{mainImg.style.transformOrigin='center center';mainImg.style.transform='scale(1)';});
+  main?.addEventListener('click',()=>openProductLightbox(mainImg.src,mainImg.alt));
 }
-function closeProduct(){const el=document.getElementById('productPage');if(el){el.style.display='none';el.setAttribute('aria-hidden','true');}document.body.style.overflow='';window.scrollTo(0,0);}
 
 function openProductLightbox(src,alt){const box=document.getElementById('productLightbox');const img=document.getElementById('productLightboxImage');if(!box||!img)return;img.src=src;img.alt=alt||'';box.classList.add('open');}
 function closeProductLightbox(){document.getElementById('productLightbox')?.classList.remove('open');}
@@ -1652,27 +1622,17 @@ function renderAdminOrders(orders){
   box.innerHTML=(orders||[]).map(o=>`<div class="admin-item"><span><b>${escapeHtml(o.external_reference||'Pedido')}</b><br>${money(o.total||0)} · ${escapeHtml(o.payment_status||'pendente')} · ${escapeHtml(o.payment_method||'')}</span><small>${o.updated_at?new Date(o.updated_at).toLocaleString('pt-BR'):''}</small></div>`).join('')||'<div class="empty">Nenhuma venda sincronizada.</div>';
 }
 (function installProductButtonHandlers(){
-  if(document.documentElement.dataset.studio70ProductHandlers==='1') return;
-  document.documentElement.dataset.studio70ProductHandlers='1';
-     document.getElementById('productPageBack')?.addEventListener('click',function(){const u=new URL(location.href);u.searchParams.delete('produto');location.assign(u.href);});
-  document.addEventListener('click',function(ev){
-    const details=ev.target.closest && ev.target.closest('#productGrid .js-details');
-    const buy=ev.target.closest && ev.target.closest('#productGrid .js-buy');
-    const fitting=ev.target.closest && ev.target.closest('.js-page-fitting, #productBody .js-fitting');
-    const pageBuy=ev.target.closest && ev.target.closest('.js-page-buy');
-    if(details){ev.preventDefault();ev.stopPropagation();openProduct(details.getAttribute('data-product-id'));return;}
-    if(buy){ev.preventDefault();ev.stopPropagation();addCart(buy.getAttribute('data-product-id'));return;}
-    if(pageBuy){ev.preventDefault();ev.stopPropagation();if(addCart(pageBuy.getAttribute('data-product-id')))closeProduct();return;}
-    if(fitting){ev.preventDefault();ev.stopPropagation();openVirtualFitting(fitting.getAttribute('data-product-id'));return;}
-  },true);
-  const grid=document.getElementById('productGrid');
-  if(grid && !grid.dataset.cardHandlersInstalled){
-    grid.dataset.cardHandlersInstalled='1';
-    grid.addEventListener('click',function(ev){
-      if(ev.target.closest && ev.target.closest('button')) return;
-      const card=ev.target.closest && ev.target.closest('.product[data-product-id]');
-      if(card){ev.preventDefault();ev.stopPropagation();openProduct(card.getAttribute('data-product-id'));}
-    });
+  // Delegação no document: funciona mesmo quando renderProducts() recria o grid via innerHTML.
+  if(!document.documentElement.dataset.studio70ProductHandlers){
+    document.documentElement.dataset.studio70ProductHandlers='1';
+    document.addEventListener('click',function(ev){
+      const details=ev.target.closest?.('#productGrid .js-details');
+      const buy=ev.target.closest?.('#productGrid .js-buy');
+      const fitting=ev.target.closest?.('#productBody .js-fitting');
+      if(fitting){ev.preventDefault();ev.stopPropagation();openVirtualFitting(fitting.dataset.productId);return;}
+      if(details){ev.preventDefault();ev.stopPropagation();openProduct(details.dataset.productId);return;}
+      if(buy){ev.preventDefault();ev.stopPropagation();addCart(buy.dataset.productId);return;}
+    },true);
   }
   const pagination=document.getElementById('pagination');
   if(pagination && !pagination.dataset.handlersInstalled){
@@ -1682,14 +1642,21 @@ function renderAdminOrders(orders){
   const modalBody=document.getElementById('productBody');
   if(modalBody && !modalBody.dataset.handlersInstalled){
     modalBody.dataset.handlersInstalled='1';
-    modalBody.addEventListener('click',function(ev){const b=ev.target.closest('.js-modal-buy');if(!b)return;ev.preventDefault();if(addCart(b.getAttribute('data-product-id')))closeProduct();});
+    modalBody.addEventListener('click',function(ev){const b=ev.target.closest('.js-modal-buy');if(!b)return;ev.preventDefault();if(addCart(b.dataset.productId))closeProduct();});
   }
-  window.openProduct=openProduct; window.renderProductPageFromUrl=renderProductPageFromUrl; window.closeProduct=closeProduct; window.addCart=addCart; window.closeProduct=closeProduct; window.renderProducts=renderProducts;
-  window.openVirtualFitting=openVirtualFitting; window.closeVirtualFitting=closeVirtualFitting; window.virtualFittingNext=virtualFittingNext; window.virtualFittingResult=virtualFittingResult;
-  window.openProductLightbox=openProductLightbox; window.closeProductLightbox=closeProductLightbox;
-})();;
+  window.openProduct=openProduct;
+  window.addCart=addCart;
+  window.closeProduct=closeProduct;
+  window.renderProducts=renderProducts;
+  window.openVirtualFitting=openVirtualFitting;
+  window.closeVirtualFitting=closeVirtualFitting;
+  window.virtualFittingNext=virtualFittingNext;
+  window.virtualFittingResult=virtualFittingResult;
+  window.openProductLightbox=openProductLightbox;
+  window.closeProductLightbox=closeProductLightbox;
+})();
 renderCategories();clearForm();loadPaymentSettings();loadShippingSettings();renderProducts();renderCart();renderPDV();initBannerCarousel();renderBannerAdmin();
-Promise.resolve(loadCarmenattoCatalog()).then(()=>{if(new URLSearchParams(location.search).has('produto'))renderProductPageFromUrl();});
+loadCarmenattoCatalog();
 setInterval(pollOrders,10000);pollOrders();
 
 let fittingProductId=''; let fittingProfile={height:160,weight:60,base:40};
