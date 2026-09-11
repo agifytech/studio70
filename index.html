@@ -268,7 +268,66 @@ repeating-linear-gradient(115deg,rgba(0,0,0,.025) 0 2px,transparent 2px 7px);col
  .banner-caption{bottom:28px}.banner-caption h3{font-size:23px}.banner-caption p{display:none}
  .banner-fallback{padding:20px}.banner-fallback h1{font-size:52px}.banner-fallback h2{font-size:13px;letter-spacing:3px}
 }
-</style></head>
+</style>
+<style id="studio70-font-overrides">
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Permanent+Marker&display=swap');
+.logo, header .logo { font-family: 'Black Ops One', sans-serif !important; }
+.hero h1 { font-family: 'Black Ops One', sans-serif !important; }
+.hero h2 { font-family: 'Permanent Marker', cursive !important; }
+body, body * { font-family: sans-serif; }
+.logo, header .logo, .hero h1, .hero h2 { font-synthesis: none; }
+</style>
+
+<style id="studio70-monochrome-brand">
+/* STUDIO 70 — identidade monocromática. Somente cores + selo ST70 no rodapé. */
+:root{
+  --bg:#e7e7e7;
+  --card:#ffffff;
+  --muted:#666666;
+  --text:#111111;
+  --accent:#111111;
+  --green:#111111;
+  --line:#c7c7c7;
+  --white:#ffffff;
+  --cement:#b8b8b8;
+  --cement-dark:#858585;
+}
+html,body{background:#e7e7e7!important;color:#111!important}
+body{font-family:sans-serif!important}
+header{background:rgba(255,255,255,.97)!important;border-bottom:1px solid #bdbdbd!important}
+.logo{font-family:'Stencil Army','Army Stencil','Stencil Std',Impact,sans-serif!important;color:#111!important}
+nav a,.iconbtn,.section-title,.cat,.product,.product .price,.meta,.smallbtn,.badge,.detail-choice,.detail-stock,.product-description,footer{color:#111}
+.announce{background:#111!important;color:#fff!important}
+.hero{background:linear-gradient(135deg,#fff,#bdbdbd),repeating-linear-gradient(115deg,rgba(0,0,0,.025) 0 2px,transparent 2px 7px)!important;color:#111!important}
+.hero::after{background:#111!important}
+.hero .eyebrow{background:#111!important;color:#fff!important}
+.hero h2{color:#333!important}
+.btn,.smallbtn.primary,.close{background:#111!important;color:#fff!important;border-color:#111!important}
+.btn{box-shadow:5px 5px 0 #8a8a8a!important}
+.trustbar span{color:#333!important;border-color:#bdbdbd!important;background:rgba(255,255,255,.65)!important}
+.section-title{border-left-color:#111!important}
+.cat,.product,.admin-item,.pdv-card,.sale-row,.pdv-item{background:#fff!important;border-color:#c7c7c7!important}
+.cat:hover,.product:hover,.searchbar input:focus,.field:focus{border-color:#111!important}
+.searchbar input,.field{background:#fff!important;color:#111!important;border-color:#bdbdbd!important}
+.product img,.pdv-item img{background:#efefef!important}
+.product .price{color:#111!important}
+.smallbtn{background:#ededed!important;border-color:#bdbdbd!important}
+.badge{background:#111!important;color:#fff!important}
+.badge.featured{background:#fff!important;border-color:#111!important;color:#111!important}
+.drawer-panel,.modal-panel{background:#f5f5f5!important;color:#111!important;border-color:#c5c5c5!important}
+.cart-row{border-bottom-color:#d0d0d0!important}
+.empty{border-color:#c6c6c6!important;color:#666!important}
+.scanner,.pdv-scan{background:#e4e4e4!important;border-color:#777!important}
+.label-preview,.product-modal-image{background:#fff!important;color:#111!important}
+footer{border-top-color:#bdbdbd!important;background:#ddd!important;color:#444!important}
+footer a{color:#111!important}
+.whatsapp{background:#111!important;color:#fff!important;box-shadow:0 4px 18px rgba(0,0,0,.25)!important}
+.qtybox button{background:#ededed!important;color:#111!important;border-color:#c6c6c6!important}
+.change-box{background:#e5e5e5!important;border-color:#888!important}
+.change-box strong,.pdv-total{color:#111!important}
+/* Selo ST70: tecido cinza + letras pretas, acabamento de bordado arredondado */
+</style>
+</head>
 <body>
 <div class="announce">🔥 FRETE GRÁTIS ACIMA DE R$150 &nbsp;·&nbsp; ENTREGA PARA TODO O BRASIL &nbsp;·&nbsp; TROCA FÁCIL EM 7 DIAS</div>
 <header><div class="header-container"><div class="logo">STUDIO 70 BRAND</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><a href="#produtos">FEMININO</a><a href="#produtos">MASCULINO</a><a href="#produtos">LANÇAMENTOS</a></nav><div class="header-icons"><button class="iconbtn" id="searchBtn">🔍</button><button class="iconbtn" id="cartBtn">🛒 <b id="cartCount">0</b></button></div></div></header>
@@ -281,7 +340,6 @@ repeating-linear-gradient(115deg,rgba(0,0,0,.025) 0 2px,transparent 2px 7px);col
     <div class="banner-dots" id="bannerDots"></div>
   </div>
 </section>
-<div class="trustbar"><span>🚚 Frete grátis acima de R$150</span><span>🔄 Troca fácil em 7 dias</span><span>🔒 Compra 100% segura</span><span>💳 Parcele suas compras</span></div>
 <section><h2 class="section-title">CATEGORIAS</h2><div class="category-grid" id="categories"></div></section>
 <section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section></main>
 <a class="whatsapp" id="whatsappFloat" href="#" target="_blank">✆</a><footer><h2>STUDIO 70 BRAND</h2><p>Moda urbana masculina e feminina. Estilo, atitude e identidade.</p><p><a href="https://instagram.com/use.studio70" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-weight:700">Instagram: @use.studio70</a></p><p>© 2026 STUDIO 70 BRAND</p></footer>
@@ -512,17 +570,24 @@ function normalizeImageList(value){
   const values=Array.isArray(value)?value:[value];
   return [...new Set(values.flatMap(v=>String(v??'').split(/\s*\|\s*/)).map(normalizeImageUrl).filter(Boolean))];
 }
+function variationLabel(value){
+  if(value==null)return '';
+  if(typeof value==='string'||typeof value==='number')return String(value).trim();
+  if(typeof value==='object')return String(value.label??value.name??value.value??value.size??value.color??value.title??'').trim();
+  return String(value).trim();
+}
 function normalizeList(value){
   const values=Array.isArray(value)?value:(value==null?[]:[value]);
-  return values.flatMap(v=>String(v??'').split(',')).map(v=>v.trim()).filter(Boolean);
+  return [...new Set(values.flatMap(v=>variationLabel(v).split(/,|\/|\|/)).map(v=>v.trim()).filter(Boolean))];
 }
 function normalizeSizeOptions(value,description=''){
   const source=[...(Array.isArray(value)?value:[value]),String(description||'')];
   const found=[];
-  const add=(size)=>{const s=String(size||'').trim().toUpperCase().replace(/Ú/g,'U');if(!s)return;const label=s==='U'||s==='UNICO'||s==='UNICA'?'Único':s;if(!found.includes(label))found.push(label)};
-  source.forEach(raw=>{const text=String(raw??'').trim().toUpperCase().replace(/Ú/g,'U');if(!text)return;
+  const add=(size)=>{const s=variationLabel(size).trim().toUpperCase().replace(/Ú/g,'U');if(!s)return;const label=s==='U'||s==='UNICO'||s==='UNICA'||s==='TAMANHO UNICO'||s==='TAMANHO UNICA'?'Único':s;if(!found.includes(label))found.push(label)};
+  source.forEach(raw=>{
+    const text=variationLabel(raw).trim().toUpperCase().replace(/Ú/g,'U');if(!text)return;
     if(/^(UNICO|UNICA|U|TAMANHO UNICO|TAMANHO UNICA)$/.test(text)){add('Único');return;}
-    const matches=text.match(/\b(PP|GG|XG|EG|G|M|P)\b/g)||[];matches.forEach(add);
+    const matches=text.match(/\b(PP|P|M|G|GG|XG|XXG|EG|EXG)\b/g)||[];matches.forEach(add);
     const numeric=text.match(/\b(3[4-9]|[4-5]\d|60)\b/g)||[];numeric.forEach(add);
   });
   return found.length?found:['Único'];
@@ -591,11 +656,12 @@ function openProduct(id){
   const body=document.getElementById('productBody'), modal=document.getElementById('productModal');
   if(!body||!modal)return;
   const esc=escapeHtml, title=esc(p.name||'Produto');
-  const rawDescription=p.description||p.raw?.description||p.raw?.product_description||p.raw?.description_text||'';
+  const raw=p.raw&&typeof p.raw==='object'?p.raw:{};
+  const rawDescription=String(p.description||raw.description||raw.product_description||raw.description_text||raw.info?.description||'').trim();
   const desc=esc(rawDescription||'Descrição não cadastrada.').replace(/\n/g,'<br>');
-  const sizes=Array.isArray(p.sizes)?p.sizes.map(x=>String(x)).filter(Boolean):[];
-  const colors=Array.isArray(p.colors)?p.colors.map(x=>String(x)).filter(Boolean):[];
-  const variantStock=Array.isArray(p.variantStock)?p.variantStock.filter(v=>v&&Number(v.stock)>=0):[];
+  const sizes=normalizeSizeOptions(p.sizes,rawDescription).filter(Boolean);
+  const colors=normalizeList(p.colors);
+  const variantStock=Array.isArray(p.variantStock)?p.variantStock.map(v=>({size:variationLabel(v?.size),color:variationLabel(v?.color),stock:Math.max(0,Math.trunc(Number(v?.stock??0)))})).filter(v=>v.size||v.color):[];
   const secondary=Array.isArray(p.secondaryImages)?p.secondaryImages.map(x=>String(x)).filter(Boolean):[];
   const gallery=[p.image,...secondary].map(x=>String(x||'').split(' | ')[0].trim()).filter(Boolean);
   const images=gallery.length?gallery:[''];
@@ -604,15 +670,30 @@ function openProduct(id){
   const sizeButtons=sizes.length?sizes.map((x,i)=>`<button type="button" class="detail-choice js-detail-size${i===0?' selected':''}" data-size="${esc(x)}">${esc(x)}</button>`).join(''):'<span style="color:#777">Tamanho único</span>';
   const colorButtons=colors.length?colors.map((x,i)=>`<button type="button" class="detail-choice js-detail-color${i===0?' selected':''}" data-color="${esc(x)}">${esc(x)}</button>`).join(''):'';
   const thumbs=images.map((src,i)=>`<button type="button" class="product-thumb${i===0?' active':''}" data-gallery-index="${i}" aria-label="Ver foto ${i+1}"><img src="${imageSrc(src)}" alt="${title} - foto ${i+1}" onerror="imageError(this)"></button>`).join('');
-  body.innerHTML=`<div class="product-detail-layout"><div><div class="product-gallery"><div class="product-thumbs">${thumbs}</div><div><div class="product-main-image" id="productMainImage" data-image-index="0"><img id="productMainImageEl" src="${first}" alt="${title}" loading="eager" decoding="async" onerror="imageError(this)"></div><div class="product-zoom-hint">Passe o mouse para ampliar · clique para abrir a imagem</div></div></div></div><div class="product-detail-info"><div class="detail-kicker">${esc(p.category||'Produto')}</div><h1>${title}</h1><div class="product-detail-price">${money(salePriceOf(p))}</div><div class="product-detail-meta"><b>SKU:</b> ${esc(p.sku||'Não informado')}<br><b>Código:</b> ${esc(p.barcode||'Não informado')}</div>${colors.length?`<strong class="detail-choice-title">COR:</strong><div class="detail-choices">${colorButtons}</div>`:''}<strong class="detail-choice-title">TAMANHO:</strong><div class="detail-choices">${sizeButtons}</div><div class="detail-stock">${Number(stock)>0?`✓ ${stock} unidade(s) em estoque`:'Produto esgotado'}</div>${variantStock.length?`<div class="detail-description-box"><b>Disponibilidade por variação</b><div style="margin-top:8px;display:grid;gap:5px">${variantStock.map(v=>`<div>${esc(v.size||'—')} · ${esc(v.color||'—')} — <b>${Number(v.stock||0)} em estoque</b></div>`).join('')}</div></div>`:''}<div class="detail-description-box"><b>Descrição do produto</b><div style="margin-top:8px">${desc}</div></div><button class="btn js-modal-buy" type="button" data-product-id="${esc(key)}" style="width:100%">ADICIONAR AO CARRINHO</button><button class="smallbtn js-fitting" type="button" style="width:100%;margin-top:10px" data-product-id="${esc(key)}" onclick="window.openVirtualFitting(this.dataset.productId)">⌁ PROVADOR VIRTUAL</button></div></div>`;
+  const variantRows=variantStock.map(v=>`<div class="detail-variant-row"><span>${esc(v.size||'—')}</span><span>${esc(v.color||'—')}</span><strong>${Number(v.stock||0)} un.</strong></div>`).join('');
+  body.innerHTML=`<div class="product-detail-layout">
+    <div><div class="product-gallery"><div class="product-thumbs">${thumbs}</div><div><div class="product-main-image" id="productMainImage" data-image-index="0"><img id="productMainImageEl" src="${first}" alt="${title}" loading="eager" decoding="async" onerror="imageError(this)"></div><div class="product-zoom-hint">Passe o mouse para ampliar · clique na foto para abrir em tela cheia</div></div></div></div>
+    <div class="product-detail-info">
+      <div class="detail-kicker">${esc(p.category||'Produto')}</div><h1>${title}</h1>
+      <div class="product-detail-price">${money(salePriceOf(p))}</div>
+      <div class="product-detail-meta"><b>SKU:</b> ${esc(p.sku||'Não informado')} &nbsp; · &nbsp; <b>Código:</b> ${esc(p.barcode||'Não informado')}</div>
+      ${colors.length?`<strong class="detail-choice-title">Escolha a cor</strong><div class="detail-choices">${colorButtons}</div>`:''}
+      <strong class="detail-choice-title">Escolha o tamanho</strong><div class="detail-choices">${sizeButtons}</div>
+      <div class="detail-stock">${Number(stock)>0?`✓ ${stock} unidade(s) disponíveis`:'Produto esgotado'}</div>
+      ${variantStock.length?`<div class="detail-description-box"><b>Disponibilidade por variação</b><div class="detail-variant-table"><div class="detail-variant-row" style="background:#f2f0ec;font-weight:700"><span>Tamanho</span><span>Cor</span><span>Estoque</span></div>${variantRows}</div></div>`:''}
+      <div class="detail-description-box"><b>Descrição</b><div style="margin-top:9px">${desc}</div></div>
+      <div class="detail-actions"><button class="btn detail-buy js-modal-buy" type="button" data-product-id="${esc(key)}">ADICIONAR AO CARRINHO</button><button class="smallbtn detail-fitting js-fitting" type="button" data-product-id="${esc(key)}" onclick="event.preventDefault();event.stopPropagation();openVirtualFitting(this.dataset.productId)">⌁ PROVADOR VIRTUAL</button></div>
+      <div class="product-detail-trust"><div><b>ESTOQUE REAL</b>Atualizado no catálogo</div><div><b>COMPRA SEGURA</b>Pedido processado pela loja</div><div><b>ATENDIMENTO</b>Suporte STUDIO 70</div></div>
+    </div></div>`;
   modal.classList.add('open');
   const main=document.getElementById('productMainImage'), mainImg=document.getElementById('productMainImageEl');
   body.querySelectorAll('.product-thumb').forEach(btn=>btn.addEventListener('click',()=>{const i=Number(btn.dataset.galleryIndex)||0;mainImg.src=imageSrc(images[i]);mainImg.alt=`${p.name||'Produto'} - foto ${i+1}`;main.dataset.imageIndex=String(i);body.querySelectorAll('.product-thumb').forEach(x=>x.classList.remove('active'));btn.classList.add('active');}));
   body.querySelectorAll('.js-detail-size,.js-detail-color').forEach(btn=>btn.addEventListener('click',()=>{const group=btn.classList.contains('js-detail-size')?'.js-detail-size':'.js-detail-color';body.querySelectorAll(group).forEach(x=>x.classList.remove('selected'));btn.classList.add('selected');}));
-  main?.addEventListener('mousemove',ev=>{const r=main.getBoundingClientRect();mainImg.style.transformOrigin=`${((ev.clientX-r.left)/r.width)*100}% ${((ev.clientY-r.top)/r.height)*100}%`;});
-  main?.addEventListener('mouseleave',()=>{mainImg.style.transformOrigin='center center';});
+  main?.addEventListener('mousemove',ev=>{const r=main.getBoundingClientRect();mainImg.style.transformOrigin=`${((ev.clientX-r.left)/r.width)*100}% ${((ev.clientY-r.top)/r.height)*100}%`;mainImg.style.transform='scale(1.035)';});
+  main?.addEventListener('mouseleave',()=>{mainImg.style.transformOrigin='center center';mainImg.style.transform='scale(1)';});
   main?.addEventListener('click',()=>openProductLightbox(mainImg.src,mainImg.alt));
 }
+
 function openProductLightbox(src,alt){const box=document.getElementById('productLightbox');const img=document.getElementById('productLightboxImage');if(!box||!img)return;img.src=src;img.alt=alt||'';box.classList.add('open');}
 function closeProductLightbox(){document.getElementById('productLightbox')?.classList.remove('open');}
 
@@ -1180,10 +1261,10 @@ async function loadCarmenattoCatalog(){
       if(grid&&!products.length)grid.innerHTML='<div class="empty" style="grid-column:1/-1">Não foi possível carregar o estoque do fornecedor. Abra o console (F12) para ver o erro.</div>';
       return;
     }
-    if(!d.ok||!Array.isArray(d.products)){console.error('[STUDIO70] Resposta inválida do estoque do fornecedor:',d);return;}
-    if(!d.products.length){console.warn('[STUDIO70] A API respondeu sem produtos.');return;}
+    const apiProducts=Array.isArray(d.products)?d.products:(Array.isArray(d.data)?d.data:(Array.isArray(d.items)?d.items:[]));
+    if(!apiProducts.length){console.error('[STUDIO70] API respondeu sem produtos válidos:',d);return;}
     const currentProducts=products.slice();
-    const remote=d.products.map((p,i)=>{
+    const remote=apiProducts.map((p,i)=>{
       const externalId=String(p.external_id||p.sku||i);
       const sku=String(p.sku||p.external_id||'');
       const current=currentProducts.find(x=>sameProduct(x,{supplierExternalId:externalId,sku}));
@@ -1221,8 +1302,8 @@ async function loadCarmenattoCatalog(){
     renderCategories();
     renderProducts();
     renderAdmin();
-    window.STUDIO70_FORNECEDOR_SYNCED_AT=d.products.reduce((max,p)=>String(p.synced_at||'')>max?String(p.synced_at||''):max,'');
-    console.info(`[STUDIO70] Estoque do fornecedor carregado: ${d.products.length} produtos.`);
+    window.STUDIO70_FORNECEDOR_SYNCED_AT=apiProducts.reduce((max,p)=>String(p.synced_at||'')>max?String(p.synced_at||''):max,'');
+    console.info(`[STUDIO70] Estoque do fornecedor carregado: ${apiProducts.length} produtos.`);
   }catch(e){
     console.error('[STUDIO70] Erro de rede ao carregar estoque do fornecedor:',e);
     const grid=document.getElementById('productGrid');
@@ -1583,16 +1664,38 @@ let fittingProductId=''; let fittingProfile={height:160,weight:60,base:40};
 function closeVirtualFitting(){document.getElementById('virtualFittingModal')?.classList.remove('open');}
 function openVirtualFitting(id){
   const p=products.find(x=>String(x.id)===String(id)); if(!p)return;
-  fittingProductId=String(id); const body=document.getElementById('virtualFittingBody'); if(!body)return;
-  body.innerHTML=`<h2 class="section-title">⌁ Provador Virtual</h2><p style="color:var(--muted)">Descubra a vestibilidade de <b>${escapeHtml(p.name||'este produto')}</b>. Informe seus dados para receber uma sugestão de tamanho.</p><div class="form-grid"><label>Altura (cm)<input class="field" id="fitHeight" type="number" min="120" max="230" value="160"></label><label>Peso (kg)<input class="field" id="fitWeight" type="number" min="35" max="250" value="60"></label><label>Tamanho habitual<select class="field" id="fitBaseSize"><option>36</option><option>38</option><option selected>40</option><option>42</option><option>44</option><option>46</option><option>48</option></select></label></div><button class="btn" style="width:100%;margin-top:16px" type="button" onclick="virtualFittingNext()">CONTINUAR</button>`;
+  fittingProductId=String(id);
+  const body=document.getElementById('virtualFittingBody'); if(!body)return;
+  const available=normalizeSizeOptions(p.sizes,p.description||'');
+  const opts=available.length?available.map(x=>`<option value="${escapeHtml(x)}">${escapeHtml(x)}</option>`).join(''):'<option value="M">M</option><option value="G">G</option><option value="GG">GG</option>';
+  body.innerHTML=`<div class="fitting-head"><div class="fitting-head-icon">⌁</div><div><div class="fitting-title">Provador Virtual</div><div class="fitting-sub">Uma estimativa personalizada para este produto</div></div></div><div class="fitting-card"><b>${escapeHtml(p.name||'Produto')}</b><p style="font-size:11px;color:#777;margin:5px 0 0">Usaremos altura, peso e seu tamanho habitual como ponto de partida.</p></div><div class="fitting-grid" style="margin-top:12px"><label>Altura (cm)<input class="field" id="fitHeight" type="number" min="120" max="230" value="160"></label><label>Peso (kg)<input class="field" id="fitWeight" type="number" min="35" max="250" value="60"></label></div><label style="display:block;margin-top:12px">Tamanho habitual<select class="field" id="fitBaseSize">${opts}</select></label><button class="btn" style="width:100%;margin-top:16px;min-height:50px" type="button" onclick="virtualFittingNext()">CONTINUAR</button>`;
   document.getElementById('virtualFittingModal').classList.add('open');
 }
+
 function virtualFittingNext(){
   fittingProfile={height:Number(document.getElementById('fitHeight')?.value||160),weight:Number(document.getElementById('fitWeight')?.value||60),base:Number(document.getElementById('fitBaseSize')?.value||40)};
   const body=document.getElementById('virtualFittingBody');
-  body.innerHTML=`<h2 class="section-title">Suas medidas</h2><p style="color:var(--muted)">Ajuste as medidas aproximadas ou use os valores sugeridos.</p><label>Busto (cm)<input class="field" id="fitBust" type="range" min="70" max="140" value="92" oninput="document.getElementById('fitBustOut').textContent=this.value+' cm'"><output id="fitBustOut">92 cm</output></label><label>Cintura (cm)<input class="field" id="fitWaist" type="range" min="55" max="130" value="76" oninput="document.getElementById('fitWaistOut').textContent=this.value+' cm'"><output id="fitWaistOut">76 cm</output></label><label>Quadril (cm)<input class="field" id="fitHip" type="range" min="75" max="150" value="100" oninput="document.getElementById('fitHipOut').textContent=this.value+' cm'"><output id="fitHipOut">100 cm</output></label><div style="display:flex;gap:10px;margin-top:16px"><button class="smallbtn" style="flex:1" type="button" onclick="openVirtualFitting(fittingProductId)">VOLTAR</button><button class="btn" style="flex:1" type="button" onclick="virtualFittingResult()">VER RESULTADO</button></div>`;
+  body.innerHTML=`<div class="fitting-head"><div class="fitting-head-icon">⌁</div><div><div class="fitting-title">Suas medidas</div><div class="fitting-sub">Ajuste apenas se quiser refinar a recomendação</div></div></div><label>Busto (cm)<input class="field" id="fitBust" type="range" min="70" max="140" value="92" oninput="document.getElementById('fitBustOut').textContent=this.value+' cm'"><output id="fitBustOut">92 cm</output></label><label>Cintura (cm)<input class="field" id="fitWaist" type="range" min="55" max="130" value="76" oninput="document.getElementById('fitWaistOut').textContent=this.value+' cm'"><output id="fitWaistOut">76 cm</output></label><label>Quadril (cm)<input class="field" id="fitHip" type="range" min="75" max="150" value="100" oninput="document.getElementById('fitHipOut').textContent=this.value+' cm'"><output id="fitHipOut">100 cm</output></label><div style="display:flex;gap:10px;margin-top:16px"><button class="smallbtn" style="flex:1" type="button" onclick="openVirtualFitting(fittingProductId)">VOLTAR</button><button class="btn" style="flex:1" type="button" onclick="virtualFittingResult()">VER RESULTADO</button></div>`;
 }
 function virtualFittingResult(){
-  const p=products.find(x=>String(x.id)===String(fittingProductId)); const base=fittingProfile.base||40; const bust=Number(document.getElementById('fitBust')?.value||92),waist=Number(document.getElementById('fitWaist')?.value||76),hip=Number(document.getElementById('fitHip')?.value||100); const score=(bust-92)*.12+(waist-76)*.08+(hip-100)*.08; const indicated=Math.max(36,Math.min(48,base+(score>7?2:score>2?1:score<-7?-2:score<-2?-1:0))); const available=(Array.isArray(p?.sizes)?p.sizes:[]).map(String).filter(x=>/^((36|38|40|42|44|46|48)(\s|$|\/|-))/i.test(x)); const size=available.length?available.find(x=>x.startsWith(String(indicated)))||available.find(x=>x.startsWith(String(base)))||String(indicated):String(indicated); const fit=score>8?'mais ajustado':score<-8?'mais confortável':'com maior chance de vestir com conforto'; document.getElementById('virtualFittingBody').innerHTML=`<h2 class="section-title">Resultado do provador</h2><div style="padding:22px;text-align:center;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.04)"><div style="font-size:13px;color:var(--muted)">TAMANHO INDICADO</div><strong style="display:block;font-size:56px;color:var(--accent);margin:8px 0">${escapeHtml(size)}</strong><p>O tamanho <b>${escapeHtml(size)}</b> tem maior chance de vestir ${fit} para esse perfil.</p></div><p style="font-size:12px;color:var(--muted);margin-top:14px">A recomendação é uma estimativa baseada nas medidas informadas e pode variar conforme o modelo e a preferência de vestibilidade.</p><div style="display:flex;gap:10px"><button class="smallbtn" style="flex:1" type="button" onclick="openVirtualFitting(fittingProductId)">CALCULAR NOVAMENTE</button><button class="btn" style="flex:1" type="button" onclick="closeVirtualFitting()">ENTENDI</button></div>`;
+  const p=products.find(x=>String(x.id)===String(fittingProductId));
+  const baseRaw=String(fittingProfile.base||40);
+  const bust=Number(document.getElementById('fitBust')?.value||92),waist=Number(document.getElementById('fitWaist')?.value||76),hip=Number(document.getElementById('fitHip')?.value||100);
+  const score=(bust-92)*.12+(waist-76)*.08+(hip-100)*.08;
+  const numericBase=Number(baseRaw);
+  let indicatedNumeric=Number.isFinite(numericBase)?Math.max(34,Math.min(60,numericBase+(score>7?2:score>2?1:score<-7?-2:score<-2?-1:0))):40;
+  const available=normalizeSizeOptions(p?.sizes,p?.description||'');
+  const map={PP:36,P:38,M:40,G:42,GG:44,XG:46,XXG:48,EG:50,EXG:52,'ÚNICO':0};
+  const reverse=n=>Object.entries(map).find(([k,v])=>v===n)?.[0]||String(n);
+  let wanted=Number.isFinite(numericBase)?String(indicatedNumeric):baseRaw;
+  if(available.length&&available[0]!=='Único'){
+    const upper=available.map(String);
+    const numericAvail=upper.filter(x=>/^\d+$/.test(x)).map(Number).sort((a,b)=>a-b);
+    const alphaAvail=upper.filter(x=>Object.prototype.hasOwnProperty.call(map,x));
+    if(numericAvail.length){wanted=String(numericAvail.reduce((best,n)=>Math.abs(n-indicatedNumeric)<Math.abs(best-indicatedNumeric)?n:best,numericAvail[0]));}
+    else if(alphaAvail.length){const key=reverse(indicatedNumeric);wanted=alphaAvail.includes(key)?key:(alphaAvail.includes(baseRaw.toUpperCase())?baseRaw.toUpperCase():alphaAvail[Math.min(alphaAvail.length-1,Math.max(0,Math.round((indicatedNumeric-36)/2))) ]);}
+  } else if(available.length&&available[0]==='Único') wanted='Único';
+  const fit=score>8?'mais ajustado':score<-8?'mais confortável':'com maior chance de vestir com conforto';
+  document.getElementById('virtualFittingBody').innerHTML=`<div class="fitting-head"><div class="fitting-head-icon">✓</div><div><div class="fitting-title">Seu resultado</div><div class="fitting-sub">Recomendação estimada para este produto</div></div></div><div class="fitting-result"><div class="fitting-result-label">Tamanho indicado</div><div class="fitting-result-size">${escapeHtml(wanted)}</div><p>Maior chance de vestir ${fit} para o perfil informado.</p></div><p style="font-size:12px;color:var(--muted);margin-top:14px">A recomendação é uma estimativa baseada nas medidas informadas e pode variar conforme o modelo e a preferência de vestibilidade.</p><div style="display:flex;gap:10px"><button class="smallbtn" style="flex:1" type="button" onclick="openVirtualFitting(fittingProductId)">CALCULAR NOVAMENTE</button><button class="btn" style="flex:1" type="button" onclick="closeVirtualFitting()">ENTENDI</button></div>`;
 }
 </script></body></html>
