@@ -650,11 +650,11 @@ function salePriceOf(p){const n=Number(p?.sale_price);if(Number.isFinite(n)&&n>0
 function renderProducts(){const list=filtered(); const pages=Math.max(1,Math.ceil(list.length/perPage)); page=Math.min(page,pages); const slice=list.slice((page-1)*perPage,page*perPage); const grid=document.getElementById('productGrid'); if(!grid)return; grid.innerHTML=slice.length?slice.map(p=>{const pid=escapeHtml(String(p.id??''));return `<article class="product" data-product-id="${pid}" ><img src="${imageSrc(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)" style="cursor:pointer"><span class="badge">${escapeHtml(p.category||'Outros')}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${escapeHtml(p.name||'Produto')}</h3><div class="price">${money(salePriceOf(p))}</div><div class="meta">SKU: ${escapeHtml(p.sku||'')}<br>Código: ${escapeHtml(p.barcode||'')}</div><div class="product-actions"><button class="smallbtn js-details" type="button" data-product-id="${pid}" >DETALHES</button><button class="smallbtn primary js-buy" type="button" data-product-id="${pid}">COMPRAR</button></div></div></article>`}).join(''):'<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.</div>'; const pagination=document.getElementById('pagination'); if(pagination)pagination.innerHTML=Array.from({length:pages},(_,i)=>`<button class="smallbtn js-page" type="button" data-page="${i+1}" ${i+1===page?'style="background:var(--accent)"':''}>${i+1}</button>`).join('');}
 function filterCat(c){document.getElementById('categoryFilter').value=c;page=1;document.getElementById('produtos').scrollIntoView({behavior:'smooth'});renderProducts();}
 function openProduct(id){
-  const key=String(id??'').trim();
+  const key=String(id??'');
   const p=products.find(x=>String(x.id??'')===key);
   if(!p){console.warn('Produto não encontrado:',key);return;}
-  const body=document.getElementById('productBody'), modal=document.getElementById('productModal');
-  if(!body||!modal)return;
+  const body=document.getElementById('productPageBody'), pageEl=document.getElementById('productPage');
+  if(!body||!pageEl)return;
   const esc=escapeHtml, title=esc(p.name||'Produto');
   const raw=p.raw&&typeof p.raw==='object'?p.raw:{};
   const rawDescription=String(p.description||raw.description||raw.product_description||raw.description_text||raw.info?.description||'').trim();
@@ -669,29 +669,15 @@ function openProduct(id){
   const stock=totalStockOf(p);
   const sizeButtons=sizes.length?sizes.map((x,i)=>`<button type="button" class="detail-choice js-detail-size${i===0?' selected':''}" data-size="${esc(x)}">${esc(x)}</button>`).join(''):'<span style="color:#777">Tamanho único</span>';
   const colorButtons=colors.length?colors.map((x,i)=>`<button type="button" class="detail-choice js-detail-color${i===0?' selected':''}" data-color="${esc(x)}">${esc(x)}</button>`).join(''):'';
-  const thumbs=images.map((src,i)=>`<button type="button" class="product-thumb${i===0?' active':''}" data-gallery-index="${i}" aria-label="Ver foto ${i+1}"><img src="${imageSrc(src)}" alt="${title} - foto ${i+1}" onerror="imageError(this)"></button>`).join('');
+  const thumbs=images.map((src,i)=>`<button type="button" class="product-thumb${i===0?' active':''}" data-gallery-index="${i}"><img src="${imageSrc(src)}" alt="${title} - foto ${i+1}" onerror="imageError(this)"></button>`).join('');
   const variantRows=variantStock.map(v=>`<div class="detail-variant-row"><span>${esc(v.size||'—')}</span><span>${esc(v.color||'—')}</span><strong>${Number(v.stock||0)} un.</strong></div>`).join('');
-  body.innerHTML=`<div class="product-detail-layout">
-    <div><div class="product-gallery"><div class="product-thumbs">${thumbs}</div><div><div class="product-main-image" id="productMainImage" data-image-index="0"><img id="productMainImageEl" src="${first}" alt="${title}" loading="eager" decoding="async" onerror="imageError(this)"></div><div class="product-zoom-hint">Passe o mouse para ampliar · clique na foto para abrir em tela cheia</div></div></div></div>
-    <div class="product-detail-info">
-      <div class="detail-kicker">${esc(p.category||'Produto')}</div><h1>${title}</h1>
-      <div class="product-detail-price">${money(salePriceOf(p))}</div>
-      <div class="product-detail-meta"><b>SKU:</b> ${esc(p.sku||'Não informado')} &nbsp; · &nbsp; <b>Código:</b> ${esc(p.barcode||'Não informado')}</div>
-      ${colors.length?`<strong class="detail-choice-title">Escolha a cor</strong><div class="detail-choices">${colorButtons}</div>`:''}
-      <strong class="detail-choice-title">Escolha o tamanho</strong><div class="detail-choices">${sizeButtons}</div>
-      <div class="detail-stock">${Number(stock)>0?`✓ ${stock} unidade(s) disponíveis`:'Produto esgotado'}</div>
-      ${variantStock.length?`<div class="detail-description-box"><b>Disponibilidade por variação</b><div class="detail-variant-table"><div class="detail-variant-row" style="background:#f2f0ec;font-weight:700"><span>Tamanho</span><span>Cor</span><span>Estoque</span></div>${variantRows}</div></div>`:''}
-      <div class="detail-description-box"><b>Descrição</b><div style="margin-top:9px">${desc}</div></div>
-      <div class="detail-actions"><button class="btn detail-buy js-modal-buy" type="button" data-product-id="${esc(key)}">ADICIONAR AO CARRINHO</button><button class="smallbtn detail-fitting js-fitting" type="button" data-product-id="${esc(key)}" onclick="event.preventDefault();event.stopPropagation();openVirtualFitting(this.dataset.productId)">⌁ PROVADOR VIRTUAL</button></div>
-    </div></div>`;
-  modal.classList.add('open'); modal.style.display='block'; modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
-  const main=document.getElementById('productMainImage'), mainImg=document.getElementById('productMainImageEl');
-  body.querySelectorAll('.product-thumb').forEach(btn=>btn.addEventListener('click',()=>{const i=Number(btn.dataset.galleryIndex)||0;mainImg.src=imageSrc(images[i]);mainImg.alt=`${p.name||'Produto'} - foto ${i+1}`;main.dataset.imageIndex=String(i);body.querySelectorAll('.product-thumb').forEach(x=>x.classList.remove('active'));btn.classList.add('active');}));
+  body.innerHTML=`<div class="product-detail-layout"><div><div class="product-gallery"><div class="product-thumbs">${thumbs}</div><div><div class="product-main-image" id="productMainImage"><img id="productMainImageEl" src="${first}" alt="${title}" loading="eager" decoding="async" onerror="imageError(this)"></div><div class="product-zoom-hint">Passe o mouse para ampliar · clique na foto para tela cheia</div></div></div></div><div class="product-detail-info"><div class="detail-kicker">${esc(p.category||'Produto')}</div><h1>${title}</h1><div class="product-detail-price">${money(salePriceOf(p))}</div><div class="product-detail-meta"><b>SKU:</b> ${esc(p.sku||'Não informado')} &nbsp; · &nbsp; <b>Código:</b> ${esc(p.barcode||'Não informado')}</div>${colors.length?`<strong class="detail-choice-title">Escolha a cor</strong><div class="detail-choices">${colorButtons}</div>`:''}<strong class="detail-choice-title">Escolha o tamanho</strong><div class="detail-choices">${sizeButtons}</div><div class="detail-stock">${Number(stock)>0?`✓ ${stock} unidade(s) disponíveis`:'Produto esgotado'}</div>${variantStock.length?`<div class="detail-description-box"><b>Disponibilidade por variação</b><div class="detail-variant-table"><div class="detail-variant-row" style="background:#f2f0ec;font-weight:700"><span>Tamanho</span><span>Cor</span><span>Estoque</span></div>${variantRows}</div></div>`:''}<div class="detail-description-box"><b>Descrição</b><div style="margin-top:9px">${desc}</div></div><div class="detail-actions"><button class="btn js-page-buy" type="button" data-product-id="${esc(key)}">ADICIONAR AO CARRINHO</button><button class="smallbtn detail-fitting js-page-fitting" type="button" data-product-id="${esc(key)}">⌁ PROVADOR VIRTUAL</button></div></div></div>`;
+  pageEl.style.display='block'; document.body.style.overflow='hidden'; window.scrollTo(0,0);
+  body.querySelectorAll('.product-thumb').forEach(btn=>btn.addEventListener('click',()=>{const i=Number(btn.dataset.galleryIndex)||0;const im=document.getElementById('productMainImageEl');im.src=imageSrc(images[i]);im.alt=`${p.name||'Produto'} - foto ${i+1}`;body.querySelectorAll('.product-thumb').forEach(x=>x.classList.remove('active'));btn.classList.add('active');}));
   body.querySelectorAll('.js-detail-size,.js-detail-color').forEach(btn=>btn.addEventListener('click',()=>{const group=btn.classList.contains('js-detail-size')?'.js-detail-size':'.js-detail-color';body.querySelectorAll(group).forEach(x=>x.classList.remove('selected'));btn.classList.add('selected');}));
-  main?.addEventListener('mousemove',ev=>{const r=main.getBoundingClientRect();mainImg.style.transformOrigin=`${((ev.clientX-r.left)/r.width)*100}% ${((ev.clientY-r.top)/r.height)*100}%`;mainImg.style.transform='scale(1.035)';});
-  main?.addEventListener('mouseleave',()=>{mainImg.style.transformOrigin='center center';mainImg.style.transform='scale(1)';});
-  main?.addEventListener('click',()=>openProductLightbox(mainImg.src,mainImg.alt));
+  document.getElementById('productMainImage')?.addEventListener('click',()=>openProductLightbox(document.getElementById('productMainImageEl').src,title));
 }
+function closeProduct(){const el=document.getElementById('productPage');if(el)el.style.display='none';document.body.style.overflow='';}
 
 function openProductLightbox(src,alt){const box=document.getElementById('productLightbox');const img=document.getElementById('productLightboxImage');if(!box||!img)return;img.src=src;img.alt=alt||'';box.classList.add('open');}
 function closeProductLightbox(){document.getElementById('productLightbox')?.classList.remove('open');}
@@ -1622,17 +1608,25 @@ function renderAdminOrders(orders){
   box.innerHTML=(orders||[]).map(o=>`<div class="admin-item"><span><b>${escapeHtml(o.external_reference||'Pedido')}</b><br>${money(o.total||0)} · ${escapeHtml(o.payment_status||'pendente')} · ${escapeHtml(o.payment_method||'')}</span><small>${o.updated_at?new Date(o.updated_at).toLocaleString('pt-BR'):''}</small></div>`).join('')||'<div class="empty">Nenhuma venda sincronizada.</div>';
 }
 (function installProductButtonHandlers(){
-  // Delegação no document: funciona mesmo quando renderProducts() recria o grid via innerHTML.
-  if(!document.documentElement.dataset.studio70ProductHandlers){
-    document.documentElement.dataset.studio70ProductHandlers='1';
-    document.addEventListener('click',function(ev){
-      const details=ev.target.closest?.('#productGrid .js-details');
-      const buy=ev.target.closest?.('#productGrid .js-buy');
-      const fitting=ev.target.closest?.('#productBody .js-fitting');
-      if(fitting){ev.preventDefault();ev.stopPropagation();openVirtualFitting(fitting.dataset.productId);return;}
-      if(details){ev.preventDefault();ev.stopPropagation();openProduct(details.dataset.productId);return;}
-      if(buy){ev.preventDefault();ev.stopPropagation();addCart(buy.dataset.productId);return;}
-    },true);
+  if(document.documentElement.dataset.studio70ProductHandlers==='1') return;
+  document.documentElement.dataset.studio70ProductHandlers='1';
+     document.getElementById('productPageBack')?.addEventListener('click',closeProduct);
+  document.addEventListener('click',function(ev){
+    const details=ev.target.closest && ev.target.closest('#productGrid .js-details');
+    const buy=ev.target.closest && ev.target.closest('#productGrid .js-buy');
+    const fitting=ev.target.closest && ev.target.closest('#productBody .js-fitting');
+    if(details){ev.preventDefault();ev.stopPropagation();openProduct(details.getAttribute('data-product-id'));return;}
+    if(buy){ev.preventDefault();ev.stopPropagation();addCart(buy.getAttribute('data-product-id'));return;}
+    if(fitting){ev.preventDefault();ev.stopPropagation();openVirtualFitting(fitting.getAttribute('data-product-id'));return;}
+  },true);
+  const grid=document.getElementById('productGrid');
+  if(grid && !grid.dataset.cardHandlersInstalled){
+    grid.dataset.cardHandlersInstalled='1';
+    grid.addEventListener('click',function(ev){
+      if(ev.target.closest && ev.target.closest('button')) return;
+      const card=ev.target.closest && ev.target.closest('.product[data-product-id]');
+      if(card){ev.preventDefault();ev.stopPropagation();openProduct(card.getAttribute('data-product-id'));}
+    });
   }
   const pagination=document.getElementById('pagination');
   if(pagination && !pagination.dataset.handlersInstalled){
@@ -1642,19 +1636,12 @@ function renderAdminOrders(orders){
   const modalBody=document.getElementById('productBody');
   if(modalBody && !modalBody.dataset.handlersInstalled){
     modalBody.dataset.handlersInstalled='1';
-    modalBody.addEventListener('click',function(ev){const b=ev.target.closest('.js-modal-buy');if(!b)return;ev.preventDefault();if(addCart(b.dataset.productId))closeProduct();});
+    modalBody.addEventListener('click',function(ev){const b=ev.target.closest('.js-modal-buy');if(!b)return;ev.preventDefault();if(addCart(b.getAttribute('data-product-id')))closeProduct();});
   }
-  window.openProduct=openProduct;
-  window.addCart=addCart;
-  window.closeProduct=closeProduct;
-  window.renderProducts=renderProducts;
-  window.openVirtualFitting=openVirtualFitting;
-  window.closeVirtualFitting=closeVirtualFitting;
-  window.virtualFittingNext=virtualFittingNext;
-  window.virtualFittingResult=virtualFittingResult;
-  window.openProductLightbox=openProductLightbox;
-  window.closeProductLightbox=closeProductLightbox;
-})();
+  window.openProduct=openProduct; window.closeProduct=closeProduct; window.addCart=addCart; window.closeProduct=closeProduct; window.renderProducts=renderProducts;
+  window.openVirtualFitting=openVirtualFitting; window.closeVirtualFitting=closeVirtualFitting; window.virtualFittingNext=virtualFittingNext; window.virtualFittingResult=virtualFittingResult;
+  window.openProductLightbox=openProductLightbox; window.closeProductLightbox=closeProductLightbox;
+})();;
 renderCategories();clearForm();loadPaymentSettings();loadShippingSettings();renderProducts();renderCart();renderPDV();initBannerCarousel();renderBannerAdmin();
 loadCarmenattoCatalog();
 setInterval(pollOrders,10000);pollOrders();
