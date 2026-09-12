@@ -293,8 +293,12 @@ const PRODUCTS_KEY = 'studio70_products_' + PRODUCTS_VERSION;
 let products = (()=>{
   let stored=null;
   try{stored=JSON.parse(localStorage.getItem(PRODUCTS_KEY)||'null');}catch(_){stored=null;}
-  const base=Array.isArray(stored)&&stored.length?stored:(Array.isArray(window.STUDIO70_SEED_PRODUCTS)?window.STUDIO70_SEED_PRODUCTS:[]);
-  return cleanProducts(base).map(p=>({...p,sale_price:Number(p.sale_price??p.price??0)}));
+  const storedClean=Array.isArray(stored)?cleanProducts(stored):[];
+  const seedClean=Array.isArray(window.STUDIO70_SEED_PRODUCTS)?cleanProducts(window.STUDIO70_SEED_PRODUCTS):[];
+  // Nunca deixe um localStorage corrompido/antigo apagar o catálogo.
+  // Se o catálogo salvo estiver vazio ou inválido, volta automaticamente para os produtos de fábrica.
+  const base=storedClean.length?storedClean:seedClean;
+  return base.map(p=>({...p,sale_price:Number(p.sale_price??p.price??0)}));
 })();
 save();
 let cart = (()=>{
