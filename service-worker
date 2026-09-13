@@ -1,28 +1,7 @@
-self.addEventListener('push', event => {
-  let data = {};
-  try { data = event.data ? event.data.json() : {}; } catch (_) {
-    data = { title: 'STUDIO 70', body: event.data ? event.data.text() : 'Nova notificação' };
-  }
-  const title = data.title || 'STUDIO 70';
-  const options = {
-    body: data.body || 'Nova venda registrada.',
-    icon: data.icon || './favicon.svg',
-    badge: data.badge || './favicon.svg',
-    tag: data.tag || 'studio70-sale',
-    renotify: true,
-    data: data.data || { url: './' },
-    vibrate: [120, 60, 120],
-  };
-  event.waitUntil(self.registration.showNotification(title, options));
-});
-self.addEventListener('notificationclick', event => {
-  event.notification.close();
-  const target = event.notification?.data?.url || './';
-  event.waitUntil((async()=>{
-    const list = await clients.matchAll({type:'window',includeUncontrolled:true});
-    for(const c of list){
-      if('focus' in c){ try { await c.navigate(target); } catch (_) {} return c.focus(); }
-    }
-    if(clients.openWindow) return clients.openWindow(target);
-  })());
+const CACHE='studio70-pdv-v2';
+self.addEventListener('install',()=>self.skipWaiting());
+self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
+self.addEventListener('fetch',event=>{
+  if(event.request.method!=='GET') return;
+  event.respondWith(fetch(event.request).catch(()=>caches.match(event.request)));
 });
