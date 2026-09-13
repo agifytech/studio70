@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>STUDIO 70 | Moda Urbana</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%2311110f'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-family='Arial,sans-serif' font-size='20' font-weight='900' fill='white'%3E70%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Stardos+Stencil:wght@400;700&family=Anton&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
@@ -818,7 +818,7 @@ async function finishSale(){
   sales.unshift(sale);sales=sales.slice(0,500);pdvCart=[];save();savePDV();renderProducts();renderAdmin();renderPDV();
   setPDVStatus(`✓ Venda ${sale.id} concluída — ${money(total)}. Sincronizando...`,'success');
   try{
-    const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'store_sale',sale})});
+    const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'store_sale',admin_password:adminAuthPassword,sale})});
     const d=await r.json().catch(()=>({}));
     if(!r.ok)throw new Error(d.error||'Venda salva apenas neste computador.');
     setPDVStatus(`✓ Venda ${sale.id} registrada na loja e sincronizada.`,'success');
@@ -1055,7 +1055,23 @@ function submitBannerForm(e){
   const st=document.getElementById('bannerAdminStatus');if(st)st.textContent='✓ Banner salvo com sucesso.';
   clearBannerForm();
 }
-function openAdmin(){const show=async()=>{document.body.classList.add('admin-page');document.documentElement.classList.add('admin-page');await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();renderBannerAdmin();loadPricingConfig();document.getElementById('scannerInput')?.focus();pollOrders()};if(adminAuthPassword)show();else requestLogin('PAINEL ADMINISTRATIVO',show)} function closeAdmin(){if(new URLSearchParams(location.search).get('admin')==='1'){location.href=location.pathname;}else{document.getElementById('adminModal').classList.remove('open');}adminAuthPassword='';} if(document.getElementById('adminBtn'))document.getElementById('adminBtn').onclick=openAdmin;
+function ensurePushAdminControl(){
+  const panel=document.querySelector('#adminModal .modal-panel');
+  if(!panel || document.getElementById('studio70PushAdminBox'))return;
+  const box=document.createElement('div');
+  box.id='studio70PushAdminBox';
+  box.style.cssText='margin:0 0 16px;padding:12px 14px;border:1px solid #c8c5be;border-radius:12px;background:#f7f5f1;color:#111;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap';
+  box.innerHTML='<div><strong>Notificações de vendas</strong><div id="studio70PushAdminStatus" style="font-size:11px;color:#666;margin-top:3px">Ative neste celular para receber avisos de venda e estoque.</div></div><button type="button" class="smallbtn" id="studio70PushBtn" style="background:#111;color:#fff;flex:0 0 auto">ATIVAR PUSH</button>';
+  const anchor=panel.querySelector('.admin-grid')||panel.firstElementChild;
+  panel.insertBefore(box,anchor||null);
+  document.getElementById('studio70PushBtn').onclick=async()=>{
+    const st=document.getElementById('studio70PushAdminStatus');
+    if(st)st.textContent='Ativando notificações...';
+    const r=await enableNotifications();
+    if(st)st.textContent=r.ok?'✓ Este celular está registrado para receber notificações de vendas.':(r.error||'Não foi possível ativar.');
+  };
+}
+function openAdmin(){const show=async()=>{document.body.classList.add('admin-page');document.documentElement.classList.add('admin-page');document.getElementById('adminModal').classList.add('open');ensurePushAdminControl();await enableNotifications();ensureCarmenattoAdminControls();renderAdmin();renderBannerAdmin();loadPricingConfig();document.getElementById('scannerInput')?.focus();pollOrders()};if(adminAuthPassword)show();else requestLogin('PAINEL ADMINISTRATIVO',show)} function closeAdmin(){if(new URLSearchParams(location.search).get('admin')==='1'){location.href=location.pathname;}else{document.getElementById('adminModal').classList.remove('open');}adminAuthPassword='';} if(document.getElementById('adminBtn'))document.getElementById('adminBtn').onclick=openAdmin;
 async function loadPricingConfig(){
   if(!adminAuthPassword)return;
   try{
@@ -1302,6 +1318,10 @@ function currentCheckoutApi(){
   return DEFAULT_CHECKOUT_API;
 }
 const CHECKOUT_API = currentCheckoutApi();
+const STUDIO70_PUSH_PUBLIC_KEY = 'BACWJynyfLML6NZJQ1M1rVpvURicwP7IsRiZrY9mimK4Z0mMGyjZNL_Zy7s6yYKmjk9IXKancGzs1-SPkgDCw30';
+const STUDIO70_PUSH_SW = './sw.js';
+let studio70PushSubscription = null;
+
 
 function studio70ApiStatus(message, ok=false){
   const el=document.getElementById('catalogApiStatus');
@@ -1696,7 +1716,30 @@ function notifySale(title,body){
   }catch(_){}
 }
 async function enableNotifications(){
-  try{if('Notification' in window&&Notification.permission==='default')await Notification.requestPermission()}catch(_){}
+  try{
+    if(!('Notification' in window))return {ok:false,reason:'notification_unsupported'};
+    if(!('serviceWorker' in navigator)||!('PushManager' in window))return {ok:false,reason:'push_unsupported'};
+    let permission=Notification.permission;
+    if(permission==='default')permission=await Notification.requestPermission();
+    if(permission!=='granted')return {ok:false,reason:'permission_denied'};
+    const reg=await navigator.serviceWorker.register(STUDIO70_PUSH_SW,{scope:'./'});
+    await navigator.serviceWorker.ready;
+    let sub=await reg.pushManager.getSubscription();
+    if(!sub){
+      const raw=Uint8Array.from(atob(STUDIO70_PUSH_PUBLIC_KEY.replace(/-/g,'+').replace(/_/g,'/')+'='.repeat((4-STUDIO70_PUSH_PUBLIC_KEY.length%4)%4)),c=>c.charCodeAt(0));
+      sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:raw});
+    }
+    studio70PushSubscription=sub;
+    if(adminAuthPassword){
+      const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'push_subscribe',admin_password:adminAuthPassword,subscription:sub.toJSON()})});
+      const d=await r.json().catch(()=>({}));
+      if(!r.ok||!d.ok)throw new Error(d.error||'Não foi possível registrar este celular para receber notificações.');
+    }
+    return {ok:true};
+  }catch(e){
+    console.warn('[STUDIO70] Push não ativado:',e);
+    return {ok:false,error:String(e?.message||e)};
+  }
 }
 async function pollOrders(){
   try{
