@@ -37,31 +37,7 @@ input:focus{border-color:#dc2626}
 .modal h3{margin:0 0 8px}.modal p{font-size:12px;color:#a8a29e}.modal button{width:100%;margin-top:10px}
 .success{color:#6ee7b7}.error{color:#fca5a5}
 
-.scan-card{padding:12px}
-.scan-title{display:flex;align-items:center;justify-content:space-between}
-.scan-title h2{margin:0 0 10px}
-.scan-ready{font-size:9px;font-weight:900;letter-spacing:.12em;color:#6ee7b7;background:#052e1b;border:1px solid #065f46;padding:5px 7px;border-radius:8px}
-.scan-buttons{margin-top:8px}
-.scan-buttons button{padding:10px}
-#reader{margin-top:8px;min-height:0}
-.product-top{display:flex;justify-content:space-between;align-items:center}
-.clear-product{background:#292524;color:#d6d3d1;padding:7px 10px}
-.sale-line{display:flex;justify-content:space-between;align-items:center;margin:10px 0 4px;padding:10px 0;border-top:1px solid #292524;border-bottom:1px solid #292524}
-.sale-line b{font-size:22px}.sale-line span{font-size:12px;color:#6ee7b7;font-weight:800}
-.quick-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
-.quick-row .qty{margin:0;width:150px}
-.payment-title{font-size:12px;font-weight:900;margin:14px 0 7px}
-.payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.payment{background:#292524;color:#e7e5e4;border:1px solid #44403c}
-.payment.active{background:#7f1d1d;border:1px solid #dc2626;color:#fff}
-.total-box{display:flex;align-items:center;justify-content:space-between;background:#0c0a09;border:1px solid #44403c;border-radius:14px;padding:13px;margin-top:12px}
-.total-box span{font-size:11px;font-weight:900;color:#a8a29e;letter-spacing:.1em}.total-box strong{font-size:25px}
-.finish-button{width:100%;font-size:16px;padding:16px;margin-top:9px}
-.extra-card{padding:12px}
-.extra-card summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;list-style:none}
-.extra-card summary::-webkit-details-marker{display:none}
-.extra-card[open] summary{margin-bottom:12px}
-@media(max-width:380px){main{padding:10px}.card{margin-bottom:10px}.title{font-size:19px}.payment{font-size:11px;padding:11px 8px}}
+.scan-card{padding:12px}.scan-title{display:flex;align-items:center;justify-content:space-between}.scan-title h2{margin:0 0 10px}.scan-ready{font-size:9px;font-weight:900;letter-spacing:.12em;color:#6ee7b7;background:#052e1b;border:1px solid #065f46;padding:5px 7px;border-radius:8px}.scan-buttons{margin-top:8px}.scan-buttons button{padding:10px}.product-top{display:flex;justify-content:space-between;align-items:center}.clear-product{background:#292524;color:#d6d3d1;padding:7px 10px}.sale-line{display:flex;justify-content:space-between;align-items:center;margin:10px 0 4px;padding:10px 0;border-top:1px solid #292524;border-bottom:1px solid #292524}.sale-line b{font-size:22px}.sale-line span{font-size:12px;color:#6ee7b7;font-weight:800}.quick-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}.quick-row .qty{margin:0;width:150px}.payment-title{font-size:12px;font-weight:900;margin:14px 0 7px}.payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.payment{background:#292524;color:#e7e5e4;border:1px solid #44403c}.payment.active{background:#7f1d1d;border-color:#dc2626;color:#fff}.total-box{display:flex;align-items:center;justify-content:space-between;background:#0c0a09;border:1px solid #44403c;border-radius:14px;padding:13px;margin-top:12px}.total-box span{font-size:11px;font-weight:900;color:#a8a29e;letter-spacing:.1em}.total-box strong{font-size:25px}.finish-button{width:100%;font-size:16px;padding:16px;margin-top:9px}.extra-card{padding:12px}.extra-card summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;list-style:none}.extra-card summary::-webkit-details-marker{display:none}.extra-card[open] summary{margin-bottom:12px}
 </style>
 </head>
 <body>
@@ -84,35 +60,16 @@ input:focus{border-color:#dc2626}
     <div id="status" class="status">Pronto para bipar.</div>
   </div>
   <div id="productCard" class="card product">
-    <div class="product-top">
-      <span class="badge">Produto</span>
-      <button class="clear-product" onclick="clearProduct()">✕</button>
-    </div>
+    <div class="product-top"><span class="badge">Produto</span><button class="clear-product" onclick="clearProduct()">✕</button></div>
     <div id="productName" class="title">Produto</div>
     <div id="productSku" class="sku">SKU: —</div>
     <div class="sale-line"><b id="productPrice">R$ 0,00</b><span id="productStock">0 un.</span></div>
-
     <div class="variation-grid">
-      <div class="variation">
-        <label class="muted" for="sizeSelect">Tamanho</label>
-        <select id="sizeSelect"><option value="">Selecione</option></select>
-      </div>
-      <div class="variation">
-        <label class="muted" for="colorSelect">Cor</label>
-        <select id="colorSelect"><option value="">Selecione</option></select>
-      </div>
+      <div class="variation"><label class="muted" for="sizeSelect">Tamanho</label><select id="sizeSelect"><option value="">Selecione</option></select></div>
+      <div class="variation"><label class="muted" for="colorSelect">Cor</label><select id="colorSelect"><option value="">Selecione</option></select></div>
     </div>
     <div id="variantStock" class="variant-stock"></div>
-
-    <div class="quick-row">
-      <span class="muted">Quantidade</span>
-      <div class="qty">
-        <button onclick="changeQty(-1)">−</button>
-        <input id="qty" type="number" min="1" value="1">
-        <button onclick="changeQty(1)">+</button>
-      </div>
-    </div>
-
+    <div class="quick-row"><span class="muted">Quantidade</span><div class="qty"><button onclick="changeQty(-1)">−</button><input id="qty" type="number" min="1" value="1"><button onclick="changeQty(1)">+</button></div></div>
     <div class="payment-title">Pagamento</div>
     <div class="payment-grid">
       <button type="button" class="payment active" data-payment="store" onclick="selectPayment(this)">💵 DINHEIRO</button>
@@ -120,26 +77,15 @@ input:focus{border-color:#dc2626}
       <button type="button" class="payment" data-payment="debit" onclick="selectPayment(this)">💳 DÉBITO</button>
       <button type="button" class="payment" data-payment="credit" onclick="selectPayment(this)">💳 CRÉDITO</button>
     </div>
-
-    <div class="total-box">
-      <span>TOTAL</span>
-      <strong id="saleTotal">R$ 0,00</strong>
-    </div>
+    <div class="total-box"><span>TOTAL</span><strong id="saleTotal">R$ 0,00</strong></div>
     <button class="primary finish-button" onclick="finishSale()">✓ FINALIZAR VENDA</button>
   </div>
-
-  <details class="card extra-card" id="storeOrdersCard">
-    <summary><b>🔔 Pedidos aguardando retirada</b><span id="ordersBadge" class="badge">0 novos</span></summary>
+  <details class="card extra-card" id="storeOrdersCard"><summary><b>🔔 Pedidos aguardando retirada</b><span id="ordersBadge" class="badge">0 novos</span></summary>
+    <div class="order-head"><h2>🔔 Pedidos da loja</h2><span id="ordersBadge" class="badge">0 novos</span></div>
     <div id="ordersStatus" class="status">Atualizando pedidos...</div>
     <div id="storeOrderList" class="order-list"></div>
   </details>
-  <details class="card extra-card">
-    <summary><b>ℹ️ Como funciona</b></summary>
-    <div class="notice">
-      Bipe o produto → confira a quantidade → escolha o pagamento → finalize.
-      O estoque é baixado no servidor.
-    </div>
-  </details>
+  <details class="card extra-card"><summary><b>ℹ️ Como funciona</b></summary><div class="notice">Bipe o produto → confira a quantidade → escolha o pagamento → finalize. O estoque é baixado no servidor.</div></details>
 </main>
 <div id="loginBox">
   <div class="modal">
@@ -190,15 +136,37 @@ function asVariationLabel(v){if(v==null)return '';if(typeof v==='string'||typeof
 function variationList(value){if(Array.isArray(value))return value.map(asVariationLabel).filter(Boolean);if(value && typeof value==='object')return Object.values(value).map(asVariationLabel).filter(Boolean);const text=String(value||'').trim();return text ? text.split(/\s*,\s*|\s*\/\s*/).map(x=>x.trim()).filter(Boolean) : [];}
 function getVariantStockList(p){const raw=p?.raw||{};const list=raw.variant_stock ?? p?.variant_stock ?? [];return Array.isArray(list) ? list.map(v=>({size:asVariationLabel(v?.size),color:asVariationLabel(v?.color),stock:Math.max(0,Math.trunc(Number(v?.stock||0)))})).filter(v=>v.size||v.color) : [];}
 function selectedVariantStock(){const p=activeProduct;if(!p)return Number.MAX_SAFE_INTEGER;const size=$('sizeSelect').value.trim(),color=$('colorSelect').value.trim();const list=getVariantStockList(p);if(!list.length)return Number(p.stock||0);const exact=list.find(v=>(!v.size||v.size===size)&&(!v.color||v.color===color));if(exact)return exact.stock;const candidates=list.filter(v=>(!size||!v.size||v.size===size)&&(!color||!v.color||v.color===color));if(candidates.length)return Math.min(...candidates.map(v=>v.stock));return Number(p.stock||0);}
-function updateVariationState(){if(!activeProduct)return;const size=$('sizeSelect').value.trim(),color=$('colorSelect').value.trim();const labels=[size,color].filter(Boolean);const available=selectedVariantStock();$('variantStock').innerHTML=labels.length ? `Estoque desta variação: <strong>${available} un</strong>` : 'Selecione tamanho e/ou cor para conferir a variação.';const qty=$('qty');let n=Math.max(1,Math.trunc(Number(qty.value||1)));const max=Math.max(0,Number(available||0));if(max>0)n=Math.min(n,max);qty.value=n;updateSaleTotal();}
+function updateVariationState(){if(!activeProduct)return;const size=$('sizeSelect').value.trim(),color=$('colorSelect').value.trim();const labels=[size,color].filter(Boolean);const available=selectedVariantStock();$('variantStock').innerHTML=labels.length ? `Estoque desta variação: <strong>${available} un</strong>` : 'Selecione tamanho e/ou cor para conferir a variação.';const qty=$('qty');let n=Math.max(1,Math.trunc(Number(qty.value||1)));const max=Math.max(0,Number(available||0));if(max>0)n=Math.min(n,max);qty.value=n;}
 function populateVariationSelect(id, values){const el=$(id);el.innerHTML='<option value="">Selecione</option>';values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o);});}
-function renderProduct(){const p=activeProduct;$('productName').textContent=p.name || 'Produto';$('productSku').textContent='STUDIO 70: '+(p.studio70_code || '—')+'  |  SKU: '+(p.sku || '—');$('productPrice').textContent=money(p.price);$('productStock').textContent=String(Number(p.stock||0))+' un';const sizes=variationList(p.sizes);const colors=variationList(p.colors);populateVariationSelect('sizeSelect',sizes);populateVariationSelect('colorSelect',colors);$('variantStock').textContent=(sizes.length||colors.length)?'Selecione tamanho e/ou cor.':'';$('qty').value=1;$('productCard').classList.add('show');updateVariationState();updateSaleTotal();}
-function changeQty(delta){const input=$('qty');let n=Math.trunc(Number(input.value||1))+delta;n=Math.max(1,n);if(activeProduct){const max=selectedVariantStock();n=Math.min(n,Math.max(1,Number(max||activeProduct.stock||0)));}input.value=n;}
-function updateSaleTotal(){if(!activeProduct)return;$('saleTotal').textContent=money(Number(activeProduct.price||0)*Math.max(1,Math.trunc(Number($('qty').value||1))));}
+function renderProduct(){const p=activeProduct;$('productName').textContent=p.name || 'Produto';$('productSku').textContent='STUDIO 70: '+(p.studio70_code || '—')+'  |  SKU: '+(p.sku || '—');$('productPrice').textContent=money(p.price);$('productStock').textContent=String(Number(p.stock||0))+' un';const sizes=variationList(p.sizes);const colors=variationList(p.colors);populateVariationSelect('sizeSelect',sizes);populateVariationSelect('colorSelect',colors);$('variantStock').textContent=(sizes.length||colors.length)?'Selecione tamanho e/ou cor.':'';$('qty').value=1;$('productCard').classList.add('show');updateVariationState();}
+function updateSaleTotal(){if(activeProduct){$('saleTotal').textContent=money(Number(activeProduct.price||0)*Math.max(1,Math.trunc(Number($('qty').value||1))));}}
 function selectPayment(btn){document.querySelectorAll('.payment').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selectedPayment=btn.dataset.payment||'store';}
-function clearProduct(){activeProduct=null;$('productCard').classList.remove('show');$('codeInput').value='';$('codeInput').focus();setStatus('Pronto para bipar.');}
-async function finishSale(){if(!activeProduct)return setStatus('Nenhum produto selecionado.','error');const qty=Math.max(1,Math.trunc(Number($('qty').value||1)));const stock=Number(activeProduct.stock||0);const size=$('sizeSelect').value.trim();const color=$('colorSelect').value.trim();const hasSizes=variationList(activeProduct.sizes).length>0;const hasColors=variationList(activeProduct.colors).length>0;if(hasSizes&&!size)return setStatus('Selecione o tamanho antes de finalizar.','error');if(hasColors&&!color)return setStatus('Selecione a cor antes de finalizar.','error');const variantStock=selectedVariantStock();if(qty>stock)return setStatus(`Estoque total insuficiente. Disponível: ${stock} unidade(s).`,'error');if(qty>variantStock)return setStatus(`Estoque da variação insuficiente. Disponível: ${variantStock} unidade(s).`,'error');if(!adminPassword){$('loginBox').classList.remove('hidden');return;}setStatus('Processando venda e baixando estoque...');
-try{const saleId='PDV-'+Date.now();const d=await api('pdv_sale',{admin_password:adminPassword,sale_id:saleId,payment:selectedPayment,items:[{id:activeProduct.id,studio70_code:activeProduct.studio70_code,external_id:activeProduct.external_id,sku:activeProduct.sku,barcode:activeProduct.barcode,name:activeProduct.name,size,color,variation:{size,color},qty,unit:Number(activeProduct.price||0)}]});if(!d.ok)throw new Error(apiError(d,'Venda não concluída.'));const after=Number(d.items?.[0]?.stock_after ?? (stock-qty));activeProduct.stock=after;clearProduct();setStatus(`✓ Venda concluída · estoque: ${after} un.`,'success');}catch(e){setStatus('Venda não concluída: '+e.message,'error');}}
+function clearProduct(){activeProduct=null;$('productCard').classList.remove('show');$('codeInput').value='';$('codeInput').focus();}
+function changeQty(delta){const input=$('qty');let n=Math.trunc(Number(input.value||1))+delta;n=Math.max(1,n);if(activeProduct){const max=selectedVariantStock();n=Math.min(n,Math.max(1,Number(max||activeProduct.stock||0)));}input.value=n;updateSaleTotal();}
+async function finishSale(){
+  if(!activeProduct)return setStatus('Nenhum produto selecionado.','error');
+  const qty=Math.max(1,Math.trunc(Number($('qty').value||1)));
+  const stock=Number(activeProduct.stock||0);
+  const size=$('sizeSelect').value.trim(); const color=$('colorSelect').value.trim();
+  const hasSizes=variationList(activeProduct.sizes).length>0; const hasColors=variationList(activeProduct.colors).length>0;
+  if(hasSizes&&!size)return setStatus('Selecione o tamanho.','error');
+  if(hasColors&&!color)return setStatus('Selecione a cor.','error');
+  if(qty>stock)return setStatus(`Estoque insuficiente. Disponível: ${stock} unidade(s).`,'error');
+  if(!adminPassword){$('loginBox').classList.remove('hidden');return;}
+  const unit=Number(activeProduct.price||activeProduct.sale_price||0);
+  if(!(unit>0))return setStatus('Preço de venda STUDIO 70 não cadastrado. Cadastre no ADM.','error');
+  setStatus('Finalizando venda...');
+  try{
+    const saleId='PDV-'+Date.now();
+    const d=await api('pdv_sale',{admin_password:adminPassword,sale_id:saleId,payment:selectedPayment,items:[{id:activeProduct.id,studio70_code:activeProduct.studio70_code,external_id:activeProduct.external_id,sku:activeProduct.sku,barcode:activeProduct.barcode,name:activeProduct.name,size,color,variation:{size,color},qty,unit}]});
+    if(!d.ok)throw new Error(apiError(d,'Venda não concluída.'));
+    const after=Number(d.items?.[0]?.stock_after ?? d.items?.[0]?.remaining_stock ?? (stock-qty));
+    activeProduct.stock=Math.max(0,after);
+    clearProduct();
+    setStatus(`✓ Venda concluída · estoque: ${Math.max(0,after)} un.`,'success');
+  }catch(e){setStatus('Venda não concluída: '+e.message,'error');}
+}
+
 function orderCustomerName(order){const c=order?.customer||{};return String(c.name||c.full_name||c.nome||'Cliente').trim()||'Cliente';}
 function orderItemsText(order){const items=Array.isArray(order?.items)?order.items:[];if(!items.length)return 'Itens não informados.';return items.map(i=>{const v=i?.variation||{};const spec=[i?.size||v.size,i?.color||v.color].filter(Boolean).join(' / ');return `${Number(i?.qty||0)}x ${i?.name||'Produto'}${spec?' — '+spec:''}`;}).join(' · ');}
 function beepNewOrder(){try{audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();const osc=audioContext.createOscillator(),gain=audioContext.createGain();osc.frequency.value=880;gain.gain.value=.08;osc.connect(gain);gain.connect(audioContext.destination);osc.start();setTimeout(()=>{osc.frequency.value=1175},120);setTimeout(()=>{osc.stop();gain.disconnect()},240);}catch(_){ }}
@@ -210,7 +178,7 @@ async function clientAlreadyTook(reference){if(!adminPassword){$('loginBox').cla
 function startStoreOrderPolling(){clearInterval(ordersPollTimer);loadStoreOrders(true);ordersPollTimer=setInterval(()=>loadStoreOrders(false),5000);}
 function startScanner(){if(scanning)return;if(typeof Html5Qrcode==='undefined'){setStatus('Biblioteca da câmera não carregou. Verifique a internet.','error');return;}try{scanner=scanner||new Html5Qrcode('reader');scanning=true;setStatus('Aponte a câmera para o código de barras...');scanner.start({facingMode:'environment'},{fps:12,qrbox:{width:280,height:150}},code=>{if(!scanning)return;scanning=false;scanner.stop().catch(()=>{});$('codeInput').value=code;lookupProduct(code);},()=>{});}catch(e){scanning=false;setStatus('Não foi possível abrir a câmera. Autorize a câmera no navegador e tente novamente.','error');}}
 async function stopScanner(){if(!scanner||!scanning)return;scanning=false;try{await scanner.stop();}catch{}setStatus('Scanner pausado.');}
-$('sizeSelect').addEventListener('change',updateVariationState);$('colorSelect').addEventListener('change',updateVariationState);$('qty').addEventListener('input',()=>{if(activeProduct){const max=selectedVariantStock();let n=Math.max(1,Math.trunc(Number($('qty').value||1)));if(max>0)n=Math.min(n,max);$('qty').value=n;}updateSaleTotal();});
+$('sizeSelect').addEventListener('change',updateVariationState);$('colorSelect').addEventListener('change',updateVariationState);$('qty').addEventListener('input',()=>{if(activeProduct){const max=selectedVariantStock();let n=Math.max(1,Math.trunc(Number($('qty').value||1)));if(max>0)n=Math.min(n,max);$('qty').value=n;}});
 $('codeInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();lookupProduct();}});
 if(adminPassword){$('loginBox').classList.add('hidden');$('connectionStatus').classList.add('ok');loadInitialProductCount();startStoreOrderPolling();}
 else{$('loginBox').classList.remove('hidden');}
