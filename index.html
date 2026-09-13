@@ -297,7 +297,7 @@ repeating-linear-gradient(115deg,rgba(0,0,0,.025) 0 2px,transparent 2px 7px);col
 </section>
 <div class="trustbar"><span>🚚 Frete grátis acima de R$150</span><span>🔄 Troca fácil em 7 dias</span><span>🔒 Compra 100% segura</span><span>💳 Parcele suas compras</span></div>
 <section><h2 class="section-title">CATEGORIAS</h2><div class="category-grid" id="categories"></div></section>
-<section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" type="search" name="studio70-q" value="" autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="search" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="catalogApiStatus" style="display:none;font-size:11px;margin:-10px 0 12px;font-weight:700"></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section></main>
+<section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" type="search" name="studio70_public_search" value="" autocomplete="off" readonly="false" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="search" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="catalogApiStatus" style="display:none;font-size:11px;margin:-10px 0 12px;font-weight:700"></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section></main>
 <a class="whatsapp" id="whatsappFloat" href="#" target="_blank">✆</a><footer><h2>STUDIO 70</h2><p>Moda urbana masculina e feminina. Estilo, atitude e identidade.</p><p><a href="https://instagram.com/use.studio70" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-weight:700">Instagram: @use.studio70</a></p><p>© 2026 STUDIO 70</p></footer>
 <div class="drawer" id="cartDrawer"><div class="drawer-panel"><button class="close" onclick="closeCart()">×</button><h2 class="section-title">SEU CARRINHO</h2><div id="cartItems"></div><div class="total" id="cartTotal">R$ 0,00</div>
 <div id="paymentOptions">
@@ -613,25 +613,33 @@ function renderCategories(){document.getElementById('categories').innerHTML=CATE
 function resetPublicSearchField(){
   const el=document.getElementById('searchInput');
   if(!el)return;
-  // Nunca permitir que o endpoint da Edge Function apareça no campo público de busca.
   const v=String(el.value||'').trim();
+  // O endpoint é interno. JAMAIS deve aparecer ou permanecer no campo público.
   if(/^https?:\/\/[^\s]+/i.test(v) || /supabase\.co\/functions\/v1\/super-handler/i.test(v)){
     el.value='';
+    el.setAttribute('value','');
+    try{el.dispatchEvent(new Event('input',{bubbles:true}));}catch(_){ }
   }
 }
 function protectPublicSearchField(){
   const el=document.getElementById('searchInput');
   if(!el)return;
+  el.value='';
+  el.setAttribute('value','');
+  el.removeAttribute('name');
+  el.setAttribute('name','studio70_public_search');
+  el.setAttribute('autocomplete','off');
   resetPublicSearchField();
   if(el.dataset.protected==='1')return;
   el.dataset.protected='1';
-  el.addEventListener('input',resetPublicSearchField,true);
-  el.addEventListener('change',resetPublicSearchField,true);
-  // Chrome pode restaurar valores antigos depois da execução inicial da página.
+  ['input','change','blur','focus'].forEach(type=>el.addEventListener(type,resetPublicSearchField,true));
   window.addEventListener('pageshow',resetPublicSearchField,true);
-  setTimeout(resetPublicSearchField,0);
-  setTimeout(resetPublicSearchField,100);
-  setTimeout(resetPublicSearchField,500);
+  window.addEventListener('load',resetPublicSearchField,true);
+  document.addEventListener('visibilitychange',resetPublicSearchField,true);
+  // Alguns gerenciadores de preenchimento do navegador inserem o valor depois do load.
+  [0,50,150,300,600,1000,2000].forEach(ms=>setTimeout(resetPublicSearchField,ms));
+  if(window.__studio70SearchGuard)clearInterval(window.__studio70SearchGuard);
+  window.__studio70SearchGuard=setInterval(resetPublicSearchField,250);
 }
 function filtered(){const q=document.getElementById('searchInput').value.trim().toLowerCase(), c=document.getElementById('categoryFilter').value; return products.filter(p=>p.active!==false && (!c||p.category===c) && (!q||[p.name,p.sku,p.barcode,p.category].join(' ').toLowerCase().includes(q)));}
 function salePriceOf(p){const n=Number(p?.sale_price);if(Number.isFinite(n)&&n>0)return n;return 0;}
@@ -1720,29 +1728,41 @@ function renderAdminOrders(orders){
   // Delegação no document: funciona mesmo quando renderProducts() recria o grid via innerHTML.
   if(!document.documentElement.dataset.studio70ProductHandlers){
     document.documentElement.dataset.studio70ProductHandlers='1';
+    const openFromEl=(el,ev)=>{
+      if(!el)return false;
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      resetPublicSearchField();
+      openProduct(el.dataset.productId,el.dataset.productSku,el.dataset.productBarcode,el.dataset.productRef);
+      return true;
+    };
+    const buyFromEl=(el,ev)=>{
+      if(!el)return false;
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+      resetPublicSearchField();
+      const p=findRenderedProduct(el.dataset.productRef)||findProductByRef(el.dataset.productId,el.dataset.productSku,el.dataset.productBarcode);
+      if(p)addCart(p.id);
+      else console.warn('Não foi possível adicionar: produto não encontrado',el.dataset);
+      return true;
+    };
+    document.addEventListener('pointerdown',function(ev){
+      const details=ev.target.closest?.('#productGrid .js-details');
+      const buy=ev.target.closest?.('#productGrid .js-buy');
+      if(details){openFromEl(details,ev);return;}
+      if(buy){buyFromEl(buy,ev);return;}
+    },true);
     document.addEventListener('click',function(ev){
       const details=ev.target.closest?.('#productGrid .js-details');
       const buy=ev.target.closest?.('#productGrid .js-buy');
       const card=ev.target.closest?.('#productGrid .js-product-card');
       const fitting=ev.target.closest?.('#productBody .js-fitting');
-      if(fitting){ev.preventDefault();ev.stopPropagation();openVirtualFitting(fitting.dataset.productId);return;}
-      if(details){
-        ev.preventDefault();
-        ev.stopPropagation();
-        openProduct(details.dataset.productId,details.dataset.productSku,details.dataset.productBarcode,details.dataset.productRef);
-        return;
-      }
-      if(buy){
-        ev.preventDefault();
-        ev.stopPropagation();
-        const p=findRenderedProduct(buy.dataset.productRef)||findProductByRef(buy.dataset.productId,buy.dataset.productSku,buy.dataset.productBarcode);
-        if(p)addCart(p.id);
-        else console.warn('Não foi possível adicionar: produto não encontrado',buy.dataset);
-        return;
-      }
+      if(fitting){ev.preventDefault();ev.stopImmediatePropagation();openVirtualFitting(fitting.dataset.productId);return;}
+      // pointerdown já abriu. Não executar novamente no click.
+      if(details||buy){ev.preventDefault();ev.stopImmediatePropagation();return;}
       if(card){
-        ev.preventDefault();
-        ev.stopPropagation();
+        ev.preventDefault();ev.stopImmediatePropagation();
+        resetPublicSearchField();
         openProduct(card.dataset.productId,card.dataset.productSku,card.dataset.productBarcode,card.dataset.productRef);
         return;
       }
