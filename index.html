@@ -955,3 +955,1003 @@ renderCategories();clearForm();loadPaymentSettings();loadShippingSettings();rend
 loadCarmenattoCatalog();
 setInterval(pollOrders,10000);pollOrders();
 </script></body></html>
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+/**
+ * STUDIO 70 BRAND — checkout-api
+ * Supabase Edge Function
+ *
+ * Ações:
+ * admin_login, save_config, shipping, pix, card,
+ * pix_status, store_order, store_sale, orders, mercadopago_auth_test, webhook
+ */
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, accept, origin, x-requested-with',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Content-Type': 'application/json; charset=utf-8',
+};
+
+const env = (name: string, fallback = '') => Deno.env.get(name) || fallback;
+
+const json = (body: unknown, status = 200) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: corsHeaders,
+  });
+
+const supabaseUrl = env('SUPABASE_URL');
+
+// Supabase atualmente disponibiliza SUPABASE_SECRET_KEYS.
+// O fallback para SUPABASE_SERVICE_ROLE_KEY mantém compatibilidade com projetos antigos.
+function getSupabaseSecretKey() {
+  const secretKeys = env('SUPABASE_SECRET_KEYS');
+
+  if (secretKeys) {
+    try {
+      const parsed = JSON.parse(secretKeys);
+      if (parsed?.default) return parsed.default;
+    } catch {
+      // Continua para o fallback legado.
+    }
+  }
+
+  return env('SUPABASE_SERVICE_ROLE_KEY');
+}
+
+const supabaseSecretKey = getSupabaseSecretKey();
+
+if (!supabaseUrl || !supabaseSecretKey) {
+  console.error('SUPABASE_URL ou chave secreta do Supabase não configurada.');
+}
+
+const db = createClient(supabaseUrl, supabaseSecretKey);
+
+function digits(value: unknown) {
+  return String(value ?? '').replace(/\D/g, '');
+}
+
+function money(value: unknown) {
+  return Number(Number(value || 0).toFixed(2));
+}
+
+function clampInt(value: unknown, min: number, max: number, fallback: number) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return fallback;
+  return Math.min(max, Math.max(min, Math.trunc(n)));
+}
+
+function errorMessage(error: unknown) {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function safeItems(items: unknown[]) {
+  return (Array.isArray(items) ? items : []).map((item: any) => ({
+    id: String(item?.id || ''),
+    title: String(item?.title || 'Produto'),
+    quantity: Math.max(1, Number(item?.quantity || 1)),
+    unit_price: money(item?.unit_price),
+    sku: String(item?.sku || ''),
+    picture_url: String(item?.picture_url || ''),
+  }));
+}
+
+async function encryptSecret(value: string) {
+  const encryptionSecret = env('CONFIG_ENCRYPTION_KEY');
+  if (!encryptionSecret) {
+    throw new Error('CONFIG_ENCRYPTION_KEY não configurada nos Secrets do Supabase.');
+  }
+
+  const digest = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(encryptionSecret),
+  );
+
+  const key = await crypto.subtle.importKey(
+    'raw',
+    digest,
+    'AES-GCM',
+    false,
+    ['encrypt', 'decrypt'],
+  );
+
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const encrypted = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    new TextEncoder().encode(value),
+  );
+
+  const output = new Uint8Array(iv.length + encrypted.byteLength);
+  output.set(iv, 0);
+  output.set(new Uint8Array(encrypted), iv.length);
+
+  return btoa(String.fromCharCode(...output));
+}
+
+async function decryptSecret(encoded: string) {
+  const encryptionSecret = env('CONFIG_ENCRYPTION_KEY');
+  if (!encryptionSecret) {
+    throw new Error('CONFIG_ENCRYPTION_KEY não configurada nos Secrets do Supabase.');
+  }
+
+  const raw = Uint8Array.from(atob(encoded), (char) => char.charCodeAt(0));
+  if (raw.length <= 12) throw new Error('Credencial criptografada inválida.');
+
+  const iv = raw.slice(0, 12);
+  const encrypted = raw.slice(12);
+
+  const digest = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(encryptionSecret),
+  );
+
+  const key = await crypto.subtle.importKey(
+    'raw',
+    digest,
+    'AES-GCM',
+    false,
+    ['encrypt', 'decrypt'],
+  );
+
+  const plain = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    encrypted,
+  );
+
+  return new TextDecoder().decode(plain);
+}
+
+async function adminOK(password: string) {
+  const configured = env('ADMIN_PANEL_PASSWORD');
+  if (!configured) throw new Error('ADMIN_PANEL_PASSWORD não configurada nos Secrets do Supabase.');
+  return Boolean(password && password === configured);
+}
+
+async function getConfig(provider: string) {
+  const { data, error } = await db
+    .from('studio70_integration_config')
+    .select('*')
+    .eq('provider', provider)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data;
+}
+
+async function saveOrder(payload: any, extra: any = {}) {
+  const externalReference = String(
+    payload?.external_reference || `ST70-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`,
+  );
+
+  const { error } = await db.from('studio70_orders').upsert(
+    {
+      external_reference: externalReference,
+      payment_provider: extra.payment_provider || 'mercadopago',
+      payment_id: extra.payment_id ? String(extra.payment_id) : null,
+      payment_status: extra.payment_status || 'pending',
+      payment_method: extra.payment_method || payload?.payment_method || null,
+      total: money(payload?.total || payload?.transaction_amount),
+      customer: payload?.customer || {},
+      shipping: payload?.shipping || {},
+      items: payload?.items || [],
+      raw: extra.raw || payload,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: 'external_reference' },
+  );
+
+  if (error) throw error;
+  return externalReference;
+}
+
+async function mpFetch(path: string, init: RequestInit = {}) {
+  const config = await getConfig('mercadopago');
+
+  if (!config?.secret_ciphertext) {
+    throw new Error('Mercado Pago ainda não foi configurado no painel ADM.');
+  }
+
+  const accessToken = await decryptSecret(config.secret_ciphertext);
+  if (!accessToken) throw new Error('Access Token do Mercado Pago está vazio.');
+
+  const headers = new Headers(init.headers || {});
+  headers.set('Authorization', `Bearer ${accessToken}`);
+  headers.set('Content-Type', 'application/json');
+  headers.set('Accept', 'application/json');
+  headers.set('User-Agent', 'STUDIO 70 BRAND (suporte@agifytech.com)');
+
+  const response = await fetch(`https://api.mercadopago.com${path}`, {
+    ...init,
+    headers,
+  });
+
+  const raw = await response.text();
+  let data: any = {};
+  try { data = raw ? JSON.parse(raw) : {}; } catch { data = { raw }; }
+
+  if (!response.ok) {
+    const detail = data?.cause?.[0]?.description || data?.cause?.[0]?.code || '';
+    const code = data?.error || data?.code || '';
+    const msg = data?.message || data?.error || `Mercado Pago HTTP ${response.status}`;
+    throw new Error(`Mercado Pago HTTP ${response.status}${code ? ` [${code}]` : ''}: ${msg}${detail ? ` — ${detail}` : ''}`);
+  }
+
+  return data;
+}
+
+async function shippingQuote(body: any) {
+  const config = await getConfig('superfrete');
+
+  if (!config?.secret_ciphertext) {
+    throw new Error('SuperFrete ainda não foi configurada no painel ADM.');
+  }
+
+  const token = await decryptSecret(config.secret_ciphertext);
+  const endpoint =
+    config.endpoint ||
+    env('SUPERFRETE_API_URL', 'https://api.superfrete.com/api/v0/calculator');
+
+  const originCep = digits(config.settings?.originCep);
+  const destinationCep = digits(body?.to);
+
+  if (originCep.length !== 8 || destinationCep.length !== 8) {
+    throw new Error('CEP de origem/destino inválido.');
+  }
+
+  const products = (Array.isArray(body?.products) ? body.products : []).map(
+    (product: any) => ({
+      weight: Number(product?.weight || 0.3),
+      width: Number(product?.width || 20),
+      height: Number(product?.height || 4),
+      length: Number(product?.length || 30),
+      quantity: Math.max(1, Number(product?.quantity || 1)),
+      insurance_value: Number(body?.insurance_value || 0),
+    }),
+  );
+
+  const payload = {
+    from: { postal_code: originCep },
+    to: { postal_code: destinationCep },
+    products,
+    options: {
+      insurance_value: Number(body?.insurance_value || 0),
+    },
+  };
+
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(
+      data?.message || data?.error || `SuperFrete HTTP ${response.status}`,
+    );
+  }
+
+  return Array.isArray(data)
+    ? data
+    : data?.services || data?.results || data?.data || data;
+}
+
+async function createPix(body: any) {
+  const externalReference = await saveOrder(body, {
+    payment_method: 'pix',
+    payment_status: 'pending',
+  });
+
+  const cpf = digits(body?.customer?.cpf);
+  const payer: any = {
+    email: String(body?.customer?.email || 'cliente@exemplo.com'),
+  };
+
+  if (cpf.length === 11) {
+    payer.identification = {
+      type: 'CPF',
+      number: cpf,
+    };
+  }
+
+  const payment = await mpFetch('/v1/payments', {
+    method: 'POST',
+    headers: {
+      'X-Idempotency-Key': externalReference,
+    },
+    body: JSON.stringify({
+      transaction_amount: money(body?.transaction_amount),
+      description: body?.description || 'Compra STUDIO 70 BRAND',
+      payment_method_id: 'pix',
+      payer,
+      external_reference: externalReference,
+    }),
+  });
+
+  const { error } = await db
+    .from('studio70_orders')
+    .update({
+      payment_id: String(payment.id),
+      payment_status: payment.status || 'pending',
+      raw: payment,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('external_reference', externalReference);
+
+  if (error) throw error;
+
+  return {
+    payment_id: payment.id,
+    status: payment.status,
+    qr_code: payment?.point_of_interaction?.transaction_data?.qr_code || '',
+    qr_code_base64:
+      payment?.point_of_interaction?.transaction_data?.qr_code_base64 || '',
+  };
+}
+
+function functionUrl(req: Request) {
+  const url = new URL(req.url);
+  return `${url.origin}${url.pathname}`;
+}
+
+const DEFAULT_STOREFRONT_URL = 'https://agifytech.github.io/studio70/';
+
+function storefrontUrl() {
+  const configured = env('STOREFRONT_URL', '').trim();
+  const candidate = configured || DEFAULT_STOREFRONT_URL;
+
+  try {
+    const parsed = new URL(candidate);
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+      throw new Error('STOREFRONT_URL deve usar http ou https.');
+    }
+    return parsed.toString().replace(/\/$/, '');
+  } catch {
+    console.warn('STOREFRONT_URL inválida; usando o endereço padrão do STUDIO 70 BRAND.');
+    return DEFAULT_STOREFRONT_URL.replace(/\/$/, '');
+  }
+}
+
+async function createStoreSale(body: any) {
+  const sale = body?.sale || {};
+  const reference = String(sale?.id || `V${Date.now()}`);
+  const payload = {
+    external_reference: reference,
+    payment_method: String(sale?.payment || 'store'),
+    total: money(sale?.total),
+    customer: { source: 'pdv' },
+    shipping: {},
+    items: Array.isArray(sale?.items) ? sale.items : [],
+    source: 'store',
+  };
+
+  const ref = await saveOrder(payload, {
+    payment_provider: 'store',
+    payment_method: payload.payment_method,
+    payment_status: 'paid_store',
+    raw: payload,
+  });
+
+  return { ok: true, order_id: ref };
+}
+
+async function listOrders(body: any) {
+  const limit = clampInt(body?.limit, 1, 100, 30);
+  const after = String(body?.after || '');
+
+  let query = db
+    .from('studio70_orders')
+    .select('external_reference,payment_provider,payment_id,payment_status,payment_method,total,customer,shipping,items,updated_at')
+    .order('updated_at', { ascending: true })
+    .limit(limit);
+
+  if (after) query = query.gt('updated_at', after);
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return { ok: true, orders: data || [] };
+}
+
+async function mercadopagoAuthTest() {
+  const me = await mpFetch('/users/me', { method: 'GET' });
+  return {
+    ok: true,
+    id: me?.id || null,
+    nickname: me?.nickname || null,
+    site_id: me?.site_id || null,
+    message: 'Access Token do Mercado Pago aceito pela API.',
+  };
+}
+
+async function createCardPreference(body: any, req: Request) {
+  const config = await getConfig('mercadopago');
+  const externalReference = await saveOrder(
+    { ...body, payment_method: 'card' },
+    {
+      payment_method: 'card',
+      payment_status: 'pending',
+    },
+  );
+
+  const items = safeItems(body?.items);
+  if (!items.length) throw new Error('Nenhum item foi enviado para o checkout.');
+
+  const backUrl = storefrontUrl();
+
+  const preference = {
+    items: [
+      ...items.map((item) => ({
+        id: item.id,
+        title: item.title,
+        quantity: item.quantity,
+        currency_id: 'BRL',
+        unit_price: item.unit_price,
+        ...(item.picture_url ? { picture_url: item.picture_url } : {}),
+      })),
+      ...(Number(body?.shipping_cost || 0) > 0
+        ? [{
+            id: 'frete',
+            title: String(body?.shipping_service || 'Frete'),
+            quantity: 1,
+            currency_id: 'BRL',
+            unit_price: money(body?.shipping_cost),
+          }]
+        : []),
+    ],
+    external_reference: externalReference,
+    notification_url: `${functionUrl(req)}?action=webhook`,
+    back_urls: {
+      success: backUrl,
+      failure: backUrl,
+      pending: backUrl,
+    },
+    auto_return: 'approved',
+    installments: clampInt(
+      config?.settings?.maxInstallments,
+      1,
+      24,
+      12,
+    ),
+  };
+
+  const data = await mpFetch('/checkout/preferences', {
+    method: 'POST',
+    body: JSON.stringify(preference),
+  });
+
+  const { error } = await db
+    .from('studio70_orders')
+    .update({
+      raw: data,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('external_reference', externalReference);
+
+  if (error) throw error;
+
+  return {
+    id: data.id,
+    init_point: data.init_point,
+    sandbox_init_point: data.sandbox_init_point,
+    external_reference: externalReference,
+  };
+}
+
+async function handleWebhook(req: Request) {
+  const url = new URL(req.url);
+  let body: any = {};
+
+  if (req.method !== 'GET') {
+    body = await req.json().catch(() => ({}));
+  }
+
+  const paymentId = String(
+    body?.data?.id ||
+      body?.id ||
+      url.searchParams.get('data.id') ||
+      url.searchParams.get('id') ||
+      '',
+  );
+
+  if (!paymentId) return json({ ok: true, ignored: true });
+
+  const payment = await mpFetch(
+    `/v1/payments/${encodeURIComponent(paymentId)}`,
+  );
+
+  if (payment?.external_reference) {
+    const { error } = await db
+      .from('studio70_orders')
+      .update({
+        payment_id: String(payment.id),
+        payment_status: payment.status || 'unknown',
+        raw: payment,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('external_reference', payment.external_reference);
+
+    if (error) throw error;
+  }
+
+  return json({ ok: true });
+}
+
+
+// ==================== CARMENATTO CATALOG SYNC ====================
+const CARMENATTO_BASE = 'https://www.carmenatto.com.br';
+const CARMENATTO_PRODUCTS_URL = `${CARMENATTO_BASE}/produtos/`;
+
+function cleanText(value: unknown) {
+  return String(value ?? '').replace(/\s+/g, ' ').trim();
+}
+
+function absoluteUrl(value: string, base = CARMENATTO_BASE) {
+  try { return new URL(value, base).toString(); } catch { return ''; }
+}
+
+function uniqueStrings(values: string[]) {
+  return [...new Set(values.map(cleanText).filter(Boolean))];
+}
+
+function parseMoneyBR(value: string) {
+  const m = String(value || '').match(/R\$\s*([0-9.]+(?:,[0-9]{1,2})?)/i);
+  if (!m) return 0;
+  return Number(m[1].replace(/\./g, '').replace(',', '.')) || 0;
+}
+
+function parseStock(text: string) {
+  const m = cleanText(text).match(/(\d+)\s+em estoque/i);
+  return m ? Number(m[1]) : 0;
+}
+
+function textOf(el: Element | null) { return el ? cleanText(el.textContent || '') : ''; }
+
+function extractImages(doc: Document) {
+  const urls: string[] = [];
+  const og = doc.querySelector('meta[property="og:image"]')?.getAttribute('content');
+  if (og) urls.push(absoluteUrl(og));
+  doc.querySelectorAll('img').forEach((img) => {
+    const src = img.getAttribute('src') || img.getAttribute('data-src') || img.getAttribute('data-lazy-src') || '';
+    if (src && /mitiendanube|carmenatto/i.test(src)) urls.push(absoluteUrl(src));
+  });
+  doc.querySelectorAll('a[href]').forEach((a) => {
+    const href = a.getAttribute('href') || '';
+    if (/\.(?:webp|jpe?g|png)(?:\?|$)/i.test(href)) urls.push(absoluteUrl(href));
+  });
+  return uniqueStrings(urls);
+}
+
+function extractVariantData(doc: Document, bodyText: string) {
+  const colors: string[] = [];
+  const sizes: string[] = [];
+  doc.querySelectorAll('select option, button, input').forEach((el) => {
+    const t = cleanText(el.textContent || el.getAttribute('value') || el.getAttribute('aria-label') || '');
+    if (!t || t.length > 120) return;
+    if (/^(?:PP|P|M|G|GG|XG|XXG|ÚNICO|UNICO|36|38|40|42|44|46|48|50|52)$/i.test(t)) sizes.push(t);
+  });
+  const colorMatch = bodyText.match(/COR\/EST\.?\s*:?\s*([\s\S]{0,700}?)(?:TAM\s*:|$)/i);
+  if (colorMatch) {
+    const raw = colorMatch[1].split(/\s{2,}|Comprar|Pronto!/i)[0];
+    raw.split(/\s{2,}/).forEach((x) => { if (x.length <= 100) colors.push(x); });
+  }
+  const sizeMatch = bodyText.match(/TAM\s*:\s*([^\n]{1,100})/i);
+  if (sizeMatch) sizeMatch[1].split(/\s{2,}/).forEach((x) => { if (x.length <= 30) sizes.push(x); });
+  return { sizes: uniqueStrings(sizes), colors: uniqueStrings(colors) };
+}
+
+function extractDescription(doc: Document) {
+  const headings = [...doc.querySelectorAll('h1,h2,h3,h4,strong')];
+  const marker = headings.find((h) => /descri.*o do produto/i.test(textOf(h)));
+  if (marker) {
+    const parts: string[] = [];
+    let n: Element | null = marker.nextElementSibling;
+    for (let i = 0; n && i < 8; i++, n = n.nextElementSibling) {
+      const t = textOf(n);
+      if (t && !/informa.*es do produto|provador virtual/i.test(t)) parts.push(t);
+    }
+    if (parts.length) return parts.join('\n\n');
+  }
+  const body = cleanText(doc.body?.textContent || '');
+  const idx = body.search(/Descri.*o do produto/i);
+  if (idx >= 0) return body.slice(idx + body.slice(idx).search(/Descri.*o do produto/i) + 22, idx + 3000).trim();
+  return '';
+}
+
+function extractProductInfo(doc: Document, bodyText: string) {
+  const info: Record<string,string> = {};
+  const idx = bodyText.search(/Informa.*es do produto/i);
+  const tail = idx >= 0 ? bodyText.slice(idx, idx + 1800) : bodyText;
+  for (const key of ['Tecido','Composição','Forro','Tamanho','Possui bojo','Modelo','Detalhes','Observação']) {
+    const re = new RegExp(`${key}\\s*:\\s*(.*?)(?=\\s+(?:Tecido|Composição|Forro|Tamanho|Possui bojo|Modelo|Detalhes|Observação)\\s*:|$)`, 'i');
+    const m = tail.match(re);
+    if (m?.[1]) info[key.toLowerCase().replace(/[^a-z]/g,'_')] = cleanText(m[1]);
+  }
+  return info;
+}
+
+async function fetchHtml(url: string) {
+  const r = await fetch(url, { headers: { 'User-Agent': 'STUDIO 70 BRAND catalog sync/1.0' } });
+  if (!r.ok) throw new Error(`Carmenatto HTTP ${r.status} em ${url}`);
+  return await r.text();
+}
+
+function productLinksFromPage(doc: Document) {
+  return uniqueStrings([...doc.querySelectorAll('a[href]')].map((a) => absoluteUrl(a.getAttribute('href') || ''))
+    .filter((u) => {
+      try { const p = new URL(u); return p.hostname.endsWith('carmenatto.com.br') && /^\/produtos\/[^/]+\/?$/.test(p.pathname); } catch { return false; }
+    }));
+}
+
+function paginationLinksFromPage(doc: Document) {
+  return uniqueStrings([...doc.querySelectorAll('a[href]')].map((a) => absoluteUrl(a.getAttribute('href') || ''))
+    .filter((u) => { try { return new URL(u).hostname.endsWith('carmenatto.com.br') && /(?:[?&](?:page|paged)=\d+|\/page\/\d+\/?$)/i.test(u); } catch { return false; } }));
+}
+
+async function scrapeCarmenattoProduct(url: string) {
+  const html = await fetchHtml(url);
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  if (!doc) throw new Error(`Não foi possível interpretar ${url}`);
+  const bodyText = cleanText(doc.body?.textContent || '');
+  const title = textOf(doc.querySelector('h1')) || textOf(doc.querySelector('title')).replace(/\s*[-|].*$/, '');
+  const skuMatch = bodyText.match(/SKU\s*:\s*([A-Za-z0-9._-]+)/i);
+  const prices = [...bodyText.matchAll(/R\$\s*[0-9.]+(?:,[0-9]{1,2})?/gi)].map((m) => parseMoneyBR(m[0]));
+  const pixMatch = bodyText.match(/R\$\s*[0-9.]+(?:,[0-9]{1,2})?\s+com\s+Pix/i);
+  const images = extractImages(doc);
+  const variants = extractVariantData(doc, bodyText);
+  const info = extractProductInfo(doc, bodyText);
+  const categoryLink = [...doc.querySelectorAll('a[href]')].find((a) => {
+    const href = a.getAttribute('href') || '';
+    return /\/(?:blusa|body|cropped|conjunto|vestido|calca|short|saia|biquini|maio|macacao|macaquinho)\/?$/i.test(href);
+  });
+  const category = cleanText(categoryLink?.textContent || '');
+  const price = prices[0] || 0;
+  const pixPrice = pixMatch ? parseMoneyBR(pixMatch[0]) : 0;
+  const slug = new URL(url).pathname.split('/').filter(Boolean).pop() || '';
+  return {
+    supplier: 'carmenatto',
+    external_id: skuMatch?.[1] || slug,
+    sku: skuMatch?.[1] || '',
+    name: title,
+    price: money(price),
+    pix_price: money(pixPrice),
+    description: extractDescription(doc),
+    sizes: variants.sizes,
+    colors: variants.colors,
+    image: images[0] || '',
+    secondary_images: images.slice(1, 12),
+    category: '',
+    stock: parseStock(bodyText),
+    active: /Comprar|Pronto!/i.test(bodyText) && !/produto indisponível|esgotado/i.test(bodyText),
+    source_url: url,
+    raw: { info, scraped_at: new Date().toISOString() },
+  };
+}
+
+async function scrapeCarmenattoCatalog(maxPages = 20, maxProducts = 500) {
+  const queue = [CARMENATTO_PRODUCTS_URL];
+  const visitedPages = new Set<string>();
+  const productUrls = new Set<string>();
+  while (queue.length && visitedPages.size < maxPages && productUrls.size < maxProducts) {
+    const pageUrl = queue.shift()!;
+    if (visitedPages.has(pageUrl)) continue;
+    visitedPages.add(pageUrl);
+    const html = await fetchHtml(pageUrl);
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    if (!doc) continue;
+    productLinksFromPage(doc).forEach((u) => { if (productUrls.size < maxProducts) productUrls.add(u); });
+    paginationLinksFromPage(doc).forEach((u) => { if (!visitedPages.has(u) && queue.length < maxPages) queue.push(u); });
+    if (visitedPages.size === 1 && !queue.length) {
+      for (let n = 2; n <= maxPages; n++) queue.push(`${CARMENATTO_PRODUCTS_URL}?page=${n}`);
+    }
+  }
+  const products: any[] = [];
+  const errors: any[] = [];
+  const urls = [...productUrls];
+  const concurrency = 8;
+  for (let i = 0; i < urls.length; i += concurrency) {
+    const batch = urls.slice(i, i + concurrency);
+    const results = await Promise.all(batch.map(async (url) => {
+      try { return { product: await scrapeCarmenattoProduct(url) }; }
+      catch (e) { return { error: { url, error: errorMessage(e) } }; }
+    }));
+    for (const result of results) {
+      if (result.product) products.push(result.product);
+      if (result.error) errors.push(result.error);
+    }
+  }
+  return { products, errors, pages: visitedPages.size, found: productUrls.size };
+}
+
+async function recordCarmenattoSyncStart(trigger: string, maxPages: number, maxProducts: number) {
+  const { data, error } = await db.from('studio70_carmenatto_sync_history').insert({
+    trigger,
+    status: 'running',
+    max_pages: maxPages,
+    max_products: maxProducts,
+    started_at: new Date().toISOString(),
+  }).select('id').single();
+  if (error) throw error;
+  return data.id;
+}
+
+async function finishCarmenattoSync(id: number, patch: any) {
+  const { error } = await db.from('studio70_carmenatto_sync_history').update({
+    ...patch,
+    finished_at: new Date().toISOString(),
+  }).eq('id', id);
+  if (error) console.error('Falha ao gravar histórico Carmenatto:', error);
+}
+
+async function syncCarmenatto(body: any) {
+  const trigger = String(body?.trigger || 'manual');
+  if (trigger !== 'automatic') {
+    const adminPassword = String(body?.admin_password || '');
+    if (!(await adminOK(adminPassword))) throw new Error('Acesso administrativo inválido.');
+  } else {
+    const secret = String(body?.sync_secret || '');
+    const configured = env('CARMENATTO_SYNC_SECRET');
+    if (!configured || !secret || secret !== configured) throw new Error('Sincronização automática não autorizada.');
+  }
+
+  const maxPages = clampInt(body?.max_pages, 1, 50, 20);
+  const maxProducts = clampInt(body?.max_products, 1, 2000, 1000);
+  const historyId = await recordCarmenattoSyncStart(trigger, maxPages, maxProducts);
+  try {
+    const result = await scrapeCarmenattoCatalog(maxPages, maxProducts);
+    let upserted = 0;
+    for (const p of result.products) {
+      const { error } = await db.from('studio70_supplier_products').upsert({
+        supplier: p.supplier, external_id: p.external_id, sku: p.sku, name: p.name, price: p.price,
+        pix_price: p.pix_price, description: p.description, sizes: p.sizes, colors: p.colors, image: p.image,
+        secondary_images: p.secondary_images, category: p.category, stock: p.stock, active: p.active,
+        source_url: p.source_url, raw: p.raw, synced_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+      }, { onConflict: 'supplier,external_id' });
+      if (error) throw error;
+      upserted++;
+    }
+
+    // Produtos que ficaram fora desta varredura não são apagados. Isso evita perder o catálogo
+    // durante uma indisponibilidade ou paginação parcial do fornecedor.
+    const now = new Date().toISOString();
+    await finishCarmenattoSync(historyId, {
+      status: 'success', pages: result.pages, found: result.found, imported: upserted,
+      errors_count: result.errors.length, errors: result.errors.slice(0, 100), finished_at: now,
+    });
+    return {
+      ok: true, supplier: 'carmenatto', found: result.found, imported: upserted,
+      errors: result.errors, pages: result.pages, synced_at: now, history_id: historyId,
+      trigger,
+    };
+  } catch (error) {
+    const message = errorMessage(error);
+    await finishCarmenattoSync(historyId, { status: 'error', errors_count: 1, errors: [{ error: message }] });
+    throw error;
+  }
+}
+
+async function listCarmenattoProducts(body: any) {
+  const limit = clampInt(body?.limit, 1, 500, 500);
+  const { data, error } = await db.from('studio70_supplier_products')
+    .select('external_id,sku,name,price,pix_price,description,sizes,colors,image,secondary_images,category,stock,active,source_url,synced_at')
+    .eq('supplier','carmenatto').eq('active',true).order('name').limit(limit);
+  if (error) throw error;
+  return { ok: true, supplier: 'carmenatto', products: data || [] };
+}
+
+async function listCarmenattoSyncHistory(body: any) {
+  const limit = clampInt(body?.limit, 1, 100, 20);
+  const { data, error } = await db.from('studio70_carmenatto_sync_history')
+    .select('id,trigger,status,max_pages,max_products,pages,found,imported,errors_count,errors,started_at,finished_at')
+    .order('started_at', { ascending: false }).limit(limit);
+  if (error) throw error;
+  return { ok: true, history: data || [] };
+}
+
+async function carmenattoSyncStatus() {
+  const { data, error } = await db.from('studio70_carmenatto_sync_history')
+    .select('id,trigger,status,pages,found,imported,errors_count,started_at,finished_at')
+    .order('started_at', { ascending: false }).limit(1).maybeSingle();
+  if (error) throw error;
+  const { count, error: countError } = await db.from('studio70_supplier_products')
+    .select('*', { count: 'exact', head: true }).eq('supplier', 'carmenatto').eq('active', true);
+  if (countError) throw countError;
+  return { ok: true, status: data || null, active_products: count || 0, checked_at: new Date().toISOString() };
+}
+
+async function automaticCarmenattoSync(req: Request, body: any) {
+  const configured = env('CARMENATTO_SYNC_SECRET');
+  const auth = req.headers.get('x-carmenatto-sync-secret') || String(body?.sync_secret || '');
+  if (!configured || !auth || auth !== configured) return json({ error: 'Sincronização automática não autorizada.' }, 401);
+  return json(await syncCarmenatto({ ...body, trigger: 'automatic', sync_secret: auth }));
+}
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
+  try {
+    const url = new URL(req.url);
+    const queryAction = url.searchParams.get('action') || '';
+
+    // Webhook do Mercado Pago pode chegar por GET ou POST.
+    if (queryAction === 'webhook' && (req.method === 'GET' || req.method === 'POST')) {
+      return await handleWebhook(req);
+    }
+
+    if (req.method !== 'POST') {
+      return json({ error: 'Método não permitido.' }, 405);
+    }
+
+    const body = await req.json().catch(() => ({}));
+    const action = String(body?.action || queryAction || '');
+
+    if (action === 'admin_login') {
+      const ok = await adminOK(String(body?.password || ''));
+      return json({ ok }, ok ? 200 : 401);
+    }
+
+    if (action === 'save_config') {
+      const adminPassword = String(body?.admin_password || '');
+
+      if (!(await adminOK(adminPassword))) {
+        return json({ error: 'Acesso administrativo inválido.' }, 401);
+      }
+
+      const provider = String(body?.provider || '');
+
+      if (!['mercadopago', 'superfrete'].includes(provider)) {
+        return json({ error: 'Provider inválido.' }, 400);
+      }
+
+      const current = await getConfig(provider);
+
+      const secret =
+        provider === 'mercadopago'
+          ? String(body?.access_token || '')
+          : String(body?.token || '');
+
+      const ciphertext = secret
+        ? await encryptSecret(secret)
+        : current?.secret_ciphertext || null;
+
+      const settings =
+        provider === 'mercadopago'
+          ? {
+              maxInstallments: clampInt(
+                body?.max_installments,
+                1,
+                24,
+                Number(current?.settings?.maxInstallments || 12),
+              ),
+            }
+          : {
+              originCep: digits(body?.originCep || current?.settings?.originCep),
+            };
+
+      const endpoint = String(
+        body?.endpoint || current?.endpoint || '',
+      );
+
+      const publicKey = String(
+        body?.public_key || current?.public_key || '',
+      );
+
+      const { error } = await db
+        .from('studio70_integration_config')
+        .upsert(
+          {
+            provider,
+            endpoint,
+            public_key: publicKey,
+            secret_ciphertext: ciphertext,
+            settings,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'provider' },
+        );
+
+      if (error) throw error;
+
+      return json({
+        ok: true,
+        message: 'Configuração salva com segurança.',
+      });
+    }
+
+    if (action === 'shipping') {
+      return json(await shippingQuote(body));
+    }
+
+    if (action === 'pix') {
+      return json(await createPix(body));
+    }
+
+    if (action === 'card') {
+      return json(await createCardPreference(body, req));
+    }
+
+    if (action === 'pix_status') {
+      const paymentId = String(body?.payment_id || '');
+      if (!paymentId) {
+        return json({ error: 'payment_id é obrigatório.' }, 400);
+      }
+
+      const payment = await mpFetch(
+        `/v1/payments/${encodeURIComponent(paymentId)}`,
+      );
+
+      return json({
+        status: payment.status,
+        id: payment.id,
+        status_detail: payment.status_detail || null,
+      });
+    }
+
+    if (action === 'store_order') {
+      const reference = await saveOrder(body, {
+        payment_provider: 'store',
+        payment_method: body?.payment_method,
+        payment_status: 'pending_store_payment',
+      });
+
+      return json({
+        ok: true,
+        order_id: reference,
+      });
+    }
+
+    if (action === 'store_sale') {
+      return json(await createStoreSale(body));
+    }
+
+    if (action === 'orders') {
+      return json(await listOrders(body));
+    }
+
+    if (action === 'carmenatto_sync') {
+      return json(await syncCarmenatto(body));
+    }
+
+    if (action === 'carmenatto_auto_sync') {
+      return await automaticCarmenattoSync(req, body);
+    }
+
+    if (action === 'carmenatto_sync_history') {
+      const adminPassword = String(body?.admin_password || '');
+      if (!(await adminOK(adminPassword))) return json({ error: 'Acesso administrativo inválido.' }, 401);
+      return json(await listCarmenattoSyncHistory(body));
+    }
+
+    if (action === 'carmenatto_sync_status') {
+      return json(await carmenattoSyncStatus());
+    }
+
+    if (action === 'carmenatto_products') {
+      return json(await listCarmenattoProducts(body));
+    }
+
+    if (action === 'mercadopago_auth_test') {
+      const adminPassword = String(body?.admin_password || '');
+      if (!(await adminOK(adminPassword))) {
+        return json({ error: 'Acesso administrativo inválido.' }, 401);
+      }
+      return json(await mercadopagoAuthTest());
+    }
+
+    return json({ error: 'Ação não reconhecida.' }, 400);
+  } catch (error) {
+    console.error('checkout-api error:', error);
+    return json({
+      error: errorMessage(error) || 'Erro interno.',
+    }, 500);
+  }
+});
