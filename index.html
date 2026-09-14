@@ -1406,7 +1406,7 @@ function mapSupplierCategory(name){
   if(n.includes('saia'))return 'Saias';
   return 'Outros';
 }
-async async function loadCarmenattoCatalog(){
+async function loadCarmenattoCatalog(){
   await loadStudio70Overrides();
   const apiUrl=checkoutApiUrl();
   try{
