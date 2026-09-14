@@ -495,6 +495,8 @@ const CATEGORIES = ['Vestidos','Conjuntos','Croppeds','Bodies','Biquínis','Maca
 const PRODUCTS_VERSION = 'v3';
 const PRODUCTS_KEY = 'studio70_products_' + PRODUCTS_VERSION;
 const ADMIN_OVERRIDES_KEY = 'studio70_admin_overrides_v1';
+// Persistência CENTRAL: o navegador guarda apenas cache. A fonte de verdade é o Supabase.
+const STUDIO70_PRODUCTS_API = 'https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/studio70-products';
 let adminOverrides = JSON.parse(localStorage.getItem(ADMIN_OVERRIDES_KEY) || '{}');
 let products = (() => {
   try {
@@ -608,7 +610,35 @@ function applyAdminOverrides(list){
     return override?normalizeProductRecord({...p,...override}):p;
   });
 }
-function save(){localStorage.setItem(PRODUCTS_KEY,JSON.stringify(products));localStorage.setItem(ADMIN_OVERRIDES_KEY,JSON.stringify(adminOverrides));}
+function save(){
+  // Cache local apenas para inicialização rápida/offline. Não é mais a fonte de verdade.
+  localStorage.setItem(PRODUCTS_KEY,JSON.stringify(products));
+  localStorage.setItem(ADMIN_OVERRIDES_KEY,JSON.stringify(adminOverrides));
+}
+async function studio70ProductApi(action, body={}){
+  const r=await fetch(STUDIO70_PRODUCTS_API,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action,...body})});
+  const text=await r.text(); let d={};
+  try{d=text?JSON.parse(text):{};}catch(_){throw new Error(`Resposta inválida da persistência STUDIO 70 (HTTP ${r.status}).`);}
+  if(!r.ok||d.ok===false)throw new Error(String(d.error||d.message||`Erro HTTP ${r.status}`));
+  return d;
+}
+async function loadStudio70Overrides(){
+  try{
+    const d=await studio70ProductApi('get_overrides');
+    const incoming=Array.isArray(d.overrides)?d.overrides:[];
+    const next={};
+    incoming.forEach(row=>{
+      const p=row?.product||row?.data||row;
+      if(p&&typeof p==='object')next[String(row.key||productOverrideKey(p)).trim().toLowerCase()]=normalizeProductRecord(p);
+    });
+    adminOverrides=next;
+    localStorage.setItem(ADMIN_OVERRIDES_KEY,JSON.stringify(adminOverrides));
+    return adminOverrides;
+  }catch(e){
+    console.warn('[STUDIO70] Não foi possível sincronizar alterações do Supabase; usando cache local:',e.message);
+    return adminOverrides;
+  }
+}
 function renderCategories(){document.getElementById('categories').innerHTML=CATEGORIES.map(c=>`<button class="cat" onclick="filterCat('${c}')">${c}</button>`).join(''); const sel=document.getElementById('categoryFilter'); sel.innerHTML='<option value="">Todas as categorias</option>'+CATEGORIES.map(c=>`<option>${c}</option>`).join(''); document.getElementById('pCategory').innerHTML=CATEGORIES.map(c=>`<option>${c}</option>`).join('');}
 function resetPublicSearchField(){
   const el=document.getElementById('searchInput');
@@ -1187,10 +1217,8 @@ document.getElementById('productForm').onsubmit=async e=>{
     featured:document.getElementById('pFeatured').checked
   };
   try{
-    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'admin_save_product',admin_password:adminAuthPassword,...payload,product:payload})});
-    const d=await r.json().catch(()=>({}));
-    if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao salvar produto no Supabase.');
-    const saved=d.product||{};
+    const d=await studio70ProductApi('save_override',{admin_password:adminAuthPassword,key:productOverrideKey({...old,...payload}),product:payload});
+    const saved=d.product||payload;
     const local=normalizeProductRecord({
       ...old,...saved,
       id:saved.id??old?.id??('p'+Date.now()),
@@ -1231,9 +1259,18 @@ document.getElementById('productForm').onsubmit=async e=>{
     alert(`${d.created?'Produto criado':'Produto atualizado'} no Supabase com sucesso. O site foi atualizado com os novos dados.`);
   }catch(err){alert('Não foi possível salvar o produto: '+(err?.message||err));}
 };
-function deleteProduct(id){
+async function deleteProduct(id){
   if(!confirm('Remover este produto?'))return;
-  products=products.filter(p=>String(p.id)!==String(id));save();renderProducts();renderAdmin();clearForm();
+  const p=products.find(x=>String(x.id)===String(id));
+  if(!p)return;
+  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>deleteProduct(id));
+  try{
+    await studio70ProductApi('delete_override',{admin_password:adminAuthPassword,key:productOverrideKey(p)});
+    delete adminOverrides[productOverrideKey(p)];
+    products=products.filter(x=>String(x.id)!==String(id));
+    save();renderProducts();renderAdmin();clearForm();
+    alert('Produto removido da persistência central do Supabase.');
+  }catch(e){alert('Não foi possível remover o produto: '+(e?.message||e));}
 }
 function renderAdmin(){
   const q=(document.getElementById('adminSearch').value||'').toLowerCase();
@@ -1369,7 +1406,8 @@ function mapSupplierCategory(name){
   if(n.includes('saia'))return 'Saias';
   return 'Outros';
 }
-async function loadCarmenattoCatalog(){
+async async function loadCarmenattoCatalog(){
+  await loadStudio70Overrides();
   const apiUrl=checkoutApiUrl();
   try{
     const r=await fetch(apiUrl,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'carmenatto_products',limit:2000})});
