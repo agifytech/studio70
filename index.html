@@ -1002,7 +1002,7 @@ function mapSupplierCategory(name){
 async function loadCarmenattoCatalog(){
   const apiUrl=checkoutApiUrl();
   try{
-    const r=await fetch(apiUrl,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'products',limit:2000})});
+    const r=await fetch(apiUrl,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'carmenatto_products',limit:2000})});
     const rawText=await r.text();
     let d={}; try{d=rawText?JSON.parse(rawText):{};}catch(_){d={};}
     if(!r.ok||!d.ok||!Array.isArray(d.products)){
@@ -1031,6 +1031,8 @@ async function loadCarmenattoCatalog(){
   }
 }
 function ensureCarmenattoAdminControls(){ return; }
+const SHIPPING_KEY='studio70_shipping';
+const SHIPPING_DEFAULTS={originCep:'',pacMin:18,pacMax:35,sedexMin:28,sedexMax:55,pacEnabled:true,sedexEnabled:true};
 function shippingSettings(){
   try{return {...SHIPPING_DEFAULTS,...JSON.parse(localStorage.getItem(SHIPPING_KEY)||'{}')}}
   catch(_){return {...SHIPPING_DEFAULTS}}
