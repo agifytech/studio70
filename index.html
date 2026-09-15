@@ -976,7 +976,7 @@ function saveShippingSettings(){
     pacEnabled:true,sedexEnabled:true
   };
   localStorage.setItem(SHIPPING_KEY,JSON.stringify(next));
-  if(st)st.innerHTML='<span style="color:#246b3b;font-weight:800">✓ Frete estimado salvo neste navegador.</span>';
+  if(st)st.innerHTML='<span style="color:#246b3b;font-weight:800">✓ CEP de origem salvo. A cotação usa a SuperFrete real; em produção, configure também SUPERFRETE_ORIGIN_CEP nos Secrets do Supabase.</span>';
 }
 const PAYMENT_KEY='studio70_payment';
 function paymentSettings(){try{return JSON.parse(localStorage.getItem(PAYMENT_KEY)||'{}')}catch(_){return {}}}
@@ -1027,40 +1027,47 @@ function selectIntegratedPayment(method){
   if(title) title.textContent=method==='store_cash'?'💵 Dinheiro na loja':'🏪 Pix na loja';
 }
 function integratedSelectShipping(idx){integratedSelectedShipping=integratedShippingOptions[idx];document.querySelectorAll('#integratedCheckoutModal .freight').forEach((e,i)=>e.classList.toggle('active',i===idx));integratedUpdateTotal();}
-function calculateEstimatedShipping(cep, cartItems){
-  const s=shippingSettings();
-  const origin=String(s.originCep||document.getElementById('shippingOriginCep')?.value||'').replace(/\D/g,'');
-  const dest=String(cep||'').replace(/\D/g,'');
-  const weightPerItem=Number(s.defaultWeight||0.30)+Number(s.packageWeight||0.10);
-  const totalWeight=Math.max(0.1,(cartItems||[]).reduce((sum,i)=>sum+Number(i.qty||1)*weightPerItem,0));
-  let distanceKm=Math.abs(Number((origin||'0').slice(0,3))-Number((dest||'0').slice(0,3)))*12;
-  distanceKm=Math.min(3000,Math.max(20,distanceKm||300));
-  const margin=Math.max(0,Number(s.safetyMargin||10)/100);
-  const calc=(name,base,per100,perKg,min,max,dmin,dmax)=>{
-    let price=Number(base||0)+(distanceKm/100)*Number(per100||0)+Math.max(0,totalWeight-0.5)*Number(perKg||0);
-    price*=1+margin; price=Math.max(Number(min||0),Math.min(Number(max||9999),price));
-    return {id:name.toLowerCase(),name:name+' (estimado)',price:Number(price.toFixed(2)),days:dmax,daysMin:dmin,daysMax:dmax,estimated:true};
-  };
-  const out=[];
-  if(s.pacEnabled!==false) out.push(calc('PAC',s.pacBase||19.9,s.pacPer100Km||1.2,s.pacPerKg||4.5,s.pacMin||19.9,s.pacMax||149.9,s.pacDaysMin||5,s.pacDaysMax||10));
-  if(s.sedexEnabled!==false) out.push(calc('SEDEX',s.sedexBase||29.9,s.sedexPer100Km||1.8,s.sedexPerKg||6.5,s.sedexMin||29.9,s.sedexMax||249.9,s.sedexDaysMin||2,s.sedexDaysMax||5));
-  return out;
-}
-function integratedQuoteShipping(){
+async function integratedQuoteShipping(){
   const cep=integratedDigits(integratedVal('cep'));
   if(cep.length!==8){integratedSetCheckoutStatus('Informe um CEP válido.','error');return;}
   const btn=document.getElementById('quoteBtn'); if(btn)btn.disabled=true;
-  setStatus('freightStatus','Calculando frete estimado...');
+  setStatus('freightStatus','Consultando a SuperFrete...');
   try{
-    integratedShippingOptions=calculateEstimatedShipping(cep,cart);
-    if(!integratedShippingOptions.length)throw new Error('Nenhuma modalidade de frete habilitada.');
+    const productsPayload=cart.map(i=>{
+      const p=integratedProduct(i.id);
+      const d=integratedDimensions(p);
+      return {quantity:Math.max(1,Number(i.qty||1)),weight:d.weight,height:d.height,width:d.width,length:d.length};
+    });
+    const origin=integratedDigits(shippingSettings().originCep||'');
+    const payload={action:'shipping',to:cep,products:productsPayload,insurance_value:integratedSubtotal(),use_insurance_value:false};
+    if(origin.length===8)payload.from=origin;
+    const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)});
+    const raw=await r.text();
+    let data={};try{data=raw?JSON.parse(raw):{};}catch(_){data={};}
+    if(!r.ok)throw new Error(data.error||data.message||raw||`Falha na cotação (HTTP ${r.status})`);
+    const arr=Array.isArray(data)?data:(Array.isArray(data.services)?data.services:(Array.isArray(data.shipping)?data.shipping:(Array.isArray(data.result)?data.result:[])));
+    integratedShippingOptions=arr.filter(x=>x&&Number(x.price??x.custom_price??x.total??x.value)>=0).map(x=>({
+      id:String(x.id??x.service??x.service_id??x.code??crypto.randomUUID()),
+      name:String(x.name??x.service_name??x.company?.name??x.company?.name_short??'Opção de envio'),
+      price:Number(x.price??x.custom_price??x.total??x.value??0),
+      days:Number(x.delivery_time??x.delivery_time_in_days??x.delivery_range?.max??x.deadline??0),
+      daysMin:Number(x.delivery_range?.min??x.delivery_time??x.delivery_time_in_days??x.deadline??0),
+      daysMax:Number(x.delivery_range?.max??x.delivery_time??x.delivery_time_in_days??x.deadline??0),
+      raw:x
+    }));
+    if(!integratedShippingOptions.length)throw new Error('A SuperFrete não retornou nenhuma modalidade para este CEP. Verifique peso, dimensões, CEP de origem e destino.');
     const list=document.getElementById('freightList');
-    if(list)list.innerHTML=integratedShippingOptions.map((x,i)=>`<div class="freight ${i===0?'active':''}" onclick="integratedSelectShipping(${i})"><span><b>${escapeHtml(x.name)}</b><small>${x.daysMin}-${x.daysMax} dias úteis</small></span><strong>${integratedMoney(x.price)}</strong></div>`).join('');
+    if(list)list.innerHTML=integratedShippingOptions.map((x,i)=>{
+      const prazo=x.daysMin&&x.daysMax&&x.daysMin!==x.daysMax?`${x.daysMin}-${x.daysMax} dias úteis`:x.days?`${x.days} dias úteis`:'Prazo conforme cotação';
+      return `<div class="freight ${i===0?'active':''}" onclick="integratedSelectShipping(${i})"><span><b>${escapeHtml(x.name)}</b><small>${prazo}</small></span><strong>${integratedMoney(x.price)}</strong></div>`;
+    }).join('');
     integratedSelectedShipping=integratedShippingOptions[0];
     integratedUpdateTotal();
-    setStatus('freightStatus','Frete estimado calculado.','ok');
-  }catch(e){setStatus('freightStatus',String(e.message||e),'error');}
-  finally{if(btn)btn.disabled=false;}
+    setStatus('freightStatus','Frete real da SuperFrete calculado com sucesso.','ok');
+  }catch(e){
+    integratedSelectedShipping=null;integratedShippingOptions=[];integratedUpdateTotal();
+    setStatus('freightStatus',String(e.message||e),'error');
+  }finally{if(btn)btn.disabled=false;}
 }
 function integratedSetCheckoutStatus(msg,type=''){const e=document.getElementById('paymentStatus');if(e){e.textContent=msg;e.className='status '+type;}}
 async function integratedCepLookup(){
