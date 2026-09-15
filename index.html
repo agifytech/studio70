@@ -461,6 +461,22 @@ function normalizeProductRecord(p){
     heightCm:numberOr(p.heightCm??p.height,4)||4,widthCm:numberOr(p.widthCm??p.width,20)||20,
     lengthCm:numberOr(p.lengthCm??p.length,30)||30};
 }
+function normalizeSkuPart(value){
+  return String(value||'')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-+|-+$/g,'').replace(/-+/g,'-');
+}
+function generateSkuFromName(name, currentSku=''){
+  const base=normalizeSkuPart(name);
+  if(!base)return '';
+  const used=new Set(products.filter(p=>String(p.sku||'').trim()).map(p=>String(p.sku).trim().toUpperCase()));
+  const current=String(currentSku||'').trim().toUpperCase();
+  if(current && used.has(current)) used.delete(current);
+  if(!used.has(base))return base;
+  let n=2;
+  while(used.has(`${base}-${n}`))n++;
+  return `${base}-${n}`;
+}
 function productIdentity(p){
   return ['supplierExternalId','sku','barcode'].map(k=>String(p?.[k]??'').trim().toLowerCase()).find(Boolean)||'';
 }
@@ -746,6 +762,7 @@ function clearForm(){
   document.getElementById('pActive').checked=true;
   document.getElementById('pFeatured').checked=false;
   document.getElementById('pBarcode').value='ST70'+String(products.length+1).padStart(6,'0');
+  const skuInput=document.getElementById('pSku'); if(skuInput){skuInput.value='';skuInput.dataset.auto='1';}
   document.getElementById('labelPreview').style.display='none';
   document.querySelectorAll('.admin-item').forEach(x=>x.classList.remove('admin-editing'));
   loadPaymentSettings();
@@ -776,6 +793,19 @@ function editProduct(id){
   const form=document.getElementById('productForm');
   if(modalPanel)modalPanel.scrollTo({top:Math.max(0,form.offsetTop-18),behavior:'smooth'});
   setTimeout(()=>document.getElementById('pName')?.focus(),250);
+}
+const pNameInput=document.getElementById('pName');
+const pSkuInput=document.getElementById('pSku');
+if(pNameInput&&pSkuInput){
+  pSkuInput.dataset.auto='1';
+  pNameInput.addEventListener('input',()=>{
+    if(document.getElementById('editId')?.value)return;
+    if(pSkuInput.dataset.auto==='1'||!pSkuInput.value.trim()){
+      pSkuInput.value=generateSkuFromName(pNameInput.value,pSkuInput.value);
+      pSkuInput.dataset.auto='1';
+    }
+  });
+  pSkuInput.addEventListener('input',()=>{pSkuInput.dataset.auto='0';});
 }
 document.getElementById('productForm').onsubmit=async e=>{
   e.preventDefault();
