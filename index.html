@@ -404,9 +404,10 @@ const CATEGORIES = ['Vestidos','Conjuntos','Croppeds','Bodies','Biquínis','Maca
 const PRODUCTS_VERSION = 'v3';
 const PRODUCTS_KEY = 'studio70_products_' + PRODUCTS_VERSION;
 const ADMIN_OVERRIDES_KEY = 'studio70_admin_overrides_v1';
-let adminOverrides = JSON.parse(localStorage.getItem(ADMIN_OVERRIDES_KEY) || '{}');
-let products = cleanProducts(JSON.parse(localStorage.getItem(PRODUCTS_KEY) || 'null') || []).map(p=>({...p,sale_price:Number(p.sale_price??p.price??0)}));
-save();
+let adminOverrides = {};
+// O catálogo oficial NÃO é armazenado no localStorage. A fonte de verdade é o Supabase.
+let products = [];
+
 let cart = JSON.parse(localStorage.getItem('studio70_cart') || '[]');
 let pdvCart = JSON.parse(localStorage.getItem('studio70_pdv_cart') || '[]');
 let sales = JSON.parse(localStorage.getItem('studio70_sales') || '[]');
@@ -507,7 +508,7 @@ function applyAdminOverrides(list){
     return override?normalizeProductRecord({...p,...override}):p;
   });
 }
-function save(){localStorage.setItem(PRODUCTS_KEY,JSON.stringify(products));localStorage.setItem(ADMIN_OVERRIDES_KEY,JSON.stringify(adminOverrides));}
+function save(){ /* catálogo persistido exclusivamente no Supabase */ }
 function renderCategories(){document.getElementById('categories').innerHTML=CATEGORIES.map(c=>`<button class="cat" onclick="filterCat('${c}')">${c}</button>`).join(''); const sel=document.getElementById('categoryFilter'); sel.innerHTML='<option value="">Todas as categorias</option>'+CATEGORIES.map(c=>`<option>${c}</option>`).join(''); document.getElementById('pCategory').innerHTML=CATEGORIES.map(c=>`<option>${c}</option>`).join('');}
 function filtered(){const q=document.getElementById('searchInput').value.trim().toLowerCase(), c=document.getElementById('categoryFilter').value; return products.filter(p=>p.active!==false && (!c||p.category===c) && (!q||[p.name,p.sku,p.barcode,p.category].join(' ').toLowerCase().includes(q)));}
 function salePriceOf(p){const n=Number(p?.sale_price);if(Number.isFinite(n)&&n>0)return n;return 0;}
