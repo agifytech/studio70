@@ -531,7 +531,7 @@ async function finishSale(){
   sales.unshift(sale);sales=sales.slice(0,500);pdvCart=[];save();savePDV();renderProducts();renderAdmin();renderPDV();
   setPDVStatus(`✓ Venda ${sale.id} concluída — ${money(total)}. Sincronizando...`,'success');
   try{
-    const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'store_sale',sale})});
+    const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'store_sale',admin_password:adminAuthPassword,sale})});
     const d=await r.json().catch(()=>({}));
     if(!r.ok)throw new Error(d.error||'Venda salva apenas neste computador.');
     setPDVStatus(`✓ Venda ${sale.id} registrada na loja e sincronizada.`,'success');
@@ -692,7 +692,7 @@ document.getElementById('productForm').onsubmit=async e=>{
   const salePrice=typedPrice>0?typedPrice:previousPrice;
   if(!(salePrice>0))return alert('Informe o preço de venda STUDIO 70.');
   const payload={
-    id:id && /^\d+$/.test(String(id))?Number(id):null,
+    id:id||null,
     supplier:old?.supplier||'studio70',
     external_id:old?.supplierExternalId||'',
     name:document.getElementById('pName').value.trim(),
@@ -717,7 +717,7 @@ document.getElementById('productForm').onsubmit=async e=>{
     featured:document.getElementById('pFeatured').checked
   };
   try{
-    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'admin_save_product',admin_password:adminAuthPassword,...payload,product:payload})});
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'product_save',admin_password:adminAuthPassword,...payload,product:payload})});
     const d=await r.json().catch(()=>({}));
     if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao salvar produto no Supabase.');
     const saved=normalizeProductRecord(d.product||payload);
@@ -1189,9 +1189,11 @@ async function enableNotifications(){
   try{if('Notification' in window&&Notification.permission==='default')await Notification.requestPermission()}catch(_){}
 }
 async function pollOrders(){
+  // Pedidos são dados administrativos: nunca consultar sem a senha autenticada.
+  if(!adminAuthPassword)return;
   try{
     const url=checkoutApiUrl();
-    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'orders',after:lastOrderPoll||null,limit:30})});
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'orders',admin_password:adminAuthPassword,after:lastOrderPoll||null,limit:30})});
     const d=await r.json().catch(()=>({}));
     if(!r.ok||!Array.isArray(d.orders))return;
     for(const o of d.orders){
@@ -1248,7 +1250,7 @@ function renderAdminOrders(orders){
 })();
 renderCategories();clearForm();loadPaymentSettings();loadShippingSettings();renderProducts();renderCart();renderPDV();
 loadSupabaseProducts();
-setInterval(pollOrders,10000);pollOrders();
+setInterval(()=>{if(adminAuthPassword)pollOrders()},10000);
 
 let fittingProductId=''; let fittingProfile={height:160,weight:60,base:40};
 function closeVirtualFitting(){document.getElementById('virtualFittingModal')?.classList.remove('open');}
