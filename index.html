@@ -417,11 +417,14 @@ function normalizeProductRecord(p){
   const url=String(p.url??p.source_url??p.sourceUrl??'').trim();
   const description=String(p.description??p.raw?.description??p.raw?.product_description??p.raw?.description_text??'');
   const stock=numberOr(p.stock??p.quantity??p.raw?.stock,0);
+  const adminMeta=(p.raw?.studio70_admin&&typeof p.raw.studio70_admin==='object')?p.raw.studio70_admin:{};
   return {...p,sale_price:sale,image,secondaryImages,url,description,
     sizes:normalizeList(p.sizes??p.raw?.sizes??[]),colors:normalizeList(p.colors??p.raw?.colors??[]),
-    stock,active:p.active!==false,weightKg:numberOr(p.weightKg??p.weight,0.3)||0.3,
-    heightCm:numberOr(p.heightCm??p.height,4)||4,widthCm:numberOr(p.widthCm??p.width,20)||20,
-    lengthCm:numberOr(p.lengthCm??p.length,30)||30};
+    stock,active:p.active!==false,
+    weightKg:firstPositiveNumber(p.weightKg,p.weight,adminMeta.weightKg),
+    heightCm:firstPositiveNumber(p.heightCm,p.height,adminMeta.heightCm),
+    widthCm:firstPositiveNumber(p.widthCm,p.width,adminMeta.widthCm),
+    lengthCm:firstPositiveNumber(p.lengthCm,p.length,adminMeta.lengthCm)};
 }
 function productIdentity(p){
   return ['supplierExternalId','sku','barcode'].map(k=>String(p?.[k]??'').trim().toLowerCase()).find(Boolean)||'';
@@ -923,7 +926,7 @@ async function loadSupabaseProducts(){
   productsLoading=true;
   const grid=document.getElementById('productGrid');
   try{
-    const r=await fetch(checkoutApiUrl(),{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'studio70_products',limit:5000})});
+    const r=await fetch(checkoutApiUrl(),{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'products_list',limit:5000})});
     const rawText=await r.text();
     let d={}; try{d=rawText?JSON.parse(rawText):{};}catch(_){d={};}
     if(!r.ok||!d.ok||!Array.isArray(d.products)){
@@ -1047,7 +1050,13 @@ const integratedMoney=n=>integratedFmt.format(Number(n||0));
 const integratedDigits=v=>String(v||'').replace(/\D/g,'');
 const integratedVal=id=>document.getElementById(id)?.value.trim()||'';
 function integratedProduct(id){return products.find(p=>p.id===id)||{};}
-function integratedDimensions(p){return {weight:Number(p.weightKg??p.weight??0.3)||0.3,height:Number(p.heightCm??p.height??4)||4,width:Number(p.widthCm??p.width??20)||20,length:Number(p.lengthCm??p.length??30)||30};}
+function integratedDimensions(p){
+  const d={weight:Number(p?.weightKg??p?.weight),height:Number(p?.heightCm??p?.height),width:Number(p?.widthCm??p?.width),length:Number(p?.lengthCm??p?.length)};
+  if(!Object.values(d).every(n=>Number.isFinite(n)&&n>0)){
+    throw new Error(`O produto "${p?.name||'sem nome'}" não possui peso e dimensões configurados para o cálculo do frete. Abra o ADM e informe peso, altura, largura e comprimento.`);
+  }
+  return d;
+}
 function integratedSubtotal(){return cart.reduce((s,i)=>s+salePriceOf(integratedProduct(i.id))*Number(i.qty||1),0)}
 function integratedSetStatus(msg,type=''){const e=document.getElementById('paymentStatus');if(e){e.textContent=msg;e.className='status '+type;}}
 function integratedUpdateTotal(){const f=integratedSelectedShipping?Number(integratedSelectedShipping.price||0):0;const sub=integratedSubtotal();const se=document.getElementById('shipping');const te=document.getElementById('total');if(se)se.textContent=integratedSelectedShipping?integratedMoney(f):'—';if(te)te.textContent=integratedMoney(sub+f);}
