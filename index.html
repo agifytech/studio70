@@ -1049,7 +1049,16 @@ const integratedFmt=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BR
 const integratedMoney=n=>integratedFmt.format(Number(n||0));
 const integratedDigits=v=>String(v||'').replace(/\D/g,'');
 const integratedVal=id=>document.getElementById(id)?.value.trim()||'';
-function integratedProduct(id){return products.find(p=>p.id===id)||{};}
+function integratedProduct(ref){
+  const key=String(ref?.id??ref?.productId??ref?.product_id??ref??'').trim().toLowerCase();
+  const sku=String(ref?.sku??'').trim().toLowerCase();
+  const barcode=String(ref?.barcode??ref?.code??'').trim().toLowerCase();
+  const external=String(ref?.external_id??ref?.externalId??ref?.supplierExternalId??'').trim().toLowerCase();
+  return products.find(p=>{
+    const ids=[p?.id,p?.sku,p?.barcode,p?.external_id,p?.externalId,p?.supplierExternalId].map(v=>String(v??'').trim().toLowerCase());
+    return (key && ids.includes(key)) || (sku && ids.includes(sku)) || (barcode && ids.includes(barcode)) || (external && ids.includes(external));
+  })||null;
+}
 function integratedDimensions(p){
   const d={weight:Number(p?.weightKg??p?.weight),height:Number(p?.heightCm??p?.height),width:Number(p?.widthCm??p?.width),length:Number(p?.lengthCm??p?.length)};
   if(!Object.values(d).every(n=>Number.isFinite(n)&&n>0)){
@@ -1057,7 +1066,7 @@ function integratedDimensions(p){
   }
   return d;
 }
-function integratedSubtotal(){return cart.reduce((s,i)=>s+salePriceOf(integratedProduct(i.id))*Number(i.qty||1),0)}
+function integratedSubtotal(){return cart.reduce((s,i)=>{const p=integratedProduct(i);return s+(p?salePriceOf(p):0)*Number(i.qty||1)},0)}
 function integratedSetStatus(msg,type=''){const e=document.getElementById('paymentStatus');if(e){e.textContent=msg;e.className='status '+type;}}
 function integratedUpdateTotal(){const f=integratedSelectedShipping?Number(integratedSelectedShipping.price||0):0;const sub=integratedSubtotal();const se=document.getElementById('shipping');const te=document.getElementById('total');if(se)se.textContent=integratedSelectedShipping?integratedMoney(f):'—';if(te)te.textContent=integratedMoney(sub+f);}
 function openIntegratedCheckout(){
@@ -1099,7 +1108,8 @@ async function integratedQuoteShipping(){
   setStatus('freightStatus','Consultando a SuperFrete...');
   try{
     const productsPayload=cart.map(i=>{
-      const p=integratedProduct(i.id);
+      const p=integratedProduct(i);
+      if(!p)throw new Error(`Produto do carrinho não encontrado no catálogo do Supabase (ID: ${String(i?.id??i?.productId??i?.product_id??'não informado')}). Recarregue a página e adicione o produto novamente.`);
       const d=integratedDimensions(p);
       return {quantity:Math.max(1,Number(i.qty||1)),weight:d.weight,height:d.height,width:d.width,length:d.length};
     });
@@ -1342,7 +1352,3 @@ function virtualFittingResult(){
 }
 loadBannersFromServer();
 </script></body></html>
-STUDIO70ONLINE-FRETE-SUPERFRETE-CORRIGIDO.HTML
-HTML
-STUDIO70-SUPER-HANDLER-FINAL-FRETE-STUDIO70.ts
-Código
