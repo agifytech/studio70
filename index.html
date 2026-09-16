@@ -34,69 +34,69 @@ footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;colo
 .product-modal-image img{width:100%;height:600px;object-fit:contain;display:block}
 .product-description{white-space:pre-line;line-height:1.65;color:#ddd}
 
-/* STUDIO 70 — nova identidade + responsividade */
+/* STUDIO 70 — identidade escura: grafite, cinza e branco */
+:root{--bg:#0f1012;--card:#181a1e;--muted:#a5a9b0;--text:#f1f2f4;--accent:#d2d5da;--green:#d2d5da;--line:#30343a;--white:#fff;--cement:#666b73;--cement-dark:#4b5058}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);overflow-x:hidden}
-header{background:rgba(233,231,227,.96);border-bottom:1px solid var(--line)}
+header{background:rgba(13,14,16,.96);border-bottom:1px solid var(--line)}
 .header-container{padding:13px 20px}
-.logo{color:#111;text-shadow:none}
-nav a{color:#24231f}
-nav a:hover{color:#000}
-.iconbtn{background:#fff;color:#111;border:1px solid #aaa69f}
-.iconbtn:hover{border-color:#111;background:#f5f4f1}
-.hero{min-height:500px;background:
-linear-gradient(135deg,rgba(255,255,255,.9),rgba(190,187,180,.9)),
-repeating-linear-gradient(115deg,rgba(0,0,0,.025) 0 2px,transparent 2px 7px);
-color:#111}
-.hero::before{background:repeating-linear-gradient(-35deg,rgba(0,0,0,.035) 0 22px,transparent 22px 44px)}
-.hero::after{background:#111}
-.hero .eyebrow{background:#111;color:#fff}
-.hero h2{color:#4f4d48}
-.btn{background:#111;color:#fff;border-color:#111;box-shadow:5px 5px 0 #8c8982}
-.btn:hover{box-shadow:3px 3px 0 #8c8982}
-.announce{background:#111;color:#fff}
-.trustbar span{color:#45433e;border-color:#bbb8b1;background:rgba(255,255,255,.45)}
-.section-title{border-left-color:#111;color:#111}
-.cat{background:#fff;border-color:#c7c4bd;color:#171614}
-.cat:hover{border-color:#111}
-.searchbar input,.field{background:#fff;color:#111;border-color:#bdb9b2}
-.searchbar input:focus,.field:focus{border-color:#111}
-.product{background:#fff;border-color:#c8c5be}
-.product:hover{border-color:#111}
-.product img{background:#f3f2ef}
-.product .price{color:#111}
-.meta{color:#6c6963}
-.smallbtn{background:#f2f1ee;color:#111;border-color:#c3c0b9}
-.smallbtn:hover{border-color:#111}
-.smallbtn.primary{background:#111;color:#fff;border-color:#111}
-.badge{background:#111;color:#fff}
-.badge.featured{background:#fff;border-color:#111;color:#111}
-.drawer-panel,.modal-panel{background:#f5f4f1;color:#111;border-color:#c4c1ba}
-.close{background:#111;color:#fff}
-.cart-row{border-bottom-color:#d0cdc6}
-.total{color:#111}
-.empty{border-color:#c6c2ba;color:#68655f}
-.scanner,.pdv-scan{background:#eceae6;border-color:#77736c}
-.scan-result,.success{color:#1b1b19}
-.danger{background:#242321!important}
+.logo{color:#f5f5f5;text-shadow:0 2px 10px rgba(255,255,255,.08)}
+nav a{color:#d5d7db}
+nav a:hover{color:#fff}
+.iconbtn{background:#1c1e22;color:#f5f5f5;border:1px solid #3a3e45}
+.iconbtn:hover{border-color:#aeb3ba;background:#25282d}
+.hero{min-height:500px;background:radial-gradient(circle at 50% 25%,#2b2f35 0,#17191d 48%,#0b0c0e 100%);color:#f5f5f5}
+.hero::before{background:repeating-linear-gradient(-35deg,rgba(255,255,255,.025) 0 22px,transparent 22px 44px)}
+.hero::after{background:#d2d5da}
+.hero .eyebrow{background:#f0f1f3;color:#111318}
+.hero h2{color:#b9bdc4}
+.btn{background:#e4e6e9;color:#111318;border-color:#e4e6e9;box-shadow:5px 5px 0 #4b5058}
+.btn:hover{box-shadow:3px 3px 0 #666b73}
+.announce{background:#e1e3e6;color:#111318}
+.trustbar span{color:#c1c5cb;border-color:#383c43;background:rgba(255,255,255,.035)}
+.section-title{border-left-color:#d2d5da;color:#f1f2f4}
+.cat{background:#191b1f;border-color:#34383f;color:#e7e8eb}
+.cat:hover{border-color:#b8bdc4;background:#202329}
+.searchbar input,.field{background:#17191d;color:#f5f5f5;border-color:#363a42}
+.searchbar input:focus,.field:focus{border-color:#aeb3ba}
+.searchbar select{background:#17191d;color:#f5f5f5;border:1px solid #363a42}
+.product{background:#181a1e;border-color:#30343a}
+.product:hover{border-color:#9ea3aa}
+.product img{background:#f1f1ef}
+.product .price{color:#f1f2f4}
+.meta{color:#9ca1a8}
+.smallbtn{background:#22252a;color:#f5f5f5;border-color:#3a3e45}
+.smallbtn:hover{border-color:#aeb3ba}
+.smallbtn.primary{background:#e2e4e7;color:#111318;border-color:#e2e4e7}
+.badge{background:#e2e4e7;color:#111318}
+.badge.featured{background:#191b1f;border-color:#9da2a9;color:#e2e4e7}
+.drawer-panel,.modal-panel{background:#15171b;color:#f1f2f4;border-color:#363a42}
+.close{background:#2a2d33;color:#fff}
+.cart-row{border-bottom-color:#30343a}
+.total{color:#f1f2f4}
+.empty{border-color:#3b3f46;color:#92979e}
+.scanner,.pdv-scan{background:#171a1d;border-color:#555b63}
+.scan-result,.success{color:#d8dadd}
+.danger{background:#34363a!important}
 .label-preview{background:#fff;color:#111}
-.product-modal-image{background:#fff}
-footer{border-top-color:#bdb9b2;color:#5f5c56}
-footer a{color:#111!important}
-.whatsapp{background:#111;color:#fff;box-shadow:0 4px 18px rgba(0,0,0,.25)}
-.pdv-card,.sale-row,.pdv-item{background:#fff;border-color:#c8c5be}
-.pdv-item img{background:#f2f1ee}
-.qtybox button{background:#f1efeb;color:#111;border-color:#c6c2ba}
-.change-box{background:#eceae6;border-color:#8a8780}
-.change-box strong{color:#111}
-.pdv-total{color:#111}
-.product-description{color:#333}
-.admin-item{background:#fff;border-color:#c8c5be}
-#paymentOptions{background:#fff;border:1px solid #c8c5be;border-radius:12px;padding:14px;margin:14px 0}
+.product-modal-image{background:#f1f1ef}
+footer{border-top-color:#30343a;color:#969ba2}
+footer a{color:#e5e6e8!important}
+.whatsapp{background:#e1e3e6;color:#111318;box-shadow:0 4px 18px rgba(0,0,0,.4)}
+.pdv-card,.sale-row,.pdv-item{background:#181a1e;border-color:#30343a}
+.pdv-item img{background:#24272c}
+.qtybox button{background:#25282d;color:#f5f5f5;border-color:#3a3e45}
+.change-box{background:#171a1d;border-color:#4b5058}
+.change-box strong{color:#e1e3e6}
+.pdv-total{color:#f1f2f4}
+.product-description{color:#d4d6da}
+.admin-item{background:#181a1e;border-color:#30343a}
+#paymentOptions{background:#181a1e;border:1px solid #30343a;border-radius:12px;padding:14px;margin:14px 0}
 #paymentOptions h4{margin:0 0 8px}
 .payment-installments{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:end}
-.payment-note{font-size:11px;color:#66615a;line-height:1.45;margin:8px 0 0}
+.payment-note{font-size:11px;color:#9da2a9;line-height:1.45;margin:8px 0 0}
 #mpStatus{font-size:11px;font-weight:700;margin-top:8px}
+.category-section-hidden{display:none!important}
 @media(max-width:900px){
   .header-container{gap:10px;padding:10px 12px}
   .logo{font-size:22px;flex:1}
@@ -454,14 +454,14 @@ function applyAdminOverrides(list){
   });
 }
 function save(){ /* Intencionalmente vazio: o catálogo oficial fica no Supabase. */ }
-function renderCategories(){document.getElementById('categories').innerHTML=CATEGORIES.map(c=>`<button class="cat" onclick="filterCat('${c}')">${c}</button>`).join(''); const sel=document.getElementById('categoryFilter'); sel.innerHTML='<option value="">Todas as categorias</option>'+CATEGORIES.map(c=>`<option>${c}</option>`).join(''); document.getElementById('pCategory').innerHTML=CATEGORIES.map(c=>`<option>${c}</option>`).join('');}
+function renderCategories(){const box=document.getElementById('categories');const section=box?.closest('section');const show=activeMenuFilter==='feminino';if(section)section.classList.toggle('category-section-hidden',!show);if(box)box.innerHTML=show?CATEGORIES.map(c=>`<button class="cat" onclick="filterCat('${c}')">${c}</button>`).join(''):'';const sel=document.getElementById('categoryFilter');if(sel){sel.innerHTML='<option value="">Todas as categorias</option>'+CATEGORIES.map(c=>`<option>${c}</option>`).join('');sel.style.display=show?'block':'none';if(!show)sel.value='';}const pc=document.getElementById('pCategory');if(pc)pc.innerHTML=CATEGORIES.map(c=>`<option>${c}</option>`).join('');}
 let activeMenuFilter='inicio';
 function menuSearchText(p){return JSON.stringify(p??{}).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
 function matchesMenuFilter(p,menu){
   if(menu==='inicio')return true;
   const text=menuSearchText(p);
   if(menu==='lancamentos')return !!p.featured || /lancamento|lancamentos|novidade|novo produto/.test(text);
-  if(menu==='feminino')return /feminino|feminina|mulher|women|woman|dama/.test(text);
+  if(menu==='feminino')return CATEGORIES.includes(String(p?.category||'').trim()) || /feminino|feminina|mulher|women|woman|dama/.test(text);
   if(menu==='masculino')return /masculino|masculina|homem|men|man/.test(text);
   if(menu==='bolsas')return /bolsa|bolsas|bag/.test(text);
   if(menu==='sandalias')return /sandalia|sandalias/.test(text);
@@ -469,7 +469,7 @@ function matchesMenuFilter(p,menu){
   return true;
 }
 function filtered(){const q=document.getElementById('searchInput').value.trim().toLowerCase(), c=document.getElementById('categoryFilter').value; return products.filter(p=>p.active!==false && matchesMenuFilter(p,activeMenuFilter) && (!c||p.category===c) && (!q||[p.name,p.sku,p.barcode,p.category].join(' ').toLowerCase().includes(q)));}
-function filterMenu(menu){activeMenuFilter=menu||'inicio';page=1;if(activeMenuFilter==='inicio')document.getElementById('categoryFilter').value='';const section=document.getElementById('produtos');if(section)section.scrollIntoView({behavior:'smooth'});renderProducts();}
+function filterMenu(menu){activeMenuFilter=menu||'inicio';page=1;const sel=document.getElementById('categoryFilter');if(sel)sel.value='';renderCategories();const section=document.getElementById('produtos');if(section)section.scrollIntoView({behavior:'smooth'});renderProducts();}
 function salePriceOf(p){const n=Number(p?.sale_price);if(Number.isFinite(n)&&n>0)return n;return 0;}
 function renderProducts(){const list=filtered(); const pages=Math.max(1,Math.ceil(list.length/perPage)); page=Math.min(page,pages); const slice=list.slice((page-1)*perPage,page*perPage); const grid=document.getElementById('productGrid'); if(!grid)return; grid.innerHTML=slice.length?slice.map(p=>{const pid=escapeHtml(String(p.id??''));return `<article class="product" data-product-id="${pid}"><img src="${imageSrc(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><span class="badge">${escapeHtml(p.category||'Outros')}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${escapeHtml(p.name||'Produto')}</h3><div class="price">${money(salePriceOf(p))}</div><div class="meta">SKU: ${escapeHtml(p.sku||'')}<br>Código: ${escapeHtml(p.barcode||'')}</div><div class="product-actions"><button class="smallbtn js-details" type="button" data-product-id="${pid}">DETALHES</button><button class="smallbtn primary js-buy" type="button" data-product-id="${pid}">COMPRAR</button></div></div></article>`}).join(''):'<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.</div>'; const pagination=document.getElementById('pagination'); if(pagination)pagination.innerHTML=Array.from({length:pages},(_,i)=>`<button class="smallbtn js-page" type="button" data-page="${i+1}" ${i+1===page?'style="background:var(--accent)"':''}>${i+1}</button>`).join('');}
 function filterCat(c){document.getElementById('categoryFilter').value=c;page=1;document.getElementById('produtos').scrollIntoView({behavior:'smooth'});renderProducts();}
@@ -938,7 +938,7 @@ async function loadSupabaseProducts(){
   productsLoading=true;
   const grid=document.getElementById('productGrid');
   try{
-    const r=await fetch(checkoutApiUrl(),{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'products_list',limit:5000})});
+    const r=await fetch(checkoutApiUrl(),{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'studio70_products',limit:5000})});
     const rawText=await r.text();
     let d={}; try{d=rawText?JSON.parse(rawText):{};}catch(_){d={};}
     if(!r.ok||!d.ok||!Array.isArray(d.products)){
