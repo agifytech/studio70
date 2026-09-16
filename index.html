@@ -926,7 +926,7 @@ async function loadSupabaseProducts(){
   productsLoading=true;
   const grid=document.getElementById('productGrid');
   try{
-    const r=await fetch(checkoutApiUrl(),{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'products_list',limit:5000})});
+    const r=await fetch(checkoutApiUrl(),{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'studio70_products',limit:5000})});
     const rawText=await r.text();
     let d={}; try{d=rawText?JSON.parse(rawText):{};}catch(_){d={};}
     if(!r.ok||!d.ok||!Array.isArray(d.products)){
@@ -1342,3 +1342,7 @@ function virtualFittingResult(){
 }
 loadBannersFromServer();
 </script></body></html>
+STUDIO70ONLINE-FRETE-SUPERFRETE-CORRIGIDO.HTML
+HTML
+STUDIO70-SUPER-HANDLER-FINAL-FRETE-STUDIO70.ts
+Código
