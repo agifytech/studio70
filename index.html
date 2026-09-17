@@ -241,7 +241,7 @@ footer a{color:#111!important}
 </div>
 <button class="btn" style="width:100%;margin-top:10px" onclick="goCheckout()">FINALIZAR COMPRA</button><button class="btn" style="width:100%;margin-top:10px;background:#eceae6;color:#111" onclick="checkoutWhatsApp()">FINALIZAR NO WHATSAPP</button></div></div>
 <div class="modal" id="loginModal"><div class="modal-panel" style="max-width:420px"><button class="close" onclick="closeLogin()">×</button><h2 class="section-title">ACESSO RESTRITO</h2><p id="loginTitle">Digite a senha para continuar.</p><label style="display:block;font-size:12px;margin-bottom:8px">URL da Edge Function<input class="field" id="loginEndpoint" value="https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler" placeholder="URL da Edge Function" autocomplete="url"></label><input class="field" id="loginPassword" type="password" inputmode="numeric" maxlength="64" placeholder="Senha do painel" autocomplete="off"><div id="loginError" style="color:#ff6b8f;font-weight:700;min-height:22px;margin:8px 0"></div><button class="btn" style="width:100%" onclick="submitLogin()">ENTRAR</button></div></div>
-<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="banner-admin-card"><h3 style="margin-top:0">🖼️ CARROSSEL DE BANNERS</h3><p style="font-size:12px;color:#666">Cadastre as imagens que aparecerão no carrossel principal da loja. As alterações ficam salvas no Supabase.</p><div class="banner-admin-row"><label>Título<input class="field" id="bannerTitle" placeholder="Ex.: NOVA COLEÇÃO"></label><label>Subtítulo<input class="field" id="bannerSubtitle" placeholder="Ex.: ESTILO URBANO 2026"></label></div><label>Link da imagem<input class="field" id="bannerImage" placeholder="https://.../banner.jpg"></label><label style="display:block;margin-top:10px">Link ao clicar (opcional)<input class="field" id="bannerLink" placeholder="https://... ou #produtos"></label><div class="checkrow"><label><input type="checkbox" id="bannerActive" checked> Banner ativo</label></div><div class="admin-tools"><button class="smallbtn primary" type="button" onclick="addBannerFromAdmin()">+ ADICIONAR BANNER</button><button class="smallbtn" type="button" onclick="loadBannersFromServer()">↻ ATUALIZAR</button></div><div id="bannerAdminList" class="banner-admin-list"></div></div><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço de venda<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU<input class="field" id="pSku" required></label><label>Código de barras<input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Link da foto principal<input class="field" id="pImage" placeholder="https://..."></label>
+<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="banner-admin-card"><h3 style="margin-top:0">🖼️ CARROSSEL DE BANNERS</h3><p style="font-size:12px;color:#666">Cadastre as imagens que aparecerão no carrossel principal da loja. As alterações ficam salvas no Supabase.</p><div class="banner-admin-row"><label>Título<input class="field" id="bannerTitle" placeholder="Ex.: NOVA COLEÇÃO"></label><label>Subtítulo<input class="field" id="bannerSubtitle" placeholder="Ex.: ESTILO URBANO 2026"></label></div><label>Link da imagem<input class="field" id="bannerImage" placeholder="https://.../banner.jpg"></label><label style="display:block;margin-top:10px">Link ao clicar (opcional)<input class="field" id="bannerLink" placeholder="https://... ou #produtos"></label><div class="checkrow"><label><input type="checkbox" id="bannerActive" checked> Banner ativo</label></div><div class="admin-tools"><button class="smallbtn primary" type="button" onclick="addBannerFromAdmin()">+ ADICIONAR BANNER</button><button class="smallbtn" type="button" onclick="loadBannersFromServer()">↻ ATUALIZAR</button></div><div id="bannerAdminList" class="banner-admin-list"></div></div><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço de venda<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU <span style="font-size:10px;color:#777;font-weight:500">(gerado automaticamente)</span><input class="field" id="pSku" required></label><label>Código de barras <span style="font-size:10px;color:#777;font-weight:500">(EAN-13 automático)</span><input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Link da foto principal<input class="field" id="pImage" placeholder="https://..."></label>
 <label class="full">Links das fotos secundárias<textarea class="field" id="pSecondaryImages" placeholder="Um link por linha"></textarea></label>
 <label class="full">URL do produto<input class="field" id="pUrl" placeholder="https://..."></label>
 <label class="full">Descrição<textarea class="field" id="pDescription"></textarea></label></div><div class="checkrow"><label><input type="checkbox" id="pActive" checked> Ativo</label><label><input type="checkbox" id="pFeatured"> Destaque</label></div>
@@ -492,11 +492,10 @@ function openProduct(id){
   const key=String(id??'');
   const p=products.find(x=>String(x.id??'')===key);
   if(!p){console.warn('Produto não encontrado:',key);return;}
-  const body=document.getElementById('productBody');
-  const modal=document.getElementById('productModal');
+  const body=document.getElementById('productBody'), modal=document.getElementById('productModal');
   if(!body||!modal)return;
   const title=escapeHtml(p.name||'Produto');
-  const rawDescription = p.description || p.raw?.description || p.raw?.product_description || p.raw?.description_text || '';
+  const rawDescription=p.description||p.raw?.description||p.raw?.product_description||p.raw?.description_text||'';
   const desc=escapeHtml(rawDescription||'Descrição não cadastrada.').replace(/\n/g,'<br>');
   const image=imageSrc(p.image);
   const sizes=Array.isArray(p.sizes)?p.sizes.map(x=>String(x)).filter(Boolean):[];
@@ -504,12 +503,41 @@ function openProduct(id){
   const variantStock=Array.isArray(p.variantStock)?p.variantStock.filter(v=>v&&Number(v.stock)>=0):[];
   const secondary=Array.isArray(p.secondaryImages)?p.secondaryImages.map(x=>String(x)).filter(Boolean):[];
   const gallery=[p.image,...secondary].map(x=>String(x||'').split(' | ')[0].trim()).filter(Boolean);
-  const pid=JSON.stringify(key);
-  body.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:25px"><div class="product-modal-image"><img src="${image}" alt="${title}" loading="eager" decoding="async" onerror="imageError(this)">${gallery.length>1?`<div style="display:flex;gap:8px;overflow:auto;margin-top:10px">${gallery.slice(0,8).map(src=>`<img src="${imageSrc(src)}" style="width:70px;height:70px;object-fit:cover;border:1px solid var(--line);border-radius:8px;cursor:pointer" onclick="this.closest('.product-modal-image').querySelector('img').src=this.src" onerror="imageError(this)">`).join('')}</div>`:''}</div><div><h1 class="section-title">${title}</h1><div class="price" style="font-size:30px;color:var(--accent)">${money(salePriceOf(p))}</div><div class="product-description">${desc}</div><p><b>SKU:</b> ${escapeHtml(p.sku||'')}<br><b>Código:</b> ${escapeHtml(p.barcode||'')}<br><b>Estoque total:</b> ${totalStockOf(p)}${sizes.length?`<br><b>Tamanhos:</b> ${escapeHtml(sizes.join(', '))}`:''}${colors.length?`<br><b>Cores/variações:</b> ${escapeHtml(colors.join(', '))}`:''}</p>${variantStock.length?`<div style="margin:10px 0;padding:10px;border:1px solid var(--line);border-radius:10px"><b>Estoque por variação</b><div style="margin-top:6px;display:grid;gap:4px">${variantStock.map(v=>`<div>${escapeHtml(v.size||'—')} · ${escapeHtml(v.color||'—')} — <b>${Number(v.stock||0)}</b></div>`).join('')}</div></div>`:''}<button class="btn js-modal-buy" type="button" data-product-id="${escapeHtml(key)}">ADICIONAR AO CARRINHO</button><button class="smallbtn js-fitting" type="button" style="width:100%;margin-top:10px" data-product-id="${escapeHtml(key)}" onclick="window.openVirtualFitting(this.dataset.productId)">⌁ PROVADOR VIRTUAL</button></div></div>`;
+  const sizeButtons=sizes.map((v,i)=>`<button type="button" class="variant-choice js-detail-size" data-value="${escapeHtml(v)}" style="border:1px solid var(--line);background:#fff;border-radius:9px;padding:10px 14px;cursor:pointer;font-weight:800">${escapeHtml(v)}</button>`).join('');
+  const colorButtons=colors.map(v=>`<button type="button" class="variant-choice js-detail-color" data-value="${escapeHtml(v)}" style="border:1px solid var(--line);background:#fff;border-radius:9px;padding:10px 14px;cursor:pointer;font-weight:800">${escapeHtml(v)}</button>`).join('');
+  const choiceCss='<style>.variant-choice.selected{background:#111!important;color:#fff;border-color:#111!important}.variant-choice:hover{border-color:#111!important}.choice-label{display:block;font-weight:900;margin:14px 0 7px;text-transform:uppercase;letter-spacing:.5px}.choice-row{display:flex;flex-wrap:wrap;gap:7px}</style>';
+  body.innerHTML=`${choiceCss}<div style="display:grid;grid-template-columns:1fr 1fr;gap:25px"><div class="product-modal-image"><img src="${image}" alt="${title}" loading="eager" decoding="async" onerror="imageError(this)">${gallery.length>1?`<div style="display:flex;gap:8px;overflow:auto;margin-top:10px">${gallery.slice(0,8).map(src=>`<img src="${imageSrc(src)}" style="width:70px;height:70px;object-fit:cover;border:1px solid var(--line);border-radius:8px;cursor:pointer" onclick="this.closest('.product-modal-image').querySelector('img').src=this.src" onerror="imageError(this)">`).join('')}</div>`:''}</div><div><h1 class="section-title">${title}</h1><div class="price" style="font-size:30px;color:var(--accent)">${money(salePriceOf(p))}</div><div class="product-description">${desc}</div><p><b>SKU:</b> ${escapeHtml(p.sku||'')}<br><b>Código:</b> ${escapeHtml(p.barcode||'')}<br><b>Estoque total:</b> ${totalStockOf(p)}</p>${colors.length?`<span class="choice-label">Escolha a cor</span><div class="choice-row">${colorButtons}</div>`:''}${sizes.length?`<span class="choice-label">Escolha o tamanho</span><div class="choice-row">${sizeButtons}</div>`:''}${variantStock.length?`<div style="margin:14px 0 10px;padding:10px;border:1px solid var(--line);border-radius:10px;font-size:12px"><b>Disponibilidade por variação</b><div style="margin-top:6px;display:grid;gap:4px">${variantStock.map(v=>`<div>${escapeHtml(v.size||'—')} · ${escapeHtml(v.color||'—')} — <b>${Number(v.stock||0)}</b></div>`).join('')}</div></div>`:''}<button class="btn js-modal-buy" type="button" data-product-id="${escapeHtml(key)}" style="margin-top:14px">ADICIONAR AO CARRINHO</button><button class="smallbtn js-fitting" type="button" style="width:100%;margin-top:10px" data-product-id="${escapeHtml(key)}" onclick="window.openVirtualFitting(this.dataset.productId)">⌁ PROVADOR VIRTUAL</button></div></div>`;
+  body.querySelectorAll('.js-detail-size,.js-detail-color').forEach(btn=>btn.addEventListener('click',()=>{
+    const group=btn.classList.contains('js-detail-size')?'.js-detail-size':'.js-detail-color';
+    body.querySelectorAll(group).forEach(x=>x.classList.remove('selected')); btn.classList.add('selected');
+  }));
   modal.classList.add('open');
 }
+function addSelectedProductToCart(id){
+  const body=document.getElementById('productBody');
+  const p=products.find(x=>String(x.id??'')===String(id??''));
+  if(!p)return false;
+  const size=body?.querySelector('.js-detail-size.selected')?.dataset.value||'';
+  const color=body?.querySelector('.js-detail-color.selected')?.dataset.value||'';
+  if((Array.isArray(p.sizes)&&p.sizes.length&&!size)||(Array.isArray(p.colors)&&p.colors.length&&!color)){
+    alert('Selecione o tamanho e a cor antes de adicionar ao carrinho.'); return false;
+  }
+  return addCart(id,{size,color});
+}
 function closeProduct(){document.getElementById('productModal').classList.remove('open')}
-function addCart(id){const key=String(id??'');const p=products.find(x=>String(x.id??'')===key);if(!p){console.warn('Não foi possível adicionar: produto não encontrado',key);return false;}const item=cart.find(x=>String(x.id??'')===key);if(item)item.qty++;else cart.push({id:key,qty:1});saveCart();renderCart();return true;}
+function addCart(id,options={}){
+  const key=String(id??''), p=products.find(x=>String(x.id??'')===key);
+  if(!p){console.warn('Não foi possível adicionar: produto não encontrado',key);return false;}
+  const size=String(options.size??'').trim(), color=String(options.color??'').trim();
+  const needsSize=Array.isArray(p.sizes)&&p.sizes.length>0, needsColor=Array.isArray(p.colors)&&p.colors.length>0;
+  if((needsSize&&!size)||(needsColor&&!color)){alert('Selecione o tamanho e a cor antes de adicionar ao carrinho.');return false;}
+  const variant=p.variantStock?.find?.(v=>String(v?.size??'')===size&&String(v?.color??'')===color);
+  if(variant&&Number(variant.stock)<=0){alert('Esta combinação de tamanho/cor está esgotada.');return false;}
+  const item=cart.find(x=>String(x.id??'')===key&&String(x.size??'')===size&&String(x.color??'')===color);
+  if(item){if(variant&&item.qty>=Number(variant.stock)){alert('Quantidade disponível esgotada para esta variação.');return false;}item.qty++;}
+  else cart.push({id:key,qty:1,size,color});
+  saveCart();renderCart();return true;
+}
 function saveCart(){localStorage.setItem('studio70_cart',JSON.stringify(cart));document.getElementById('cartCount').textContent=cart.reduce((a,b)=>a+b.qty,0);}
 function findCartProduct(item){
   const id=String(item?.id??'').trim();
@@ -527,8 +555,9 @@ function renderCart(){
     const p=findCartProduct(i);
     if(!p){console.warn('[STUDIO70] Item antigo/removido retirado do carrinho:',i);continue;}
     const qty=Math.max(1,Number(i?.qty)||1), id=String(p.id??i.id??'');
-    valid.push({id,qty});
-    rows.push(`<div class="cart-row"><div><b>${escapeHtml(p.name||'Produto')}</b><br>${money(salePriceOf(p))} × ${qty}</div><button class="smallbtn" onclick="removeCart('${escapeHtml(id)}')">−</button></div>`);
+    valid.push({id,qty,size:String(i?.size??''),color:String(i?.color??'')});
+    const variantMeta=[i?.size?`Tam.: ${escapeHtml(i.size)}`:'',i?.color?`Cor: ${escapeHtml(i.color)}`:''].filter(Boolean).join(' · ');
+    rows.push(`<div class="cart-row"><div><b>${escapeHtml(p.name||'Produto')}</b>${variantMeta?`<br><small>${variantMeta}</small>`:''}<br>${money(salePriceOf(p))} × ${qty}</div><button class="smallbtn" onclick="removeCart(${escapeHtml(JSON.stringify(id))},${escapeHtml(JSON.stringify(String(i?.size??'')))},${escapeHtml(JSON.stringify(String(i?.color??'')))})">−</button></div>`);
   }
   cart=valid;
   el.innerHTML=rows.length?rows.join(''):'<div class="empty">Nenhum produto adicionado.</div>';
@@ -537,7 +566,7 @@ function renderCart(){
   if(totalEl)totalEl.textContent=money(total);
   saveCart();
 }
-function removeCart(id){const key=String(id??'');const i=cart.find(x=>String(x.id??'')===key);if(!i)return;if(i.qty>1)i.qty--;else cart=cart.filter(x=>String(x.id??'')!==key);renderCart();}
+function removeCart(id,size='',color=''){const key=String(id??'');const s=String(size??''),c=String(color??'');const i=cart.find(x=>String(x.id??'')===key&&String(x.size??'')===s&&String(x.color??'')===c);if(!i)return;if(i.qty>1)i.qty--;else cart=cart.filter(x=>!(String(x.id??'')===key&&String(x.size??'')===s&&String(x.color??'')===c));renderCart();}
 function checkoutWhatsApp(){const phone='5521980507823';if(!phone)return alert('Cadastre o WhatsApp no painel ou configure studio70_whatsapp no navegador.');let msg='Olá! Quero comprar:%0A'+cart.map(i=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return `• ${p.name} — ${i.qty}x — ${money(salePriceOf(p)*i.qty)}`}).join('%0A');window.open(`https://wa.me/${phone.replace(/\D/g,'')}?text=${msg}`,'_blank');}
 function closeCart(){document.getElementById('cartDrawer').classList.remove('open')}
 document.getElementById('cartBtn').onclick=()=>document.getElementById('cartDrawer').classList.add('open'); document.getElementById('searchBtn').onclick=()=>{document.getElementById('searchInput').focus();document.getElementById('produtos').scrollIntoView({behavior:'smooth'})}; document.getElementById('searchInput').oninput=()=>{page=1;renderProducts()}; document.getElementById('categoryFilter').onchange=()=>{page=1;renderProducts()};
@@ -716,6 +745,39 @@ async function applySeedPricesToSupabase(){
   if(st)st.textContent='O catálogo é exclusivamente o Supabase; não existem mais preços vindos do código. Atualize os preços diretamente pelo produto no ADM.';
 }
 
+function randomBase36(length=6){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let out='';
+  for(let i=0;i<length;i++) out+=chars[Math.floor(Math.random()*chars.length)];
+  return out;
+}
+function slugSkuPart(name){
+  return String(name||'PRODUTO').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9]+/g,'-').replace(/^-+|-+$/g,'').toUpperCase().slice(0,16)||'PRODUTO';
+}
+function generateSku(name){
+  let sku=''; do{sku=`ST70-${slugSkuPart(name)}-${randomBase36(6)}`;}while(products.some(p=>String(p.sku||'').toUpperCase()===sku));
+  return sku;
+}
+function ean13CheckDigit(first12){
+  const digits12=String(first12).replace(/\D/g,'').slice(0,12).padStart(12,'0');
+  let sum=0; for(let i=0;i<12;i++) sum+=Number(digits12[i])*(i%2?3:1);
+  return String((10-(sum%10))%10);
+}
+function generateBarcode(){
+  let code=''; do{
+    let prefix='789';
+    for(let i=0;i<9;i++) prefix+=String(Math.floor(Math.random()*10));
+    code=prefix+ean13CheckDigit(prefix);
+  }while(products.some(p=>String(p.barcode||'')===code));
+  return code;
+}
+function ensureGeneratedCodes(){
+  const name=document.getElementById('pName')?.value.trim();
+  if(!name||document.getElementById('editId')?.value) return;
+  const sku=document.getElementById('pSku'), barcode=document.getElementById('pBarcode');
+  if(sku&&!sku.value.trim()) sku.value=generateSku(name);
+  if(barcode&&!barcode.value.trim()) barcode.value=generateBarcode();
+}
+
 function clearForm(){
   const form=document.getElementById('productForm');
   form.reset();
@@ -723,7 +785,8 @@ function clearForm(){
   document.getElementById('formTitle').textContent='Novo produto';
   document.getElementById('pActive').checked=true;
   document.getElementById('pFeatured').checked=false;
-  document.getElementById('pBarcode').value='ST70'+String(products.length+1).padStart(6,'0');
+  document.getElementById('pSku').value='';
+  document.getElementById('pBarcode').value='';
   document.getElementById('labelPreview').style.display='none';
   document.querySelectorAll('.admin-item').forEach(x=>x.classList.remove('admin-editing'));
   loadPaymentSettings();
@@ -755,10 +818,12 @@ function editProduct(id){
   if(modalPanel)modalPanel.scrollTo({top:Math.max(0,form.offsetTop-18),behavior:'smooth'});
   setTimeout(()=>document.getElementById('pName')?.focus(),250);
 }
+document.getElementById('pName')?.addEventListener('input',ensureGeneratedCodes);
 document.getElementById('productForm').onsubmit=async e=>{
   e.preventDefault();
   if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>document.getElementById('productForm').requestSubmit());
   const id=document.getElementById('editId').value||'';
+  ensureGeneratedCodes();
   const old=products.find(p=>String(p.id)===String(id));
   const typedPrice=Number(String(document.getElementById('pPrice').value||'').trim().replace(',','.'));
   const previousPrice=firstPositiveNumber(old?.sale_price,old?.salePrice,old?.price,old?.supplier_price);
@@ -1136,7 +1201,7 @@ function openIntegratedCheckout(){
   document.getElementById('integratedCheckoutModal').classList.add('open');
   document.getElementById('integratedCheckoutModal').scrollTop=0;
   const el=document.getElementById('items');
-  if(el)el.innerHTML=cart.map(i=>{const p=integratedProduct(i.id);return `<div class="item"><span><b>${escapeHtml(p.name||'Produto')}</b><br><small>${i.qty} × ${integratedMoney(salePriceOf(p))}</small></span><strong>${integratedMoney((salePriceOf(p)||0)*i.qty)}</strong></div>`}).join('');
+  if(el)el.innerHTML=cart.map(i=>{const p=integratedProduct(i.id);return `<div class="item"><span><b>${escapeHtml(p.name||'Produto')}</b><br><small>${i.qty} × ${integratedMoney(salePriceOf(p))}${i.size||i.color?` · ${escapeHtml(i.size||'')}${i.size&&i.color?' · ':''}${escapeHtml(i.color||'')}`:''}</small></span><strong>${integratedMoney((salePriceOf(p)||0)*i.qty)}</strong></div>`}).join('');
   const sub=document.getElementById('subtotal');if(sub)sub.textContent=integratedMoney(integratedSubtotal());
   integratedUpdateTotal();
   integratedSetStatus('');
@@ -1235,7 +1300,7 @@ async function createPixPayment(){
   const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));if(!name||!email||cpf.length<11)return integratedSetCheckoutStatus('Preencha nome, e-mail e CPF.','error');
   const total=integratedSubtotal()+(integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0));const btn=document.getElementById('pixBtn');btn.disabled=true;integratedSetCheckoutStatus('Gerando Pix...');
   try{
-    const payload={action:'pix',external_reference:'ST70-'+Date.now(),description:'Compra STUDIO 70 BRAND',transaction_amount:Number(total.toFixed(2)),customer:{name,email,cpf},items:cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||''}}),shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement')},shipping_cost:integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name};
+    const payload={action:'pix',external_reference:'ST70-'+Date.now(),description:'Compra STUDIO 70 BRAND',transaction_amount:Number(total.toFixed(2)),customer:{name,email,cpf},items:cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||'',size:i.size||'',color:i.color||''}}),shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement')},shipping_cost:integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name};
     const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao gerar Pix.');
     integratedPixPaymentId=data.payment_id||data.id;const qr=document.getElementById('pixQr');if(qr){qr.src=data.qr_code_base64?.startsWith('data:')?data.qr_code_base64:'data:image/png;base64,'+data.qr_code_base64;qr.style.display='block';}
     document.getElementById('pixCode').value=data.qr_code||'';document.getElementById('pixBox').classList.add('show');integratedSetCheckoutStatus('Pix gerado. Escaneie o QR Code ou copie o código.','ok');
@@ -1247,7 +1312,7 @@ async function integratedCardCheckout(){
   if(!integratedSelectedShipping)return integratedSetCheckoutStatus('Calcule e selecione o frete antes de continuar.','error');
   const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));if(!name||!email||cpf.length<11)return integratedSetCheckoutStatus('Preencha nome, e-mail e CPF.','error');
   const btn=document.getElementById('cardBtn');btn.disabled=true;integratedSetCheckoutStatus('Criando checkout seguro...');
-  try{const total=integratedSubtotal()+(integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0));const payload={action:'card',external_reference:'ST70-'+Date.now(),max_installments:Number(paymentSettings().maxInstallments||12),customer:{name,email,cpf},shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement')},shipping_cost:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name,items:[...cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||'',picture_url:p.image||''}}),{id:'frete',title:integratedSelectedShipping.name,quantity:1,unit_price:integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0),sku:'FRETE'}],total:Number(total.toFixed(2))};const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao criar checkout.');if(!data.init_point)throw new Error('Mercado Pago não retornou o link.');localStorage.setItem('studio70_last_order',JSON.stringify(payload));window.location.href=data.init_point;}catch(e){integratedSetCheckoutStatus(e.message,'error');btn.disabled=false;}
+  try{const total=integratedSubtotal()+(integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0));const payload={action:'card',external_reference:'ST70-'+Date.now(),max_installments:Number(paymentSettings().maxInstallments||12),customer:{name,email,cpf},shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement')},shipping_cost:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name,items:[...cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||'',picture_url:p.image||'',size:i.size||'',color:i.color||''}}),{id:'frete',title:integratedSelectedShipping.name,quantity:1,unit_price:integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0),sku:'FRETE'}],total:Number(total.toFixed(2))};const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao criar checkout.');if(!data.init_point)throw new Error('Mercado Pago não retornou o link.');localStorage.setItem('studio70_last_order',JSON.stringify(payload));window.location.href=data.init_point;}catch(e){integratedSetCheckoutStatus(e.message,'error');btn.disabled=false;}
 }
 async function createStoreOrder(){
   const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));
@@ -1257,7 +1322,7 @@ async function createStoreOrder(){
   const btn=document.getElementById('storePayBtn');if(btn)btn.disabled=true;
   integratedSetCheckoutStatus('Registrando sua reserva...');
   try{
-    const payload={action:'store_order',payment_method:method,external_reference:'ST70-'+Date.now(),customer:{name,email,cpf},items:cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||''}}),shipping:integratedSelectedShipping?{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement'),cost:integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0),service:integratedSelectedShipping.name}:null,total:Number(total.toFixed(2))};
+    const payload={action:'store_order',payment_method:method,external_reference:'ST70-'+Date.now(),customer:{name,email,cpf},items:cart.map(i=>{const p=integratedProduct(i.id);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||'',size:i.size||'',color:i.color||''}}),shipping:integratedSelectedShipping?{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement'),cost:integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0),service:integratedSelectedShipping.name}:null,total:Number(total.toFixed(2))};
     const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const data=await r.json();if(!r.ok)throw new Error(data.error||'Não foi possível reservar o pedido.');
     localStorage.setItem('studio70_last_order',JSON.stringify({...payload,order_id:data.order_id||null,status:'pending_store_payment'}));
@@ -1381,7 +1446,7 @@ function renderAdminOrders(orders){
       const fitting=ev.target.closest?.('#productBody .js-fitting');
       if(fitting){ev.preventDefault();ev.stopPropagation();openVirtualFitting(fitting.dataset.productId);return;}
       if(details){ev.preventDefault();ev.stopPropagation();openProduct(details.dataset.productId);return;}
-      if(buy){ev.preventDefault();ev.stopPropagation();addCart(buy.dataset.productId);return;}
+      if(buy){ev.preventDefault();ev.stopPropagation();openProduct(buy.dataset.productId);return;}
     },true);
   }
   const pagination=document.getElementById('pagination');
@@ -1392,7 +1457,7 @@ function renderAdminOrders(orders){
   const modalBody=document.getElementById('productBody');
   if(modalBody && !modalBody.dataset.handlersInstalled){
     modalBody.dataset.handlersInstalled='1';
-    modalBody.addEventListener('click',function(ev){const b=ev.target.closest('.js-modal-buy');if(!b)return;ev.preventDefault();if(addCart(b.dataset.productId))closeProduct();});
+    modalBody.addEventListener('click',function(ev){const b=ev.target.closest('.js-modal-buy');if(!b)return;ev.preventDefault();if(addSelectedProductToCart(b.dataset.productId))closeProduct();});
   }
   window.openProduct=openProduct;
   window.addCart=addCart;
