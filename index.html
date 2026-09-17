@@ -283,13 +283,6 @@ footer a{color:#111!important}
   <div id="paymentAdminStatus" style="font-size:11px;margin-top:6px"></div>
 </div>
 <div class="payment-admin-box" style="margin:14px 0;padding:14px;background:#eceae6;border:1px solid #c8c5be;border-radius:12px">
-  <b>🎁 Frete grátis — Regra da loja</b>
-  <p style="font-size:11px;color:#666;margin:6px 0 10px">Defina pelo painel o valor mínimo da compra para liberar o frete grátis. A regra fica salva no Supabase e é aplicada automaticamente no checkout e no pagamento.</p>
-  <label>Frete grátis acima de (R$)<input class="field" id="freeShippingThreshold" type="number" min="0" step="0.01" value="250"></label>
-  <button type="button" class="smallbtn" style="margin-top:8px" onclick="saveFreeShippingConfig()">SALVAR REGRA DE FRETE GRÁTIS</button>
-  <div id="freeShippingAdminStatus" style="font-size:11px;margin-top:6px"></div>
-</div>
-<div class="payment-admin-box" style="margin:14px 0;padding:14px;background:#eceae6;border:1px solid #c8c5be;border-radius:12px">
   <b>🚚 Frete PAC / SEDEX — estimativa</b>
   <p style="font-size:11px;color:#666;margin:6px 0 10px">
     O site não usa token da SuperFrete. O frete é estimado localmente com base no CEP de origem, destino e peso do carrinho.
@@ -654,31 +647,7 @@ document.getElementById('pdvScanner').addEventListener('keydown',e=>{if(e.key===
 document.getElementById('pdvSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();pdvSearchAdd()}});
 document.getElementById('pdvDiscount').addEventListener('input',renderPDV);document.getElementById('pdvReceived').addEventListener('input',updateChange);
 document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
-function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} document.getElementById('adminBtn').onclick=openAdmin;
-async function loadFreeShippingConfig(){
-  try{
-    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shipping_config'})});
-    const d=await r.json().catch(()=>({}));
-    if(!r.ok||!d.ok)throw new Error(d.error||'Não foi possível carregar a regra de frete grátis.');
-    const value=Number(d.shipping?.free_shipping_threshold??250);
-    if(Number.isFinite(value)){FREE_SHIPPING_THRESHOLD=value;const input=document.getElementById('freeShippingThreshold');if(input)input.value=value;}
-    updateFreeShippingPromo();
-  }catch(e){console.warn('shipping_config',e);}
-}
-async function saveFreeShippingConfig(){
-  const password=adminAuthPassword;
-  if(!password)return requestLogin('PAINEL ADMINISTRATIVO',saveFreeShippingConfig);
-  const value=Math.max(0,Number(document.getElementById('freeShippingThreshold')?.value||250));
-  if(!Number.isFinite(value))return;
-  const st=document.getElementById('freeShippingAdminStatus');if(st)st.textContent='Salvando regra de frete grátis...';
-  try{
-    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save_shipping_config',admin_password:password,free_shipping_threshold:value})});
-    const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao salvar a regra.');
-    FREE_SHIPPING_THRESHOLD=Number(d.shipping?.free_shipping_threshold??value);
-    if(st)st.textContent=`✓ Frete grátis a partir de ${integratedMoney(FREE_SHIPPING_THRESHOLD)}.`;
-    updateFreeShippingPromo();integratedUpdateTotal();
-  }catch(e){if(st)st.textContent=e.message;}
-}
+function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadPricingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} document.getElementById('adminBtn').onclick=openAdmin;
 async function loadPricingConfig(){
   if(!adminAuthPassword)return;
   try{
@@ -1045,7 +1014,7 @@ async function syncCarmenattoCatalog(){
   }catch(e){status.textContent='✕ '+e.message;alert('Falha na sincronização do fornecedor: '+e.message);}
   finally{btn.disabled=false;}
 }
-// FREE_SHIPPING_THRESHOLD é carregado do Supabase; padrão definido no início do script.
+const FREE_SHIPPING_THRESHOLD=250;
 let promoIndex=0;
 let promoTimer=null;
 function renderPromoCarousel(){
@@ -1065,9 +1034,9 @@ function updateFreeShippingPromo(){
   const slide=document.querySelector('#promoTrack .promo-slide[data-promo="frete"]');
   if(!slide)return;
   const subtotal=typeof integratedSubtotal==='function'?integratedSubtotal():(typeof cart!=='undefined'?cart.reduce((s,i)=>s+salePriceOf(integratedProduct(i.id))*Number(i.qty||1),0):0);
-  if(subtotal>=FREE_SHIPPING_THRESHOLD){slide.innerHTML=`🚚 <b>FRETE GRÁTIS LIBERADO!</b> Seu pedido atingiu ${integratedMoney(FREE_SHIPPING_THRESHOLD)} ou mais.`;}
+  if(subtotal>=FREE_SHIPPING_THRESHOLD){slide.innerHTML='🚚 <b>FRETE GRÁTIS LIBERADO!</b> Seu pedido atingiu R$ 250,00 ou mais.';}
   else if(subtotal>0){slide.innerHTML=`🚚 Faltam <b>${integratedMoney(FREE_SHIPPING_THRESHOLD-subtotal)}</b> para você ganhar <strong>FRETE GRÁTIS</strong>`;}
-  else{slide.innerHTML=`🚚 <b>FRETE GRÁTIS</b> nas compras acima de <strong>${integratedMoney(FREE_SHIPPING_THRESHOLD)}</strong>`}
+  else{slide.innerHTML='🚚 <b>FRETE GRÁTIS</b> nas compras acima de <strong>R$ 250,00</strong>'}
 }
 
 const SHIPPING_KEY='studio70_shipping';
@@ -1166,7 +1135,7 @@ async function integratedQuoteShipping(){
   if(subtotal>=FREE_SHIPPING_THRESHOLD){
     integratedShippingOptions=[{id:'FREE',name:'Frete grátis STUDIO 70',price:0,days:0,daysMin:0,daysMax:0,raw:{free_shipping:true}}];
     const list=document.getElementById('freightList');
-    if(list)list.innerHTML=`<div class="freight active"><span><b>Frete grátis STUDIO 70</b><small>Pedido acima de ${integratedMoney(FREE_SHIPPING_THRESHOLD)}</small></span><strong>GRÁTIS</strong></div>`;
+    if(list)list.innerHTML='<div class="freight active"><span><b>Frete grátis STUDIO 70</b><small>Pedido acima de R$ 250,00</small></span><strong>GRÁTIS</strong></div>';
     integratedSelectedShipping=integratedShippingOptions[0];
     integratedUpdateTotal();
     setStatus('freightStatus','Frete grátis liberado automaticamente para este pedido.','ok');
