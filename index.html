@@ -115,6 +115,8 @@ footer a{color:#111!important}
   .header-icons .iconbtn#cartBtn{font-size:18px}
   .header-icons .iconbtn#cartBtn b{font-size:9px}
   .header-icons .iconbtn#pdvBtn,.header-icons .iconbtn#adminBtn{font-size:16px}
+/* Acesso administrativo/PDV: não exibir para clientes. O acesso continua protegido por senha. */
+#pdvBtn,#adminBtn{display:none!important}
   nav{display:none}
   .hero{min-height:430px;padding:0 15px!important}
   .hero h1{font-size:clamp(52px,17vw,82px)}
@@ -219,7 +221,7 @@ footer a{color:#111!important}
   <button class="promo-next" type="button" onclick="promoMove(1)" aria-label="Próxima mensagem">›</button>
   <div class="promo-dots" id="promoDots"></div>
 </div>
-<header><div class="header-container"><div class="logo">STUDIO 70 BRAND</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><a href="#produtos">FEMININO</a><a href="#produtos">MASCULINO</a><a href="#produtos">LANÇAMENTOS</a></nav><div class="header-icons"><button class="iconbtn" id="searchBtn">🔍</button><button class="iconbtn" id="cartBtn">🛒 <b id="cartCount">0</b></button><button class="iconbtn" id="pdvBtn">🧾 PDV</button><button class="iconbtn" id="adminBtn">⚙️ ADM</button></div></div></header>
+<header><div class="header-container"><div class="logo">STUDIO 70 BRAND</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><a href="#produtos">FEMININO</a><a href="#produtos">MASCULINO</a><a href="#produtos">LANÇAMENTOS</a></nav><div class="header-icons"><button class="iconbtn" id="searchBtn">🔍</button><button class="iconbtn" id="cartBtn">🛒 <b id="cartCount">0</b></button><button class="iconbtn" id="pdvBtn" aria-hidden="true" tabindex="-1">🧾 PDV</button><button class="iconbtn" id="adminBtn" aria-hidden="true" tabindex="-1">⚙️ ADM</button></div></div></header>
 <main id="inicio"><section class="hero-banner-section" style="padding:0;max-width:none"><div class="banner-carousel" id="bannerCarousel"><div class="banner-track" id="bannerTrack"></div><button class="banner-arrow prev" type="button" id="bannerPrev" aria-label="Banner anterior">‹</button><button class="banner-arrow next" type="button" id="bannerNext" aria-label="Próximo banner">›</button><div class="banner-dots" id="bannerDots"></div></div></section>
 <div class="trustbar"><span>🚚 Frete grátis acima de R$250</span><span>🔄 Troca fácil em 7 dias</span><span>🔒 Compra 100% segura</span><span>💳 Parcele suas compras</span></div>
 <section><h2 class="section-title">CATEGORIAS</h2><div class="category-grid" id="categories"></div></section>
@@ -647,14 +649,16 @@ async function submitLogin(){
 }
 document.getElementById('loginPassword').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();submitLogin()}});
 
-function openPDV(){requestLogin('PDV',()=>{document.getElementById('pdvModal').classList.add('open');renderPDV();document.getElementById('pdvScanner').focus()})}
+function openPDV(){requestLogin('PDV',()=>{document.getElementById('pdvModal').classList.add('open');renderPDV();document.getElementById('pdvScanner')?.focus()})}
 function closePDV(){document.getElementById('pdvModal').classList.remove('open')}
-document.getElementById('pdvBtn').onclick=openPDV;
+if(document.getElementById('pdvBtn'))document.getElementById('pdvBtn').onclick=openPDV;
 document.getElementById('pdvScanner').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();scanPDV()}});
 document.getElementById('pdvSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();pdvSearchAdd()}});
 document.getElementById('pdvDiscount').addEventListener('input',renderPDV);document.getElementById('pdvReceived').addEventListener('input',updateChange);
-document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
-function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} document.getElementById('adminBtn').onclick=openAdmin;
+let cartTapCount=0,cartTapTimer=null;const cartAccess=document.getElementById('cartBtn');
+if(cartAccess)cartAccess.addEventListener('click',e=>{cartTapCount++;clearTimeout(cartTapTimer);cartTapTimer=setTimeout(()=>{cartTapCount=0},650);if(cartTapCount>=3){e.preventDefault();e.stopImmediatePropagation();cartTapCount=0;openAdmin()}},{capture:true});
+document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.altKey&&e.shiftKey&&e.key.toLowerCase()==='a'){e.preventDefault();openAdmin()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
+function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} if(document.getElementById('adminBtn'))document.getElementById('adminBtn').onclick=openAdmin;
 async function loadFreeShippingConfig(){
   try{
     const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shipping_config'})});
@@ -1046,6 +1050,7 @@ async function syncCarmenattoCatalog(){
   finally{btn.disabled=false;}
 }
 // FREE_SHIPPING_THRESHOLD é carregado do Supabase; padrão definido no início do script.
+let FREE_SHIPPING_THRESHOLD = 250;
 let promoIndex=0;
 let promoTimer=null;
 function renderPromoCarousel(){
