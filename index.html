@@ -22,10 +22,6 @@ section{max-width:1280px;margin:auto;padding:42px 22px} .section-title{font:34px
 .admin-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px} .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px} label{font-size:12px;font-weight:800;color:#bbb} label.full{grid-column:1/-1} textarea{min-height:100px;resize:vertical} .checkrow{display:flex;gap:15px;align-items:center;padding:12px 0} .admin-list{display:grid;gap:8px} .admin-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px;background:#19191f;border:1px solid var(--line);border-radius:10px} .admin-item span{font-size:12px}.admin-editing{outline:2px solid #111;outline-offset:2px}.admin-sticky-form{scroll-margin-top:20px} .admin-tools{display:flex;gap:6px} .danger{background:#4b1722!important;color:#fff!important}
 .scanner{background:#121216;border:1px solid var(--green);padding:18px;border-radius:14px;margin-bottom:20px} .scanner input{font-size:20px;font-weight:800} .scan-result{margin-top:10px;color:var(--green);font-weight:800} .label-preview{background:#fff;color:#111;padding:18px;border-radius:10px;text-align:center;margin-top:15px} .label-preview svg{max-width:100%;height:auto}
 .product-modal-image{width:100%;height:600px;display:flex;align-items:center;justify-content:center;background:#222;border-radius:15px;overflow:hidden}.product-modal-image img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;max-width:100%;max-height:100%}
-/* Acesso administrativo e PDV: nunca ficam expostos na vitrine.
-   O acesso continua disponível por F2 / Alt+Shift+A no PC e pela lupa + admlogin no celular. */
-#pdvBtn,#adminBtn{display:none!important;visibility:hidden!important;width:0!important;min-width:0!important;padding:0!important;margin:0!important;border:0!important}
-
 footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;color:#aaa} footer h2{font-family:var(--font-display);text-transform:uppercase;letter-spacing:1px;font-weight:400} .whatsapp{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border-radius:50%;background:var(--green);color:#07160e;display:grid;place-items:center;text-decoration:none;font-size:26px;font-weight:900;z-index:25;box-shadow:0 4px 18px rgba(34,212,119,.45);animation:wa-pulse 2.2s infinite}
 @keyframes wa-pulse{0%{box-shadow:0 0 0 0 rgba(34,212,119,.55)}70%{box-shadow:0 0 0 14px rgba(34,212,119,0)}100%{box-shadow:0 0 0 0 rgba(34,212,119,0)}}
 @media(prefers-reduced-motion:reduce){.whatsapp{animation:none}}
@@ -42,9 +38,8 @@ footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;colo
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);overflow-x:hidden}
 header{background:rgba(233,231,227,.96);border-bottom:1px solid var(--line)}
-.header-container{padding:11px 20px;min-height:64px}
+.header-container{padding:13px 20px}
 .logo{color:#111;text-shadow:none}
-nav{align-items:center;gap:24px}
 nav a{color:#24231f}
 nav a:hover{color:#000}
 .iconbtn{background:#fff;color:#111;border:1px solid #aaa69f}
@@ -103,16 +98,10 @@ footer a{color:#111!important}
 .payment-note{font-size:11px;color:#66615a;line-height:1.45;margin:8px 0 0}
 #mpStatus{font-size:11px;font-weight:700;margin-top:8px}
 @media(max-width:900px){
-  .header-container{gap:10px;padding:10px 12px;flex-wrap:wrap}
-  .logo{font-size:22px;flex:1;min-width:0}
-  .header-icons{gap:5px;margin-left:auto}
+  .header-container{gap:10px;padding:10px 12px}
+  .logo{font-size:22px;flex:1}
+  .header-icons{gap:5px}
   .iconbtn{padding:9px 10px}
-  nav{order:3;flex:0 0 100%;width:100%;gap:18px;overflow-x:auto;overflow-y:visible;padding:2px 2px 5px;scrollbar-width:none}
-  nav::-webkit-scrollbar{display:none}
-  nav a{font-size:11px}
-  .category-menu{flex:0 0 auto}
-  .category-dropdown{position:fixed;top:96px;left:auto}
-
   .product-grid{grid-template-columns:repeat(2,1fr)}
   .category-grid{grid-template-columns:repeat(2,1fr)}
   section{padding:32px 14px}
@@ -122,9 +111,13 @@ footer a{color:#111!important}
   .header-container{position:relative}
   .logo{font-size:19px}
   .header-icons{margin-left:auto}
-  .header-icons .iconbtn{font-size:18px;width:39px;height:39px;padding:0;display:grid;place-items:center}
+  .header-icons .iconbtn{font-size:0;width:39px;height:39px;padding:0;display:grid;place-items:center}
+  .header-icons .iconbtn#cartBtn{font-size:18px}
   .header-icons .iconbtn#cartBtn b{font-size:9px}
-  nav{gap:15px}
+  .header-icons .iconbtn#pdvBtn,.header-icons .iconbtn#adminBtn{font-size:16px}
+/* Acesso administrativo/PDV: não exibir para clientes. O acesso continua protegido por senha. */
+#pdvBtn,#adminBtn{display:none!important}
+  nav{display:none}
   .hero{min-height:430px;padding:0 15px!important}
   .hero h1{font-size:clamp(52px,17vw,82px)}
   .hero h2{font-size:15px;letter-spacing:4px}
@@ -217,7 +210,9 @@ footer a{color:#111!important}
 .banner-admin-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.banner-admin-list{display:grid;gap:8px;margin-top:12px}.banner-admin-item{display:flex;gap:10px;align-items:center;padding:10px;background:#fff;border:1px solid #c8c5be;border-radius:10px}.banner-admin-item img{width:110px;height:55px;object-fit:cover;border-radius:6px}.banner-admin-item .info{flex:1;font-size:12px}.banner-admin-item .tools{display:flex;gap:6px}
 @media(max-width:650px){.banner-carousel{height:360px}.banner-content{left:18px;right:18px;bottom:38px}.banner-content h2{font-size:42px}.banner-arrow{width:38px;height:38px;font-size:20px}.banner-admin-row{grid-template-columns:1fr}.banner-admin-item{align-items:flex-start}.banner-admin-item img{width:85px;height:48px}}
 
-.header-container{align-items:center}.header-container nav{align-items:center;justify-content:flex-start;min-width:0}.category-menu{position:relative;display:flex;align-items:center;height:38px}.category-menu>a{display:inline-flex;align-items:center;gap:4px;height:38px;padding:0;white-space:nowrap}.category-dropdown{position:absolute;top:calc(100% + 8px);left:0;transform:none;min-width:220px;max-width:300px;background:#fff;border:1px solid #c8c5be;border-radius:12px;padding:7px;box-shadow:0 14px 35px #0002;display:none;z-index:60}.category-menu:hover .category-dropdown,.category-menu.open .category-dropdown{display:block}.category-dropdown button{display:block;width:100%;text-align:left;border:0;background:transparent;color:#111;padding:9px 12px;border-radius:8px;font-weight:700;font-size:12px;text-transform:uppercase;cursor:pointer;white-space:nowrap}.category-dropdown button:hover{background:#eceae6}.category-mobile-wrap{display:none}@media(max-width:950px){.category-dropdown{position:absolute;top:calc(100% + 6px);left:0;transform:none;display:none;box-shadow:0 14px 35px #0002;min-width:210px;margin-top:0;z-index:80}.category-menu.open .category-dropdown{display:block}}
+.category-group{border:1px solid #d7d4ce;border-radius:14px;padding:14px;margin-bottom:14px;background:#fff}.category-parent{font-weight:900!important;font-size:18px!important;width:100%;margin-bottom:10px}.category-subgrid{display:flex;flex-wrap:wrap;gap:8px}.category-child{font-size:12px!important;padding:9px 13px!important}.category-group[data-category-group="Masculino"] .category-parent{border-style:solid}.category-group[data-category-group="Feminino"] .category-parent{border-style:solid}
+
+.nav-cat-wrap{position:relative;display:flex;align-items:center}.nav-cat-link{display:flex;align-items:center;gap:4px}.nav-cat-menu{display:none;position:absolute;top:100%;left:0;min-width:180px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px;box-shadow:0 10px 25px rgba(0,0,0,.15);z-index:50}.nav-cat-wrap:hover .nav-cat-menu,.nav-cat-wrap:focus-within .nav-cat-menu{display:grid;gap:3px}.nav-cat-menu button{border:0;background:#fff;text-align:left;padding:8px 10px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}.nav-cat-menu button:hover{background:#eee}.nav-cat-menu button{color:#111}
 </style></head>
 <body>
 <div class="promo-carousel" id="promoCarousel" aria-label="Ofertas e benefícios">
@@ -230,9 +225,10 @@ footer a{color:#111!important}
   <button class="promo-next" type="button" onclick="promoMove(1)" aria-label="Próxima mensagem">›</button>
   <div class="promo-dots" id="promoDots"></div>
 </div>
-<header><div class="header-container"><div class="logo">STUDIO 70 BRAND</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><span class="category-menu"><a href="#produtos" onclick="toggleCategoryMenu(event,'Feminino')">FEMININO ▾</a><span class="category-dropdown" id="menuFeminino"></span></span><span class="category-menu"><a href="#produtos" onclick="toggleCategoryMenu(event,'Masculino')">MASCULINO ▾</a><span class="category-dropdown" id="menuMasculino"></span></span></nav><div class="header-icons"><button class="iconbtn" id="searchBtn" aria-label="Pesquisar">🔍</button><button class="iconbtn" id="cartBtn" aria-label="Carrinho">🛒 <b id="cartCount">0</b></button></div></div></header>
+<header><div class="header-container"><div class="logo">STUDIO 70 BRAND</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><a href="#produtos" onclick="filterGender('Feminino')">FEMININO</a><a href="#produtos" onclick="filterGender('Masculino')">MASCULINO</a><a href="#produtos">LANÇAMENTOS</a></nav><div class="header-icons"><button class="iconbtn" id="searchBtn" type="button" aria-label="Pesquisar">🔍</button><button class="iconbtn" id="cartBtn" type="button" aria-label="Carrinho">🛒 <b id="cartCount">0</b></button></div></div></header>
 <main id="inicio"><section class="hero-banner-section" style="padding:0;max-width:none"><div class="banner-carousel" id="bannerCarousel"><div class="banner-track" id="bannerTrack"></div><button class="banner-arrow prev" type="button" id="bannerPrev" aria-label="Banner anterior">‹</button><button class="banner-arrow next" type="button" id="bannerNext" aria-label="Próximo banner">›</button><div class="banner-dots" id="bannerDots"></div></div></section>
 <div class="trustbar"><span>🚚 Frete grátis acima de R$250</span><span>🔄 Troca fácil em 7 dias</span><span>🔒 Compra 100% segura</span><span>💳 Parcele suas compras</span></div>
+
 <section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section></main>
 <a class="whatsapp" id="whatsappFloat" href="#" target="_blank">✆</a><footer><h2>STUDIO 70 BRAND</h2><p>Moda urbana masculina e feminina. Estilo, atitude e identidade.</p><p><a href="https://instagram.com/use.studio70" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-weight:700">Instagram: @use.studio70</a></p><p>© 2026 STUDIO 70 BRAND</p></footer>
 <div class="drawer" id="cartDrawer"><div class="drawer-panel"><button class="close" onclick="closeCart()">×</button><h2 class="section-title">SEU CARRINHO</h2><div id="cartItems"></div><div class="total" id="cartTotal">R$ 0,00</div>
@@ -320,7 +316,7 @@ footer a{color:#111!important}
 <div class="pdv-layout">
  <div>
   <div class="pdv-card">
-   <div class="pdv-scan"><b>📟 BIPAR PRODUTO</b><input class="field" id="pdvScanner" placeholder="Passe o leitor de código de barras..." autocomplete="off"><div id="pdvStatus" class="pdv-status"></div><div class="pdv-shortcuts">Enter confirma a bipagem · F2 abre o PDV · Alt+Shift+A abre o ADM · no celular: lupa + <b>admlogin</b></div></div>
+   <div class="pdv-scan"><b>📟 BIPAR PRODUTO</b><input class="field" id="pdvScanner" placeholder="Passe o leitor de código de barras..." autocomplete="off"><div id="pdvStatus" class="pdv-status"></div><div class="pdv-shortcuts">Enter confirma a bipagem · F2 abre o PDV · Esc fecha</div></div>
    <div class="searchbar" style="margin-top:14px"><input id="pdvSearch" placeholder="Buscar produto por nome, SKU ou código..."><button class="smallbtn" onclick="pdvSearchAdd()">ADICIONAR</button></div>
    <div id="pdvItems" class="pdv-items"></div>
   </div>
@@ -410,6 +406,7 @@ footer a{color:#111!important}
 <script>
 
 let categoryCatalog = [];
+let categoryGroups = [];
 let CATEGORIES = [];
 const DEFAULT_CATEGORY_FALLBACK = [
   {id:'feminino',name:'Feminino',group:'Feminino',parent_id:null,order:1,active:true,system:true},
@@ -526,49 +523,32 @@ function applyAdminOverrides(list){
 function save(){ /* Intencionalmente vazio: o catálogo oficial fica no Supabase. */ }
 function categoryById(id){return categoryCatalog.find(c=>String(c.id)===String(id));}
 function categoryByName(name){const n=String(name||'').trim().toLowerCase();return categoryCatalog.find(c=>String(c.name||'').trim().toLowerCase()===n);}
-function childCategories(group){return categoryCatalog.filter(c=>c.active!==false&&c.parent_id&&c.group===group).sort((a,b)=>Number(a.order||999)-Number(b.order||999));}
+function groupById(id){return categoryGroups.find(g=>String(g.id)===String(id));}
+function groupByName(name){const n=String(name||'').trim().toLowerCase();return categoryGroups.find(g=>String(g.name||'').trim().toLowerCase()===n);}
+function activeGroups(){return categoryGroups.filter(g=>g.active!==false).sort((a,b)=>Number(a.order||999)-Number(b.order||999));}
+function childCategories(group){const gid=String(group?.id||group||'');const gname=String(group?.name||group||'');return categoryCatalog.filter(c=>c.active!==false&&c.parent_id&&(String(c.parent_id)===gid||String(c.group)===gname)).sort((a,b)=>Number(a.order||999)-Number(b.order||999));}
+function categoryById(id){return categoryCatalog.find(c=>String(c.id)===String(id));}
+function categoryByName(name){const n=String(name||'').trim().toLowerCase();return categoryCatalog.find(c=>String(c.name||'').trim().toLowerCase()===n);}
 function categoryLabel(p){const c=categoryById(p?.category_id)||categoryByName(p?.category);return c?.name||p?.category||'Outros';}
 function categoryGroupOf(p){const c=categoryById(p?.category_id)||categoryByName(p?.category);return c?.group||'';}
 function renderCategoryOptions(selectedId=''){
   const sel=document.getElementById('pCategory');if(!sel)return;
-  const groups=['Feminino','Masculino','Outros'];
-  sel.innerHTML='<option value="">Selecione a categoria</option>'+groups.map(g=>{
-    const list=childCategories(g);
-    if(g==='Outros' && !list.length)return '<option value="outros">Outros</option>';
-    return `<optgroup label="${escapeHtml(g)}">${list.map(c=>`<option value="${escapeHtml(String(c.id))}">${escapeHtml(c.name)}</option>`).join('')}</optgroup>`;
-  }).join('');
+  sel.innerHTML='<option value="">Selecione a categoria</option>'+activeGroups().map(g=>{const list=childCategories(g);if(!list.length)return '';return `<optgroup label="${escapeHtml(g.name)}">${list.map(c=>`<option value="${escapeHtml(String(c.id))}">${escapeHtml(c.name)}</option>`).join('')}</optgroup>`;}).join('');
   if(selectedId)sel.value=selectedId;
 }
 function renderCategories(){
   const box=document.getElementById('categories');
-  if(box){
-    const groups=['Feminino','Masculino','Outros'];
-    box.innerHTML=groups.map(group=>{
-      const parent=categoryCatalog.find(c=>c.parent_id===null&&c.group===group&&c.active!==false);
-      const children=childCategories(group);
-      if(!parent && !children.length)return '';
-      return `<div class="category-group" data-category-group="${escapeHtml(group)}"><button class="cat category-parent" type="button" onclick="filterGender('${escapeHtml(group)}')">${escapeHtml(parent?.name||group)}</button><div class="category-subgrid">${children.map(c=>`<button class="cat category-child" type="button" onclick="filterCatId('${escapeHtml(String(c.id))}')">${escapeHtml(c.name)}</button>`).join('')}</div></div>`;
-    }).join('');
-  }
-  ['Feminino','Masculino'].forEach(group=>{
-    const menu=document.getElementById('menu'+group);
-    if(!menu)return;
-    const children=childCategories(group);
-    menu.innerHTML=children.map(c=>`<button type="button" onclick="filterCatId('${escapeHtml(String(c.id))}');closeCategoryMenus()">${escapeHtml(c.name)}</button>`).join('') || '<button type="button" disabled>Nenhuma categoria cadastrada</button>';
-  });
-
+  if(box)box.innerHTML='';
   const sel=document.getElementById('categoryFilter');
-  if(sel){
-    const current=sel.value;
-    sel.innerHTML='<option value="">Todas as categorias</option>'+['Feminino','Masculino'].map(group=>`<option value="__group:${group}">${group} — todas</option>`).join('')+categoryCatalog.filter(c=>c.parent_id&&c.active!==false).sort((a,b)=>Number(a.order||999)-Number(b.order||999)).map(c=>`<option value="${escapeHtml(String(c.id))}">${escapeHtml(c.group)} › ${escapeHtml(c.name)}</option>`).join('');
-    if(current)sel.value=current;
-  }
+  if(sel){const current=sel.value;sel.innerHTML='<option value="">Todas as categorias</option>'+activeGroups().map(g=>`<option value="__group:${escapeHtml(String(g.name))}">${escapeHtml(g.name)} — todas</option>`).join('')+categoryCatalog.filter(c=>c.parent_id&&c.active!==false).sort((a,b)=>Number(a.order||999)-Number(b.order||999)).map(c=>`<option value="${escapeHtml(String(c.id))}">${escapeHtml(c.group)} › ${escapeHtml(c.name)}</option>`).join('');if(current)sel.value=current;}
   renderCategoryOptions(document.getElementById('pCategory')?.value||'');
+  renderTopCategoryMenus();
 }
-function closeCategoryMenus(){document.querySelectorAll('.category-menu.open').forEach(x=>{x.classList.remove('open');const m=x.querySelector('.category-dropdown');if(m){m.style.left='';m.style.top='';}});}
-function toggleCategoryMenu(ev,group){ev.preventDefault();ev.stopPropagation();const wrap=ev.currentTarget.closest('.category-menu');const wasOpen=wrap.classList.contains('open');closeCategoryMenus();if(!wasOpen){wrap.classList.add('open');const menu=wrap.querySelector('.category-dropdown');if(menu&&window.matchMedia('(max-width:950px)').matches){const r=ev.currentTarget.getBoundingClientRect();menu.style.left=Math.max(8,Math.min(r.left,window.innerWidth-228))+'px';menu.style.top=(r.bottom+6)+'px';}}}
-document.addEventListener('click',ev=>{if(!ev.target.closest('.category-menu'))closeCategoryMenus();});
-
+function renderTopCategoryMenus(){
+  const nav=document.querySelector('header nav');if(!nav)return;
+  const groups=activeGroups().filter(g=>childCategories(g).length);
+  nav.innerHTML='<a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a>'+groups.map(g=>{const children=childCategories(g);return `<div class="nav-cat-wrap"><a href="#produtos" class="nav-cat-link">${escapeHtml(g.name)} <span>▾</span></a><div class="nav-cat-menu">${children.map(c=>`<button type="button" onclick="filterCatId('${escapeHtml(String(c.id))}')">${escapeHtml(c.name)}</button>`).join('')}</div></div>`;}).join('');
+}
 function filterCatId(id){const sel=document.getElementById('categoryFilter');if(sel)sel.value=String(id);page=1;document.getElementById('produtos')?.scrollIntoView({behavior:'smooth'});renderProducts();}
 function filterGender(group){const sel=document.getElementById('categoryFilter');if(sel)sel.value=`__group:${group}`;page=1;document.getElementById('produtos')?.scrollIntoView({behavior:'smooth'});renderProducts();}
 
@@ -668,24 +648,7 @@ function renderCart(){
 function removeCart(id,size='',color=''){const key=String(id??'');const s=String(size??''),c=String(color??'');const i=cart.find(x=>String(x.id??'')===key&&String(x.size??'')===s&&String(x.color??'')===c);if(!i)return;if(i.qty>1)i.qty--;else cart=cart.filter(x=>!(String(x.id??'')===key&&String(x.size??'')===s&&String(x.color??'')===c));renderCart();}
 function checkoutWhatsApp(){const phone='5521980507823';if(!phone)return alert('Cadastre o WhatsApp no painel ou configure studio70_whatsapp no navegador.');let msg='Olá! Quero comprar:%0A'+cart.map(i=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return `• ${p.name} — ${i.qty}x — ${money(salePriceOf(p)*i.qty)}`}).join('%0A');window.open(`https://wa.me/${phone.replace(/\D/g,'')}?text=${msg}`,'_blank');}
 function closeCart(){document.getElementById('cartDrawer').classList.remove('open')}
-document.getElementById('cartBtn').onclick=()=>document.getElementById('cartDrawer').classList.add('open');
-function handleAdminLoginShortcut(){
-  const input=document.getElementById('searchInput');
-  if(!input)return false;
-  const value=input.value.trim().toLowerCase().replace(/\s+/g,'');
-  if(value==='admlogin'){
-    input.value='';
-    page=1;
-    renderProducts();
-    openAdmin();
-    return true;
-  }
-  return false;
-}
-document.getElementById('searchBtn').onclick=()=>{document.getElementById('produtos').scrollIntoView({behavior:'smooth'});setTimeout(()=>document.getElementById('searchInput')?.focus(),180)};
-document.getElementById('searchInput').oninput=()=>{if(handleAdminLoginShortcut())return;page=1;renderProducts()};
-document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&handleAdminLoginShortcut()){e.preventDefault();}});
-document.getElementById('categoryFilter').onchange=()=>{page=1;renderProducts()};
+document.getElementById('cartBtn').onclick=()=>document.getElementById('cartDrawer').classList.add('open'); document.getElementById('searchBtn').onclick=()=>{document.getElementById('searchInput').focus();document.getElementById('produtos').scrollIntoView({behavior:'smooth'})}; document.getElementById('searchInput').oninput=()=>{const input=document.getElementById('searchInput');const secret=String(input.value||'').trim().toLowerCase(); if(secret==='admlogin'){input.value='';openAdmin();return;} if(secret==='pdvlogin'){input.value='';openPDV();return;} page=1;renderProducts()}; document.getElementById('categoryFilter').onchange=()=>{page=1;renderProducts()};
 
 function savePDV(){localStorage.setItem('studio70_pdv_cart',JSON.stringify(pdvCart));localStorage.setItem('studio70_sales',JSON.stringify(sales));}
 function pdvTotal(){const subtotal=pdvCart.reduce((s,i)=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return s+(p?salePriceOf(p):0)*i.qty},0);const discount=Math.max(0,Number(document.getElementById('pdvDiscount')?.value||0));return Math.max(0,subtotal-discount)}
@@ -796,14 +759,14 @@ document.getElementById('loginPassword').addEventListener('keydown',e=>{if(e.key
 
 function openPDV(){requestLogin('PDV',()=>{document.getElementById('pdvModal').classList.add('open');renderPDV();document.getElementById('pdvScanner')?.focus()})}
 function closePDV(){document.getElementById('pdvModal').classList.remove('open')}
-if(document.getElementById('pdvBtn'))document.getElementById('pdvBtn').onclick=openPDV;
+
 document.getElementById('pdvScanner').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();scanPDV()}});
 document.getElementById('pdvSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();pdvSearchAdd()}});
 document.getElementById('pdvDiscount').addEventListener('input',renderPDV);document.getElementById('pdvReceived').addEventListener('input',updateChange);
 let cartTapCount=0,cartTapTimer=null;const cartAccess=document.getElementById('cartBtn');
 if(cartAccess)cartAccess.addEventListener('click',e=>{cartTapCount++;clearTimeout(cartTapTimer);cartTapTimer=setTimeout(()=>{cartTapCount=0},650);if(cartTapCount>=3){e.preventDefault();e.stopImmediatePropagation();cartTapCount=0;openAdmin()}},{capture:true});
 document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.altKey&&e.shiftKey&&e.key.toLowerCase()==='a'){e.preventDefault();openAdmin()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
-function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} if(document.getElementById('adminBtn'))document.getElementById('adminBtn').onclick=openAdmin;
+function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} 
 async function loadFreeShippingConfig(){
   try{
     const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shipping_config'})});
@@ -1071,6 +1034,7 @@ async function loadCategoriesFromServer(){
     const d=await r.json().catch(()=>({}));
     if(!r.ok||!d.ok||!Array.isArray(d.categories))throw new Error(d.error||'Não foi possível carregar as categorias.');
     categoryCatalog=d.categories;
+    categoryGroups=Array.isArray(d.groups)?d.groups:categoryGroups;
     CATEGORIES=categoryCatalog.filter(c=>c.parent_id).map(c=>c.name);
     renderCategories();
     renderProducts();
@@ -1083,38 +1047,24 @@ async function loadCategoriesFromServer(){
 }
 function ensureCategoryAdminControls(){
   if(document.getElementById('categoryAdminCard'))return;
-  const banner=document.querySelector('#adminModal .banner-admin-card');
-  if(!banner)return;
+  const banner=document.querySelector('#adminModal .banner-admin-card');if(!banner)return;
   const card=document.createElement('div');card.className='banner-admin-card';card.id='categoryAdminCard';
-  card.innerHTML=`<h3 style="margin-top:0">🗂️ CATEGORIAS DA LOJA</h3><p style="font-size:12px;color:#666">Crie, edite e organize as categorias. Produtos femininos ficam dentro de FEMININO e produtos masculinos dentro de MASCULINO.</p><div class="banner-admin-row"><label>Nome da categoria<input class="field" id="categoryAdminName" placeholder="Ex.: Vestidos de Festa"></label><label>Grupo<select class="field" id="categoryAdminGroup"><option value="Feminino">Feminino</option><option value="Masculino">Masculino</option><option value="Outros">Outros</option></select></label></div><input type="hidden" id="categoryAdminId"><div class="admin-tools"><button class="smallbtn primary" type="button" onclick="saveCategoryFromAdmin()">+ SALVAR CATEGORIA</button><button class="smallbtn" type="button" onclick="clearCategoryAdminForm()">LIMPAR</button><button class="smallbtn" type="button" onclick="repairCategoriesFromAdmin()">🔧 ORGANIZAR PRODUTOS EXISTENTES</button><button class="smallbtn" type="button" onclick="loadCategoriesFromServer()">↻ ATUALIZAR</button></div><div id="categoryAdminStatus" style="font-size:11px;color:#777;margin-top:8px;min-height:16px"></div><div id="categoryAdminList" class="banner-admin-list"></div>`;
-  banner.parentNode.insertBefore(card,banner.nextSibling);
-  renderCategoryAdminList();
+  card.innerHTML=`<h3 style="margin-top:0">🗂️ CATEGORIAS E GRUPOS</h3><p style="font-size:12px;color:#666">Gerencie livremente os grupos e as categorias da loja. Você pode criar, editar, mover e excluir categorias e criar ou excluir grupos.</p>
+  <h4 style="margin:14px 0 8px">GRUPOS</h4><div class="banner-admin-row"><label>Nome do grupo<input class="field" id="categoryGroupName" placeholder="Ex.: Infantil"></label><label>Ordem<input class="field" id="categoryGroupOrder" type="number" min="1" value="1"></label></div><input type="hidden" id="categoryGroupId"><div class="admin-tools"><button class="smallbtn primary" type="button" onclick="saveCategoryGroupFromAdmin()">+ SALVAR GRUPO</button><button class="smallbtn" type="button" onclick="clearCategoryGroupForm()">LIMPAR</button></div><div id="categoryGroupStatus" style="font-size:11px;color:#777;margin-top:8px;min-height:16px"></div><div id="categoryGroupList" class="banner-admin-list"></div>
+  <h4 style="margin:20px 0 8px">CATEGORIAS</h4><div class="banner-admin-row"><label>Nome da categoria<input class="field" id="categoryAdminName" placeholder="Ex.: Infantil Casual"></label><label>Grupo<select class="field" id="categoryAdminGroup"></select></label></div><input type="hidden" id="categoryAdminId"><div class="admin-tools"><button class="smallbtn primary" type="button" onclick="saveCategoryFromAdmin()">+ SALVAR CATEGORIA</button><button class="smallbtn" type="button" onclick="clearCategoryAdminForm()">LIMPAR</button><button class="smallbtn" type="button" onclick="repairCategoriesFromAdmin()">🔧 ORGANIZAR PRODUTOS EXISTENTES</button><button class="smallbtn" type="button" onclick="loadCategoriesFromServer()">↻ ATUALIZAR</button></div><div id="categoryAdminStatus" style="font-size:11px;color:#777;margin-top:8px;min-height:16px"></div><div id="categoryAdminList" class="banner-admin-list"></div>`;
+  banner.parentNode.insertBefore(card,banner.nextSibling);renderCategoryGroupAdmin();renderCategoryAdminList();
 }
-function clearCategoryAdminForm(){document.getElementById('categoryAdminId').value='';document.getElementById('categoryAdminName').value='';document.getElementById('categoryAdminGroup').value='Feminino';}
-function renderCategoryAdminList(){
-  const el=document.getElementById('categoryAdminList');if(!el)return;
-  const groups=['Feminino','Masculino','Outros'];
-  el.innerHTML=groups.map(g=>{const list=categoryCatalog.filter(c=>c.group===g&&c.active!==false).sort((a,b)=>Number(a.order||999)-Number(b.order||999));if(!list.length)return '';return `<div style="margin-top:10px"><b>${escapeHtml(g)}</b>${list.map(c=>`<div class="banner-admin-item"><div class="info"><b>${escapeHtml(c.name)}</b>${c.parent_id?'<br><small>Subcategoria</small>':'<br><small>Categoria principal</small>'}</div><div class="tools">${c.system?'<span style="font-size:10px;color:#777">PRINCIPAL</span>':`<button class="smallbtn" type="button" onclick="editCategoryFromAdmin('${escapeHtml(String(c.id))}')">Editar</button><button class="smallbtn danger" type="button" onclick="deleteCategoryFromAdmin('${escapeHtml(String(c.id))}')">Excluir</button>`}</div></div>`).join('')}</div>`}).join('');
-}
-function editCategoryFromAdmin(id){const c=categoryById(id);if(!c)return;document.getElementById('categoryAdminId').value=c.id;document.getElementById('categoryAdminName').value=c.name;document.getElementById('categoryAdminGroup').value=c.group;document.getElementById('categoryAdminName').focus();}
-async function saveCategoryFromAdmin(){
-  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',saveCategoryFromAdmin);
-  const name=document.getElementById('categoryAdminName').value.trim(), group=document.getElementById('categoryAdminGroup').value, id=document.getElementById('categoryAdminId').value.trim();
-  if(!name)return alert('Informe o nome da categoria.');
-  const status=document.getElementById('categoryAdminStatus');if(status)status.textContent='Salvando categoria...';
-  try{const d=await apiCategory('category_save',{id:id||null,name,group});categoryCatalog=d.categories||categoryCatalog;renderCategories();renderCategoryAdminList();renderCategoryOptions();clearCategoryAdminForm();if(status)status.textContent='✓ Categoria salva no Supabase.';}catch(e){if(status)status.textContent=e.message;alert('Não foi possível salvar a categoria: '+e.message);}
-}
-async function deleteCategoryFromAdmin(id){
-  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>deleteCategoryFromAdmin(id));
-  const c=categoryById(id);if(!c)return;if(!confirm(`Excluir a categoria "${c.name}"?`))return;
-  try{const d=await apiCategory('category_delete',{id});categoryCatalog=d.categories||categoryCatalog;renderCategories();renderCategoryAdminList();renderCategoryOptions();}catch(e){alert('Não foi possível excluir a categoria: '+e.message);}
-}
-async function repairCategoriesFromAdmin(){
-  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',repairCategoriesFromAdmin);
-  const status=document.getElementById('categoryAdminStatus');if(!confirm('Organizar os produtos existentes pelas categorias atuais? Produtos sem identificação clara serão mantidos para revisão.'))return;
-  if(status)status.textContent='Organizando produtos...';
-  try{const d=await apiCategory('categories_repair_products',{});await loadSupabaseProducts();if(status)status.textContent=`✓ ${d.updated||0} produto(s) organizado(s). ${d.unresolved?.length||0} aguardando revisão.`;alert(`Organização concluída. ${d.updated||0} produto(s) atualizado(s).`);}catch(e){if(status)status.textContent=e.message;alert('Não foi possível organizar os produtos: '+e.message);}
-}
+function clearCategoryGroupForm(){const id=document.getElementById('categoryGroupId');const n=document.getElementById('categoryGroupName');const o=document.getElementById('categoryGroupOrder');if(id)id.value='';if(n)n.value='';if(o)o.value=String(activeGroups().length+1);}
+function renderCategoryGroupAdmin(){const sel=document.getElementById('categoryAdminGroup');if(sel)sel.innerHTML=activeGroups().map(g=>`<option value="${escapeHtml(String(g.id))}">${escapeHtml(g.name)}</option>`).join('');const el=document.getElementById('categoryGroupList');if(!el)return;el.innerHTML=activeGroups().map(g=>`<div class="banner-admin-item"><div class="info"><b>${escapeHtml(g.name)}</b><br><small>Grupo</small></div><div class="tools"><button class="smallbtn" type="button" onclick="editCategoryGroupFromAdmin('${escapeHtml(String(g.id))}')">Editar</button><button class="smallbtn danger" type="button" onclick="deleteCategoryGroupFromAdmin('${escapeHtml(String(g.id))}')">Excluir</button></div></div>`).join('');}
+function editCategoryGroupFromAdmin(id){const g=groupById(id);if(!g)return;document.getElementById('categoryGroupId').value=g.id;document.getElementById('categoryGroupName').value=g.name;document.getElementById('categoryGroupOrder').value=g.order||1;document.getElementById('categoryGroupName').focus();}
+async function saveCategoryGroupFromAdmin(){if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',saveCategoryGroupFromAdmin);const name=document.getElementById('categoryGroupName').value.trim(),id=document.getElementById('categoryGroupId').value.trim(),order=Number(document.getElementById('categoryGroupOrder').value||activeGroups().length+1);if(!name)return alert('Informe o nome do grupo.');try{const d=await apiCategory('category_group_save',{id:id||null,name,order});categoryGroups=d.groups||categoryGroups;renderCategoryGroupAdmin();renderCategoryAdminList();renderCategoryOptions();renderTopCategoryMenus();clearCategoryGroupForm();document.getElementById('categoryGroupStatus').textContent='✓ Grupo salvo no Supabase.';}catch(e){document.getElementById('categoryGroupStatus').textContent=e.message;alert('Não foi possível salvar o grupo: '+e.message);}}
+async function deleteCategoryGroupFromAdmin(id){if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>deleteCategoryGroupFromAdmin(id));const g=groupById(id);if(!g)return;if(!confirm(`Excluir o grupo "${g.name}"?`))return;try{const d=await apiCategory('category_group_delete',{id});categoryGroups=d.groups||categoryGroups;categoryCatalog=categoryCatalog.filter(c=>String(c.parent_id)!==String(id));renderCategoryGroupAdmin();renderCategoryAdminList();renderCategoryOptions();renderTopCategoryMenus();}catch(e){alert('Não foi possível excluir o grupo: '+e.message);}}
+function clearCategoryAdminForm(){document.getElementById('categoryAdminId').value='';document.getElementById('categoryAdminName').value='';if(document.getElementById('categoryAdminGroup'))document.getElementById('categoryAdminGroup').value=activeGroups()[0]?.id||'';}
+function renderCategoryAdminList(){const el=document.getElementById('categoryAdminList');if(!el)return;el.innerHTML=activeGroups().map(g=>{const list=childCategories(g);if(!list.length)return `<div style="margin-top:10px"><b>${escapeHtml(g.name)}</b><div style="font-size:11px;color:#777">Nenhuma categoria.</div></div>`;return `<div style="margin-top:10px"><b>${escapeHtml(g.name)}</b>${list.map(c=>`<div class="banner-admin-item"><div class="info"><b>${escapeHtml(c.name)}</b><br><small>${escapeHtml(g.name)}</small></div><div class="tools"><button class="smallbtn" type="button" onclick="editCategoryFromAdmin('${escapeHtml(String(c.id))}')">Editar</button><button class="smallbtn danger" type="button" onclick="deleteCategoryFromAdmin('${escapeHtml(String(c.id))}')">Excluir</button></div></div>`).join('')}</div>`;}).join('');}
+function editCategoryFromAdmin(id){const c=categoryById(id);if(!c)return;document.getElementById('categoryAdminId').value=c.id;document.getElementById('categoryAdminName').value=c.name;document.getElementById('categoryAdminGroup').value=String(c.parent_id||c.group_id||'');document.getElementById('categoryAdminName').focus();}
+async function saveCategoryFromAdmin(){if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',saveCategoryFromAdmin);const name=document.getElementById('categoryAdminName').value.trim(),group_id=document.getElementById('categoryAdminGroup').value,id=document.getElementById('categoryAdminId').value.trim();if(!name)return alert('Informe o nome da categoria.');if(!group_id)return alert('Crie ou selecione um grupo.');const status=document.getElementById('categoryAdminStatus');if(status)status.textContent='Salvando categoria...';try{const d=await apiCategory('category_save',{id:id||null,name,group_id});categoryCatalog=d.categories||categoryCatalog;categoryGroups=d.groups||categoryGroups;renderCategories();renderCategoryGroupAdmin();renderCategoryAdminList();clearCategoryAdminForm();if(status)status.textContent='✓ Categoria salva no Supabase.';}catch(e){if(status)status.textContent=e.message;alert('Não foi possível salvar a categoria: '+e.message);}}
+async function deleteCategoryFromAdmin(id){if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>deleteCategoryFromAdmin(id));const c=categoryById(id);if(!c)return;if(!confirm(`Excluir a categoria "${c.name}"?`))return;try{const d=await apiCategory('category_delete',{id});categoryCatalog=d.categories||categoryCatalog;categoryGroups=d.groups||categoryGroups;renderCategories();renderCategoryGroupAdmin();renderCategoryAdminList();renderCategoryOptions();}catch(e){alert('Não foi possível excluir a categoria: '+e.message);}}
+async function repairCategoriesFromAdmin(){if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',repairCategoriesFromAdmin);const status=document.getElementById('categoryAdminStatus');if(!confirm('Organizar os produtos existentes pelas categorias atuais? Produtos sem identificação clara serão mantidos para revisão.'))return;if(status)status.textContent='Organizando produtos...';try{const d=await apiCategory('categories_repair_products',{});await loadSupabaseProducts();if(status)status.textContent=`✓ ${d.updated||0} produto(s) organizado(s). ${d.unresolved?.length||0} aguardando revisão.`;alert(`Organização concluída. ${d.updated||0} produto(s) atualizado(s).`);}catch(e){if(status)status.textContent=e.message;alert('Não foi possível organizar os produtos: '+e.message);}}
 
 function renderAdmin(){
   const q=(document.getElementById('adminSearch').value||'').toLowerCase();
