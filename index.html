@@ -244,7 +244,7 @@ footer a{color:#111!important}
 <div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="banner-admin-card"><h3 style="margin-top:0">🖼️ CARROSSEL DE BANNERS</h3><p style="font-size:12px;color:#666">Cadastre as imagens que aparecerão no carrossel principal da loja. As alterações ficam salvas no Supabase.</p><div class="banner-admin-row"><label>Título<input class="field" id="bannerTitle" placeholder="Ex.: NOVA COLEÇÃO"></label><label>Subtítulo<input class="field" id="bannerSubtitle" placeholder="Ex.: ESTILO URBANO 2026"></label></div><label>Link da imagem<input class="field" id="bannerImage" placeholder="https://.../banner.jpg"></label><label style="display:block;margin-top:10px">Link ao clicar (opcional)<input class="field" id="bannerLink" placeholder="https://... ou #produtos"></label><div class="checkrow"><label><input type="checkbox" id="bannerActive" checked> Banner ativo</label></div><div class="admin-tools"><button class="smallbtn primary" type="button" onclick="addBannerFromAdmin()">+ ADICIONAR BANNER</button><button class="smallbtn" type="button" onclick="loadBannersFromServer()">↻ ATUALIZAR</button></div><div id="bannerAdminList" class="banner-admin-list"></div></div><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço de venda<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU <span style="font-size:10px;color:#777;font-weight:500">(gerado automaticamente)</span><input class="field" id="pSku" required></label><label>Código de barras <span style="font-size:10px;color:#777;font-weight:500">(EAN-13 automático)</span><input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Link da foto principal<input class="field" id="pImage" placeholder="https://..."></label>
 <label class="full">Links das fotos secundárias<textarea class="field" id="pSecondaryImages" placeholder="Um link por linha"></textarea></label>
 <label class="full">URL do produto<input class="field" id="pUrl" placeholder="https://..."></label>
-<label class="full">Descrição<textarea class="field" id="pDescription"></textarea></label></div><div class="checkrow"><label><input type="checkbox" id="pActive" checked> Ativo</label><label><input type="checkbox" id="pFeatured"> Destaque</label></div>
+<label class="full">Descrição<div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap"><textarea class="field" id="pDescription" style="flex:1;min-width:240px"></textarea><button class="smallbtn" type="button" id="aiDescriptionBtn" onclick="generateAIDescription()" style="white-space:nowrap">✨ GERAR DESCRIÇÃO COM IA</button></div><div id="aiDescriptionStatus" style="font-size:11px;color:#777;margin-top:6px;min-height:16px"></div></label></div><div class="checkrow"><label><input type="checkbox" id="pActive" checked> Ativo</label><label><input type="checkbox" id="pFeatured"> Destaque</label></div>
 <div class="payment-admin-box" id="pricingAdminBox" style="margin:14px 0;padding:14px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px">
   <b>💰 PREÇO DE VENDA — STUDIO 70</b>
   <p style="font-size:11px;color:#666;margin:6px 0 10px">
@@ -428,8 +428,35 @@ function normalizeImageList(value){
   return [...new Set(values.flatMap(v=>String(v??'').split(/\s*\|\s*/)).map(normalizeImageUrl).filter(Boolean))];
 }
 function normalizeList(value){
-  const values=Array.isArray(value)?value:[value];
-  return values.flatMap(v=>String(v??'').split(',')).map(v=>v.trim()).filter(Boolean);
+  // Aceita arrays reais, JSON salvo no Supabase e strings com JSON escapado.
+  const out=[];
+  const visit=(v)=>{
+    if(v==null)return;
+    if(Array.isArray(v)){v.forEach(visit);return;}
+    let s=String(v).trim();
+    if(!s)return;
+    // Pode chegar como: ["P","M","G"] ou como uma string contendo esse JSON.
+    for(let i=0;i<2;i++){
+      if((s.startsWith('[')&&s.endsWith(']'))||(s.startsWith('\"')&&s.endsWith('\"'))){
+        try{
+          const parsed=JSON.parse(s);
+          if(parsed!==s){visit(parsed);return;}
+        }catch(_){}
+      }
+      if(/^\".*\"$/.test(s)){
+        try{const parsed=JSON.parse(s);if(parsed!==s){s=String(parsed).trim();continue;}}catch(_){}
+      }
+      break;
+    }
+    // Limpa apenas a representação textual residual, sem alterar nomes como G1.
+    s=s.replace(/^\[\s*/,'').replace(/\s*\]$/,'').trim();
+    s.split(',').forEach(part=>{
+      const item=part.trim().replace(/^['\"]+|['\"]+$/g,'').trim();
+      if(item)out.push(item);
+    });
+  };
+  visit(value);
+  return [...new Set(out)];
 }
 function numberOr(value,fallback=0){const n=Number(value);return Number.isFinite(n)?n:fallback;}
 function firstPositiveNumber(...values){for(const value of values){const n=Number(value);if(Number.isFinite(n)&&n>0)return n;}return 0;}
@@ -830,6 +857,31 @@ function editProduct(id){
   setTimeout(()=>document.getElementById('pName')?.focus(),250);
 }
 document.getElementById('pName')?.addEventListener('input',ensureGeneratedCodes);
+async function generateAIDescription(){
+  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',generateAIDescription);
+  const name=String(document.getElementById('pName')?.value||'').trim();
+  const image=normalizeImageUrl(document.getElementById('pImage')?.value||'');
+  const status=document.getElementById('aiDescriptionStatus');
+  const btn=document.getElementById('aiDescriptionBtn');
+  if(!name)return alert('Informe o nome do produto antes de gerar a descrição.');
+  if(!image)return alert('Informe o link da foto principal antes de gerar a descrição com IA.');
+  if(status)status.textContent='✨ Analisando o nome e a imagem do produto...';
+  if(btn){btn.disabled=true;btn.textContent='✨ GERANDO...';}
+  try{
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'ai_generate_description',admin_password:adminAuthPassword,name,image})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok)throw new Error(d.error||'Não foi possível gerar a descrição.');
+    const desc=String(d.description||'').trim();
+    if(!desc)throw new Error('A IA não retornou uma descrição.');
+    document.getElementById('pDescription').value=desc;
+    if(status)status.textContent='✓ Descrição gerada. Revise o texto e salve o produto normalmente.';
+  }catch(e){
+    if(status)status.textContent=e?.message||'Falha ao gerar descrição.';
+    alert('Não foi possível gerar a descrição: '+(e?.message||e));
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='✨ GERAR DESCRIÇÃO COM IA';}
+  }
+}
 document.getElementById('productForm').onsubmit=async e=>{
   e.preventDefault();
   if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>document.getElementById('productForm').requestSubmit());
