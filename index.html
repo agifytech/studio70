@@ -252,13 +252,14 @@ footer a{color:#111!important}
 <div class="modal" id="loginModal"><div class="modal-panel" style="max-width:420px"><button class="close" onclick="closeLogin()">×</button><h2 class="section-title">ACESSO RESTRITO</h2><p id="loginTitle">Digite a senha para continuar.</p><label style="display:block;font-size:12px;margin-bottom:8px">URL da Edge Function<input class="field" id="loginEndpoint" value="https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler" placeholder="URL da Edge Function" autocomplete="url"></label><input class="field" id="loginPassword" type="password" inputmode="numeric" maxlength="64" placeholder="Senha do painel" autocomplete="off"><div id="loginError" style="color:#ff6b8f;font-weight:700;min-height:22px;margin:8px 0"></div><button class="btn" style="width:100%" onclick="submitLogin()">ENTRAR</button></div></div>
 <div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="standalone-barcode-box">
   <h3>🏷️ GERAR CÓDIGO DE BARRAS AVULSO</h3>
-  <p style="font-size:11px;color:#666;margin:6px 0 10px">Digite um código por linha. Você pode gerar uma etiqueta avulsa ou várias etiquetas em lote, sem alterar o cadastro dos produtos.</p>
+  <p style="font-size:11px;color:#666;margin:6px 0 10px">Gere um código aleatório, escolha o produto e vincule o código ao cadastro no Supabase. Depois disso, o PDV reconhecerá a etiqueta em qualquer dispositivo.</p>
   <label>Valor do código de barras
     <textarea class="field" id="standaloneBarcodeValue" placeholder="Digite um código por linha ou use GERAR CÓDIGO..." autocomplete="off" inputmode="numeric" rows="4" style="resize:vertical"></textarea>
   </label>
   <div class="admin-tools" style="margin-top:10px">
     <button class="smallbtn primary" type="button" onclick="addStandaloneRandomCodeRow()">🎲 GERAR CÓDIGO</button>
     <button class="smallbtn" type="button" onclick="generateStandaloneBarcode()">🏷️ GERAR ETIQUETAS</button>
+    <button class="smallbtn primary" type="button" onclick="linkStandaloneBarcodesToProducts()">💾 VINCULAR AO PRODUTO</button>
     <button class="smallbtn" type="button" onclick="printStandaloneBarcode()">🖨️ IMPRIMIR LOTE</button>
   </div>
   <div id="standaloneBarcodeList" style="margin-top:12px"></div>
@@ -915,23 +916,53 @@ function getStandaloneBarcodeValues(){
   return String(input?.value||'').split(/\r?\n/).map(v=>v.trim()).filter(Boolean);
 }
 function makeStandaloneRandomEAN13(){
-  let first12=Array.from({length:12},()=>Math.floor(Math.random()*10)).join('');
-  return first12+ean13CheckDigit(first12);
+  let code='';
+  let tries=0;
+  do{
+    const first12=Array.from({length:12},()=>Math.floor(Math.random()*10)).join('');
+    code=first12+ean13CheckDigit(first12);
+    tries++;
+  }while((products.some(p=>String(p.barcode||'').trim()===code) || getStandaloneBarcodeRows().some(r=>r.value===code)) && tries<100);
+  return code;
 }
-function createStandaloneCodeRow(value=''){
+function createStandaloneProductSelect(selectedId=''){
+  const select=document.createElement('select');
+  select.className='field standalone-barcode-product';
+  select.innerHTML='<option value="">Selecione o produto</option>';
+  const list=Array.isArray(products)?products.slice().sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'pt-BR')):[];
+  list.forEach(p=>{
+    const option=document.createElement('option');
+    option.value=String(p.id||'');
+    option.textContent=String(p.name||'Produto')+(p.sku?' — '+p.sku:'');
+    option.dataset.price=String(firstPositiveNumber(p.sale_price,p.salePrice,p.price));
+    if(String(p.id||'')===String(selectedId))option.selected=true;
+    select.appendChild(option);
+  });
+  return select;
+}
+function createStandaloneCodeRow(value='',selectedProductId=''){
   const list=document.getElementById('standaloneBarcodeList');
   if(!list)return;
   const row=document.createElement('div');
   row.className='standalone-barcode-row';
-  row.style.cssText='display:grid;grid-template-columns:minmax(160px,1fr) 130px 110px auto;gap:8px;align-items:end;background:#f3f1ec;border:1px solid #c8c5be;border-radius:10px;padding:10px;margin-top:8px';
+  row.style.cssText='display:grid;grid-template-columns:minmax(180px,1.4fr) minmax(180px,2fr) 130px 110px auto;gap:8px;align-items:end;background:#f3f1ec;border:1px solid #c8c5be;border-radius:10px;padding:10px;margin-top:8px';
   const codeLabel=document.createElement('label'); codeLabel.style.cssText='font-size:11px;font-weight:700'; codeLabel.textContent='Código';
   const codeInput=document.createElement('input'); codeInput.className='field standalone-barcode-code-input'; codeInput.value=value||makeStandaloneRandomEAN13(); codeInput.inputMode='numeric'; codeInput.autocomplete='off'; codeLabel.appendChild(codeInput);
-  const priceLabel=document.createElement('label'); priceLabel.style.cssText='font-size:11px;font-weight:700'; priceLabel.textContent='Preço (R$)';
+  const productLabel=document.createElement('label'); productLabel.style.cssText='font-size:11px;font-weight:700'; productLabel.textContent='Produto';
+  const productSelect=createStandaloneProductSelect(selectedProductId); productLabel.appendChild(productSelect);
+  const priceLabel=document.createElement('label'); priceLabel.style.cssText='font-size:11px;font-weight:700'; priceLabel.textContent='Preço da etiqueta (R$)';
   const priceInput=document.createElement('input'); priceInput.className='field standalone-barcode-price'; priceInput.type='number'; priceInput.min='0'; priceInput.step='0.01'; priceInput.placeholder='Ex.: 59,90'; priceInput.inputMode='decimal'; priceLabel.appendChild(priceInput);
   const qtyLabel=document.createElement('label'); qtyLabel.style.cssText='font-size:11px;font-weight:700'; qtyLabel.textContent='Quantidade de etiquetas';
   const qty=document.createElement('input'); qty.className='field standalone-barcode-qty'; qty.type='number'; qty.min='1'; qty.step='1'; qty.value='1'; qty.inputMode='numeric'; qtyLabel.appendChild(qty);
+  productSelect.addEventListener('change',()=>{
+    const selected=products.find(p=>String(p.id||'')===String(productSelect.value||''));
+    if(selected && !String(priceInput.value||'').trim()){
+      const sale=firstPositiveNumber(selected.sale_price,selected.salePrice,selected.price);
+      if(sale>0)priceInput.value=sale.toFixed(2);
+    }
+  });
   const remove=document.createElement('button'); remove.type='button'; remove.className='smallbtn'; remove.textContent='✕'; remove.title='Remover código'; remove.onclick=()=>row.remove();
-  row.appendChild(codeLabel); row.appendChild(priceLabel); row.appendChild(qtyLabel); row.appendChild(remove); list.appendChild(row);
+  row.appendChild(codeLabel); row.appendChild(productLabel); row.appendChild(priceLabel); row.appendChild(qtyLabel); row.appendChild(remove); list.appendChild(row);
   return row;
 }
 function addStandaloneRandomCodeRow(){
@@ -953,6 +984,85 @@ function syncStandaloneTextToRows(){
   const input=document.getElementById('standaloneBarcodeValue');
   const values=String(input?.value||'').split(/\r?\n/).map(v=>v.trim()).filter(Boolean);
   values.forEach(v=>createStandaloneCodeRow(v));
+}
+async function linkStandaloneBarcodesToProducts(){
+  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',linkStandaloneBarcodesToProducts);
+  syncStandaloneTextToRows();
+  const rows=Array.from(document.querySelectorAll('.standalone-barcode-row'));
+  if(!rows.length)return alert('Clique em GERAR CÓDIGO para criar uma etiqueta.');
+  const assignments=rows.map(row=>({
+    row,
+    code:String(row.querySelector('.standalone-barcode-code-input')?.value||'').trim(),
+    productId:String(row.querySelector('.standalone-barcode-product')?.value||'').trim()
+  }));
+  const missing=assignments.find(x=>!x.code||!x.productId);
+  if(missing)return alert('Selecione um produto em todas as linhas antes de vincular.');
+  const duplicateCodes=new Set();
+  for(const item of assignments){
+    if(duplicateCodes.has(item.code))return alert('Há código de barras repetido na lista: '+item.code);
+    duplicateCodes.add(item.code);
+    const existing=products.find(p=>String(p.barcode||'').trim()===item.code && String(p.id||'')!==item.productId);
+    if(existing)return alert(`O código ${item.code} já está cadastrado no produto "${existing.name}".`);
+  }
+  if(!confirm(`Vincular ${assignments.length} código(s) aos produtos selecionados e salvar no Supabase?`))return;
+  const btn=Array.from(document.querySelectorAll('.standalone-barcode-box .smallbtn')).find(b=>String(b.textContent||'').includes('VINCULAR'));
+  if(btn){btn.disabled=true;btn.textContent='💾 SALVANDO...';}
+  let ok=0;
+  try{
+    for(const item of assignments){
+      const product=products.find(p=>String(p.id||'')===item.productId);
+      if(!product)throw new Error('Produto selecionado não foi encontrado no catálogo atual.');
+      const payload={
+        ...product,
+        id:product.id,
+        supplier:product.supplier||'studio70',
+        external_id:product.supplierExternalId||product.external_id||'',
+        name:product.name,
+        sale_price:firstPositiveNumber(product.sale_price,product.salePrice,product.price),
+        salePrice:firstPositiveNumber(product.sale_price,product.salePrice,product.price),
+        selling_price:firstPositiveNumber(product.sale_price,product.salePrice,product.price),
+        studio70_sale_price:firstPositiveNumber(product.sale_price,product.salePrice,product.price),
+        price:firstPositiveNumber(product.sale_price,product.salePrice,product.price),
+        supplier_price:Number(product.supplier_price??0),
+        sku:product.sku||'',
+        barcode:item.code,
+        category:product.category||'',
+        category_id:product.category_id||null,
+        stock:Number(product.stock??0),
+        sizes:Array.isArray(product.sizes)?product.sizes:[],
+        colors:Array.isArray(product.colors)?product.colors:[],
+        weightKg:Number(product.weightKg??product.weight??0.3),
+        heightCm:Number(product.heightCm??product.height??4),
+        widthCm:Number(product.widthCm??product.width??20),
+        lengthCm:Number(product.lengthCm??product.length??30),
+        image:normalizeImageUrl(product.image||''),
+        secondary_images:Array.isArray(product.secondaryImages)?product.secondaryImages:[],
+        videos:Array.isArray(product.videos)?product.videos:[],
+        source_url:product.url||product.source_url||'',
+        description:product.description||'',
+        active:product.active!==false,
+        featured:!!product.featured
+      };
+      const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'product_save',admin_password:adminAuthPassword,product:payload})});
+      const d=await r.json().catch(()=>({}));
+      if(!r.ok||!d.ok)throw new Error(d.error||`Falha ao salvar o produto ${product.name}.`);
+      ok++;
+    }
+    await loadSupabaseProducts();
+    assignments.forEach(item=>{
+      const p=products.find(x=>String(x.id||'')===item.productId);
+      if(p){
+        const select=item.row.querySelector('.standalone-barcode-product');
+        if(select)select.value=String(p.id||'');
+      }
+    });
+    alert(`✓ ${ok} código(s) vinculado(s) aos produtos no Supabase. O PDV já poderá reconhecê-los pelo código.`);
+  }catch(err){
+    alert('Não foi possível vincular os códigos: '+(err?.message||err)+`\n\nForam salvos ${ok} de ${assignments.length}.`);
+    await loadSupabaseProducts();
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='💾 VINCULAR AO PRODUTO';}
+  }
 }
 function generateStandaloneBarcode(){
   syncStandaloneTextToRows();
