@@ -21,11 +21,11 @@ button{border:0;border-radius:12px;padding:13px 12px;font-weight:900;font-size:1
 .primary{background:#b91c1c;color:#fff}.secondary{background:#292524;color:#e7e5e4}.danger{background:#3f1d1d;color:#fecaca}
 input{width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:13px;font-size:16px;outline:none}
 input:focus{border-color:#dc2626}
-.lookup{display:flex;gap:8px}.lookup input{flex:1}.lookup button{width:110px}
+.lookup{display:flex;gap:8px;margin-top:10px}.lookup input{flex:1}.lookup button{width:90px}.quick-qty{display:grid;grid-template-columns:1fr 44px 72px 44px;gap:6px;align-items:center;margin-top:10px}.quick-qty>span{font-size:12px;color:#a8a29e;font-weight:800}.quick-qty input{text-align:center;font-weight:900}.quick-qty .mini{height:44px;padding:0;font-size:20px}
 .product{display:none}.product.show{display:block}
 .badge{display:inline-block;background:#052e1b;color:#6ee7b7;border:1px solid #065f46;border-radius:8px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
 .title{font-size:21px;font-weight:900;margin:12px 0 4px}.sku{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#78716c}
-.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0}.stat{background:#0c0a09;border:1px solid #292524;border-radius:12px;padding:10px;text-align:center}.stat small{display:block;color:#78716c;text-transform:uppercase;font-size:9px;font-weight:800}.stat b{display:block;margin-top:3px}
+.compact-product{display:flex;justify-content:space-between;gap:12px;align-items:center}.compact-product b{font-size:16px}.compact-product strong{font-size:18px}
 .qty{display:flex;align-items:center;justify-content:space-between;background:#0c0a09;border:1px solid #292524;border-radius:14px;padding:8px;margin:12px 0}.qty button{width:50px;height:48px;padding:0;font-size:22px;background:#292524;color:#fff}.qty input{width:80px;text-align:center;border:0;background:transparent;font-size:22px;font-weight:900}
 .variation-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.variation label{display:block;margin-bottom:6px}.variation select{width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:13px;font-size:15px;outline:none}.variation select:focus{border-color:#dc2626}.variant-stock{font-size:11px;color:#a8a29e;margin-top:6px}.variant-stock strong{color:#6ee7b7}
 .notice{background:#2a1705;border:1px solid #854d0e;color:#fde68a;border-radius:12px;padding:10px;font-size:11px;line-height:1.45}
@@ -51,94 +51,64 @@ input:focus{border-color:#dc2626}
 </header>
 
 <main>
-  <div class="card">
-    <h2>Leitura do produto</h2>
+  <div class="card scan-card">
+    <div class="order-head"><h2>📷 Bipar produtos</h2><span id="cartCount" class="badge">0 itens</span></div>
     <div id="reader"></div>
     <div class="grid">
-      <button class="primary" onclick="startScanner()">📷 ABRIR CÂMERA</button>
-      <button class="secondary" onclick="stopScanner()">⏸ PAUSAR</button>
+      <button class="primary" onclick="startScanner()">📷 ESCANEAR</button>
+      <button class="secondary" onclick="stopScanner()">⏸ PARAR</button>
     </div>
-    <div id="status" class="status">Carregando estoque do fornecedor...</div>
     <div class="lookup">
-      <input id="codeInput" inputmode="text" autocomplete="off" placeholder="Código de barras ou SKU">
+      <input id="codeInput" inputmode="text" autocomplete="off" placeholder="Código de barras / SKU">
       <button class="secondary" onclick="lookupProduct()">BUSCAR</button>
     </div>
+    <div class="quick-qty">
+      <span>Quantidade</span>
+      <button class="secondary mini" onclick="changeQty(-1)">−</button>
+      <input id="qty" type="number" min="1" value="1" aria-label="Quantidade">
+      <button class="secondary mini" onclick="changeQty(1)">+</button>
+    </div>
+    <div id="status" class="status">Pronto para bipar.</div>
   </div>
 
   <div id="productCard" class="card product">
-    <span class="badge">Item identificado</span>
-    <div id="productName" class="title">Produto</div>
-    <div id="productSku" class="sku">SKU: —</div>
-    <div id="productBarcode" class="sku">EAN: —</div>
-
-    <div class="stats">
-      <div class="stat"><small>Preço</small><b id="productPrice">R$ 0,00</b></div>
-      <div class="stat"><small>Estoque total</small><b id="productStock">0</b></div>
-      <div class="stat"><small>Variação</small><b id="productSpecs">—</b></div>
+    <div class="compact-product">
+      <div><b id="productName">Produto</b><div id="productMeta" class="muted">—</div></div>
+      <strong id="productPrice">R$ 0,00</strong>
     </div>
-
     <div class="variation-grid">
-      <div class="variation">
-        <label class="muted" for="sizeSelect">Tamanho</label>
-        <select id="sizeSelect"><option value="">Selecione</option></select>
-      </div>
-      <div class="variation">
-        <label class="muted" for="colorSelect">Cor</label>
-        <select id="colorSelect"><option value="">Selecione</option></select>
-      </div>
+      <div class="variation"><label class="muted" for="sizeSelect">Tamanho</label><select id="sizeSelect"><option value="">Selecione</option></select></div>
+      <div class="variation"><label class="muted" for="colorSelect">Cor</label><select id="colorSelect"><option value="">Selecione</option></select></div>
     </div>
     <div id="variantStock" class="variant-stock"></div>
-
-    <label class="muted">Quantidade da venda</label>
-    <div class="qty">
-      <button onclick="changeQty(-1)">−</button>
-      <input id="qty" type="number" min="1" value="1">
-      <button onclick="changeQty(1)">+</button>
-    </div>
-
-    <button class="primary" style="width:100%" onclick="addCurrentToCart()">➕ ADICIONAR À VENDA</button>
+    <button class="primary" style="width:100%" onclick="addCurrentToCart()">➕ ADICIONAR</button>
   </div>
 
   <div class="card">
-    <div class="order-head">
-      <h2>🛒 Venda atual</h2>
-      <span id="cartCount" class="badge">0 itens</span>
-    </div>
-    <div id="cartList" class="cart-list"><div class="muted">Nenhum produto adicionado.</div></div>
-    <div class="cart-total"><span>Subtotal</span><span id="cartSubtotal">R$ 0,00</span></div>
+    <div class="order-head"><h2>🛒 Venda</h2><strong id="cartSubtotal">R$ 0,00</strong></div>
+    <div id="cartList" class="cart-list"><div class="muted">Bipe os produtos para montar a venda.</div></div>
     <div class="sale-grid">
       <label>Desconto (R$)<input id="saleDiscount" type="number" min="0" step="0.01" value="0" oninput="renderCart()"></label>
       <label>Total<input id="saleTotal" type="text" value="R$ 0,00" readonly></label>
-      <label>Forma de pagamento<select id="paymentMethod"><option value="dinheiro">Dinheiro</option><option value="pix">PIX</option><option value="cartao">Cartão</option></select></label>
-      <label>Status do pagamento<select id="paymentStatus"><option value="paid">Pago</option><option value="pending_payment">Aguardando pagamento</option></select></label>
+      <label>Pagamento<select id="paymentMethod"><option value="dinheiro">Dinheiro</option><option value="pix">PIX</option><option value="cartao">Cartão</option></select></label>
+      <label>Status<select id="paymentStatus"><option value="paid">Pago</option><option value="pending_payment">Aguardando</option></select></label>
     </div>
     <button class="primary full" style="width:100%;margin-top:10px" onclick="finishSale()">⚡ FINALIZAR VENDA</button>
   </div>
 
-  <div class="card" id="salesHistoryCard">
-    <div class="order-head">
-      <h2>🧾 VENDAS REALIZADAS</h2>
-      <button class="secondary" onclick="loadSalesHistory()">↻ ATUALIZAR</button>
-    </div>
-    <div id="salesHistoryStatus" class="status">Carregando vendas de hoje...</div>
-    <div id="salesHistoryList" class="order-list"></div>
-  </div>
-
   <div class="card" id="storeOrdersCard">
-    <div class="order-head">
-      <h2>🔔 Pedidos da loja</h2>
-      <span id="ordersBadge" class="badge">0 novos</span>
-    </div>
+    <div class="order-head"><h2>🔔 Pedidos da loja</h2><span id="ordersBadge" class="badge">0 novos</span></div>
     <div id="ordersStatus" class="status">Atualizando pedidos...</div>
     <div id="storeOrderList" class="order-list"></div>
   </div>
 
-  <div class="card">
-    <div class="notice">
-      O PDV consulta o estoque do fornecedor no Supabase e a baixa é feita no servidor.
-      O acesso usa a senha administrativa do PDV; ela não fica gravada no HTML.
-    </div>
+  <div class="card" id="salesHistoryCard">
+    <div class="order-head"><h2>🧾 Vendas do PDV</h2><button class="secondary mini" onclick="loadSalesHistory()">↻ ATUALIZAR</button></div>
+    <div id="salesHistoryStatus" class="status">Carregando...</div>
+    <div id="salesHistoryList" class="order-list"></div>
   </div>
+
+  <div class="notice">PDV conectado ao Supabase. As vendas finalizadas neste PDV ficam registradas no painel e os pedidos da loja são atualizados automaticamente.</div>
 </main>
 
 <div id="loginBox">
@@ -200,6 +170,8 @@ async function unlockPdv(){
     $('connectionStatus').classList.add('ok');
     setStatus('PDV autorizado. Carregando estoque...');
     loadInitialProductCount();
+    loadSalesHistory();
+    startStoreOrderPolling();
   }catch(e){
     $('loginError').textContent=e.message || 'Senha inválida.';
   }
@@ -228,7 +200,10 @@ async function lookupProduct(code){
     if(d && d.found && d.product){
       activeProduct=d.product;
       renderProduct();
-      setStatus('Produto identificado no Supabase. Confira a quantidade.','success');
+      const hasSizes=variationList(activeProduct.sizes).length>0;
+      const hasColors=variationList(activeProduct.colors).length>0;
+      if(!hasSizes && !hasColors){ addCurrentToCart(); }
+      else setStatus('Produto identificado. Se houver tamanho/cor, selecione e adicione.','success');
       return;
     }
 
@@ -272,7 +247,6 @@ function updateVariationState(){
   if(!activeProduct)return;
   const size=$('sizeSelect').value.trim(), color=$('colorSelect').value.trim();
   const labels=[size,color].filter(Boolean);
-  $('productSpecs').textContent=labels.length?labels.join(' / '):'Selecione';
   const available=selectedVariantStock();
   $('variantStock').innerHTML=labels.length ? `Estoque desta variação: <strong>${available} un</strong>` : 'Selecione tamanho e/ou cor para conferir a variação.';
   const qty=$('qty');
@@ -288,16 +262,13 @@ function populateVariationSelect(id, values){
 function renderProduct(){
   const p=activeProduct;
   $('productName').textContent=p.name || 'Produto';
-  $('productSku').textContent='STUDIO 70: '+(p.studio70_code || '—')+'  |  SKU: '+(p.sku || '—');
-  $('productBarcode').textContent='EAN: '+(p.barcode ? p.barcode : 'não cadastrado (produto encontrado)');
+  $('productMeta').textContent='SKU: '+(p.sku||'—')+' · Código: '+(p.barcode||'—')+' · Estoque: '+String(Number(p.stock||0))+' un';
   $('productPrice').textContent=Number(p.price||0)>0 ? money(p.price) : 'Preço não cadastrado';
-  $('productStock').textContent=String(Number(p.stock||0))+' un';
   const sizes=variationList(p.sizes);
   const colors=variationList(p.colors);
   populateVariationSelect('sizeSelect',sizes);
   populateVariationSelect('colorSelect',colors);
   $('variantStock').textContent=(sizes.length||colors.length)?'Selecione tamanho e/ou cor.':'';
-  $('productSpecs').textContent=(sizes.length||colors.length)?'Selecione':'Único';
   $('qty').value=1;
   $('productCard').classList.add('show');
   updateVariationState();
@@ -334,7 +305,11 @@ function addCurrentToCart(){
   const item={key,id:activeProduct.id,studio70_code:activeProduct.studio70_code,external_id:activeProduct.external_id,sku:activeProduct.sku,barcode:activeProduct.barcode,name:activeProduct.name,size,color,variation:{size,color},qty:newQty,unit:Number(activeProduct.price||0)};
   if(existing)Object.assign(existing,item); else saleCart.push(item);
   renderCart();
+  $('qty').value=1;
+  $('codeInput').value='';
+  $('productCard').classList.remove('show');
   setStatus(`✓ ${qty} unidade(s) de ${activeProduct.name} adicionada(s) à venda.`,'success');
+  if(!scanning) setTimeout(()=>startScanner(),120);
 }
 function cartSubtotal(){return saleCart.reduce((sum,i)=>sum+(Number(i.unit)||0)*(Number(i.qty)||0),0);}
 function renderCart(){
@@ -614,6 +589,8 @@ if(adminPassword){
   $('loginBox').classList.add('hidden');
   $('connectionStatus').classList.add('ok');
   loadInitialProductCount();
+  loadSalesHistory();
+  startStoreOrderPolling();
 }
 </script>
 <script>
