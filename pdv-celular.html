@@ -5,3706 +5,624 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#0c0a09">
 <title>STUDIO 70 — PDV Móvel</title>
-
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-
 <style>
 *{box-sizing:border-box}
-
-body{
-  margin:0;
-  background:#0c0a09;
-  color:#f5f5f4;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif
-}
-
-main{
-  width:min(100%,520px);
-  margin:auto;
-  padding:16px
-}
-
-header{
-  padding:16px;
-  border-bottom:1px solid #292524;
-  background:#090807;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  position:sticky;
-  top:0;
-  z-index:5
-}
-
-.brand{
-  font-weight:900;
-  letter-spacing:.12em
-}
-
-.sub{
-  font-size:10px;
-  color:#ef4444;
-  font-weight:800;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  margin-top:2px
-}
-
-.dot{
-  width:11px;
-  height:11px;
-  border-radius:50%;
-  background:#f59e0b
-}
-
-.dot.ok{background:#10b981}
-.dot.err{background:#ef4444}
-
-.card{
-  background:#171412;
-  border:1px solid #292524;
-  border-radius:18px;
-  padding:14px;
-  margin-bottom:14px;
-  box-shadow:0 12px 30px #0005
-}
-
-h2{
-  font-size:18px;
-  margin:0 0 10px
-}
-
-.muted{
-  color:#a8a29e;
-  font-size:12px
-}
-
-.status{
-  min-height:22px;
-  text-align:center;
-  color:#a8a29e;
-  font-size:12px;
-  margin:8px 0 14px
-}
-
-#reader{
-  width:100%;
-  overflow:hidden;
-  border-radius:14px;
-  background:#0c0a09;
-  min-height:40px
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:10px
-}
-
-button{
-  border:0;
-  border-radius:12px;
-  padding:13px 12px;
-  font-weight:900;
-  font-size:13px;
-  cursor:pointer
-}
-
-.primary{
-  background:#b91c1c;
-  color:#fff
-}
-
-.secondary{
-  background:#292524;
-  color:#e7e5e4
-}
-
-.danger{
-  background:#3f1d1d;
-  color:#fecaca
-}
-
-input{
-  width:100%;
-  background:#0c0a09;
-  color:#fff;
-  border:1px solid #44403c;
-  border-radius:12px;
-  padding:13px;
-  font-size:16px;
-  outline:none
-}
-
-input:focus{
-  border-color:#dc2626
-}
-
-.lookup{
-  display:flex;
-  gap:8px
-}
-
-.lookup input{
-  flex:1
-}
-
-.lookup button{
-  width:110px
-}
-
-.product{
-  display:none
-}
-
-.product.show{
-  display:block
-}
-
-.badge{
-  display:inline-block;
-  background:#052e1b;
-  color:#6ee7b7;
-  border:1px solid #065f46;
-  border-radius:8px;
-  padding:5px 8px;
-  font-size:10px;
-  font-weight:900;
-  text-transform:uppercase;
-  letter-spacing:.08em
-}
-
-.title{
-  font-size:21px;
-  font-weight:900;
-  margin:12px 0 4px
-}
-
-.sku{
-  font:12px ui-monospace,SFMono-Regular,Menlo,monospace;
-  color:#78716c
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:8px;
-  margin:14px 0
-}
-
-.stat{
-  background:#0c0a09;
-  border:1px solid #292524;
-  border-radius:12px;
-  padding:10px;
-  text-align:center
-}
-
-.stat small{
-  display:block;
-  color:#78716c;
-  text-transform:uppercase;
-  font-size:9px;
-  font-weight:800
-}
-
-.stat b{
-  display:block;
-  margin-top:3px
-}
-
-.qty{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:#0c0a09;
-  border:1px solid #292524;
-  border-radius:14px;
-  padding:8px;
-  margin:12px 0
-}
-
-.qty button{
-  width:50px;
-  height:48px;
-  padding:0;
-  font-size:22px;
-  background:#292524;
-  color:#fff
-}
-
-.qty input{
-  width:80px;
-  text-align:center;
-  border:0;
-  background:transparent;
-  font-size:22px;
-  font-weight:900
-}
-
-.variation-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin:12px 0
-}
-
-.variation label{
-  display:block;
-  margin-bottom:6px
-}
-
-.variation select{
-  width:100%;
-  background:#0c0a09;
-  color:#fff;
-  border:1px solid #44403c;
-  border-radius:12px;
-  padding:13px;
-  font-size:15px;
-  outline:none
-}
-
-.variation select:focus{
-  border-color:#dc2626
-}
-
-.variant-stock{
-  font-size:11px;
-  color:#a8a29e;
-  margin-top:6px
-}
-
-.variant-stock strong{
-  color:#6ee7b7
-}
-
-.notice{
-  background:#2a1705;
-  border:1px solid #854d0e;
-  color:#fde68a;
-  border-radius:12px;
-  padding:10px;
-  font-size:11px;
-  line-height:1.45
-}
-
-.hidden{
-  display:none!important
-}
-
-.order-list{
-  display:grid;
-  gap:10px
-}
-
-.order-item{
-  background:#0c0a09;
-  border:1px solid #292524;
-  border-radius:14px;
-  padding:12px
-}
-
-.order-head{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  align-items:center
-}
-
-.order-ref{
-  font:11px ui-monospace,SFMono-Regular,Menlo,monospace;
-  color:#a8a29e
-}
-
-.order-total{
-  font-weight:900
-}
-
-.order-customer{
-  font-weight:800;
-  margin:6px 0
-}
-
-.order-items{
-  font-size:11px;
-  color:#d6d3d1;
-  line-height:1.5
-}
-
-.order-item button{
-  width:100%;
-  margin-top:10px
-}
-
-.new-order{
-  border-color:#b91c1c;
-  box-shadow:0 0 0 1px #b91c1c55
-}
-
-#loginBox{
-  position:fixed;
-  inset:0;
-  background:#000b;
-  z-index:20;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px
-}
-
-.modal{
-  width:min(100%,400px);
-  background:#171412;
-  border:1px solid #44403c;
-  border-radius:18px;
-  padding:18px
-}
-
-.modal h3{
-  margin:0 0 8px
-}
-
-.modal p{
-  font-size:12px;
-  color:#a8a29e
-}
-
-.modal button{
-  width:100%;
-  margin-top:10px
-}
-
-.success{
-  color:#6ee7b7
-}
-
-.error{
-  color:#fca5a5
-}
-
-.cart-list{
-  display:grid;
-  gap:8px;
-  margin-top:10px
-}
-
-.cart-item{
-  background:#0c0a09;
-  border:1px solid #292524;
-  border-radius:12px;
-  padding:10px
-}
-
-.cart-item-head{
-  display:flex;
-  justify-content:space-between;
-  gap:8px
-}
-
-.cart-item-name{
-  font-weight:900
-}
-
-.cart-item-meta{
-  font-size:11px;
-  color:#a8a29e;
-  margin-top:3px
-}
-
-.cart-item-actions{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  margin-top:8px
-}
-
-.mini{
-  padding:7px 10px;
-  font-size:11px
-}
-
-.cart-total{
-  display:flex;
-  justify-content:space-between;
-  font-size:17px;
-  font-weight:900;
-  margin-top:12px;
-  padding-top:12px;
-  border-top:1px solid #292524
-}
-
-.sale-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:10px
-}
-
-.sale-grid label{
-  display:block
-}
-
-.sale-grid input,
-.sale-grid select{
-  margin-top:5px;
-  width:100%;
-  background:#0c0a09;
-  color:#fff;
-  border:1px solid #44403c;
-  border-radius:12px;
-  padding:12px;
-  font-size:14px
-}
-
-.full{
-  grid-column:1/-1
-}
-
-.status-pill{
-  display:inline-block;
-  border-radius:999px;
-  padding:5px 8px;
-  font-size:10px;
-  font-weight:900
-}
-
-.paid{
-  background:#052e1b;
-  color:#6ee7b7
-}
-
-.pending{
-  background:#2a1705;
-  color:#fde68a
-}
-
-/* =========================
-   HISTÓRICO DE VENDAS
-========================= */
-
-.sales-toolbar{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:10px
-}
-
-.sales-toolbar button{
-  width:100%
-}
-
-.sale-history-item{
-  background:#0c0a09;
-  border:1px solid #292524;
-  border-radius:14px;
-  padding:12px
-}
-
-.sale-history-item + .sale-history-item{
-  margin-top:8px
-}
-
-.sale-history-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px
-}
-
-.sale-number{
-  font-size:16px;
-  font-weight:900
-}
-
-.sale-date{
-  font-size:10px;
-  color:#78716c;
-  margin-top:3px
-}
-
-.sale-history-total{
-  font-size:16px;
-  font-weight:900;
-  text-align:right
-}
-
-.sale-history-meta{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-top:10px
-}
-
-.sale-history-meta span{
-  background:#1c1917;
-  border:1px solid #292524;
-  border-radius:999px;
-  padding:5px 8px;
-  color:#d6d3d1;
-  font-size:10px;
-  font-weight:800
-}
-
-.sale-products-preview{
-  color:#d6d3d1;
-  font-size:11px;
-  line-height:1.5;
-  margin-top:9px
-}
-
-.sale-history-item button{
-  width:100%;
-  margin-top:10px
-}
-
-#saleHistoryCard{
-  display:none
-}
-
-#saleHistoryCard.show{
-  display:block
-}
-
-.sale-details{
-  margin-top:10px;
-  border-top:1px solid #292524;
-  padding-top:10px
-}
-
-.sale-detail-row{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  padding:5px 0;
-  font-size:12px
-}
-
-.sale-detail-row strong{
-  text-align:right
-}
-
-.sale-detail-products{
-  margin-top:10px
-}
-
-.sale-detail-product{
-  background:#171412;
-  border:1px solid #292524;
-  border-radius:10px;
-  padding:9px;
-  margin-top:7px
-}
-
-.sale-detail-product-name{
-  font-weight:900;
-  font-size:12px
-}
-
-.sale-detail-product-meta{
-  color:#a8a29e;
-  font-size:10px;
-  margin-top:3px;
-  line-height:1.5
-}
-
-.sale-success{
-  position:fixed;
-  inset:0;
-  background:#000b;
-  z-index:30;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px
-}
-
-.sale-success.show{
-  display:flex
-}
-
-.sale-success-box{
-  width:min(100%,400px);
-  background:#171412;
-  border:1px solid #065f46;
-  border-radius:20px;
-  padding:22px;
-  text-align:center;
-  box-shadow:0 20px 60px #0008
-}
-
-.sale-success-icon{
-  font-size:48px;
-  margin-bottom:8px
-}
-
-.sale-success-title{
-  font-size:21px;
-  font-weight:900
-}
-
-.sale-success-number{
-  font-size:28px;
-  font-weight:900;
-  margin:12px 0;
-  color:#6ee7b7
-}
-
-.sale-success-total{
-  font-size:18px;
-  font-weight:900
-}
-
-.sale-success-info{
-  color:#a8a29e;
-  font-size:12px;
-  margin-top:6px
-}
-
-.sale-success-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:18px
-}
-
-@media(max-width:380px){
-  .stats{
-    grid-template-columns:1fr
-  }
-
-  .variation-grid,
-  .sale-grid,
-  .sales-toolbar{
-    grid-template-columns:1fr
-  }
-}
+body{margin:0;background:#0c0a09;color:#f5f5f4;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+main{width:min(100%,520px);margin:auto;padding:16px}
+header{padding:16px;border-bottom:1px solid #292524;background:#090807;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+.brand{font-weight:900;letter-spacing:.12em}.sub{font-size:10px;color:#ef4444;font-weight:800;letter-spacing:.18em;text-transform:uppercase;margin-top:2px}
+.dot{width:11px;height:11px;border-radius:50%;background:#f59e0b}.dot.ok{background:#10b981}.dot.err{background:#ef4444}
+.card{background:#171412;border:1px solid #292524;border-radius:18px;padding:14px;margin-bottom:14px;box-shadow:0 12px 30px #0005}
+h2{font-size:18px;margin:0 0 10px}.muted{color:#a8a29e;font-size:12px}.status{min-height:22px;text-align:center;color:#a8a29e;font-size:12px;margin:8px 0 14px}
+#reader{width:100%;overflow:hidden;border-radius:14px;background:#0c0a09;min-height:40px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+button{border:0;border-radius:12px;padding:13px 12px;font-weight:900;font-size:13px;cursor:pointer}
+.primary{background:#b91c1c;color:#fff}.secondary{background:#292524;color:#e7e5e4}.danger{background:#3f1d1d;color:#fecaca}
+input{width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:13px;font-size:16px;outline:none}
+input:focus{border-color:#dc2626}
+.lookup{display:flex;gap:8px}.lookup input{flex:1}.lookup button{width:110px}
+.product{display:none}.product.show{display:block}
+.badge{display:inline-block;background:#052e1b;color:#6ee7b7;border:1px solid #065f46;border-radius:8px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.title{font-size:21px;font-weight:900;margin:12px 0 4px}.sku{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#78716c}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0}.stat{background:#0c0a09;border:1px solid #292524;border-radius:12px;padding:10px;text-align:center}.stat small{display:block;color:#78716c;text-transform:uppercase;font-size:9px;font-weight:800}.stat b{display:block;margin-top:3px}
+.qty{display:flex;align-items:center;justify-content:space-between;background:#0c0a09;border:1px solid #292524;border-radius:14px;padding:8px;margin:12px 0}.qty button{width:50px;height:48px;padding:0;font-size:22px;background:#292524;color:#fff}.qty input{width:80px;text-align:center;border:0;background:transparent;font-size:22px;font-weight:900}
+.variation-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.variation label{display:block;margin-bottom:6px}.variation select{width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:13px;font-size:15px;outline:none}.variation select:focus{border-color:#dc2626}.variant-stock{font-size:11px;color:#a8a29e;margin-top:6px}.variant-stock strong{color:#6ee7b7}
+.notice{background:#2a1705;border:1px solid #854d0e;color:#fde68a;border-radius:12px;padding:10px;font-size:11px;line-height:1.45}
+.hidden{display:none!important}
+.order-list{display:grid;gap:10px}.order-item{background:#0c0a09;border:1px solid #292524;border-radius:14px;padding:12px}.order-head{display:flex;justify-content:space-between;gap:8px;align-items:center}.order-ref{font:11px ui-monospace,SFMono-Regular,Menlo,monospace;color:#a8a29e}.order-total{font-weight:900}.order-customer{font-weight:800;margin:6px 0}.order-items{font-size:11px;color:#d6d3d1;line-height:1.5}.order-item button{width:100%;margin-top:10px}.new-order{border-color:#b91c1c;box-shadow:0 0 0 1px #b91c1c55}
+#loginBox{position:fixed;inset:0;background:#000b;z-index:20;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{width:min(100%,400px);background:#171412;border:1px solid #44403c;border-radius:18px;padding:18px}
+.modal h3{margin:0 0 8px}.modal p{font-size:12px;color:#a8a29e}.modal button{width:100%;margin-top:10px}
+.success{color:#6ee7b7}.error{color:#fca5a5}
+.cart-list{display:grid;gap:8px;margin-top:10px}.cart-item{background:#0c0a09;border:1px solid #292524;border-radius:12px;padding:10px}.cart-item-head{display:flex;justify-content:space-between;gap:8px}.cart-item-name{font-weight:900}.cart-item-meta{font-size:11px;color:#a8a29e;margin-top:3px}.cart-item-actions{display:flex;align-items:center;gap:6px;margin-top:8px}.mini{padding:7px 10px;font-size:11px}.cart-total{display:flex;justify-content:space-between;font-size:17px;font-weight:900;margin-top:12px;padding-top:12px;border-top:1px solid #292524}.sale-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.sale-grid label{display:block}.sale-grid input,.sale-grid select{margin-top:5px;width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:12px;font-size:14px}.full{grid-column:1/-1}.status-pill{display:inline-block;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900}.paid{background:#052e1b;color:#6ee7b7}.pending{background:#2a1705;color:#fde68a}
 </style>
-
 <link rel="manifest" href="./manifest.json">
-
 <meta name="theme-color" content="#0c0a09">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="STUDIO 70 PDV">
 </head>
-
 <body>
-
 <header>
-  <div>
-    <div class="brand">STUDIO 70</div>
-    <div class="sub">PDV Móvel</div>
-  </div>
-
+  <div><div class="brand">STUDIO 70</div><div class="sub">PDV Móvel</div></div>
   <div id="connectionStatus" class="dot"></div>
 </header>
 
 <main>
-
-  <!-- LEITURA -->
   <div class="card">
-
     <h2>Leitura do produto</h2>
-
     <div id="reader"></div>
-
     <div class="grid">
       <button class="primary" onclick="startScanner()">📷 ABRIR CÂMERA</button>
       <button class="secondary" onclick="stopScanner()">⏸ PAUSAR</button>
     </div>
-
-    <div id="status" class="status">
-      Carregando estoque do fornecedor...
-    </div>
-
+    <div id="status" class="status">Carregando estoque do fornecedor...</div>
     <div class="lookup">
-      <input
-        id="codeInput"
-        inputmode="text"
-        autocomplete="off"
-        placeholder="Código de barras ou SKU">
+      <input id="codeInput" inputmode="text" autocomplete="off" placeholder="Código de barras ou SKU">
       <button class="secondary" onclick="lookupProduct()">BUSCAR</button>
     </div>
-
   </div>
 
-  <!-- PRODUTO -->
   <div id="productCard" class="card product">
-
     <span class="badge">Item identificado</span>
-
     <div id="productName" class="title">Produto</div>
-
     <div id="productSku" class="sku">SKU: —</div>
     <div id="productBarcode" class="sku">EAN: —</div>
 
     <div class="stats">
-
-      <div class="stat">
-        <small>Preço</small>
-        <b id="productPrice">R$ 0,00</b>
-      </div>
-
-      <div class="stat">
-        <small>Estoque total</small>
-        <b id="productStock">0</b>
-      </div>
-
-      <div class="stat">
-        <small>Variação</small>
-        <b id="productSpecs">—</b>
-      </div>
-
+      <div class="stat"><small>Preço</small><b id="productPrice">R$ 0,00</b></div>
+      <div class="stat"><small>Estoque total</small><b id="productStock">0</b></div>
+      <div class="stat"><small>Variação</small><b id="productSpecs">—</b></div>
     </div>
 
     <div class="variation-grid">
-
       <div class="variation">
         <label class="muted" for="sizeSelect">Tamanho</label>
-        <select id="sizeSelect">
-          <option value="">Selecione</option>
-        </select>
+        <select id="sizeSelect"><option value="">Selecione</option></select>
       </div>
-
       <div class="variation">
         <label class="muted" for="colorSelect">Cor</label>
-        <select id="colorSelect">
-          <option value="">Selecione</option>
-        </select>
+        <select id="colorSelect"><option value="">Selecione</option></select>
       </div>
-
     </div>
-
     <div id="variantStock" class="variant-stock"></div>
 
     <label class="muted">Quantidade da venda</label>
-
     <div class="qty">
       <button onclick="changeQty(-1)">−</button>
       <input id="qty" type="number" min="1" value="1">
       <button onclick="changeQty(1)">+</button>
     </div>
 
-    <button
-      class="primary"
-      style="width:100%"
-      onclick="addCurrentToCart()">
-      ➕ ADICIONAR À VENDA
-    </button>
-
+    <button class="primary" style="width:100%" onclick="addCurrentToCart()">➕ ADICIONAR À VENDA</button>
   </div>
 
-  <!-- VENDA ATUAL -->
   <div class="card">
-
     <div class="order-head">
       <h2>🛒 Venda atual</h2>
       <span id="cartCount" class="badge">0 itens</span>
     </div>
-
-    <div id="cartList" class="cart-list">
-      <div class="muted">
-        Nenhum produto adicionado.
-      </div>
-    </div>
-
-    <div class="cart-total">
-      <span>Subtotal</span>
-      <span id="cartSubtotal">R$ 0,00</span>
-    </div>
-
+    <div id="cartList" class="cart-list"><div class="muted">Nenhum produto adicionado.</div></div>
+    <div class="cart-total"><span>Subtotal</span><span id="cartSubtotal">R$ 0,00</span></div>
     <div class="sale-grid">
-
-      <label>
-        Desconto (R$)
-        <input
-          id="saleDiscount"
-          type="number"
-          min="0"
-          step="0.01"
-          value="0"
-          oninput="renderCart()">
-      </label>
-
-      <label>
-        Total
-        <input
-          id="saleTotal"
-          type="text"
-          value="R$ 0,00"
-          readonly>
-      </label>
-
-      <label>
-        Forma de pagamento
-        <select id="paymentMethod">
-          <option value="dinheiro">Dinheiro</option>
-          <option value="pix">PIX</option>
-          <option value="cartao">Cartão</option>
-        </select>
-      </label>
-
-      <label>
-        Status do pagamento
-        <select id="paymentStatus">
-          <option value="paid">Pago</option>
-          <option value="pending_payment">Aguardando pagamento</option>
-        </select>
-      </label>
-
+      <label>Desconto (R$)<input id="saleDiscount" type="number" min="0" step="0.01" value="0" oninput="renderCart()"></label>
+      <label>Total<input id="saleTotal" type="text" value="R$ 0,00" readonly></label>
+      <label>Forma de pagamento<select id="paymentMethod"><option value="dinheiro">Dinheiro</option><option value="pix">PIX</option><option value="cartao">Cartão</option></select></label>
+      <label>Status do pagamento<select id="paymentStatus"><option value="paid">Pago</option><option value="pending_payment">Aguardando pagamento</option></select></label>
     </div>
-
-    <button
-      class="primary full"
-      style="width:100%;margin-top:10px"
-      onclick="finishSale()">
-      ⚡ FINALIZAR VENDA
-    </button>
-
+    <button class="primary full" style="width:100%;margin-top:10px" onclick="finishSale()">⚡ FINALIZAR VENDA</button>
   </div>
 
-  <!-- =========================
-       VENDAS REALIZADAS
-  ========================== -->
-
-  <div class="card">
-
+  <div class="card" id="salesHistoryCard">
     <div class="order-head">
-
-      <h2>🧾 Vendas realizadas</h2>
-
-      <span id="salesTodayBadge" class="badge">
-        0 hoje
-      </span>
-
+      <h2>🧾 VENDAS REALIZADAS</h2>
+      <button class="secondary" onclick="loadSalesHistory()">↻ ATUALIZAR</button>
     </div>
-
-    <div class="muted">
-      Consulte as vendas registradas no Supabase.
-    </div>
-
-    <div class="sales-toolbar">
-
-      <button
-        class="primary"
-        onclick="toggleSalesHistory()">
-        🧾 ABRIR VENDAS
-      </button>
-
-      <button
-        class="secondary"
-        onclick="loadSalesHistory()">
-        🔄 ATUALIZAR
-      </button>
-
-    </div>
-
+    <div id="salesHistoryStatus" class="status">Carregando vendas de hoje...</div>
+    <div id="salesHistoryList" class="order-list"></div>
   </div>
 
-  <div class="card" id="saleHistoryCard">
-
-    <div class="order-head">
-
-      <h2>Histórico</h2>
-
-      <span
-        id="salesHistoryCount"
-        class="badge">
-        0 vendas
-      </span>
-
-    </div>
-
-    <div
-      id="salesHistoryStatus"
-      class="status">
-      Carregando vendas...
-    </div>
-
-    <div
-      id="salesHistoryList"
-      class="order-list">
-    </div>
-
-  </div>
-
-  <!-- PEDIDOS DA LOJA -->
   <div class="card" id="storeOrdersCard">
-
     <div class="order-head">
-
       <h2>🔔 Pedidos da loja</h2>
-
-      <span id="ordersBadge" class="badge">
-        0 novos
-      </span>
-
+      <span id="ordersBadge" class="badge">0 novos</span>
     </div>
-
-    <div
-      id="ordersStatus"
-      class="status">
-      Atualizando pedidos...
-    </div>
-
-    <div
-      id="storeOrderList"
-      class="order-list">
-    </div>
-
+    <div id="ordersStatus" class="status">Atualizando pedidos...</div>
+    <div id="storeOrderList" class="order-list"></div>
   </div>
 
   <div class="card">
-
     <div class="notice">
-
       O PDV consulta o estoque do fornecedor no Supabase e a baixa é feita no servidor.
-
       O acesso usa a senha administrativa do PDV; ela não fica gravada no HTML.
-
-      <br><br>
-
-      O histórico de vendas consulta os registros da tabela
-      <strong>public.pdv_sales</strong> através do servidor.
-
     </div>
-
   </div>
-
 </main>
 
-<!-- LOGIN -->
-
 <div id="loginBox">
-
   <div class="modal">
-
     <h3>Acesso ao PDV</h3>
-
-    <p>
-      Digite a mesma senha usada para acessar o painel administrativo.
-    </p>
-
-    <input
-      id="pdvPassword"
-      type="password"
-      inputmode="numeric"
-      autocomplete="current-password"
-      placeholder="Senha do PDV">
-
-    <button
-      class="primary"
-      onclick="unlockPdv()">
-      ENTRAR NO PDV
-    </button>
-
-    <div
-      id="loginError"
-      class="status error">
-    </div>
-
+    <p>Digite a mesma senha usada para acessar o painel administrativo.</p>
+    <input id="pdvPassword" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Senha do PDV">
+    <button class="primary" onclick="unlockPdv()">ENTRAR NO PDV</button>
+    <div id="loginError" class="status error"></div>
   </div>
-
-</div>
-
-<!-- CONFIRMAÇÃO DA VENDA -->
-
-<div id="saleSuccessModal" class="sale-success">
-
-  <div class="sale-success-box">
-
-    <div class="sale-success-icon">✅</div>
-
-    <div class="sale-success-title">
-      VENDA REALIZADA
-    </div>
-
-    <div
-      id="successSaleNumber"
-      class="sale-success-number">
-      #000000
-    </div>
-
-    <div
-      id="successSaleTotal"
-      class="sale-success-total">
-      R$ 0,00
-    </div>
-
-    <div
-      id="successSalePayment"
-      class="sale-success-info">
-      PIX · PAGO
-    </div>
-
-    <div class="sale-success-actions">
-
-      <button
-        class="secondary"
-        onclick="closeSaleSuccess()">
-        FECHAR
-      </button>
-
-      <button
-        class="primary"
-        onclick="openLastSaleDetails()">
-        VER VENDA
-      </button>
-
-    </div>
-
-  </div>
-
 </div>
 
 <script>
-
-const API =
-'https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler';
-
+const API = 'https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler';
 let scanner = null;
 let scanning = false;
 let activeProduct = null;
 let saleCart = [];
-
-let adminPassword =
-sessionStorage.getItem('studio70_pdv_password') || '';
-
+let adminPassword = sessionStorage.getItem('studio70_pdv_password') || '';
 let pendingStoreOrders = new Map();
 let ordersPollTimer = null;
 let lastOrderSnapshot = new Set();
-
 let audioContext = null;
 
-let salesHistory = [];
-let lastCompletedSale = null;
-
 const $ = id => document.getElementById(id);
+const money = n => Number(n || 0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 
-const money = n =>
-Number(n || 0).toLocaleString(
-'pt-BR',
-{
-  style:'currency',
-  currency:'BRL'
-});
-
-function setStatus(text,type=''){
-
+function setStatus(text, type=''){
   $('status').textContent=text;
-
-  $('status').className =
-  'status '+
-  (
-    type==='success'
-    ? 'success'
-    : type==='error'
-    ? 'error'
-    : ''
-  );
+  $('status').className='status '+(type==='success'?'success':type==='error'?'error':'');
 }
+function apiError(data, fallback){ return String(data?.error || data?.message || fallback || 'Erro desconhecido.'); }
 
-function apiError(data,fallback){
-
-  return String(
-    data?.error ||
-    data?.message ||
-    fallback ||
-    'Erro desconhecido.'
-  );
-
-}
-
-async function api(action,body={}){
-
-  const r = await fetch(
-    API,
-    {
-      method:'POST',
-      mode:'cors',
-      headers:{
-        'Content-Type':'application/json',
-        'Accept':'application/json'
-      },
-      body:JSON.stringify({
-        action,
-        ...body
-      })
-    }
-  );
-
-  const text = await r.text();
-
+async function api(action, body={}){
+  const r=await fetch(API,{
+    method:'POST',
+    mode:'cors',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify({action,...body})
+  });
+  const text=await r.text();
   let data={};
-
-  try{
-    data=text ? JSON.parse(text) : {};
-  }catch{
-    throw new Error(
-      `Resposta inválida da API (HTTP ${r.status}).`
-    );
-  }
-
-  if(!r.ok){
-
-    throw new Error(
-      apiError(
-        data,
-        `API HTTP ${r.status}`
-      )
-    );
-
-  }
-
+  try{data=text?JSON.parse(text):{};}catch{throw new Error(`Resposta inválida da API (HTTP ${r.status}).`);}
+  if(!r.ok) throw new Error(apiError(data,`API HTTP ${r.status}`));
   return data;
 }
 
-/* =========================
-   LOGIN
-========================= */
-
 async function unlockPdv(){
-
-  const value =
-  $('pdvPassword').value.trim();
-
-  if(!value){
-
-    $('loginError').textContent =
-    'Digite a senha.';
-
-    return;
-  }
-
+  const value=$('pdvPassword').value.trim();
+  if(!value){$('loginError').textContent='Digite a senha.';return;}
   $('loginError').textContent='';
-
   try{
-
-    const data =
-    await api(
-      'carmenatto_sync_history',
-      {
-        admin_password:value,
-        limit:1
-      }
-    );
-
-    if(!data.ok)
-      throw new Error('Senha recusada.');
-
+    // Ação administrativa simples para validar a senha sem alterar dados.
+    const data=await api('carmenatto_sync_history',{admin_password:value,limit:1});
+    if(!data.ok) throw new Error('Senha recusada.');
     adminPassword=value;
-
-    sessionStorage.setItem(
-      'studio70_pdv_password',
-      value
-    );
-
-    $('loginBox')
-      .classList
-      .add('hidden');
-
-    $('connectionStatus')
-      .classList
-      .add('ok');
-
-    setStatus(
-      'PDV autorizado. Carregando estoque...'
-    );
-
+    sessionStorage.setItem('studio70_pdv_password',value);
+    $('loginBox').classList.add('hidden');
+    $('connectionStatus').classList.add('ok');
+    setStatus('PDV autorizado. Carregando estoque...');
     loadInitialProductCount();
-
   }catch(e){
-
-    $('loginError').textContent =
-    e.message ||
-    'Senha inválida.';
-
+    $('loginError').textContent=e.message || 'Senha inválida.';
   }
-
 }
-
-/* =========================
-   ESTOQUE
-========================= */
 
 async function loadInitialProductCount(){
-
   try{
-
-    const d =
-    await api(
-      'carmenatto_products',
-      {
-        limit:2000
-      }
-    );
-
-    const count =
-    Array.isArray(d.products)
-    ? d.products.length
-    : 0;
-
-    setStatus(
-      `${count} produtos disponíveis para consulta. Pronto para bipar.`,
-      'success'
-    );
-
+    const d=await api('carmenatto_products',{limit:2000});
+    const count=Array.isArray(d.products)?d.products.length:0;
+    setStatus(`${count} produtos disponíveis para consulta. Pronto para bipar.`,'success');
   }catch(e){
-
-    setStatus(
-      'Falha ao carregar estoque: '+
-      e.message,
-      'error'
-    );
-
+    setStatus('Falha ao carregar estoque: '+e.message,'error');
   }
-
 }
 
-/* =========================
-   BUSCA PRODUTO
-========================= */
-
 async function lookupProduct(code){
-
-  code =
-  String(
-    code ??
-    $('codeInput').value
-  ).trim();
-
-  if(!code){
-
-    setStatus(
-      'Digite ou leia um código.',
-      'error'
-    );
-
-    return;
-  }
-
-  setStatus(
-    'Consultando produto...'
-  );
-
+  code=String(code ?? $('codeInput').value).trim();
+  if(!code){setStatus('Digite ou leia um código.','error');return;}
+  setStatus('Consultando produto...');
   try{
+    const d=await api('pdv_product',{code});
 
-    const d =
-    await api(
-      'pdv_product',
-      {
-        code
-      }
-    );
-
-    if(
-      d &&
-      d.found &&
-      d.product
-    ){
-
+    // O backend pode devolver found=true mesmo que algum campo visual
+    // (EAN, SKU ou preço) esteja vazio. Nunca trate EAN ausente como
+    // produto inexistente.
+    if(d && d.found && d.product){
       activeProduct=d.product;
-
       renderProduct();
-
-      setStatus(
-        'Produto identificado no Supabase. Confira a quantidade.',
-        'success'
-      );
-
+      setStatus('Produto identificado no Supabase. Confira a quantidade.','success');
       return;
     }
 
-    const msg =
-    String(
-      d?.error ||
-      d?.message ||
-      ''
-    ).trim();
-
-    throw new Error(
-      msg ||
-      'Produto não encontrado para este código.'
-    );
-
+    const msg=String(d?.error || d?.message || '').trim();
+    throw new Error(msg || 'Produto não encontrado para este código.');
   }catch(e){
-
     activeProduct=null;
-
-    $('productCard')
-      .classList
-      .remove('show');
-
-    setStatus(
-      e.message ||
-      'Erro ao consultar produto.',
-      'error'
-    );
-
+    $('productCard').classList.remove('show');
+    setStatus(e.message || 'Erro ao consultar produto.','error');
   }
-
 }
-
-/* =========================
-   VARIAÇÕES
-========================= */
 
 function asVariationLabel(v){
-
   if(v==null)return '';
-
-  if(
-    typeof v==='string' ||
-    typeof v==='number'
-  )
-    return String(v).trim();
-
-  return String(
-    v.name ??
-    v.label ??
-    v.value ??
-    v.color ??
-    v.size ??
-    ''
-  ).trim();
-
+  if(typeof v==='string'||typeof v==='number')return String(v).trim();
+  return String(v.name ?? v.label ?? v.value ?? v.color ?? v.size ?? '').trim();
 }
-
 function variationList(value){
-
-  if(Array.isArray(value))
-    return value
-      .map(asVariationLabel)
-      .filter(Boolean);
-
-  if(
-    value &&
-    typeof value==='object'
-  )
-    return Object.values(value)
-      .map(asVariationLabel)
-      .filter(Boolean);
-
-  const text =
-  String(value||'').trim();
-
-  return text
-    ?
-    text
-      .split(/\s*,\s*|\s*\/\s*/)
-      .map(x=>x.trim())
-      .filter(Boolean)
-    :
-    [];
+  if(Array.isArray(value))return value.map(asVariationLabel).filter(Boolean);
+  if(value && typeof value==='object')return Object.values(value).map(asVariationLabel).filter(Boolean);
+  const text=String(value||'').trim();
+  return text ? text.split(/\s*,\s*|\s*\/\s*/).map(x=>x.trim()).filter(Boolean) : [];
 }
-
 function getVariantStockList(p){
-
   const raw=p?.raw||{};
-
-  const list =
-  raw.variant_stock ??
-  p?.variant_stock ??
-  [];
-
-  return Array.isArray(list)
-    ?
-    list
-      .map(v=>({
-        size:asVariationLabel(v?.size),
-        color:asVariationLabel(v?.color),
-        stock:
-        Math.max(
-          0,
-          Math.trunc(
-            Number(v?.stock||0)
-          )
-        )
-      }))
-      .filter(
-        v=>v.size||v.color
-      )
-    :
-    [];
+  const list=raw.variant_stock ?? p?.variant_stock ?? [];
+  return Array.isArray(list) ? list.map(v=>({size:asVariationLabel(v?.size),color:asVariationLabel(v?.color),stock:Math.max(0,Math.trunc(Number(v?.stock||0)))})).filter(v=>v.size||v.color) : [];
 }
-
 function selectedVariantStock(){
-
-  const p=activeProduct;
-
-  if(!p)
-    return Number.MAX_SAFE_INTEGER;
-
-  const size =
-  $('sizeSelect').value.trim();
-
-  const color =
-  $('colorSelect').value.trim();
-
-  const list =
-  getVariantStockList(p);
-
-  if(!list.length)
-    return Number(p.stock||0);
-
-  const exact =
-  list.find(
-    v=>
-    (!v.size||v.size===size) &&
-    (!v.color||v.color===color)
-  );
-
-  if(exact)
-    return exact.stock;
-
-  const candidates =
-  list.filter(
-    v=>
-    (!size||!v.size||v.size===size) &&
-    (!color||!v.color||v.color===color)
-  );
-
-  if(candidates.length)
-    return Math.min(
-      ...candidates.map(
-        v=>v.stock
-      )
-    );
-
+  const p=activeProduct;if(!p)return Number.MAX_SAFE_INTEGER;
+  const size=$('sizeSelect').value.trim(), color=$('colorSelect').value.trim();
+  const list=getVariantStockList(p);
+  if(!list.length)return Number(p.stock||0);
+  const exact=list.find(v=>(!v.size||v.size===size)&&(!v.color||v.color===color));
+  if(exact)return exact.stock;
+  const candidates=list.filter(v=>(!size||!v.size||v.size===size)&&(!color||!v.color||v.color===color));
+  if(candidates.length)return Math.min(...candidates.map(v=>v.stock));
   return Number(p.stock||0);
-
 }
-
 function updateVariationState(){
-
   if(!activeProduct)return;
-
-  const size =
-  $('sizeSelect').value.trim();
-
-  const color =
-  $('colorSelect').value.trim();
-
-  const labels =
-  [size,color].filter(Boolean);
-
-  $('productSpecs').textContent =
-  labels.length
-  ?
-  labels.join(' / ')
-  :
-  'Selecione';
-
-  const available =
-  selectedVariantStock();
-
-  $('variantStock').innerHTML =
-  labels.length
-  ?
-  `Estoque desta variação: <strong>${available} un</strong>`
-  :
-  'Selecione tamanho e/ou cor para conferir a variação.';
-
+  const size=$('sizeSelect').value.trim(), color=$('colorSelect').value.trim();
+  const labels=[size,color].filter(Boolean);
+  $('productSpecs').textContent=labels.length?labels.join(' / '):'Selecione';
+  const available=selectedVariantStock();
+  $('variantStock').innerHTML=labels.length ? `Estoque desta variação: <strong>${available} un</strong>` : 'Selecione tamanho e/ou cor para conferir a variação.';
   const qty=$('qty');
-
-  let n =
-  Math.max(
-    1,
-    Math.trunc(
-      Number(qty.value||1)
-    )
-  );
-
-  const max =
-  Math.max(
-    0,
-    Number(available||0)
-  );
-
-  if(max>0)
-    n=Math.min(n,max);
-
+  let n=Math.max(1,Math.trunc(Number(qty.value||1)));
+  const max=Math.max(0,Number(available||0));
+  if(max>0)n=Math.min(n,max);
   qty.value=n;
-
 }
-
-function populateVariationSelect(
-  id,
-  values
-){
-
-  const el=$(id);
-
-  el.innerHTML =
-  '<option value="">Selecione</option>';
-
-  values.forEach(v=>{
-
-    const o =
-    document.createElement('option');
-
-    o.value=v;
-    o.textContent=v;
-
-    el.appendChild(o);
-
-  });
-
+function populateVariationSelect(id, values){
+  const el=$(id);el.innerHTML='<option value="">Selecione</option>';
+  values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o);});
 }
-
 function renderProduct(){
-
   const p=activeProduct;
-
-  $('productName').textContent =
-  p.name ||
-  'Produto';
-
-  $('productSku').textContent =
-  'STUDIO 70: '+
-  (p.studio70_code || '—')+
-  '  |  SKU: '+
-  (p.sku || '—');
-
-  $('productBarcode').textContent =
-  'EAN: '+
-  (
-    p.barcode
-    ?
-    p.barcode
-    :
-    'não cadastrado (produto encontrado)'
-  );
-
-  $('productPrice').textContent =
-  Number(p.price||0)>0
-  ?
-  money(p.price)
-  :
-  'Preço não cadastrado';
-
-  $('productStock').textContent =
-  String(
-    Number(p.stock||0)
-  )+
-  ' un';
-
-  const sizes =
-  variationList(p.sizes);
-
-  const colors =
-  variationList(p.colors);
-
-  populateVariationSelect(
-    'sizeSelect',
-    sizes
-  );
-
-  populateVariationSelect(
-    'colorSelect',
-    colors
-  );
-
-  $('variantStock').textContent =
-  (
-    sizes.length ||
-    colors.length
-  )
-  ?
-  'Selecione tamanho e/ou cor.'
-  :
-  '';
-
-  $('productSpecs').textContent =
-  (
-    sizes.length ||
-    colors.length
-  )
-  ?
-  'Selecione'
-  :
-  'Único';
-
+  $('productName').textContent=p.name || 'Produto';
+  $('productSku').textContent='STUDIO 70: '+(p.studio70_code || '—')+'  |  SKU: '+(p.sku || '—');
+  $('productBarcode').textContent='EAN: '+(p.barcode ? p.barcode : 'não cadastrado (produto encontrado)');
+  $('productPrice').textContent=Number(p.price||0)>0 ? money(p.price) : 'Preço não cadastrado';
+  $('productStock').textContent=String(Number(p.stock||0))+' un';
+  const sizes=variationList(p.sizes);
+  const colors=variationList(p.colors);
+  populateVariationSelect('sizeSelect',sizes);
+  populateVariationSelect('colorSelect',colors);
+  $('variantStock').textContent=(sizes.length||colors.length)?'Selecione tamanho e/ou cor.':'';
+  $('productSpecs').textContent=(sizes.length||colors.length)?'Selecione':'Único';
   $('qty').value=1;
-
-  $('productCard')
-    .classList
-    .add('show');
-
+  $('productCard').classList.add('show');
   updateVariationState();
-
 }
 
 function changeQty(delta){
-
   const input=$('qty');
-
-  let n =
-  Math.trunc(
-    Number(input.value||1)
-  )+
-  delta;
-
+  let n=Math.trunc(Number(input.value||1))+delta;
   n=Math.max(1,n);
-
   if(activeProduct){
-
-    const max =
-    selectedVariantStock();
-
-    n =
-    Math.min(
-      n,
-      Math.max(
-        1,
-        Number(
-          max ||
-          activeProduct.stock ||
-          0
-        )
-      )
-    );
-
+    const max=selectedVariantStock();
+    n=Math.min(n,Math.max(1,Number(max||activeProduct.stock||0)));
   }
-
   input.value=n;
-
 }
-
-/* =========================
-   CARRINHO
-========================= */
 
 function addCurrentToCart(){
-
-  if(!activeProduct){
-
-    setStatus(
-      'Nenhum produto selecionado.',
-      'error'
-    );
-
-    return;
-  }
-
-  const qty =
-  Math.max(
-    1,
-    Math.trunc(
-      Number(
-        $('qty').value||1
-      )
-    )
-  );
-
-  const stock =
-  Number(
-    activeProduct.stock||0
-  );
-
-  const size =
-  $('sizeSelect').value.trim();
-
-  const color =
-  $('colorSelect').value.trim();
-
-  const hasSizes =
-  variationList(
-    activeProduct.sizes
-  ).length>0;
-
-  const hasColors =
-  variationList(
-    activeProduct.colors
-  ).length>0;
-
-  if(hasSizes && !size){
-
-    setStatus(
-      'Selecione o tamanho antes de adicionar.',
-      'error'
-    );
-
-    return;
-  }
-
-  if(hasColors && !color){
-
-    setStatus(
-      'Selecione a cor antes de adicionar.',
-      'error'
-    );
-
-    return;
-  }
-
-  const variantStock =
-  selectedVariantStock();
-
-  if(qty>stock){
-
-    setStatus(
-      `Estoque total insuficiente. Disponível: ${stock} unidade(s).`,
-      'error'
-    );
-
-    return;
-  }
-
-  if(qty>variantStock){
-
-    setStatus(
-      `Estoque da variação insuficiente. Disponível: ${variantStock} unidade(s).`,
-      'error'
-    );
-
-    return;
-  }
-
-  const key =
-  [
-    String(
-      activeProduct.id ||
-      activeProduct.sku ||
-      activeProduct.barcode ||
-      activeProduct.name
-    ),
-    size,
-    color
-  ].join('|');
-
-  const existing =
-  saleCart.find(
-    i=>i.key===key
-  );
-
-  const newQty =
-  (existing?.qty||0)+qty;
-
-  if(newQty>variantStock){
-
-    setStatus(
-      `A quantidade desta variação ultrapassa o estoque disponível (${variantStock}).`,
-      'error'
-    );
-
-    return;
-  }
-
-  const item={
-
-    key,
-
-    id:activeProduct.id,
-
-    studio70_code:
-    activeProduct.studio70_code,
-
-    external_id:
-    activeProduct.external_id,
-
-    sku:
-    activeProduct.sku,
-
-    barcode:
-    activeProduct.barcode,
-
-    name:
-    activeProduct.name,
-
-    size,
-    color,
-
-    variation:{
-      size,
-      color
-    },
-
-    qty:newQty,
-
-    unit:
-    Number(
-      activeProduct.price||0
-    )
-
-  };
-
-  if(existing)
-    Object.assign(
-      existing,
-      item
-    );
-  else
-    saleCart.push(item);
-
+  if(!activeProduct)return setStatus('Nenhum produto selecionado.','error');
+  const qty=Math.max(1,Math.trunc(Number($('qty').value||1)));
+  const stock=Number(activeProduct.stock||0);
+  const size=$('sizeSelect').value.trim();
+  const color=$('colorSelect').value.trim();
+  const hasSizes=variationList(activeProduct.sizes).length>0;
+  const hasColors=variationList(activeProduct.colors).length>0;
+  if(hasSizes && !size)return setStatus('Selecione o tamanho antes de adicionar.','error');
+  if(hasColors && !color)return setStatus('Selecione a cor antes de adicionar.','error');
+  const variantStock=selectedVariantStock();
+  if(qty>stock)return setStatus(`Estoque total insuficiente. Disponível: ${stock} unidade(s).`,'error');
+  if(qty>variantStock)return setStatus(`Estoque da variação insuficiente. Disponível: ${variantStock} unidade(s).`,'error');
+  const key=[String(activeProduct.id||activeProduct.sku||activeProduct.barcode||activeProduct.name),size,color].join('|');
+  const existing=saleCart.find(i=>i.key===key);
+  const newQty=(existing?.qty||0)+qty;
+  if(newQty>variantStock)return setStatus(`A quantidade desta variação ultrapassa o estoque disponível (${variantStock}).`,'error');
+  const item={key,id:activeProduct.id,studio70_code:activeProduct.studio70_code,external_id:activeProduct.external_id,sku:activeProduct.sku,barcode:activeProduct.barcode,name:activeProduct.name,size,color,variation:{size,color},qty:newQty,unit:Number(activeProduct.price||0)};
+  if(existing)Object.assign(existing,item); else saleCart.push(item);
   renderCart();
-
-  setStatus(
-    `✓ ${qty} unidade(s) de ${activeProduct.name} adicionada(s) à venda.`,
-    'success'
-  );
-
+  setStatus(`✓ ${qty} unidade(s) de ${activeProduct.name} adicionada(s) à venda.`,'success');
 }
-
-function cartSubtotal(){
-
-  return saleCart.reduce(
-    (sum,i)=>
-    sum+
-    (Number(i.unit)||0)*
-    (Number(i.qty)||0),
-    0
-  );
-
-}
-
+function cartSubtotal(){return saleCart.reduce((sum,i)=>sum+(Number(i.unit)||0)*(Number(i.qty)||0),0);}
 function renderCart(){
-
   const list=$('cartList');
-
-  const count =
-  saleCart.reduce(
-    (n,i)=>
-    n+
-    Number(i.qty||0),
-    0
-  );
-
-  $('cartCount').textContent =
-  `${count} ${count===1?'item':'itens'}`;
-
-  if(!saleCart.length){
-
-    list.innerHTML =
-    '<div class="muted">'+
-    'Nenhum produto adicionado. '+
-    'Busque um produto, escolha a variação e toque em “ADICIONAR À VENDA”.'+
-    '</div>';
-
-  }else{
-
-    list.innerHTML =
-    saleCart.map(
-      (i,idx)=>{
-
-        const spec =
-        [i.size,i.color]
-        .filter(Boolean)
-        .join(' / ');
-
-        return `
-        <div class="cart-item">
-
-          <div class="cart-item-head">
-
-            <div>
-
-              <div class="cart-item-name">
-                ${escapeHtml(i.name)}
-              </div>
-
-              <div class="cart-item-meta">
-                ${escapeHtml(i.sku||i.barcode||'Sem código')}
-                ${spec?' · '+escapeHtml(spec):''}
-              </div>
-
-            </div>
-
-            <strong>
-              ${money(i.unit*i.qty)}
-            </strong>
-
-          </div>
-
-          <div class="cart-item-actions">
-
-            <button
-              class="secondary mini"
-              onclick="changeCartQty(${idx},-1)">
-              −
-            </button>
-
-            <span
-              style="min-width:28px;text-align:center;font-weight:900">
-              ${i.qty}
-            </span>
-
-            <button
-              class="secondary mini"
-              onclick="changeCartQty(${idx},1)">
-              +
-            </button>
-
-            <button
-              class="danger mini"
-              style="margin-left:auto"
-              onclick="removeCartItem(${idx})">
-              REMOVER
-            </button>
-
-          </div>
-
-        </div>
-        `;
-
-      }
-    ).join('');
-
-  }
-
-  const sub =
-  cartSubtotal();
-
-  const discount =
-  Math.max(
-    0,
-    Number(
-      $('saleDiscount')?.value||0
-    )
-  );
-
-  const total =
-  Math.max(
-    0,
-    sub-discount
-  );
-
-  $('cartSubtotal').textContent =
-  money(sub);
-
-  $('saleTotal').value =
-  money(total);
-
+  const count=saleCart.reduce((n,i)=>n+Number(i.qty||0),0);
+  $('cartCount').textContent=`${count} ${count===1?'item':'itens'}`;
+  if(!saleCart.length){list.innerHTML='<div class="muted">Nenhum produto adicionado. Busque um produto, escolha a variação e toque em “ADICIONAR À VENDA”.</div>';}
+  else list.innerHTML=saleCart.map((i,idx)=>{
+    const spec=[i.size,i.color].filter(Boolean).join(' / ');
+    return `<div class="cart-item"><div class="cart-item-head"><div><div class="cart-item-name">${escapeHtml(i.name)}</div><div class="cart-item-meta">${escapeHtml(i.sku||i.barcode||'Sem código')}${spec?' · '+escapeHtml(spec):''}</div></div><strong>${money(i.unit*i.qty)}</strong></div><div class="cart-item-actions"><button class="secondary mini" onclick="changeCartQty(${idx},-1)">−</button><span style="min-width:28px;text-align:center;font-weight:900">${i.qty}</span><button class="secondary mini" onclick="changeCartQty(${idx},1)">+</button><button class="danger mini" style="margin-left:auto" onclick="removeCartItem(${idx})">REMOVER</button></div></div>`;
+  }).join('');
+  const sub=cartSubtotal();
+  const discount=Math.max(0,Number($('saleDiscount')?.value||0));
+  const total=Math.max(0,sub-discount);
+  $('cartSubtotal').textContent=money(sub);
+  $('saleTotal').value=money(total);
 }
-
-function escapeHtml(v){
-
-  return String(v??'')
-  .replace(
-    /[&<>"']/g,
-    m=>({
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;',
-      "'":'&#039;'
-    }[m])
-  );
-
-}
-
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
 function changeCartQty(index,delta){
-
-  const item=saleCart[index];
-
-  if(!item)return;
-
-  const max =
-  stockForCartItem(item);
-
-  const next =
-  Math.max(
-    1,
-    Number(item.qty)+delta
-  );
-
-  if(next>max){
-
-    setStatus(
-      `Estoque insuficiente. Disponível: ${max} unidade(s).`,
-      'error'
-    );
-
-    return;
-  }
-
-  item.qty=next;
-
-  renderCart();
-
+  const item=saleCart[index]; if(!item)return;
+  const max=stockForCartItem(item);
+  const next=Math.max(1,Number(item.qty)+delta);
+  if(next>max)return setStatus(`Estoque insuficiente. Disponível: ${max} unidade(s).`,'error');
+  item.qty=next; renderCart();
 }
-
 function stockForCartItem(item){
-
-  if(
-    activeProduct &&
-    String(activeProduct.id)===
-    String(item.id)
-  ){
-
+  if(activeProduct && String(activeProduct.id)===String(item.id)){
     const old=activeProduct;
-
-    const size=item.size||'';
-    const color=item.color||'';
-
-    const list =
-    getVariantStockList(old);
-
-    if(list.length){
-
-      const exact =
-      list.find(
-        v=>
-        (!v.size||v.size===size) &&
-        (!v.color||v.color===color)
-      );
-
-      if(exact)
-        return Number(
-          exact.stock||0
-        );
-
-    }
-
-    return Number(
-      old.stock||0
-    );
-
+    const size=item.size||'',color=item.color||'';
+    const list=getVariantStockList(old);
+    if(list.length){const exact=list.find(v=>(!v.size||v.size===size)&&(!v.color||v.color===color));if(exact)return Number(exact.stock||0);}
+    return Number(old.stock||0);
   }
-
-  return Number(
-    item.stock_snapshot||999999
-  );
-
+  return Number(item.stock_snapshot||999999);
 }
-
-function removeCartItem(index){
-
-  saleCart.splice(index,1);
-
-  renderCart();
-
-}
-
-/* =========================
-   FINALIZAR VENDA
-========================= */
-
+function removeCartItem(index){saleCart.splice(index,1);renderCart();}
 async function finishSale(){
-
-  if(!saleCart.length){
-
-    setStatus(
-      'Adicione pelo menos um produto à venda.',
-      'error'
-    );
-
-    return;
-  }
-
-  if(!adminPassword){
-
-    $('loginBox')
-      .classList
-      .remove('hidden');
-
-    return;
-  }
-
-  const subtotal =
-  Number(
-    cartSubtotal().toFixed(2)
-  );
-
-  const discount =
-  Math.max(
-    0,
-    Number(
-      $('saleDiscount').value||0
-    )
-  );
-
-  if(discount>subtotal){
-
-    setStatus(
-      'O desconto não pode ser maior que o subtotal.',
-      'error'
-    );
-
-    return;
-  }
-
-  const total =
-  Number(
-    Math.max(
-      0,
-      subtotal-discount
-    ).toFixed(2)
-  );
-
-  const paymentStatus =
-  $('paymentStatus').value;
-
-  const paymentMethod =
-  $('paymentMethod').value;
-
-  setStatus(
-    'Processando venda e baixando estoque...'
-  );
-
+  if(!saleCart.length)return setStatus('Adicione pelo menos um produto à venda.','error');
+  if(!adminPassword){$('loginBox').classList.remove('hidden');return;}
+  const subtotal=Number(cartSubtotal().toFixed(2));
+  const discount=Math.max(0,Number($('saleDiscount').value||0));
+  if(discount>subtotal)return setStatus('O desconto não pode ser maior que o subtotal.','error');
+  const total=Number(Math.max(0,subtotal-discount).toFixed(2));
+  const paymentStatus=$('paymentStatus').value;
+  const paymentMethod=$('paymentMethod').value;
+  setStatus('Processando venda e baixando estoque...');
   try{
-
-    /*
-      ID técnico da requisição.
-
-      O número oficial da venda deverá vir
-      do backend / public.pdv_sales.
-    */
-
-    const saleId =
-    'PDV-'+Date.now();
-
-    const d =
-    await api(
-      'store_sale',
-      {
-        admin_password:
-        adminPassword,
-
-        sale_id:
-        saleId,
-
-        payment:
-        paymentMethod,
-
-        payment_method:
-        paymentMethod,
-
-        payment_status:
-        paymentStatus,
-
-        status:
-        paymentStatus,
-
-        subtotal,
-        discount,
-        total,
-
-        items:
-        saleCart.map(
-          i=>({
-            ...i,
-            quantity:i.qty
-          })
-        )
-      }
-    );
-
-    if(!d.ok)
-      throw new Error(
-        apiError(
-          d,
-          'Venda não concluída.'
-        )
-      );
-
-    /*
-      Aceita diferentes formatos
-      de retorno do Edge Function.
-    */
-
-    const officialSaleNumber =
-      d.sale_number ??
-      d.sale?.sale_number ??
-      d.data?.sale_number ??
-      d.sale?.number ??
-      saleId;
-
-    const officialSaleId =
-      d.id ??
-      d.sale?.id ??
-      d.data?.id ??
-      saleId;
-
-    lastCompletedSale={
-
-      id:officialSaleId,
-
-      sale_number:
-      officialSaleNumber,
-
-      items:
-      JSON.parse(
-        JSON.stringify(saleCart)
-      ),
-
-      subtotal,
-      discount,
-      total,
-
-      payment_method:
-      paymentMethod,
-
-      payment_status:
-      paymentStatus,
-
-      status:
-      d.sale?.status ??
-      d.status ??
-      paymentStatus,
-
-      created_at:
-      d.created_at ??
-      d.sale?.created_at ??
-      new Date().toISOString()
-
-    };
-
-    const label =
-    paymentStatus==='paid'
-    ?
-    'PAGO'
-    :
-    'AGUARDANDO PAGAMENTO';
-
+    const d=await api('store_sale',{
+      admin_password:adminPassword,
+      payment:paymentMethod,
+      payment_method:paymentMethod,
+      payment_status:paymentStatus,
+      status:paymentStatus,
+      subtotal,discount,total,
+      items:saleCart.map(i=>({...i,quantity:i.qty}))
+    });
+    if(!d.ok)throw new Error(apiError(d,'Venda não concluída.'));
+    const label=paymentStatus==='paid'?'PAGO':'AGUARDANDO PAGAMENTO';
     saleCart=[];
-
     $('saleDiscount').value='0';
-
     renderCart();
-
-    activeProduct=null;
-
-    $('productCard')
-      .classList
-      .remove('show');
-
-    $('codeInput').value='';
-
-    setStatus(
-      `✓ Venda ${officialSaleNumber} registrada: ${label}. Total ${money(total)}.`,
-      'success'
-    );
-
-    showSaleSuccess(
-      officialSaleNumber,
-      total,
-      paymentMethod,
-      paymentStatus
-    );
-
-    /*
-      Atualiza o histórico logo após
-      a venda ser registrada.
-    */
-
-    setTimeout(
-      ()=>loadSalesHistory(true),
-      500
-    );
-
-  }catch(e){
-
-    setStatus(
-      'Venda não concluída: '+
-      e.message,
-      'error'
-    );
-
-  }
-
+    activeProduct=null;$('productCard').classList.remove('show');$('codeInput').value='';
+    const officialSaleNumber=d?.sale?.sale_number ?? d?.sale?.id ?? '—';
+    setStatus(`✓ Venda #${officialSaleNumber} finalizada: ${label}. Total ${money(total)}.`,'success');
+    await loadSalesHistory();
+  }catch(e){setStatus('Venda não concluída: '+e.message,'error');}
 }
 
-/* =========================
-   CONFIRMAÇÃO DA VENDA
-========================= */
-
-function paymentMethodLabel(method){
-
-  const map={
-    dinheiro:'DINHEIRO',
-    pix:'PIX',
-    cartao:'CARTÃO'
-  };
-
-  return map[
-    String(method||'').toLowerCase()
-  ] ||
-  String(method||'').toUpperCase();
-
+function escapeHtml(value){
+  return String(value ?? '').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 }
-
-function paymentStatusLabel(status){
-
-  return String(status||'')
-  ==='paid'
-  ?
-  'PAGO'
-  :
-  'AGUARDANDO PAGAMENTO';
-
+function formatSaleDate(value){
+  const d=new Date(value);
+  if(Number.isNaN(d.getTime()))return String(value||'');
+  return d.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
 }
-
-function showSaleSuccess(
-  saleNumber,
-  total,
-  paymentMethod,
-  paymentStatus
-){
-
-  $('successSaleNumber')
-    .textContent =
-    '#'+String(
-      saleNumber
-    ).replace(/^#/,'').padStart(6,'0');
-
-  $('successSaleTotal')
-    .textContent =
-    money(total);
-
-  $('successSalePayment')
-    .textContent =
-    paymentMethodLabel(
-      paymentMethod
-    )+
-    ' · '+
-    paymentStatusLabel(
-      paymentStatus
-    );
-
-  $('saleSuccessModal')
-    .classList
-    .add('show');
-
+function saleStatusLabel(status){
+  return status==='pending_payment'?'AGUARDANDO PAGAMENTO':'PAGO';
 }
-
-function closeSaleSuccess(){
-
-  $('saleSuccessModal')
-    .classList
-    .remove('show');
-
+function salePaymentLabel(method){
+  const map={dinheiro:'DINHEIRO',pix:'PIX',cartao:'CARTÃO'};
+  return map[String(method||'').toLowerCase()]||String(method||'—').toUpperCase();
 }
-
-function openLastSaleDetails(){
-
-  closeSaleSuccess();
-
-  if(!lastCompletedSale)
-    return;
-
-  $('saleHistoryCard')
-    .classList
-    .add('show');
-
-  renderSalesHistory();
-
-  const id =
-  String(
-    lastCompletedSale.id
-  );
-
-  setTimeout(()=>{
-
-    const element =
-    document.querySelector(
-      `[data-sale-id="${CSS.escape(id)}"]`
-    );
-
-    if(element)
-      element.scrollIntoView({
-        behavior:'smooth',
-        block:'center'
-      });
-
-  },100);
-
+function saleItemsHtml(items){
+  if(!Array.isArray(items)||!items.length)return '<div class="muted">Itens não informados.</div>';
+  return items.map(i=>{
+    const spec=[i?.size,i?.color].filter(Boolean).join(' / ');
+    const qty=Number(i?.quantity??i?.qty??1);
+    const unit=Number(i?.unit??i?.unit_price??i?.price??0);
+    const line=unit*qty;
+    return `<div style="padding:8px 0;border-bottom:1px solid #e5e5e5"><b>${qty}x ${escapeHtml(i?.name||'Produto')}</b>${spec?`<div class="muted">${escapeHtml(spec)}</div>`:''}<div class="muted">SKU: ${escapeHtml(i?.sku||'—')} · EAN: ${escapeHtml(i?.barcode||'—')} · ${money(unit)} cada · ${money(line)}</div></div>`;
+  }).join('');
 }
-
-/* =========================
-   HISTÓRICO DE VENDAS
-========================= */
-
-function toggleSalesHistory(){
-
-  const card =
-  $('saleHistoryCard');
-
-  const open =
-  card.classList.toggle('show');
-
-  if(open)
-    loadSalesHistory();
-
+function toggleSaleDetails(id){
+  const el=document.getElementById(`sale-details-${id}`);
+  if(el)el.classList.toggle('hidden');
 }
-
-function normalizeSaleItems(sale){
-
-  const raw =
-  sale?.items ??
-  sale?.sale_items ??
-  [];
-
-  if(Array.isArray(raw))
-    return raw;
-
-  return [];
-
-}
-
-function saleNumber(sale){
-
-  return String(
-    sale?.sale_number ??
-    sale?.number ??
-    sale?.sale_id ??
-    sale?.id ??
-    '—'
-  );
-
-}
-
-function saleCreatedAt(sale){
-
-  return (
-    sale?.created_at ??
-    sale?.createdAt ??
-    ''
-  );
-
-}
-
-function formatDateTime(value){
-
-  if(!value)
-    return 'Data não informada';
-
-  const d =
-  new Date(value);
-
-  if(
-    Number.isNaN(
-      d.getTime()
-    )
-  )
-    return String(value);
-
-  return d.toLocaleString(
-    'pt-BR',
-    {
-      dateStyle:'short',
-      timeStyle:'short'
-    }
-  );
-
-}
-
-function salePaymentMethod(sale){
-
-  return String(
-    sale?.payment_method ??
-    sale?.payment ??
-    '—'
-  );
-
-}
-
-function salePaymentStatus(sale){
-
-  return String(
-    sale?.payment_status ??
-    sale?.status ??
-    '—'
-  );
-
-}
-
-function saleItemsPreview(sale){
-
-  const items =
-  normalizeSaleItems(sale);
-
-  if(!items.length)
-    return 'Produtos não informados.';
-
-  return items
-  .slice(0,3)
-  .map(i=>{
-
-    const variation =
-    i?.variation||{};
-
-    const size =
-    i?.size ??
-    variation?.size ??
-    '';
-
-    const color =
-    i?.color ??
-    variation?.color ??
-    '';
-
-    const spec =
-    [size,color]
-    .filter(Boolean)
-    .join(' / ');
-
-    const qty =
-    Number(
-      i?.qty ??
-      i?.quantity ??
-      0
-    );
-
-    return (
-      `${qty}x `+
-      `${i?.name||'Produto'}`+
-      (
-        spec
-        ?
-        ` — ${spec}`
-        :
-        ''
-      )
-    );
-
-  })
-  .join(' · ');
-
-}
-
-function renderSalesHistory(){
-
-  const list =
-  $('salesHistoryList');
-
-  if(!salesHistory.length){
-
-    list.innerHTML =
-    '<div class="muted">'+
-    'Nenhuma venda encontrada.'+
-    '</div>';
-
-    $('salesHistoryCount')
-      .textContent=
-      '0 vendas';
-
-    return;
-  }
-
-  $('salesHistoryCount')
-    .textContent=
-    `${salesHistory.length} ${
-      salesHistory.length===1
-      ?
-      'venda'
-      :
-      'vendas'
-    }`;
-
-  list.innerHTML =
-  salesHistory
-  .map(
-    (sale,index)=>{
-
-      const number =
-      saleNumber(sale);
-
-      const total =
-      Number(
-        sale?.total ??
-        0
-      );
-
-      const method =
-      salePaymentMethod(sale);
-
-      const paymentStatus =
-      salePaymentStatus(sale);
-
-      const paid =
-      paymentStatus==='paid';
-
-      const id =
-      String(
-        sale?.id ??
-        sale?.sale_id ??
-        number ??
-        index
-      );
-
-      return `
-      <div
-        class="sale-history-item"
-        data-sale-id="${escapeHtml(id)}">
-
-        <div class="sale-history-head">
-
-          <div>
-
-            <div class="sale-number">
-              Venda #${escapeHtml(
-                number.replace(/^#/,'')
-              )}
-            </div>
-
-            <div class="sale-date">
-              ${escapeHtml(
-                formatDateTime(
-                  saleCreatedAt(sale)
-                )
-              )}
-            </div>
-
-          </div>
-
-          <div class="sale-history-total">
-            ${money(total)}
-          </div>
-
-        </div>
-
-        <div class="sale-history-meta">
-
-          <span>
-            💳 ${escapeHtml(
-              paymentMethodLabel(method)
-            )}
-          </span>
-
-          <span
-            class="status-pill ${
-              paid
-              ?
-              'paid'
-              :
-              'pending'
-            }">
-
-            ${escapeHtml(
-              paymentStatusLabel(
-                paymentStatus
-              )
-            )}
-
-          </span>
-
-        </div>
-
-        <div class="sale-products-preview">
-          ${escapeHtml(
-            saleItemsPreview(sale)
-          )}
-        </div>
-
-        <button
-          class="secondary"
-          onclick="toggleSaleDetails(${index})">
-          👁 VER DETALHES
-        </button>
-
-        <div
-          id="saleDetails${index}"
-          class="sale-details hidden">
-
-          ${renderSaleDetails(sale)}
-
-        </div>
-
-      </div>
-      `;
-
-    }
-  )
-  .join('');
-
-}
-
-function renderSaleDetails(sale){
-
-  const items =
-  normalizeSaleItems(sale);
-
-  const subtotal =
-  Number(
-    sale?.subtotal ??
-    0
-  );
-
-  const discount =
-  Number(
-    sale?.discount ??
-    0
-  );
-
-  const total =
-  Number(
-    sale?.total ??
-    0
-  );
-
-  let products='';
-
-  if(items.length){
-
-    products =
-    items
-    .map(i=>{
-
-      const variation =
-      i?.variation||{};
-
-      const size =
-      i?.size ??
-      variation?.size ??
-      '';
-
-      const color =
-      i?.color ??
-      variation?.color ??
-      '';
-
-      const spec =
-      [size,color]
-      .filter(Boolean)
-      .join(' / ');
-
-      const qty =
-      Number(
-        i?.qty ??
-        i?.quantity ??
-        0
-      );
-
-      const unit =
-      Number(
-        i?.unit ??
-        i?.unit_price ??
-        i?.price ??
-        0
-      );
-
-      return `
-      <div class="sale-detail-product">
-
-        <div class="sale-detail-product-name">
-          ${escapeHtml(
-            `${qty}x ${i?.name||'Produto'}`
-          )}
-        </div>
-
-        <div class="sale-detail-product-meta">
-
-          ${spec
-            ?
-            escapeHtml(
-              'Variação: '+spec
-            )+
-            '<br>'
-            :
-            ''
-          }
-
-          ${
-            i?.sku
-            ?
-            escapeHtml(
-              'SKU: '+i.sku
-            )+
-            '<br>'
-            :
-            ''
-          }
-
-          ${
-            unit
-            ?
-            escapeHtml(
-              'Unitário: '+money(unit)
-            )
-            :
-            ''
-          }
-
-        </div>
-
-      </div>
-      `;
-
-    })
-    .join('');
-
-  }else{
-
-    products =
-    '<div class="muted">'+
-    'Itens não informados.'+
-    '</div>';
-
-  }
-
-  return `
-
-    <div class="sale-detail-row">
-      <span>Subtotal</span>
-      <strong>${money(subtotal)}</strong>
-    </div>
-
-    <div class="sale-detail-row">
-      <span>Desconto</span>
-      <strong>${money(discount)}</strong>
-    </div>
-
-    <div class="sale-detail-row">
-      <span>Total</span>
-      <strong>${money(total)}</strong>
-    </div>
-
-    <div class="sale-detail-row">
-      <span>Pagamento</span>
-      <strong>
-        ${escapeHtml(
-          paymentMethodLabel(
-            salePaymentMethod(sale)
-          )
-        )}
-      </strong>
-    </div>
-
-    <div class="sale-detail-row">
-      <span>Status</span>
-      <strong>
-        ${escapeHtml(
-          paymentStatusLabel(
-            salePaymentStatus(sale)
-          )
-        )}
-      </strong>
-    </div>
-
-    <div class="sale-detail-products">
-
-      <strong>
-        Produtos vendidos
-      </strong>
-
-      ${products}
-
-    </div>
-
-  `;
-
-}
-
-function toggleSaleDetails(index){
-
-  const el =
-  $('saleDetails'+index);
-
-  if(!el)return;
-
-  el.classList.toggle(
-    'hidden'
-  );
-
-}
-
-function normalizeSalesResponse(d){
-
-  if(Array.isArray(d))
-    return d;
-
-  if(Array.isArray(d?.sales))
-    return d.sales;
-
-  if(Array.isArray(d?.data))
-    return d.data;
-
-  if(Array.isArray(d?.rows))
-    return d.rows;
-
-  return [];
-
-}
-
-function getTodayStartISO(){
-
-  const now =
-  new Date();
-
-  now.setHours(
-    0,0,0,0
-  );
-
-  return now.toISOString();
-
-}
-
-async function loadSalesHistory(silent=false){
-
+async function loadSalesHistory(){
+  const status=$('salesHistoryStatus'), list=$('salesHistoryList');
   if(!adminPassword){
-
-    $('loginBox')
-      .classList
-      .remove('hidden');
-
+    status.textContent='Faça login no PDV para consultar as vendas.';
     return;
   }
-
-  $('saleHistoryCard')
-    .classList
-    .add('show');
-
-  if(!silent){
-
-    $('salesHistoryStatus')
-      .textContent =
-      'Consultando vendas no Supabase...';
-
-  }
-
+  status.textContent='Consultando vendas...';
   try{
-
-    /*
-      A ação deve consultar:
-
-      public.pdv_sales
-
-      e retornar:
-
-      {
-        ok:true,
-        sales:[...]
-      }
-    */
-
-    const d =
-    await api(
-      'pdv_sales_history',
-      {
-        admin_password:
-        adminPassword,
-
-        date_from:
-        getTodayStartISO(),
-
-        limit:100
-      }
-    );
-
-    if(!d.ok)
-      throw new Error(
-        apiError(
-          d,
-          'Não foi possível carregar as vendas.'
-        )
-      );
-
-    salesHistory =
-    normalizeSalesResponse(d);
-
-    /*
-      Ordenação local:
-      mais recente primeiro.
-    */
-
-    salesHistory.sort(
-      (a,b)=>
-      new Date(
-        saleCreatedAt(b)
-      )-
-      new Date(
-        saleCreatedAt(a)
-      )
-    );
-
-    renderSalesHistory();
-
-    $('salesHistoryStatus')
-      .textContent =
-      salesHistory.length
-      ?
-      `Vendas de hoje · ${salesHistory.length} registro(s).`
-      :
-      'Nenhuma venda registrada hoje.';
-
-    $('salesTodayBadge')
-      .textContent =
-      `${salesHistory.length} ${
-        salesHistory.length===1
-        ?
-        'hoje'
-        :
-        'hoje'
-      }`;
-
+    const d=await api('pdv_history',{admin_password:adminPassword,limit:100});
+    if(!d.ok)throw new Error(apiError(d,'Não foi possível carregar as vendas.'));
+    const now=new Date();
+    const y=now.getFullYear(),m=now.getMonth(),day=now.getDate();
+    const sales=(Array.isArray(d.sales)?d.sales:[]).filter(s=>{
+      const dt=new Date(s.created_at); return !Number.isNaN(dt.getTime()) && dt.getFullYear()===y && dt.getMonth()===m && dt.getDate()===day;
+    });
+    if(!sales.length){
+      list.innerHTML='<div class="muted">Nenhuma venda registrada hoje.</div>';
+      status.textContent='Vendas de hoje';
+      return;
+    }
+    status.textContent=`${sales.length} venda(s) realizada(s) hoje`;
+    list.innerHTML=sales.map(s=>{
+      const sid=escapeHtml(s.id||s.sale_number||Math.random());
+      const num=escapeHtml(s.sale_number??s.id??'—');
+      const total=money(Number(s.total||0));
+      const statusLabel=saleStatusLabel(s.payment_status||s.status);
+      const payment=salePaymentLabel(s.payment_method);
+      const items=Array.isArray(s.items)?s.items:[];
+      const qty=items.reduce((n,i)=>n+Number(i?.quantity??i?.qty??1),0);
+      return `<div class="order-item" style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+          <div><b>VENDA #${num}</b><div class="muted">${formatSaleDate(s.created_at)} · ${qty} item(ns)</div></div>
+          <strong>${total}</strong>
+        </div>
+        <div style="margin-top:7px"><b>${payment}</b> · <span>${statusLabel}</span></div>
+        <button class="secondary" style="width:100%;margin-top:8px" onclick="toggleSaleDetails('${sid}')">DETALHES DA VENDA</button>
+        <div id="sale-details-${sid}" class="hidden" style="margin-top:10px;padding-top:8px;border-top:1px solid #ddd">
+          ${saleItemsHtml(items)}
+          <div style="padding-top:8px"><div>Subtotal: <b>${money(Number(s.subtotal||0))}</b></div><div>Desconto: <b>${money(Number(s.discount||0))}</b></div><div>Total: <b>${total}</b></div><div>Pagamento: <b>${payment}</b></div><div>Status: <b>${statusLabel}</b></div></div>
+        </div>
+      </div>`;
+    }).join('');
   }catch(e){
-
-    $('salesHistoryStatus')
-      .textContent =
-      'Histórico: '+e.message;
-
-    $('salesHistoryStatus')
-      .className =
-      'status error';
-
+    status.textContent='Erro ao carregar vendas: '+e.message;
+    list.innerHTML='';
   }
-
 }
-
-/* =========================
-   PEDIDOS DA LOJA
-========================= */
 
 function orderCustomerName(order){
-
-  const c =
-  order?.customer||{};
-
-  return String(
-    c.name||
-    c.full_name||
-    c.nome||
-    'Cliente'
-  ).trim() ||
-  'Cliente';
-
+  const c=order?.customer||{};
+  return String(c.name||c.full_name||c.nome||'Cliente').trim() || 'Cliente';
 }
-
 function orderItemsText(order){
-
-  const items =
-  Array.isArray(order?.items)
-  ?
-  order.items
-  :
-  [];
-
-  if(!items.length)
-    return 'Itens não informados.';
-
-  return items
-  .map(i=>{
-
-    const v =
-    i?.variation||{};
-
-    const spec =
-    [
-      i?.size||v.size,
-      i?.color||v.color
-    ]
-    .filter(Boolean)
-    .join(' / ');
-
-    return (
-      `${Number(i?.qty||0)}x `+
-      `${i?.name||'Produto'}`+
-      (
-        spec
-        ?
-        ' — '+spec
-        :
-        ''
-      )
-    );
-
-  })
-  .join(' · ');
-
+  const items=Array.isArray(order?.items)?order.items:[];
+  if(!items.length)return 'Itens não informados.';
+  return items.map(i=>{
+    const v=i?.variation||{};
+    const spec=[i?.size||v.size,i?.color||v.color].filter(Boolean).join(' / ');
+    return `${Number(i?.qty||0)}x ${i?.name||'Produto'}${spec?' — '+spec:''}`;
+  }).join(' · ');
 }
-
 function beepNewOrder(){
-
   try{
-
-    audioContext =
-    audioContext ||
-    new (
-      window.AudioContext ||
-      window.webkitAudioContext
-    )();
-
-    const osc =
-    audioContext.createOscillator();
-
-    const gain =
-    audioContext.createGain();
-
-    osc.frequency.value=880;
-
-    gain.gain.value=.08;
-
-    osc.connect(gain);
-
-    gain.connect(
-      audioContext.destination
-    );
-
-    osc.start();
-
-    setTimeout(
-      ()=>{
-        osc.frequency.value=1175
-      },
-      120
-    );
-
-    setTimeout(
-      ()=>{
-        osc.stop();
-        gain.disconnect();
-      },
-      240
-    );
-
-  }catch(_){}
-
+    audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();
+    const osc=audioContext.createOscillator(), gain=audioContext.createGain();
+    osc.frequency.value=880; gain.gain.value=.08;
+    osc.connect(gain);gain.connect(audioContext.destination);osc.start();
+    setTimeout(()=>{osc.frequency.value=1175},120);
+    setTimeout(()=>{osc.stop();gain.disconnect()},240);
+  }catch(_){ }
 }
-
 async function notifyNewOrder(){
-
   beepNewOrder();
-
-  if(
-    'Notification' in window &&
-    Notification.permission==='granted'
-  ){
-
-    try{
-
-      new Notification(
-        'STUDIO 70 — Novo pedido',
-        {
-          body:
-          'Há um pedido aguardando retirada no PDV da loja.'
-        }
-      );
-
-    }catch(_){}
-
+  if('Notification' in window && Notification.permission==='granted'){
+    try{ new Notification('STUDIO 70 — Novo pedido',{body:'Há um pedido aguardando retirada no PDV da loja.'}); }catch(_){ }
   }
-
 }
-
 async function enableOrderNotifications(){
-
-  if(
-    'Notification' in window &&
-    Notification.permission==='default'
-  ){
-
-    try{
-      await Notification.requestPermission();
-    }catch(_){}
-
+  if('Notification' in window && Notification.permission==='default'){
+    try{ await Notification.requestPermission(); }catch(_){ }
   }
-
 }
-
 function renderStoreOrders(){
-
-  const list =
-  $('storeOrderList');
-
-  const orders =
-  Array.from(
-    pendingStoreOrders.values()
-  );
-
-  $('ordersBadge')
-    .textContent =
-    `${orders.length} ${
-      orders.length===1
-      ?
-      'novo'
-      :
-      'novos'
-    }`;
-
-  if(!orders.length){
-
-    list.innerHTML =
-    '<div class="muted">'+
-    'Nenhum pedido aguardando retirada.'+
-    '</div>';
-
-    return;
-  }
-
-  list.innerHTML =
-  orders.map(
-    o=>{
-
-      const ref =
-      String(
-        o.external_reference||
-        '—'
-      );
-
-      const total =
-      money(o.total);
-
-      const method =
-      String(
-        o.payment_method||
-        o.payment_provider||
-        'pagamento'
-      ).replaceAll(
-        '_',
-        ' '
-      );
-
-      return `
-      <div
-        class="order-item"
-        data-order-ref="${ref.replaceAll('"','&quot;')}">
-
-        <div class="order-head">
-
-          <span class="order-ref">
-            ${escapeHtml(ref)}
-          </span>
-
-          <span class="order-total">
-            ${total}
-          </span>
-
-        </div>
-
-        <div class="order-customer">
-          ${escapeHtml(
-            orderCustomerName(o)
-          )}
-        </div>
-
-        <div class="order-items">
-          ${escapeHtml(
-            orderItemsText(o)
-          )}
-        </div>
-
-        <div
-          class="muted"
-          style="margin-top:6px">
-
-          Pagamento:
-          ${escapeHtml(method)}
-
-        </div>
-
-        <button
-          class="primary"
-          onclick="clientAlreadyTook('${ref.replaceAll("'","\\'")}')">
-          ✅ CLIENTE JÁ LEVOU
-        </button>
-
-      </div>
-      `;
-
-    }
-  ).join('');
-
+  const list=$('storeOrderList');
+  const orders=Array.from(pendingStoreOrders.values());
+  $('ordersBadge').textContent=`${orders.length} ${orders.length===1?'novo':'novos'}`;
+  if(!orders.length){ list.innerHTML='<div class="muted">Nenhum pedido aguardando retirada.</div>'; return; }
+  list.innerHTML=orders.map(o=>{
+    const ref=String(o.external_reference||'—');
+    const total=money(o.total);
+    const method=String(o.payment_method||o.payment_provider||'pagamento').replaceAll('_',' ');
+    return `<div class="order-item" data-order-ref="${ref.replaceAll('"','&quot;')}">
+      <div class="order-head"><span class="order-ref">${ref}</span><span class="order-total">${total}</span></div>
+      <div class="order-customer">${orderCustomerName(o)}</div>
+      <div class="order-items">${orderItemsText(o)}</div>
+      <div class="muted" style="margin-top:6px">Pagamento: ${method}</div>
+      <button class="primary" onclick="clientAlreadyTook('${ref.replaceAll("'","\\'")}')">✅ CLIENTE JÁ LEVOU</button>
+    </div>`;
+  }).join('');
 }
-
 async function loadStoreOrders(initial=false){
-
-  if(!adminPassword){
-
-    $('ordersStatus')
-      .textContent =
-      'Entre no PDV para acompanhar os pedidos.';
-
-    return;
-  }
-
+  if(!adminPassword){$('ordersStatus').textContent='Entre no PDV para acompanhar os pedidos.';return;}
   try{
-
-    const d =
-    await api(
-      'store_pending_orders',
-      {
-        admin_password:
-        adminPassword,
-        limit:50
-      }
-    );
-
-    if(!d.ok)
-      throw new Error(
-        apiError(
-          d,
-          'Não foi possível carregar os pedidos.'
-        )
-      );
-
-    const incoming =
-    Array.isArray(d.orders)
-    ?
-    d.orders
-    :
-    [];
-
-    const next =
-    new Map(
-      incoming.map(
-        o=>[
-          String(
-            o.external_reference
-          ),
-          o
-        ]
-      )
-    );
-
-    const newRefs =
-    incoming
-    .map(
-      o=>
-      String(
-        o.external_reference
-      )
-    )
-    .filter(
-      r=>
-      !lastOrderSnapshot.has(r)
-    );
-
+    const d=await api('store_pending_orders',{admin_password:adminPassword,limit:50});
+    if(!d.ok)throw new Error(apiError(d,'Não foi possível carregar os pedidos.'));
+    const incoming=Array.isArray(d.orders)?d.orders:[];
+    const next=new Map(incoming.map(o=>[String(o.external_reference),o]));
+    const newRefs=incoming.map(o=>String(o.external_reference)).filter(r=>!lastOrderSnapshot.has(r));
     pendingStoreOrders=next;
-
-    lastOrderSnapshot =
-    new Set(
-      incoming.map(
-        o=>
-        String(
-          o.external_reference
-        )
-      )
-    );
-
+    lastOrderSnapshot=new Set(incoming.map(o=>String(o.external_reference)));
     renderStoreOrders();
-
-    $('ordersStatus')
-      .textContent =
-      incoming.length
-      ?
-      `Atualizado agora · ${incoming.length} pedido(s) aguardando retirada.`
-      :
-      'Nenhum pedido aguardando retirada.';
-
-    if(
-      !initial &&
-      newRefs.length
-    )
-      await notifyNewOrder();
-
-  }catch(e){
-
-    $('ordersStatus')
-      .textContent =
-      'Pedidos: '+e.message;
-
-  }
-
+    $('ordersStatus').textContent=incoming.length?`Atualizado agora · ${incoming.length} pedido(s) aguardando retirada.`:'Nenhum pedido aguardando retirada.';
+    if(!initial && newRefs.length) await notifyNewOrder();
+  }catch(e){$('ordersStatus').textContent='Pedidos: '+e.message;}
 }
-
 async function clientAlreadyTook(reference){
-
-  if(!adminPassword){
-
-    $('loginBox')
-      .classList
-      .remove('hidden');
-
-    return;
-  }
-
-  if(
-    !confirm(
-      `Confirmar que o cliente já levou o pedido ${reference}?`
-    )
-  )
-    return;
-
+  if(!adminPassword){$('loginBox').classList.remove('hidden');return;}
+  const order=pendingStoreOrders.get(String(reference));
+  if(!confirm(`Confirmar que o cliente já levou o pedido ${reference}?`))return;
   try{
-
-    $('ordersStatus')
-      .textContent =
-      'Registrando retirada...';
-
-    const d =
-    await api(
-      'store_order_picked_up',
-      {
-        admin_password:
-        adminPassword,
-
-        external_reference:
-        reference,
-
-        picked_up_by:
-        'PDV da loja'
-      }
-    );
-
-    if(!d.ok)
-      throw new Error(
-        apiError(
-          d,
-          'Não foi possível confirmar a retirada.'
-        )
-      );
-
-    pendingStoreOrders.delete(
-      String(reference)
-    );
-
+    $('ordersStatus').textContent='Registrando retirada...';
+    const d=await api('store_order_picked_up',{admin_password:adminPassword,external_reference:reference,picked_up_by:'PDV da loja'});
+    if(!d.ok)throw new Error(apiError(d,'Não foi possível confirmar a retirada.'));
+    pendingStoreOrders.delete(String(reference));
     renderStoreOrders();
-
-    $('ordersStatus')
-      .textContent =
-      '✓ Cliente já levou. Pedido retirado do painel.';
-
-  }catch(e){
-
-    $('ordersStatus')
-      .textContent =
-      'Retirada não registrada: '+
-      e.message;
-
-  }
-
+    $('ordersStatus').textContent='✓ Cliente já levou. Pedido retirado do painel.';
+  }catch(e){$('ordersStatus').textContent='Retirada não registrada: '+e.message;}
 }
-
 function startStoreOrderPolling(){
-
-  clearInterval(
-    ordersPollTimer
-  );
-
+  clearInterval(ordersPollTimer);
   loadStoreOrders(true);
-
-  ordersPollTimer =
-  setInterval(
-    ()=>loadStoreOrders(false),
-    5000
-  );
-
+  ordersPollTimer=setInterval(()=>loadStoreOrders(false),5000);
 }
-
-/* =========================
-   SCANNER
-========================= */
 
 async function startScanner(){
-
   if(scanning)return;
-
-  if(
-    typeof Html5Qrcode===
-    'undefined'
-  ){
-
-    setStatus(
-      'Biblioteca da câmera não carregou. Verifique a internet.',
-      'error'
-    );
-
-    return;
+  if(typeof Html5Qrcode==='undefined'){
+    setStatus('Biblioteca da câmera não carregou. Verifique a internet.','error');return;
   }
-
   try{
-
-    scanner =
-    scanner ||
-    new Html5Qrcode(
-      'reader'
-    );
-
+    scanner=scanner || new Html5Qrcode('reader');
     scanning=true;
-
-    setStatus(
-      'Aponte a câmera para o código de barras...'
-    );
-
+    setStatus('Aponte a câmera para o código de barras...');
     await scanner.start(
-
-      {
-        facingMode:'environment'
-      },
-
-      {
-        fps:12,
-        qrbox:{
-          width:280,
-          height:150
-        }
-      },
-
+      {facingMode:'environment'},
+      {fps:12,qrbox:{width:280,height:150}},
       code=>{
-
-        if(!scanning)
-          return;
-
+        if(!scanning)return;
         scanning=false;
-
-        scanner
-          .stop()
-          .catch(()=>{});
-
+        scanner.stop().catch(()=>{});
         $('codeInput').value=code;
-
         lookupProduct(code);
-
       },
-
       ()=>{}
-
     );
-
   }catch(e){
-
     scanning=false;
-
-    setStatus(
-      'Não foi possível abrir a câmera. Autorize a câmera no navegador e tente novamente.',
-      'error'
-    );
-
+    setStatus('Não foi possível abrir a câmera. Autorize a câmera no navegador e tente novamente.','error');
   }
-
 }
 
 async function stopScanner(){
-
-  if(
-    !scanner ||
-    !scanning
-  )
-    return;
-
+  if(!scanner || !scanning)return;
   scanning=false;
-
-  try{
-    await scanner.stop();
-  }catch{}
-
-  setStatus(
-    'Scanner pausado.'
-  );
-
+  try{await scanner.stop();}catch{}
+  setStatus('Scanner pausado.');
 }
-
-/* =========================
-   INICIALIZAÇÃO
-========================= */
 
 renderCart();
 
-$('sizeSelect')
-.addEventListener(
-  'change',
-  updateVariationState
-);
+$('sizeSelect').addEventListener('change',updateVariationState);
+$('colorSelect').addEventListener('change',updateVariationState);
+$('qty').addEventListener('input',()=>{ if(activeProduct){ const max=selectedVariantStock(); let n=Math.max(1,Math.trunc(Number($('qty').value||1))); if(max>0)n=Math.min(n,max); $('qty').value=n; }});
 
-$('colorSelect')
-.addEventListener(
-  'change',
-  updateVariationState
-);
-
-$('qty')
-.addEventListener(
-  'input',
-  ()=>{
-    
-    if(activeProduct){
-
-      const max =
-      selectedVariantStock();
-
-      let n =
-      Math.max(
-        1,
-        Math.trunc(
-          Number(
-            $('qty').value||1
-          )
-        )
-      );
-
-      if(max>0)
-        n=Math.min(
-          n,
-          max
-        );
-
-      $('qty').value=n;
-
-    }
-
-  }
-);
-
-$('codeInput')
-.addEventListener(
-  'keydown',
-  e=>{
-
-    if(e.key==='Enter'){
-
-      e.preventDefault();
-
-      lookupProduct();
-
-    }
-
-  }
-);
+$('codeInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();lookupProduct();}
+});
 
 if(adminPassword){
-
-  $('loginBox')
-    .classList
-    .add('hidden');
-
-  $('connectionStatus')
-    .classList
-    .add('ok');
-
+  $('loginBox').classList.add('hidden');
+  $('connectionStatus').classList.add('ok');
   loadInitialProductCount();
-
-  /*
-    Pedidos continuam sendo
-    atualizados automaticamente.
-  */
-
-  startStoreOrderPolling();
-
 }
-
 </script>
-
 <script>
-
-if('serviceWorker' in navigator){
-
-  window.addEventListener(
-    'load',
-    ()=>{
-      navigator.serviceWorker
-      .register(
-        './service-worker.js',
-        {
-          scope:'./'
-        }
-      )
-      .catch(
-        err=>
-        console.warn(
-          '[STUDIO70 PWA] Service Worker:',
-          err
-        )
-      );
-    }
-  );
-
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js', {scope:'./'})
+      .catch(err => console.warn('[STUDIO70 PWA] Service Worker:', err));
+  });
 }
-
 </script>
-
 </body>
 </html>
