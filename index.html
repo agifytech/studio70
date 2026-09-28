@@ -20,6 +20,7 @@ section{max-width:1280px;margin:auto;padding:42px 22px} .section-title{font:34px
 .drawer,.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;display:none} .drawer.open,.modal.open{display:block} .drawer-panel{margin-left:auto;width:min(480px,100%);height:100%;background:#111116;padding:22px;overflow:auto} .modal-panel{width:min(1100px,94vw);max-height:92vh;overflow:auto;margin:4vh auto;background:#111116;border:1px solid var(--line);border-radius:18px;padding:22px}
 .close{float:right;border:0;background:#292930;color:#fff;border-radius:9px;padding:8px 12px} .cart-row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)} .total{font-size:24px;font-weight:900;margin:20px 0}
 .admin-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px} .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px} label{font-size:12px;font-weight:800;color:#bbb} label.full{grid-column:1/-1} textarea{min-height:100px;resize:vertical} .checkrow{display:flex;gap:15px;align-items:center;padding:12px 0} .admin-list{display:grid;gap:8px} .admin-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px;background:#19191f;border:1px solid var(--line);border-radius:10px} .admin-item span{font-size:12px}.admin-editing{outline:2px solid #111;outline-offset:2px}.admin-sticky-form{scroll-margin-top:20px} .admin-tools{display:flex;gap:6px} .danger{background:#4b1722!important;color:#fff!important}
+.upload-box{border:1px solid #c8c5be;border-radius:10px;padding:10px;background:#faf9f6}.upload-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}.upload-status{font-size:11px;font-weight:800;color:#555;min-height:18px}.upload-status.ok{color:#246b3b}.upload-status.error{color:#a52b2b}.upload-status.busy{color:#555}
 .scanner{background:#121216;border:1px solid var(--green);padding:18px;border-radius:14px;margin-bottom:20px} .scanner input{font-size:20px;font-weight:800} .scan-result{margin-top:10px;color:var(--green);font-weight:800} .label-preview{background:#fff;color:#111;padding:18px;border-radius:10px;text-align:center;margin-top:15px} .label-preview svg{max-width:100%;height:auto}
 .product-modal-image{width:100%;height:600px;display:flex;align-items:center;justify-content:center;background:#222;border-radius:15px;overflow:hidden}.product-modal-image img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;max-width:100%;max-height:100%}
 footer{border-top:1px solid var(--line);padding:45px 22px;text-align:center;color:#aaa} footer h2{font-family:var(--font-display);text-transform:uppercase;letter-spacing:1px;font-weight:400} .whatsapp{position:fixed;right:20px;bottom:20px;width:58px;height:58px;border-radius:50%;background:var(--green);color:#07160e;display:grid;place-items:center;text-decoration:none;font-size:26px;font-weight:900;z-index:25;box-shadow:0 4px 18px rgba(34,212,119,.45);animation:wa-pulse 2.2s infinite}
@@ -245,8 +246,28 @@ footer a{color:#111!important}
 </div>
 <button class="btn" style="width:100%;margin-top:10px" onclick="goCheckout()">FINALIZAR COMPRA</button><button class="btn" style="width:100%;margin-top:10px;background:#eceae6;color:#111" onclick="checkoutWhatsApp()">FINALIZAR NO WHATSAPP</button></div></div>
 <div class="modal" id="loginModal"><div class="modal-panel" style="max-width:420px"><button class="close" onclick="closeLogin()">×</button><h2 class="section-title">ACESSO RESTRITO</h2><p id="loginTitle">Digite a senha para continuar.</p><label style="display:block;font-size:12px;margin-bottom:8px">URL da Edge Function<input class="field" id="loginEndpoint" value="https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler" placeholder="URL da Edge Function" autocomplete="url"></label><input class="field" id="loginPassword" type="password" inputmode="numeric" maxlength="64" placeholder="Senha do painel" autocomplete="off"><div id="loginError" style="color:#ff6b8f;font-weight:700;min-height:22px;margin:8px 0"></div><button class="btn" style="width:100%" onclick="submitLogin()">ENTRAR</button></div></div>
-<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="banner-admin-card"><h3 style="margin-top:0">🖼️ CARROSSEL DE BANNERS</h3><p style="font-size:12px;color:#666">Cadastre as imagens que aparecerão no carrossel principal da loja. As alterações ficam salvas no Supabase.</p><div class="banner-admin-row"><label>Título<input class="field" id="bannerTitle" placeholder="Ex.: NOVA COLEÇÃO"></label><label>Subtítulo<input class="field" id="bannerSubtitle" placeholder="Ex.: ESTILO URBANO 2026"></label></div><label>Link da imagem<input class="field" id="bannerImage" placeholder="https://.../banner.jpg"></label><label style="display:block;margin-top:10px">Link ao clicar (opcional)<input class="field" id="bannerLink" placeholder="https://... ou #produtos"></label><div class="checkrow"><label><input type="checkbox" id="bannerActive" checked> Banner ativo</label></div><div class="admin-tools"><button class="smallbtn primary" type="button" onclick="addBannerFromAdmin()">+ ADICIONAR BANNER</button><button class="smallbtn" type="button" onclick="loadBannersFromServer()">↻ ATUALIZAR</button></div><div id="bannerAdminList" class="banner-admin-list"></div></div><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço de venda<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU <span style="font-size:10px;color:#777;font-weight:500">(gerado automaticamente)</span><input class="field" id="pSku" required></label><label>Código de barras <span style="font-size:10px;color:#777;font-weight:500">(EAN-13 automático)</span><input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Link da foto principal<input class="field" id="pImage" placeholder="https://..."></label>
-<label class="full">Links das fotos secundárias<textarea class="field" id="pSecondaryImages" placeholder="Um link por linha"></textarea></label>
+<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="banner-admin-card"><h3 style="margin-top:0">🖼️ CARROSSEL DE BANNERS</h3><p style="font-size:12px;color:#666">Cadastre as imagens que aparecerão no carrossel principal da loja. As alterações ficam salvas no Supabase.</p><div class="banner-admin-row"><label>Título<input class="field" id="bannerTitle" placeholder="Ex.: NOVA COLEÇÃO"></label><label>Subtítulo<input class="field" id="bannerSubtitle" placeholder="Ex.: ESTILO URBANO 2026"></label></div><label>Link da imagem<input class="field" id="bannerImage" placeholder="https://.../banner.jpg"></label><label style="display:block;margin-top:10px">Link ao clicar (opcional)<input class="field" id="bannerLink" placeholder="https://... ou #produtos"></label><div class="checkrow"><label><input type="checkbox" id="bannerActive" checked> Banner ativo</label></div><div class="admin-tools"><button class="smallbtn primary" type="button" onclick="addBannerFromAdmin()">+ ADICIONAR BANNER</button><button class="smallbtn" type="button" onclick="loadBannersFromServer()">↻ ATUALIZAR</button></div><div id="bannerAdminList" class="banner-admin-list"></div></div><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço de venda<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU <span style="font-size:10px;color:#777;font-weight:500">(gerado automaticamente)</span><input class="field" id="pSku" required></label><label>Código de barras <span style="font-size:10px;color:#777;font-weight:500">(EAN-13 automático)</span><input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Foto principal
+<div class="upload-box">
+  <input class="field" id="pImage" placeholder="https://... ou use o botão abaixo">
+  <div class="upload-actions">
+    <input id="pImageFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none">
+    <button class="smallbtn" type="button" onclick="document.getElementById('pImageFile').click()">📷 ESCOLHER FOTO</button>
+    <span id="pImageUploadStatus" class="upload-status"></span>
+  </div>
+</div>
+<small style="display:block;color:#777;margin-top:5px">A foto é enviada automaticamente para o Supabase Storage. JPG, PNG, WEBP ou GIF — até 10 MB.</small>
+</label>
+<label class="full">Fotos secundárias
+<div class="upload-box">
+  <textarea class="field" id="pSecondaryImages" placeholder="Um link por linha — ou escolha várias fotos abaixo"></textarea>
+  <div class="upload-actions">
+    <input id="pSecondaryFiles" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple style="display:none">
+    <button class="smallbtn" type="button" onclick="document.getElementById('pSecondaryFiles').click()">🖼️ ESCOLHER FOTOS</button>
+    <span id="pSecondaryUploadStatus" class="upload-status"></span>
+  </div>
+</div>
+<small style="display:block;color:#777;margin-top:5px">Você pode selecionar várias fotos de uma vez. Elas serão adicionadas automaticamente ao produto.</small>
+</label>
 <label class="full">Links dos vídeos do produto<textarea class="field" id="pVideos" placeholder="Um link por linha — MP4/WebM ou YouTube/Vimeo"></textarea><small style="display:block;color:#777;margin-top:4px">Os vídeos serão exibidos junto com as fotos na galeria do produto.</small></label>
 <label class="full">URL do produto<input class="field" id="pUrl" placeholder="https://..."></label>
 <label class="full">Descrição<div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap"><textarea class="field" id="pDescription" style="flex:1;min-width:240px"></textarea><button class="smallbtn" type="button" id="aiDescriptionBtn" onclick="generateAIDescription()" style="white-space:nowrap">✨ GERAR DESCRIÇÃO COM IA</button></div><div id="aiDescriptionStatus" style="font-size:11px;color:#777;margin-top:6px;min-height:16px"></div></label></div><div class="checkrow"><label><input type="checkbox" id="pActive" checked> Ativo</label><label><input type="checkbox" id="pFeatured"> Destaque</label></div>
@@ -582,6 +603,7 @@ function isDirectVideo(value){
   return /\.(mp4|webm|ogg|mov|m4v)$/.test(raw);
 }
 function openProduct(id){
+  const analyticsProduct=products.find(x=>String(x.id)===String(id)); if(analyticsProduct) trackAnalytics('product_open',{product_id:String(id),metadata:{name:analyticsProduct.name||''}});
   const key=String(id??'');
   const p=products.find(x=>String(x.id??'')===key);
   if(!p){console.warn('Produto não encontrado:',key);return;}
@@ -796,7 +818,21 @@ document.getElementById('pdvDiscount').addEventListener('input',renderPDV);docum
 let cartTapCount=0,cartTapTimer=null;const cartAccess=document.getElementById('cartBtn');
 if(cartAccess)cartAccess.addEventListener('click',e=>{cartTapCount++;clearTimeout(cartTapTimer);cartTapTimer=setTimeout(()=>{cartTapCount=0},650);if(cartTapCount>=3){e.preventDefault();e.stopImmediatePropagation();cartTapCount=0;openAdmin()}},{capture:true});
 document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.altKey&&e.shiftKey&&e.key.toLowerCase()==='a'){e.preventDefault();openAdmin()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
-function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} 
+const ST70_ANALYTICS_API=DEFAULT_CHECKOUT_API;
+function st70AnalyticsSession(){let id=localStorage.getItem('st70_analytics_session');if(!id){id=(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2));localStorage.setItem('st70_analytics_session',id)}return id}
+async function trackAnalytics(event_type,extra={}){try{await fetch(ST70_ANALYTICS_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'analytics_track',event_type,session_id:st70AnalyticsSession(),page:location.pathname+location.hash,...extra})})}catch(_){} }
+function applyStoreAppearance(a){a=a||{};const root=document.documentElement;if(a.background)root.style.setProperty('--bg',a.background);if(a.surface)root.style.setProperty('--surface',a.surface);if(a.text)root.style.setProperty('--text',a.text);if(a.accent)root.style.setProperty('--accent',a.accent);const font=String(a.font||'Inter');if(font){let link=document.getElementById('st70DynamicFont');if(!link){link=document.createElement('link');link.id='st70DynamicFont';link.rel='stylesheet';document.head.appendChild(link)}link.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(font).replace(/%20/g,'+')+':wght@400;500;600;700&display=swap';root.style.setProperty('--font-body',`'${font}',system-ui,sans-serif`);document.body.style.fontFamily=`'${font}',system-ui,sans-serif`}}
+async function loadStoreAppearance(){try{const r=await fetch(ST70_ANALYTICS_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'appearance_get'})});const d=await r.json();if(r.ok&&d.ok)applyStoreAppearance(d.appearance)}catch(_){} }
+async function saveStoreAppearance(){if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',saveStoreAppearance);const body={admin_password:adminAuthPassword,background:document.getElementById('appearanceBg').value,surface:document.getElementById('appearanceSurface').value,text:document.getElementById('appearanceText').value,accent:document.getElementById('appearanceAccent').value,font:document.getElementById('appearanceFont').value};const st=document.getElementById('appearanceStatus');try{if(st)st.textContent='Salvando...';const r=await fetch(ST70_ANALYTICS_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'appearance_save',...body})});const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao salvar aparência.');applyStoreAppearance(d.appearance);if(st)st.textContent='✓ Aparência salva e aplicada.'}catch(e){if(st)st.textContent=e.message;alert('Não foi possível salvar a aparência: '+e.message)}}
+function ensureAnalyticsAdminControls(){if(document.getElementById('analyticsAdminCard'))return;const modal=document.querySelector('#adminModal .modal-panel');if(!modal)return;const card=document.createElement('div');card.className='banner-admin-card';card.id='analyticsAdminCard';card.innerHTML=`<h3 style="margin-top:0">📊 DASHBOARD DA LOJA</h3><p style="font-size:12px;color:#666">Acompanhe acessos, produtos clicados, pesquisas e vendas reais confirmadas.</p><div class="admin-tools" style="flex-wrap:wrap"><select class="field" id="analyticsPeriod" style="max-width:180px"><option value="7">Últimos 7 dias</option><option value="30" selected>Últimos 30 dias</option><option value="90">Últimos 90 dias</option><option value="365">Último ano</option></select><button class="smallbtn primary" type="button" onclick="loadAnalyticsDashboard()">↻ ATUALIZAR DASHBOARD</button></div><div id="analyticsMetrics" class="admin-tools" style="margin-top:12px;flex-wrap:wrap"></div><div id="analyticsTables" style="margin-top:14px"></div><hr style="margin:20px 0;border:0;border-top:1px solid #ccc"><h3>🎨 APARÊNCIA DA LOJA</h3><p style="font-size:12px;color:#666">Altere fonte, fundo e cores do site sem editar o HTML.</p><div class="form-grid"><label>Fonte<select class="field" id="appearanceFont"><option>Inter</option><option>Montserrat</option><option>Poppins</option><option>Roboto</option><option>Oswald</option><option>Playfair Display</option><option>Lora</option><option>Bebas Neue</option><option>Arial</option><option>Georgia</option><option>Verdana</option></select></label><label>Fundo<input class="field" id="appearanceBg" type="color" value="#ffffff"></label><label>Superfície<input class="field" id="appearanceSurface" type="color" value="#f3f1ec"></label><label>Texto<input class="field" id="appearanceText" type="color" value="#111111"></label><label>Destaque<input class="field" id="appearanceAccent" type="color" value="#111111"></label></div><button class="smallbtn primary" type="button" style="margin-top:10px" onclick="saveStoreAppearance()">SALVAR APARÊNCIA</button><div id="appearanceStatus" style="font-size:11px;color:#777;margin-top:7px"></div>`;const first=modal.querySelector('.scanner');if(first)first.insertAdjacentElement('afterend',card);else modal.prepend(card);loadAnalyticsDashboard();loadAppearanceAdmin()}
+async function loadAppearanceAdmin(){try{const r=await fetch(ST70_ANALYTICS_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'appearance_get'})});const d=await r.json();if(!r.ok||!d.ok)return;const a=d.appearance||{};for(const [id,key] of [['appearanceBg','background'],['appearanceSurface','surface'],['appearanceText','text'],['appearanceAccent','accent']]){const el=document.getElementById(id);if(el&&a[key])el.value=a[key]}const f=document.getElementById('appearanceFont');if(f&&a.font)f.value=a.font}catch(_){} }
+function analyticsMoney(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
+async function loadAnalyticsDashboard(){if(!adminAuthPassword)return;const box=document.getElementById('analyticsMetrics');if(box)box.innerHTML='<div style="font-size:12px;color:#777">Carregando indicadores...</div>';try{const days=Number(document.getElementById('analyticsPeriod')?.value||30);const r=await fetch(ST70_ANALYTICS_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'analytics_dashboard',admin_password:adminAuthPassword,days})});const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao carregar dashboard.');if(box)box.innerHTML=[['👥','Acessos únicos',d.metrics.visits],['👁️','Visualizações',d.metrics.page_views],['🖱️','Cliques em produtos',d.metrics.product_clicks],['🔎','Pesquisas',d.metrics.searches],['🛍️','Vendas',d.metrics.sales_count],['💰','Faturamento',analyticsMoney(d.metrics.revenue)]].map(x=>`<div style="flex:1;min-width:135px;padding:12px;background:#fff;border:1px solid #ccc;border-radius:10px"><div style="font-size:20px">${x[0]}</div><b>${x[2]}</b><div style="font-size:11px;color:#777">${x[1]}</div></div>`).join('');const clicked=(d.top_clicked||[]).slice(0,10).map((x,i)=>`<div class="admin-item"><span><b>${i+1}. ${escapeHtml(x.name||x.id)}</b></span><small>${x.clicks} cliques</small></div>`).join('')||'<div class="empty">Sem cliques registrados.</div>';const sold=(d.top_sold||[]).slice(0,10).map((x,i)=>`<div class="admin-item"><span><b>${i+1}. ${escapeHtml(x.name||x.id)}</b></span><small>${x.sales} vendidos</small></div>`).join('')||'<div class="empty">Sem vendas registradas.</div>';const searched=(d.top_searches||[]).slice(0,10).map((x,i)=>`<div class="admin-item"><span><b>${i+1}. ${escapeHtml(x.query)}</b></span><small>${x.count} buscas</small></div>`).join('')||'<div class="empty">Sem pesquisas registradas.</div>';const sales=(d.sales||[]).slice(0,30).map(o=>`<div class="admin-item"><span><b>${escapeHtml(o.number||'Venda')}</b><br>${escapeHtml(o.customer_name||'Cliente')} · ${analyticsMoney(o.total)}<br><small>${(o.items||[]).map(i=>`${Number(i.quantity||i.qty||1)}x ${escapeHtml(i.title||i.name||'Produto')}`).join(' · ')}</small></span><small>${escapeHtml(o.payment_method||'')}<br>${new Date(o.created_at).toLocaleString('pt-BR')}</small></div>`).join('')||'<div class="empty">Nenhuma venda confirmada no período.</div>';document.getElementById('analyticsTables').innerHTML=`<div class="form-grid"><div><h4>🔥 Mais clicados</h4><div class="admin-list">${clicked}</div></div><div><h4>🏆 Mais vendidos</h4><div class="admin-list">${sold}</div></div><div><h4>🔎 Mais pesquisados</h4><div class="admin-list">${searched}</div></div><div class="full"><h4>🧾 VENDAS REALIZADAS</h4><div class="admin-list" style="max-height:420px;overflow:auto">${sales}</div></div></div>`}catch(e){if(box)box.innerHTML=`<div style="color:#a00;font-size:12px">${escapeHtml(e.message)}</div>`}}
+trackAnalytics('page_view');
+let st70SearchTimer=null;document.getElementById('searchInput')?.addEventListener('input',e=>{clearTimeout(st70SearchTimer);const q=String(e.target.value||'').trim();if(q)st70SearchTimer=setTimeout(()=>trackAnalytics('search',{query:q}),700)});
+loadStoreAppearance();
+
+function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();ensureAnalyticsAdminControls();renderAdmin();loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} 
 async function loadFreeShippingConfig(){
   try{
     const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shipping_config'})});
@@ -887,6 +923,79 @@ function ensureGeneratedCodes(){
   if(barcode&&!barcode.value.trim()) barcode.value=generateBarcode();
 }
 
+async function uploadProductFiles(field, input) {
+  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>uploadProductFiles(field,input));
+  const productId=String(document.getElementById('editId')?.value||'').trim();
+  const files=Array.from(input?.files||[]);
+  const status=document.getElementById(field==='primary'?'pImageUploadStatus':'pSecondaryUploadStatus');
+  if(!files.length)return;
+  if(!productId){
+    if(status)status.textContent='Salve o produto primeiro. A foto ficará selecionada e será enviada após o cadastro.';
+    if(status)status.className='upload-status busy';
+    return;
+  }
+  if(status){status.textContent='Enviando para o Supabase...';status.className='upload-status busy';}
+  const fd=new FormData();
+  fd.append('action','product_image_upload');
+  fd.append('admin_password',adminAuthPassword);
+  fd.append('product_id',productId);
+  fd.append('field',field);
+  files.forEach(file=>fd.append('files',file,file.name));
+  try{
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',body:fd});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao enviar a imagem.');
+    const p=normalizeProductRecord(d.product||{});
+    if(field==='primary'){
+      const url=String(d.urls?.[0]||p.image||'').trim();
+      if(url)document.getElementById('pImage').value=url;
+    }else{
+      const urls=Array.isArray(d.urls)?d.urls:[];
+      const current=document.getElementById('pSecondaryImages').value.split(/\n|,/).map(x=>normalizeImageUrl(x.trim())).filter(Boolean);
+      document.getElementById('pSecondaryImages').value=[...new Set([...current,...urls])].join('\n');
+    }
+    if(input)input.value='';
+    await loadSupabaseProducts();
+    if(status){status.textContent=`✓ ${files.length} imagem(ns) salva(s) no Supabase.`;status.className='upload-status ok';}
+  }catch(err){
+    if(status){status.textContent=err?.message||'Falha no upload.';status.className='upload-status error';}
+    alert('Não foi possível enviar a imagem: '+(err?.message||err));
+  }
+}
+
+async function uploadPendingProductFiles(productId){
+  const inputs=[
+    {field:'primary',input:document.getElementById('pImageFile')},
+    {field:'secondary',input:document.getElementById('pSecondaryFiles')}
+  ];
+  let uploadedAny=false;
+  for(const item of inputs){
+    const files=Array.from(item.input?.files||[]);
+    if(!files.length)continue;
+    const status=document.getElementById(item.field==='primary'?'pImageUploadStatus':'pSecondaryUploadStatus');
+    if(status){status.textContent='Enviando após o cadastro...';status.className='upload-status busy';}
+    const fd=new FormData();
+    fd.append('action','product_image_upload');fd.append('admin_password',adminAuthPassword);fd.append('product_id',String(productId));fd.append('field',item.field);
+    files.forEach(file=>fd.append('files',file,file.name));
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',body:fd});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao enviar imagem após salvar o produto.');
+    const p=normalizeProductRecord(d.product||{});
+    if(item.field==='primary'&&d.urls?.[0])document.getElementById('pImage').value=String(d.urls[0]);
+    if(item.field==='secondary'&&Array.isArray(d.urls)){
+      const current=document.getElementById('pSecondaryImages').value.split(/\n|,/).map(x=>normalizeImageUrl(x.trim())).filter(Boolean);
+      document.getElementById('pSecondaryImages').value=[...new Set([...current,...d.urls])].join('\n');
+    }
+    item.input.value='';uploadedAny=true;
+    if(status){status.textContent=`✓ ${files.length} imagem(ns) salva(s) no Supabase.`;status.className='upload-status ok';}
+  }
+  if(uploadedAny)await loadSupabaseProducts();
+  return uploadedAny;
+}
+
+document.getElementById('pImageFile')?.addEventListener('change',e=>uploadProductFiles('primary',e.target));
+document.getElementById('pSecondaryFiles')?.addEventListener('change',e=>uploadProductFiles('secondary',e.target));
+
 function clearForm(){
   const form=document.getElementById('productForm');
   form.reset();
@@ -896,6 +1005,9 @@ function clearForm(){
   document.getElementById('pFeatured').checked=false;
   document.getElementById('pSku').value='';
   document.getElementById('pBarcode').value='';
+  if(document.getElementById('pImageFile'))document.getElementById('pImageFile').value='';
+  if(document.getElementById('pSecondaryFiles'))document.getElementById('pSecondaryFiles').value='';
+  ['pImageUploadStatus','pSecondaryUploadStatus'].forEach(id=>{const e=document.getElementById(id);if(e){e.textContent='';e.className='upload-status';}});
   document.getElementById('labelPreview').style.display='none';
   document.querySelectorAll('.admin-item').forEach(x=>x.classList.remove('admin-editing'));
   loadPaymentSettings();
@@ -1003,7 +1115,12 @@ document.getElementById('productForm').onsubmit=async e=>{
     document.getElementById('pBarcode').value=local.barcode||'';
     document.getElementById('labelPreview').style.display='block';
     document.getElementById('formTitle').textContent='Editar produto';
-    alert(`${d.created?'Produto criado':'Produto atualizado'} no Supabase com sucesso.`);
+    await uploadPendingProductFiles(local.id);
+    await loadSupabaseProducts();
+    const refreshed=products.find(x=>String(x.id)===String(local.id)) || local;
+    document.getElementById('pImage').value=normalizeImageUrl(refreshed.image||document.getElementById('pImage').value||'');
+    document.getElementById('pSecondaryImages').value=(Array.isArray(refreshed.secondaryImages)?refreshed.secondaryImages:[]).map(normalizeImageUrl).filter(Boolean).join('\n');
+    alert(`${d.created?'Produto criado':'Produto atualizado'} no Supabase com sucesso${document.getElementById('pImage').value?' e imagens processadas.':'.'}`);
   }catch(err){alert('Não foi possível salvar o produto: '+(err?.message||err));}
 };
 async function deleteProduct(id){
@@ -1626,8 +1743,8 @@ function renderAdminOrders(orders){
       const buy=ev.target.closest?.('#productGrid .js-buy');
       const fitting=ev.target.closest?.('#productBody .js-fitting');
       if(fitting){ev.preventDefault();ev.stopPropagation();openVirtualFitting(fitting.dataset.productId);return;}
-      if(details){ev.preventDefault();ev.stopPropagation();openProduct(details.dataset.productId);return;}
-      if(buy){ev.preventDefault();ev.stopPropagation();openProduct(buy.dataset.productId);return;}
+      if(details){ev.preventDefault();ev.stopPropagation();trackAnalytics('product_click',{product_id:details.dataset.productId,metadata:{name:products.find(p=>String(p.id)===String(details.dataset.productId))?.name||''}});openProduct(details.dataset.productId);return;}
+      if(buy){ev.preventDefault();ev.stopPropagation();trackAnalytics('product_click',{product_id:buy.dataset.productId,metadata:{name:products.find(p=>String(p.id)===String(buy.dataset.productId))?.name||''}});openProduct(buy.dataset.productId);return;}
     },true);
   }
   const pagination=document.getElementById('pagination');
