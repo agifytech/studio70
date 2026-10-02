@@ -213,7 +213,414 @@ footer a{color:#111!important}
 .category-group{border:1px solid #d7d4ce;border-radius:14px;padding:14px;margin-bottom:14px;background:#fff}.category-parent{font-weight:900!important;font-size:18px!important;width:100%;margin-bottom:10px}.category-subgrid{display:flex;flex-wrap:wrap;gap:8px}.category-child{font-size:12px!important;padding:9px 13px!important}.category-group[data-category-group="Masculino"] .category-parent{border-style:solid}.category-group[data-category-group="Feminino"] .category-parent{border-style:solid}
 
 .nav-cat-wrap{position:relative;display:flex;align-items:center}.nav-cat-link{display:flex;align-items:center;gap:4px}.nav-cat-menu{display:none;position:absolute;top:100%;left:0;min-width:180px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px;box-shadow:0 10px 25px rgba(0,0,0,.15);z-index:50}.nav-cat-wrap:hover .nav-cat-menu,.nav-cat-wrap:focus-within .nav-cat-menu{display:grid;gap:3px}.nav-cat-menu button{border:0;background:#fff;text-align:left;padding:8px 10px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}.nav-cat-menu button:hover{background:#eee}.nav-cat-menu button{color:#111}
-</style></head>
+</style><style>
+
+/* =========================================================
+   STUDIO 70 — CAMADA FINAL DE RESPONSIVIDADE MOBILE
+   Não altera JavaScript, IDs, integrações ou regras de negócio.
+   ========================================================= */
+
+html,body{max-width:100%;overflow-x:hidden}
+img,svg,video,canvas{max-width:100%}
+button,input,select,textarea{max-width:100%}
+button,.btn,.smallbtn,.iconbtn{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+
+@media (max-width: 1100px){
+  .header-container{max-width:100%;padding-left:16px;padding-right:16px}
+  section{padding-left:18px;padding-right:18px}
+  .product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .category-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .modal-panel{width:min(96vw,1100px)}
+  .admin-grid{gap:14px}
+}
+
+@media (max-width: 768px){
+  /* Base */
+  body{min-width:0}
+  section{padding:28px 12px}
+  .section-title{font-size:27px;margin-bottom:16px}
+
+  /* Cabeçalho */
+  .header-container{
+    min-height:58px;
+    gap:7px;
+    padding:8px 10px;
+  }
+  .logo{
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    font-size:18px;
+    letter-spacing:.2px;
+  }
+  .header-icons{flex-shrink:0}
+  .header-icons .iconbtn{
+    min-width:40px;
+    min-height:40px;
+  }
+
+  /* Banner principal */
+  .banner-carousel{
+    height:clamp(300px,78vw,390px);
+    min-height:300px;
+  }
+  .banner-slide img{object-position:center}
+  .banner-content{
+    left:16px;
+    right:16px;
+    bottom:34px;
+    max-width:none;
+  }
+  .banner-content h2{
+    font-size:clamp(30px,10vw,48px);
+    line-height:.92;
+  }
+  .banner-content p{
+    font-size:14px;
+    line-height:1.25;
+    margin-bottom:12px;
+  }
+  .banner-content a{padding:10px 14px}
+  .banner-arrow{
+    width:36px;
+    height:36px;
+    font-size:20px;
+  }
+  .banner-arrow.prev{left:8px}
+  .banner-arrow.next{right:8px}
+
+  /* Faixa de benefícios */
+  .trustbar{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    padding:7px 10px 9px;
+    gap:5px;
+  }
+  .trustbar span{
+    justify-content:center;
+    text-align:center;
+    min-width:0;
+    padding:6px 5px;
+    line-height:1.15;
+  }
+
+  /* Categorias e busca */
+  .category-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+  }
+  .cat{
+    min-height:52px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:12px 7px;
+  }
+  .searchbar{
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    gap:8px;
+  }
+  .searchbar input,.searchbar select{
+    width:100%;
+    min-height:44px;
+    max-width:none;
+  }
+
+  /* Produtos */
+  .product-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+  }
+  .product{
+    min-width:0;
+    border-radius:10px;
+  }
+  .product img{
+    width:100%;
+    height:auto;
+    aspect-ratio:1/1.12;
+    object-fit:contain;
+  }
+  .product-info{padding:9px}
+  .product h3{
+    font-size:11px;
+    line-height:1.18;
+    min-height:26px;
+    overflow-wrap:anywhere;
+  }
+  .product .price{font-size:19px}
+  .meta{
+    font-size:9px;
+    line-height:1.2;
+    overflow-wrap:anywhere;
+  }
+  .product-actions{
+    flex-direction:column;
+    gap:5px;
+  }
+  .smallbtn{
+    min-height:40px;
+    padding:8px 7px;
+  }
+  .badge{
+    top:6px;
+    left:6px;
+    padding:4px 6px;
+    font-size:8px;
+    max-width:calc(100% - 12px);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .badge.featured{right:6px;left:auto}
+
+  /* Carrinho lateral */
+  .drawer-panel{
+    width:100%;
+    max-width:none;
+    padding:15px 12px calc(18px + env(safe-area-inset-bottom));
+  }
+  .cart-row{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:8px;
+    align-items:center;
+  }
+  #paymentOptions{padding:11px}
+  .payment-installments{
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+  .drawer-panel .btn{
+    min-height:46px;
+  }
+
+  /* Modais */
+  .modal-panel{
+    width:calc(100vw - 12px);
+    max-width:none;
+    max-height:96vh;
+    margin:2vh auto;
+    padding:12px;
+    border-radius:14px;
+  }
+  .modal-panel .section-title{
+    padding-left:10px;
+    border-left-width:4px;
+    padding-right:42px;
+  }
+  .close{
+    min-width:42px;
+    min-height:42px;
+    padding:7px 10px;
+  }
+  .product-modal-image{
+    min-height:260px;
+    height:auto;
+    max-height:58vh;
+  }
+  .product-modal-image img{
+    width:100%;
+    height:auto;
+    max-height:56vh;
+  }
+
+  /* ADM */
+  .admin-grid{grid-template-columns:1fr}
+  .form-grid{
+    grid-template-columns:1fr;
+    gap:9px;
+  }
+  .form-grid label.full{grid-column:auto}
+  .field{
+    width:100%;
+    min-height:44px;
+    font-size:16px; /* evita zoom automático no iPhone */
+  }
+  textarea.field{
+    min-height:110px;
+  }
+  .admin-item{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    gap:8px;
+  }
+  .admin-tools{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    width:100%;
+    gap:6px;
+  }
+  .admin-tools .smallbtn,
+  .admin-tools label.smallbtn{
+    width:100%;
+    min-height:42px;
+  }
+  .banner-admin-row{
+    grid-template-columns:1fr;
+  }
+  .banner-admin-item{
+    display:grid;
+    grid-template-columns:78px minmax(0,1fr);
+    align-items:start;
+  }
+  .banner-admin-item img{
+    width:78px;
+    height:48px;
+  }
+  .banner-admin-item .tools{
+    grid-column:1/-1;
+    width:100%;
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .scanner{padding:12px}
+  .scanner input{font-size:18px}
+
+  /* PDV */
+  .pdv-layout{grid-template-columns:1fr}
+  .pdv-card{padding:12px}
+  .pdv-scan{padding:12px}
+  .pdv-scan input{font-size:18px}
+  .pdv-item{
+    grid-template-columns:44px minmax(0,1fr);
+    gap:7px;
+    padding:8px;
+  }
+  .pdv-item img{
+    width:44px;
+    height:56px;
+  }
+  .pdv-item>.qtybox,
+  .pdv-item>.lineprice,
+  .pdv-item>.pdv-label-action{
+    grid-column:2;
+  }
+  .pay-grid{grid-template-columns:1fr}
+  .pay-grid label[style*="grid-column"]{grid-column:auto!important}
+  .pdv-total{font-size:28px}
+
+  /* Checkout integrado */
+  #integratedCheckoutModal{
+    padding:0;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  #integratedCheckoutModal .integrated-shell{
+    width:100%;
+    min-height:100%;
+    border-radius:0;
+  }
+  #integratedCheckoutModal .integrated-close{
+    top:max(8px,env(safe-area-inset-top));
+    right:8px;
+    width:42px;
+    height:42px;
+    padding:0;
+  }
+  #integratedCheckoutModal .wrap{
+    width:100%;
+    margin:0;
+    padding:12px 10px calc(20px + env(safe-area-inset-bottom));
+  }
+  #integratedCheckoutModal .brand{
+    padding-right:48px;
+    margin-bottom:14px;
+  }
+  #integratedCheckoutModal .brand h1{
+    font-size:22px;
+    letter-spacing:2px;
+  }
+  #integratedCheckoutModal .grid{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+  #integratedCheckoutModal .card{
+    padding:13px;
+    border-radius:13px;
+  }
+  #integratedCheckoutModal .fields{
+    grid-template-columns:1fr;
+    gap:9px;
+  }
+  #integratedCheckoutModal .fields label.full{grid-column:auto}
+  #integratedCheckoutModal .field{
+    font-size:16px;
+    min-height:44px;
+  }
+  #integratedCheckoutModal .freight{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  #integratedCheckoutModal .pay-methods{
+    grid-template-columns:1fr;
+  }
+  #integratedCheckoutModal .pay-method{
+    min-height:56px;
+  }
+  #integratedCheckoutModal .copy-pix{
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+  }
+  #integratedCheckoutModal .copy-pix .btn{
+    width:100%!important;
+  }
+  #integratedCheckoutModal .pix-qr{
+    width:min(68vw,230px);
+    height:min(68vw,230px);
+  }
+
+  /* Rodapé / WhatsApp */
+  footer{padding:32px 14px}
+  .whatsapp{
+    width:50px;
+    height:50px;
+    right:12px;
+    bottom:max(12px,env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 380px){
+  .logo{font-size:16px}
+  .header-icons .iconbtn{min-width:37px;width:37px}
+  .product-grid{gap:6px}
+  .product-info{padding:7px}
+  .product h3{font-size:10px}
+  .product .price{font-size:17px}
+  .smallbtn{font-size:9px}
+  .trustbar span{font-size:8px}
+  .section-title{font-size:24px}
+  .banner-carousel{height:315px}
+  .banner-content h2{font-size:32px}
+  .admin-tools{grid-template-columns:1fr}
+}
+
+@media (hover:none) and (pointer:coarse){
+  .product:hover,
+  .product:hover img,
+  .cat:hover,
+  .btn:hover,
+  .smallbtn:hover{transform:none}
+  .product-actions .smallbtn,
+  .btn,
+  .iconbtn{min-height:44px}
+}
+
+/* Segurança contra conteúdos longos causarem largura horizontal */
+#adminList,#adminOrders,#pdvHistory,#cartItems,#productBody,
+.banner-admin-list,.category-subgrid,.summary{
+  min-width:0;
+  max-width:100%;
+}
+#adminList *,#adminOrders *,#pdvHistory *,#cartItems *,
+#productBody *,.banner-admin-list *,.summary *{
+  overflow-wrap:anywhere;
+}
+
+</style>
+</head>
 <body>
 <div class="promo-carousel" id="promoCarousel" aria-label="Ofertas e benefícios">
   <div class="promo-track" id="promoTrack">
