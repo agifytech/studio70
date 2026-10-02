@@ -850,6 +850,58 @@ button,.btn,.smallbtn,.iconbtn{touch-action:manipulation;-webkit-tap-highlight-c
 #geekSection .geek-menu-btn:hover,#geekSection .geek-menu-btn.active{border-color:var(--geek-menu-active);color:var(--geek-menu-active)}
 </style>
 
+
+<style id="st70-fashion-admin-theme">
+/* MODA — identidade visual configurável pelo ADM */
+:root{
+  --fashion-bg:#e9e7e3;--fashion-card:#fff;--fashion-text:#11110f;--fashion-muted:#66645f;
+  --fashion-accent:#111;--fashion-accent2:#8f8b84;--fashion-line:#c9c6c0;
+  --fashion-button:#111;--fashion-button-text:#fff;--fashion-hero1:#fff;--fashion-hero2:#bdbab3;
+  --fashion-header:#e9e7e3;--fashion-header-text:#111;--fashion-footer:#111;--fashion-footer-text:#fff;
+  --fashion-display:'Black Ops One';--fashion-body:'Barlow Condensed';
+}
+body{background:var(--fashion-bg);color:var(--fashion-text);font-family:var(--fashion-body),Arial,sans-serif}
+header#siteHeader{background:color-mix(in srgb,var(--fashion-header) 96%,transparent);border-bottom-color:var(--fashion-line)}
+#siteHeader .logo{color:var(--fashion-header-text)}
+#siteHeader nav a{color:var(--fashion-header-text)}
+#siteHeader nav a:hover{color:var(--fashion-accent)}
+#siteHeader .iconbtn{color:var(--fashion-header-text);border-color:var(--fashion-line);background:var(--fashion-card)}
+.hero{background:linear-gradient(135deg,var(--fashion-hero1),var(--fashion-hero2));color:var(--fashion-text)}
+.hero .eyebrow{background:var(--fashion-accent);color:var(--fashion-button-text)}
+.hero h2{color:var(--fashion-muted)}
+.hero::after{background:var(--fashion-accent)}
+.btn{background:var(--fashion-button);color:var(--fashion-button-text);border-color:var(--fashion-button);box-shadow:5px 5px 0 var(--fashion-accent2)}
+.announce{background:var(--fashion-accent);color:var(--fashion-button-text)}
+.trustbar span{color:var(--fashion-muted);border-color:var(--fashion-line);background:color-mix(in srgb,var(--fashion-card) 60%,transparent)}
+.section-title{color:var(--fashion-text);border-left-color:var(--fashion-accent)}
+.cat{background:var(--fashion-card);color:var(--fashion-text);border-color:var(--fashion-line)}
+.cat:hover{border-color:var(--fashion-accent)}
+.searchbar input,.field{border-color:var(--fashion-line);background:var(--fashion-card);color:var(--fashion-text)}
+.searchbar input:focus,.field:focus{border-color:var(--fashion-accent)}
+.product{background:var(--fashion-card);border-color:var(--fashion-line)}
+.product:hover{border-color:var(--fashion-accent)}
+.product img{background:color-mix(in srgb,var(--fashion-bg) 70%,var(--fashion-card))}
+.product .price{color:var(--fashion-accent)}
+.meta{color:var(--fashion-muted)}
+.smallbtn{background:var(--fashion-card);color:var(--fashion-text);border-color:var(--fashion-line)}
+.smallbtn:hover{border-color:var(--fashion-accent)}
+.smallbtn.primary{background:var(--fashion-button);color:var(--fashion-button-text);border-color:var(--fashion-button)}
+.badge{background:var(--fashion-accent);color:var(--fashion-button-text)}
+.badge.featured{background:var(--fashion-card);border-color:var(--fashion-accent);color:var(--fashion-accent)}
+footer{background:var(--fashion-footer);color:var(--fashion-footer-text);border-top-color:var(--fashion-line)}
+footer h2,footer a{color:var(--fashion-footer-text)!important}
+.whatsapp{background:var(--fashion-accent);color:var(--fashion-button-text)}
+.mobile-menu-toggle{background:var(--fashion-card);color:var(--fashion-header-text);border-color:var(--fashion-line)}
+.mobile-nav{background:var(--fashion-header);border-color:var(--fashion-line)}
+.mobile-nav a{color:var(--fashion-header-text)}
+.mobile-nav a:hover{background:color-mix(in srgb,var(--fashion-accent) 10%,transparent);color:var(--fashion-accent)}
+.fashion-admin-card .color-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.fashion-admin-card .color-field{display:grid;grid-template-columns:44px 1fr;gap:8px;align-items:center}
+.fashion-admin-card input[type=color]{width:44px;height:42px;padding:2px;border-radius:9px;border:1px solid #bbb;background:#fff}
+.fashion-admin-card .admin-preview{border-radius:12px;border:1px solid var(--fashion-line);padding:16px;margin-top:12px;background:var(--fashion-card);color:var(--fashion-text)}
+@media(max-width:768px){.fashion-admin-card .color-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+
 </head>
 <body>
 <div class="promo-carousel" id="promoCarousel" aria-label="Ofertas e benefícios">
@@ -916,6 +968,52 @@ button,.btn,.smallbtn,.iconbtn{touch-action:manipulation;-webkit-tap-highlight-c
 <button class="btn" style="width:100%;margin-top:10px" onclick="goCheckout()">FINALIZAR COMPRA</button><button class="btn" style="width:100%;margin-top:10px;background:#eceae6;color:#111" onclick="checkoutWhatsApp()">FINALIZAR NO WHATSAPP</button></div></div>
 <div class="modal" id="loginModal"><div class="modal-panel" style="max-width:420px"><button class="close" onclick="closeLogin()">×</button><h2 class="section-title">ACESSO RESTRITO</h2><p id="loginTitle">Digite a senha para continuar.</p><label style="display:block;font-size:12px;margin-bottom:8px">URL da Edge Function<input class="field" id="loginEndpoint" value="https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler" placeholder="URL da Edge Function" autocomplete="url"></label><input class="field" id="loginPassword" type="password" inputmode="numeric" maxlength="64" placeholder="Senha do painel" autocomplete="off"><div id="loginError" style="color:#ff6b8f;font-weight:700;min-height:22px;margin:8px 0"></div><button class="btn" style="width:100%" onclick="submitLogin()">ENTRAR</button></div></div>
 <div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="banner-admin-card"><h3 style="margin-top:0">🖼️ CARROSSEL DE BANNERS</h3><p style="font-size:12px;color:#666">Cadastre as imagens que aparecerão no carrossel principal da loja. As alterações ficam salvas no Supabase.</p><div class="banner-admin-row"><label>Título<input class="field" id="bannerTitle" placeholder="Ex.: NOVA COLEÇÃO"></label><label>Subtítulo<input class="field" id="bannerSubtitle" placeholder="Ex.: ESTILO URBANO 2026"></label></div><label>Link da imagem<input class="field" id="bannerImage" placeholder="https://.../banner.jpg"></label><label style="display:block;margin-top:10px">Link ao clicar (opcional)<input class="field" id="bannerLink" placeholder="https://... ou #produtos"></label><div class="checkrow"><label><input type="checkbox" id="bannerActive" checked> Banner ativo</label></div><div class="admin-tools"><button class="smallbtn primary" type="button" onclick="addBannerFromAdmin()">+ ADICIONAR BANNER</button><button class="smallbtn" type="button" onclick="loadBannersFromServer()">↻ ATUALIZAR</button></div><div id="bannerAdminList" class="banner-admin-list"></div>
+</div>
+
+<div class="payment-admin-box fashion-admin-card" style="margin:14px 0;padding:16px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px">
+  <b>👕 ÁREA DE MODA — IDENTIDADE VISUAL</b>
+  <p style="font-size:11px;color:#666;margin:6px 0 14px">
+    Edite somente pelo ADM as cores da vitrine de MODA. A configuração é independente da área GEEK e fica salva no Supabase.
+  </p>
+  <h4 style="margin:12px 0 8px">🎨 CORES DA LOJA</h4>
+  <div class="color-grid">
+    <label class="color-field">Fundo<input type="color" id="fashionThemeBackground"></label>
+    <label class="color-field">Cards<input type="color" id="fashionThemeCard"></label>
+    <label class="color-field">Texto<input type="color" id="fashionThemeText"></label>
+    <label class="color-field">Texto secundário<input type="color" id="fashionThemeMuted"></label>
+    <label class="color-field">Cor principal<input type="color" id="fashionThemeAccent"></label>
+    <label class="color-field">Cor secundária<input type="color" id="fashionThemeAccent2"></label>
+    <label class="color-field">Bordas<input type="color" id="fashionThemeLine"></label>
+    <label class="color-field">Botões<input type="color" id="fashionThemeButton"></label>
+    <label class="color-field">Texto dos botões<input type="color" id="fashionThemeButtonText"></label>
+    <label class="color-field">Hero / fundo 1<input type="color" id="fashionThemeHero1"></label>
+    <label class="color-field">Hero / fundo 2<input type="color" id="fashionThemeHero2"></label>
+    <label class="color-field">Cabeçalho<input type="color" id="fashionThemeHeader"></label>
+    <label class="color-field">Texto cabeçalho<input type="color" id="fashionThemeHeaderText"></label>
+    <label class="color-field">Rodapé<input type="color" id="fashionThemeFooter"></label>
+    <label class="color-field">Texto rodapé<input type="color" id="fashionThemeFooterText"></label>
+  </div>
+  <h4 style="margin:16px 0 8px">🔤 FONTES</h4>
+  <div class="form-grid">
+    <label>Fonte dos títulos
+      <select class="field" id="fashionThemeFontDisplay">
+        <option>Black Ops One</option><option>Barlow Condensed</option><option>Inter</option><option>Space Grotesk</option><option>Rajdhani</option><option>Orbitron</option><option>Roboto</option><option>Montserrat</option>
+      </select>
+    </label>
+    <label>Fonte dos textos
+      <select class="field" id="fashionThemeFontBody">
+        <option>Barlow Condensed</option><option>Inter</option><option>Space Grotesk</option><option>Rajdhani</option><option>Roboto</option><option>Montserrat</option><option>Arial</option>
+      </select>
+    </label>
+  </div>
+  <div class="admin-tools" style="margin-top:12px">
+    <button type="button" class="smallbtn primary" onclick="saveFashionThemeFromAdmin()">SALVAR IDENTIDADE DA MODA</button>
+    <button type="button" class="smallbtn" onclick="resetFashionThemeAdmin()">RESTAURAR PADRÃO</button>
+  </div>
+  <div id="fashionThemeAdminStatus" style="font-size:11px;margin-top:7px;min-height:16px"></div>
+  <div class="admin-preview">
+    <b>Prévia:</b> a alteração afeta a vitrine de moda, cabeçalho, categorias, produtos, botões e rodapé. GEEK, PDV e checkout mantêm suas próprias identidades.
+  </div>
 </div>
 <div class="payment-admin-box geek-admin-card" style="margin:14px 0;padding:16px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px">
   <b>🎮 ÁREA GEEK — PERSONALIZAÇÃO</b>
@@ -1563,7 +1661,7 @@ document.getElementById('pdvDiscount').addEventListener('input',renderPDV);docum
 let cartTapCount=0,cartTapTimer=null;const cartAccess=document.getElementById('cartBtn');
 if(cartAccess)cartAccess.addEventListener('click',e=>{cartTapCount++;clearTimeout(cartTapTimer);cartTapTimer=setTimeout(()=>{cartTapCount=0},650);if(cartTapCount>=3){e.preventDefault();e.stopImmediatePropagation();cartTapCount=0;openAdmin()}},{capture:true});
 document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.altKey&&e.shiftKey&&e.key.toLowerCase()==='a'){e.preventDefault();openAdmin()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
-function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} 
+function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadFashionTheme().then(fillFashionThemeAdmin);loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} 
 async function loadFreeShippingConfig(){
   try{
     const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shipping_config'})});
@@ -2043,6 +2141,75 @@ function resetGeekThemeAdmin(){
   if(!confirm('Restaurar a aparência padrão da área GEEK?'))return;
   applyGeekTheme(DEFAULT_GEEK_THEME);fillGeekThemeAdmin();
   const st=document.getElementById('geekThemeAdminStatus');if(st)st.textContent='Padrão carregado. Clique em SALVAR PERSONALIZAÇÃO GEEK para gravar.';
+}
+
+
+const DEFAULT_FASHION_THEME={
+  background:'#e9e7e3',card:'#ffffff',text:'#11110f',muted:'#66645f',accent:'#111111',
+  accent2:'#8f8b84',line:'#c9c6c0',button:'#111111',buttonText:'#ffffff',
+  hero1:'#ffffff',hero2:'#bdbab3',header:'#e9e7e3',headerText:'#111111',
+  footer:'#111111',footerText:'#ffffff',fontDisplay:'Black Ops One',fontBody:'Barlow Condensed'
+};
+let fashionTheme={...DEFAULT_FASHION_THEME};
+function applyFashionTheme(t){
+  fashionTheme={...DEFAULT_FASHION_THEME,...(t||{})};
+  const root=document.documentElement;
+  const map={
+    background:'--fashion-bg',card:'--fashion-card',text:'--fashion-text',muted:'--fashion-muted',
+    accent:'--fashion-accent',accent2:'--fashion-accent2',line:'--fashion-line',
+    button:'--fashion-button',buttonText:'--fashion-button-text',hero1:'--fashion-hero1',hero2:'--fashion-hero2',
+    header:'--fashion-header',headerText:'--fashion-header-text',footer:'--fashion-footer',footerText:'--fashion-footer-text',
+    fontDisplay:'--fashion-display',fontBody:'--fashion-body'
+  };
+  Object.entries(map).forEach(([k,v])=>root.style.setProperty(v,
+    ['fontDisplay','fontBody'].includes(k) ? `"${String(fashionTheme[k]).replace(/"/g,'')}"` : String(fashionTheme[k])));
+  loadFashionFont(fashionTheme.fontDisplay);
+  loadFashionFont(fashionTheme.fontBody);
+}
+function loadFashionFont(font){
+  const allowed=['Black Ops One','Barlow Condensed','Inter','Space Grotesk','Rajdhani','Orbitron','Roboto','Montserrat'];
+  if(!allowed.includes(font))return;
+  const id='st70-fashion-font-'+font.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+  if(document.getElementById(id))return;
+  const link=document.createElement('link');link.id=id;link.rel='stylesheet';link.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(font).replace(/%20/g,'+')+':wght@400;500;600;700;800;900&display=swap';document.head.appendChild(link);
+}
+function fillFashionThemeAdmin(){
+  const t=fashionTheme;
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v;};
+  ['Background','Card','Text','Muted','Accent','Accent2','Line','Button','ButtonText','Hero1','Hero2','Header','HeaderText','Footer','FooterText'].forEach(k=>set('fashionTheme'+k,t[k.charAt(0).toLowerCase()+k.slice(1)]));
+  set('fashionThemeFontDisplay',t.fontDisplay);set('fashionThemeFontBody',t.fontBody);
+}
+function readFashionThemeAdmin(){
+  const t={...fashionTheme};
+  const get=id=>document.getElementById(id)?.value||'';
+  ['Background','Card','Text','Muted','Accent','Accent2','Line','Button','ButtonText','Hero1','Hero2','Header','HeaderText','Footer','FooterText'].forEach(k=>{
+    const prop=k.charAt(0).toLowerCase()+k.slice(1);t[prop]=get('fashionTheme'+k);
+  });
+  t.fontDisplay=get('fashionThemeFontDisplay');t.fontBody=get('fashionThemeFontBody');
+  return t;
+}
+async function loadFashionTheme(){
+  try{
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'fashion_theme_get'})});
+    const d=await r.json().catch(()=>({}));
+    applyFashionTheme(r.ok&&d.ok&&d.theme?d.theme:DEFAULT_FASHION_THEME);
+  }catch(e){console.warn('fashion_theme_get',e);applyFashionTheme(DEFAULT_FASHION_THEME);}
+}
+async function saveFashionThemeFromAdmin(){
+  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',saveFashionThemeFromAdmin);
+  const st=document.getElementById('fashionThemeAdminStatus');
+  try{
+    const theme=readFashionThemeAdmin();st.textContent='Salvando identidade visual da MODA...';
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'fashion_theme_save',admin_password:adminAuthPassword,theme})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao salvar a identidade visual da MODA.');
+    applyFashionTheme(d.theme||theme);fillFashionThemeAdmin();st.textContent='✓ Cores da MODA salvas no Supabase.';
+  }catch(e){st.textContent=e.message;alert(e.message);}
+}
+function resetFashionThemeAdmin(){
+  if(!confirm('Restaurar as cores padrão da área de MODA?'))return;
+  applyFashionTheme(DEFAULT_FASHION_THEME);fillFashionThemeAdmin();
+  const st=document.getElementById('fashionThemeAdminStatus');if(st)st.textContent='Padrão carregado. Clique em SALVAR IDENTIDADE DA MODA para gravar.';
 }
 
 function renderAdmin(){
@@ -2579,8 +2746,8 @@ function renderAdminOrders(orders){
   if(!document.documentElement.dataset.studio70ProductHandlers){
     document.documentElement.dataset.studio70ProductHandlers='1';
     document.addEventListener('click',function(ev){
-      const details=ev.target.closest?.('#productGrid .js-details');
-      const buy=ev.target.closest?.('#productGrid .js-buy');
+      const details=ev.target.closest?.('#productGrid .js-details, #geekProductGrid .js-details');
+      const buy=ev.target.closest?.('#productGrid .js-buy, #geekProductGrid .js-buy');
       const fitting=ev.target.closest?.('#productBody .js-fitting');
       if(fitting){ev.preventDefault();ev.stopPropagation();openVirtualFitting(fitting.dataset.productId);return;}
       if(details){ev.preventDefault();ev.stopPropagation();openProduct(details.dataset.productId);return;}
@@ -2613,6 +2780,7 @@ function renderAdminOrders(orders){
 })();
 ensureCategoryAdminControls(); renderCategories();clearForm();loadPaymentSettings();loadShippingSettings();renderProducts();renderCart();renderPDV();
 loadCategoriesFromServer();
+loadFashionTheme();
 loadGeekTheme();
 loadSupabaseProducts();
 setInterval(()=>{if(adminAuthPassword)pollOrders()},10000);
