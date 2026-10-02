@@ -620,6 +620,236 @@ button,.btn,.smallbtn,.iconbtn{touch-action:manipulation;-webkit-tap-highlight-c
 }
 
 </style>
+
+<style id="st70-mobile-menu-fix">
+/* STUDIO 70 — MENU MOBILE CORRIGIDO */
+.mobile-menu-toggle{display:none;flex:0 0 44px;width:44px;height:44px;border:1px solid var(--line);border-radius:8px;background:#202026;color:#fff;font-size:22px;line-height:1;cursor:pointer;align-items:center;justify-content:center;padding:0;position:relative;z-index:1001}
+.mobile-nav{display:none}
+@media(max-width:950px){
+  .mobile-menu-toggle{display:flex}
+  #desktopNav{display:none!important}
+  .header-container{position:relative;z-index:1000}
+  .mobile-nav{position:absolute;display:flex;visibility:hidden;opacity:0;pointer-events:none;left:10px;right:10px;top:calc(100% + 4px);z-index:1000;flex-direction:column;gap:4px;padding:10px;background:#17171b;border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 35px rgba(0,0,0,.35);transform:translateY(-6px);transition:opacity .16s ease,transform .16s ease,visibility .16s ease}
+  .mobile-nav.open{visibility:visible;opacity:1;pointer-events:auto;transform:translateY(0)}
+  .mobile-nav a{display:flex;align-items:center;min-height:46px;padding:10px 13px;color:#fff;text-decoration:none;border-radius:8px;font-size:13px;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+  .mobile-nav a:active,.mobile-nav a:hover{background:#2a2a30;color:#fff}
+  .header-icons{margin-left:auto;position:relative;z-index:1002}
+}
+@media(max-width:420px){
+  .header-container{padding-left:8px;padding-right:8px}
+  .mobile-menu-toggle{flex-basis:42px;width:42px;height:42px}
+  .header-icons{gap:5px}
+  .header-icons .iconbtn{min-width:40px;padding:8px 9px}
+  .logo{font-size:16px}
+}
+</style>
+
+<style id="st70-geek-theme">
+/* STUDIO 70 — ÁREA GEEK COM IDENTIDADE PRÓPRIA */
+.geek-section{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  margin-top:28px;
+  padding:48px clamp(12px,3vw,34px) 54px;
+  border-top:0;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(0,229,255,.18), transparent 24%),
+    radial-gradient(circle at 88% 12%, rgba(255,0,153,.17), transparent 25%),
+    radial-gradient(circle at 50% 100%, rgba(124,58,237,.24), transparent 38%),
+    linear-gradient(135deg,#080914 0%,#111329 48%,#090a16 100%);
+  color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 0 90px rgba(0,0,0,.35);
+}
+.geek-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  opacity:.26;
+  background-image:
+    linear-gradient(rgba(0,229,255,.12) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,0,153,.10) 1px,transparent 1px);
+  background-size:28px 28px;
+  mask-image:linear-gradient(to bottom,black,transparent 92%);
+}
+.geek-section::after{
+  content:"✦  ◈  ✦  ◇  ✦  ◈  ✦";
+  position:absolute;
+  top:12px;
+  right:clamp(12px,4vw,50px);
+  color:rgba(0,229,255,.34);
+  font-size:18px;
+  letter-spacing:10px;
+  pointer-events:none;
+}
+.geek-header{
+  position:relative;
+  max-width:1180px;
+  margin:0 auto 28px;
+  padding:24px 24px 22px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(7,9,24,.88),rgba(25,16,48,.76));
+  box-shadow:0 14px 45px rgba(0,0,0,.30),0 0 35px rgba(124,58,237,.12);
+  overflow:hidden;
+}
+.geek-header::before{
+  content:"";
+  position:absolute;
+  left:-30px;
+  top:-50px;
+  width:190px;
+  height:190px;
+  border-radius:50%;
+  border:1px solid rgba(0,229,255,.25);
+  box-shadow:0 0 0 20px rgba(0,229,255,.025),0 0 0 42px rgba(0,229,255,.018);
+}
+.geek-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  margin-bottom:8px;
+  padding:6px 10px;
+  border:1px solid rgba(0,229,255,.35);
+  border-radius:999px;
+  background:rgba(0,229,255,.07);
+  color:#7df6ff;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:1.6px;
+  text-transform:uppercase;
+}
+.geek-header h2{
+  position:relative;
+  margin:0;
+  font-size:clamp(30px,5vw,52px);
+  line-height:.95;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  background:linear-gradient(90deg,#fff 0%,#7df6ff 38%,#ff4fbd 76%,#fff 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow:0 0 28px rgba(0,229,255,.16);
+}
+.geek-subtitle{
+  position:relative;
+  max-width:720px;
+  margin:10px 0 0;
+  color:#c7c9da;
+  font-size:13px;
+  line-height:1.55;
+}
+.geek-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:16px;
+}
+.geek-tags span{
+  padding:6px 9px;
+  border-radius:7px;
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(255,255,255,.055);
+  color:#e7e8f2;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+}
+#geekProductGrid{
+  position:relative;
+  max-width:1180px;
+  margin-left:auto;
+  margin-right:auto;
+}
+#geekProductGrid .product{
+  border:1px solid rgba(255,255,255,.14);
+  background:linear-gradient(180deg,rgba(25,27,51,.96),rgba(10,11,24,.98));
+  color:#fff;
+  box-shadow:0 8px 28px rgba(0,0,0,.28),0 0 0 1px rgba(124,58,237,.06);
+}
+#geekProductGrid .product:hover{
+  border-color:rgba(0,229,255,.55);
+  box-shadow:0 14px 36px rgba(0,0,0,.38),0 0 28px rgba(0,229,255,.12);
+}
+#geekProductGrid .product h3{color:#fff}
+#geekProductGrid .product .meta{color:#aeb1c4}
+#geekProductGrid .product .price{color:#7df6ff}
+#geekProductGrid .product .smallbtn{border-color:rgba(0,229,255,.30);background:rgba(0,229,255,.08);color:#fff}
+#geekProductGrid .product .smallbtn:hover{background:rgba(255,0,153,.14);border-color:rgba(255,0,153,.42)}
+#geekPagination button{background:#17192f!important;color:#fff!important;border-color:rgba(255,255,255,.16)!important}
+#geekPagination button.active{background:linear-gradient(90deg,#00cfe8,#8b5cf6)!important;color:#fff!important;border-color:transparent!important}
+@media(max-width:768px){
+  .geek-section{margin-top:12px;padding:30px 10px 38px}
+  .geek-header{padding:19px 16px 18px;margin-bottom:18px;border-radius:14px}
+  .geek-subtitle{font-size:12px}
+  .geek-tags{gap:5px;margin-top:12px}
+  .geek-tags span{font-size:8px;padding:5px 7px}
+  .geek-section::after{font-size:14px;letter-spacing:5px}
+}
+</style>
+
+<style id="st70-geek-admin-theme">
+/* Tema GEEK controlado exclusivamente pelo ADM */
+#geekSection{
+  --geek-bg1:#080914;--geek-bg2:#111329;--geek-bg3:#090a16;
+  --geek-a1:#00e5ff;--geek-a2:#ff0099;--geek-a3:#7c3aed;
+  --geek-text:#fff;--geek-card:#0d1020;--geek-border:#27304a;
+  --geek-menu-text:#fff;--geek-menu-active:#00e5ff;
+  background:
+    radial-gradient(circle at 12% 18%, color-mix(in srgb,var(--geek-a1) 18%,transparent), transparent 24%),
+    radial-gradient(circle at 88% 12%, color-mix(in srgb,var(--geek-a2) 17%,transparent), transparent 25%),
+    radial-gradient(circle at 50% 100%, color-mix(in srgb,var(--geek-a3) 24%,transparent), transparent 38%),
+    linear-gradient(135deg,var(--geek-bg1) 0%,var(--geek-bg2) 48%,var(--geek-bg3) 100%);
+  color:var(--geek-text);
+  font-family:var(--geek-font,"Barlow Condensed",Arial,sans-serif);
+}
+#geekSection .geek-header{
+  background:linear-gradient(135deg,color-mix(in srgb,var(--geek-bg1) 88%,transparent),color-mix(in srgb,var(--geek-a3) 25%,var(--geek-bg2)));
+  border-color:color-mix(in srgb,var(--geek-border) 75%,var(--geek-a1));
+}
+#geekSection .geek-kicker{color:var(--geek-a1);border-color:color-mix(in srgb,var(--geek-a1) 45%,transparent);background:color-mix(in srgb,var(--geek-a1) 7%,transparent)}
+#geekSection .geek-header h2{color:var(--geek-text)}
+#geekSection .geek-subtitle{color:color-mix(in srgb,var(--geek-text) 78%,transparent)}
+#geekSection .geek-tags span{
+  color:var(--geek-menu-text);
+  border-color:color-mix(in srgb,var(--geek-border) 75%,var(--geek-a1));
+  background:color-mix(in srgb,var(--geek-card) 82%,transparent);
+}
+#geekSection .geek-tags span:hover,#geekSection .geek-tags span.active{
+  color:var(--geek-menu-active);
+  border-color:var(--geek-menu-active);
+  box-shadow:0 0 18px color-mix(in srgb,var(--geek-menu-active) 22%,transparent);
+}
+#geekSection .product{
+  background:linear-gradient(145deg,color-mix(in srgb,var(--geek-card) 96%,transparent),color-mix(in srgb,var(--geek-bg2) 88%,transparent));
+  border-color:color-mix(in srgb,var(--geek-border) 90%,transparent);
+}
+#geekSection .product .price{color:var(--geek-a1)}
+#geekSection .smallbtn.primary{background:var(--geek-a1);color:#061018}
+#geekSection .smallbtn:not(.primary){border-color:var(--geek-border);color:var(--geek-text);background:color-mix(in srgb,var(--geek-card) 90%,transparent)}
+#geekSection .badge{background:var(--geek-a3);color:#fff}
+.geek-admin-card .color-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.geek-admin-card .color-field{display:grid;grid-template-columns:44px 1fr;gap:8px;align-items:center}
+.geek-admin-card input[type=color]{width:44px;height:42px;padding:2px;border-radius:9px;border:1px solid #bbb;background:#fff}
+.geek-admin-card .menu-editor{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end;margin-top:8px}
+.geek-admin-card .menu-editor .smallbtn{height:42px}
+@media(max-width:768px){
+  .geek-admin-card .color-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .geek-admin-card .menu-editor{grid-template-columns:1fr}
+}
+</style>
+
+
+<style id="st70-geek-menu-buttons">
+#geekSection .geek-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+#geekSection .geek-menu-btn{appearance:none;border:1px solid rgba(255,255,255,.15);padding:9px 12px;border-radius:999px;background:rgba(255,255,255,.04);color:#fff;font:inherit;font-size:11px;font-weight:800;letter-spacing:.5px;cursor:pointer}
+#geekSection .geek-menu-btn:hover,#geekSection .geek-menu-btn.active{border-color:var(--geek-menu-active);color:var(--geek-menu-active)}
+</style>
+
 </head>
 <body>
 <div class="promo-carousel" id="promoCarousel" aria-label="Ofertas e benefícios">
@@ -632,11 +862,44 @@ button,.btn,.smallbtn,.iconbtn{touch-action:manipulation;-webkit-tap-highlight-c
   <button class="promo-next" type="button" onclick="promoMove(1)" aria-label="Próxima mensagem">›</button>
   <div class="promo-dots" id="promoDots"></div>
 </div>
-<header><div class="header-container"><div class="logo">STUDIO 70 BRAND</div><nav><a href="#inicio">INÍCIO</a><a href="#produtos">LANÇAMENTOS</a><a href="#produtos" onclick="filterGender('Feminino')">FEMININO</a><a href="#produtos" onclick="filterGender('Masculino')">MASCULINO</a><a href="#produtos">LANÇAMENTOS</a></nav><div class="header-icons"><button class="iconbtn" id="searchBtn" type="button" aria-label="Pesquisar">🔍</button><button class="iconbtn" id="cartBtn" type="button" aria-label="Carrinho">🛒 <b id="cartCount">0</b></button></div></div></header>
+<header id="siteHeader">
+<div class="header-container">
+  <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Abrir menu" aria-expanded="false">☰</button>
+  <div class="logo">STUDIO 70 BRAND</div>
+  <nav id="desktopNav">
+    <a href="#inicio">INÍCIO</a>
+    <a href="#produtos">LANÇAMENTOS</a>
+    <a href="#produtos" onclick="filterGender('Feminino')">FEMININO</a>
+    <a href="#produtos" onclick="filterGender('Masculino')">MASCULINO</a>
+    <a href="#produtos">LANÇAMENTOS</a>
+  </nav>
+  <div class="header-icons">
+    <button class="iconbtn" id="searchBtn" type="button" aria-label="Pesquisar">🔍</button>
+    <button class="iconbtn" id="cartBtn" type="button" aria-label="Carrinho">🛒 <b id="cartCount">0</b></button>
+  </div>
+</div>
+<div class="mobile-nav" id="mobileNav" aria-hidden="true">
+  <a href="#inicio" data-mobile-nav>INÍCIO</a>
+  <a href="#produtos" data-mobile-nav>LANÇAMENTOS</a>
+  <a href="#produtos" data-mobile-nav data-gender="Feminino">FEMININO</a>
+  <a href="#produtos" data-mobile-nav data-gender="Masculino">MASCULINO</a>
+</div>
+</header>
 <main id="inicio"><section class="hero-banner-section" style="padding:0;max-width:none"><div class="banner-carousel" id="bannerCarousel"><div class="banner-track" id="bannerTrack"></div><button class="banner-arrow prev" type="button" id="bannerPrev" aria-label="Banner anterior">‹</button><button class="banner-arrow next" type="button" id="bannerNext" aria-label="Próximo banner">›</button><div class="banner-dots" id="bannerDots"></div></div></section>
 <div class="trustbar"><span>🚚 Frete grátis acima de R$250</span><span>🔄 Troca fácil em 7 dias</span><span>🔒 Compra 100% segura</span><span>💳 Parcele suas compras</span></div>
 
-<section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section></main>
+<section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section>
+<section id="geekSection" class="geek-section" style="display:none">
+  <div class="geek-header">
+    <div class="geek-kicker">⚡ ST70 · GEEK ZONE</div>
+    <h2>GEEK</h2>
+    <p class="geek-subtitle">Uma área exclusiva para colecionáveis, cultura pop, decoração e produtos geek — visualmente separada da coleção de moda.</p>
+    <nav class="geek-tags" id="geekMenu" aria-label="Menu Geek"></nav>
+  </div>
+  <div id="geekProductGrid" class="product-grid"></div>
+  <div id="geekPagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div>
+</section>
+</main>
 <a class="whatsapp" id="whatsappFloat" href="#" target="_blank">✆</a><footer><h2>STUDIO 70 BRAND</h2><p>Moda urbana masculina e feminina. Estilo, atitude e identidade.</p><p><a href="https://instagram.com/use.studio70" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-weight:700">Instagram: @use.studio70</a></p><p>© 2026 STUDIO 70 BRAND</p></footer>
 <div class="drawer" id="cartDrawer"><div class="drawer-panel"><button class="close" onclick="closeCart()">×</button><h2 class="section-title">SEU CARRINHO</h2><div id="cartItems"></div><div class="total" id="cartTotal">R$ 0,00</div>
 <div id="paymentOptions">
@@ -652,7 +915,59 @@ button,.btn,.smallbtn,.iconbtn{touch-action:manipulation;-webkit-tap-highlight-c
 </div>
 <button class="btn" style="width:100%;margin-top:10px" onclick="goCheckout()">FINALIZAR COMPRA</button><button class="btn" style="width:100%;margin-top:10px;background:#eceae6;color:#111" onclick="checkoutWhatsApp()">FINALIZAR NO WHATSAPP</button></div></div>
 <div class="modal" id="loginModal"><div class="modal-panel" style="max-width:420px"><button class="close" onclick="closeLogin()">×</button><h2 class="section-title">ACESSO RESTRITO</h2><p id="loginTitle">Digite a senha para continuar.</p><label style="display:block;font-size:12px;margin-bottom:8px">URL da Edge Function<input class="field" id="loginEndpoint" value="https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler" placeholder="URL da Edge Function" autocomplete="url"></label><input class="field" id="loginPassword" type="password" inputmode="numeric" maxlength="64" placeholder="Senha do painel" autocomplete="off"><div id="loginError" style="color:#ff6b8f;font-weight:700;min-height:22px;margin:8px 0"></div><button class="btn" style="width:100%" onclick="submitLogin()">ENTRAR</button></div></div>
-<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="banner-admin-card"><h3 style="margin-top:0">🖼️ CARROSSEL DE BANNERS</h3><p style="font-size:12px;color:#666">Cadastre as imagens que aparecerão no carrossel principal da loja. As alterações ficam salvas no Supabase.</p><div class="banner-admin-row"><label>Título<input class="field" id="bannerTitle" placeholder="Ex.: NOVA COLEÇÃO"></label><label>Subtítulo<input class="field" id="bannerSubtitle" placeholder="Ex.: ESTILO URBANO 2026"></label></div><label>Link da imagem<input class="field" id="bannerImage" placeholder="https://.../banner.jpg"></label><label style="display:block;margin-top:10px">Link ao clicar (opcional)<input class="field" id="bannerLink" placeholder="https://... ou #produtos"></label><div class="checkrow"><label><input type="checkbox" id="bannerActive" checked> Banner ativo</label></div><div class="admin-tools"><button class="smallbtn primary" type="button" onclick="addBannerFromAdmin()">+ ADICIONAR BANNER</button><button class="smallbtn" type="button" onclick="loadBannersFromServer()">↻ ATUALIZAR</button></div><div id="bannerAdminList" class="banner-admin-list"></div></div><div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço de venda<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU <span style="font-size:10px;color:#777;font-weight:500">(gerado automaticamente)</span><input class="field" id="pSku" required></label><label>Código de barras <span style="font-size:10px;color:#777;font-weight:500">(EAN-13 automático)</span><input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Link da foto principal<input class="field" id="pImage" placeholder="https://..."></label>
+<div class="modal" id="adminModal"><div class="modal-panel"><button class="close" onclick="closeAdmin()">×</button><h2 class="section-title">PAINEL ADMINISTRATIVO</h2><div class="scanner"><b>📟 BIPAGEM / LEITOR</b><p style="color:#aaa;font-size:12px">Conecte um leitor USB de código de barras. Ele funciona como teclado: deixe este campo selecionado e bipar o produto.</p><input class="field" id="scannerInput" placeholder="Aguardando bipagem..." autocomplete="off"><div class="scan-result" id="scanResult"></div></div><div class="banner-admin-card"><h3 style="margin-top:0">🖼️ CARROSSEL DE BANNERS</h3><p style="font-size:12px;color:#666">Cadastre as imagens que aparecerão no carrossel principal da loja. As alterações ficam salvas no Supabase.</p><div class="banner-admin-row"><label>Título<input class="field" id="bannerTitle" placeholder="Ex.: NOVA COLEÇÃO"></label><label>Subtítulo<input class="field" id="bannerSubtitle" placeholder="Ex.: ESTILO URBANO 2026"></label></div><label>Link da imagem<input class="field" id="bannerImage" placeholder="https://.../banner.jpg"></label><label style="display:block;margin-top:10px">Link ao clicar (opcional)<input class="field" id="bannerLink" placeholder="https://... ou #produtos"></label><div class="checkrow"><label><input type="checkbox" id="bannerActive" checked> Banner ativo</label></div><div class="admin-tools"><button class="smallbtn primary" type="button" onclick="addBannerFromAdmin()">+ ADICIONAR BANNER</button><button class="smallbtn" type="button" onclick="loadBannersFromServer()">↻ ATUALIZAR</button></div><div id="bannerAdminList" class="banner-admin-list"></div>
+</div>
+<div class="payment-admin-box geek-admin-card" style="margin:14px 0;padding:16px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px">
+  <b>🎮 ÁREA GEEK — PERSONALIZAÇÃO</b>
+  <p style="font-size:11px;color:#666;margin:6px 0 14px">
+    Todas as alterações abaixo ficam salvas no Supabase e aparecem somente na área GEEK da loja.
+    O cliente não tem acesso a estas configurações.
+  </p>
+  <div class="form-grid">
+    <label>Título da área<input class="field" id="geekThemeTitle" maxlength="50"></label>
+    <label>Texto pequeno / Kicker<input class="field" id="geekThemeKicker" maxlength="80"></label>
+    <label class="full">Descrição<input class="field" id="geekThemeSubtitle" maxlength="220"></label>
+    <label>Fonte
+      <select class="field" id="geekThemeFont">
+        <option>Barlow Condensed</option>
+        <option>Inter</option>
+        <option>Space Grotesk</option>
+        <option>Rajdhani</option>
+        <option>Orbitron</option>
+        <option>Roboto</option>
+        <option>Montserrat</option>
+        <option>Arial</option>
+      </select>
+    </label>
+    <label>Área GEEK ativa
+      <select class="field" id="geekThemeEnabled"><option value="true">Sim</option><option value="false">Não</option></select>
+    </label>
+  </div>
+  <h4 style="margin:16px 0 8px">🎨 CORES</h4>
+  <div class="color-grid">
+    <label class="color-field">Fundo 1<input type="color" id="geekThemeBackground1"></label>
+    <label class="color-field">Fundo 2<input type="color" id="geekThemeBackground2"></label>
+    <label class="color-field">Fundo 3<input type="color" id="geekThemeBackground3"></label>
+    <label class="color-field">Destaque 1<input type="color" id="geekThemeAccent1"></label>
+    <label class="color-field">Destaque 2<input type="color" id="geekThemeAccent2"></label>
+    <label class="color-field">Destaque 3<input type="color" id="geekThemeAccent3"></label>
+    <label class="color-field">Texto<input type="color" id="geekThemeText"></label>
+    <label class="color-field">Cards<input type="color" id="geekThemeCard"></label>
+    <label class="color-field">Bordas<input type="color" id="geekThemeBorder"></label>
+    <label class="color-field">Texto dos menus<input type="color" id="geekThemeMenuText"></label>
+    <label class="color-field">Menu ativo<input type="color" id="geekThemeMenuActive"></label>
+  </div>
+  <h4 style="margin:16px 0 8px">☰ MENUS DA ÁREA GEEK</h4>
+  <p style="font-size:11px;color:#666;margin:0 0 8px">Você pode trocar o nome e o termo usado para filtrar os produtos. Deixe o termo vazio para um menu que apenas rola até a área GEEK.</p>
+  <div id="geekMenuAdminList"></div>
+  <button type="button" class="smallbtn" style="margin-top:9px" onclick="addGeekMenuAdmin()">+ ADICIONAR MENU</button>
+  <div class="admin-tools" style="margin-top:12px">
+    <button type="button" class="smallbtn primary" onclick="saveGeekThemeFromAdmin()">SALVAR PERSONALIZAÇÃO GEEK</button>
+    <button type="button" class="smallbtn" onclick="resetGeekThemeAdmin()">RESTAURAR PADRÃO</button>
+  </div>
+  <div id="geekThemeAdminStatus" style="font-size:11px;margin-top:7px;min-height:16px"></div>
+</div>
+<div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço de venda<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU <span style="font-size:10px;color:#777;font-weight:500">(gerado automaticamente)</span><input class="field" id="pSku" required></label><label>Código de barras <span style="font-size:10px;color:#777;font-weight:500">(EAN-13 automático)</span><input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Link da foto principal <span style="font-size:10px;color:#777;font-weight:500">(opcional)</span><input class="field" id="pImage" placeholder="Opcional — você também pode enviar a foto pelo Storage abaixo"></label>
 <div class="payment-admin-box full" style="margin:0;padding:14px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px"><b>📸 FOTOS DO PRODUTO — SUPABASE STORAGE</b><p style="font-size:11px;color:#666;margin:6px 0 10px">Envie as fotos diretamente pelo ADM. Elas serão salvas automaticamente no Supabase Storage e a URL será gravada no produto.</p><label>Foto principal<input class="field" id="pImageFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><div id="pImageUploadStatus" class="upload-status" style="font-size:11px;margin-top:5px;min-height:16px"></div><label style="display:block;margin-top:8px">Fotos secundárias<input class="field" id="pSecondaryFiles" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label><div id="pSecondaryUploadStatus" class="upload-status" style="font-size:11px;margin-top:5px;min-height:16px"></div></div>
 <label class="full">Links das fotos secundárias<textarea class="field" id="pSecondaryImages" placeholder="Um link por linha"></textarea></label>
 <label class="full">Links dos vídeos do produto<textarea class="field" id="pVideos" placeholder="Um link por linha — MP4/WebM ou YouTube/Vimeo"></textarea><small style="display:block;color:#777;margin-top:4px">Os vídeos serão exibidos junto com as fotos na galeria do produto.</small></label>
@@ -962,9 +1277,52 @@ function renderTopCategoryMenus(){
 function filterCatId(id){const sel=document.getElementById('categoryFilter');if(sel)sel.value=String(id);page=1;document.getElementById('produtos')?.scrollIntoView({behavior:'smooth'});renderProducts();}
 function filterGender(group){const sel=document.getElementById('categoryFilter');if(sel)sel.value=`__group:${group}`;page=1;document.getElementById('produtos')?.scrollIntoView({behavior:'smooth'});renderProducts();}
 
-function filtered(){const q=document.getElementById('searchInput').value.trim().toLowerCase(), c=document.getElementById('categoryFilter').value; return products.filter(p=>{if(p.active===false)return false; const group=categoryGroupOf(p); const categoryId=String(p.category_id||categoryByName(p.category)?.id||''); const categoryOk=!c||(c.startsWith('__group:')?group===c.slice(8):categoryId===c||String(p.category||'').toLowerCase()===String(categoryById(c)?.name||'').toLowerCase()); return categoryOk&&(!q||[p.name,p.sku,p.barcode,p.category,group].join(' ').toLowerCase().includes(q));});}
+function isGeekProduct(p){
+  const group=String(categoryGroupOf(p)||'').trim().toLowerCase();
+  const category=String(categoryLabel(p)||p.category||'').trim().toLowerCase();
+  return group==='geek'||category==='geek'||category.startsWith('geek ›')||category.startsWith('geek -');
+}
+function filtered(){
+  const q=document.getElementById('searchInput').value.trim().toLowerCase();
+  const c=document.getElementById('categoryFilter').value;
+  return products.filter(p=>{
+    if(p.active===false||isGeekProduct(p))return false;
+    const group=categoryGroupOf(p);
+    const categoryId=String(p.category_id||categoryByName(p.category)?.id||'');
+    const categoryOk=!c||(c.startsWith('__group:')?group===c.slice(8):categoryId===c||String(p.category||'').toLowerCase()===String(categoryById(c)?.name||'').toLowerCase());
+    return categoryOk&&(!q||[p.name,p.sku,p.barcode,p.category,group].join(' ').toLowerCase().includes(q));
+  });
+}
 function salePriceOf(p){const n=Number(p?.sale_price);if(Number.isFinite(n)&&n>0)return n;return 0;}
-function renderProducts(){const list=filtered(); const pages=Math.max(1,Math.ceil(list.length/perPage)); page=Math.min(page,pages); const slice=list.slice((page-1)*perPage,page*perPage); const grid=document.getElementById('productGrid'); if(!grid)return; grid.innerHTML=slice.length?slice.map(p=>{const pid=escapeHtml(String(p.id??''));return `<article class="product" data-product-id="${pid}"><img src="${imageSrc(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><span class="badge">${escapeHtml(p.category||'Outros')}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${escapeHtml(p.name||'Produto')}</h3><div class="price">${money(salePriceOf(p))}</div><div class="meta">SKU: ${escapeHtml(p.sku||'')}<br>Código: ${escapeHtml(p.barcode||'')}</div><div class="product-actions"><button class="smallbtn js-details" type="button" data-product-id="${pid}">DETALHES</button><button class="smallbtn primary js-buy" type="button" data-product-id="${pid}">COMPRAR</button></div></div></article>`}).join(''):'<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.</div>'; const pagination=document.getElementById('pagination'); if(pagination)pagination.innerHTML=Array.from({length:pages},(_,i)=>`<button class="smallbtn js-page" type="button" data-page="${i+1}" ${i+1===page?'style="background:var(--accent)"':''}>${i+1}</button>`).join('');}
+function productCardHtml(p){
+  const pid=escapeHtml(String(p.id??''));
+  return `<article class="product" data-product-id="${pid}"><img src="${imageSrc(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><span class="badge">${escapeHtml(categoryLabel(p)||'Outros')}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${escapeHtml(p.name||'Produto')}</h3><div class="price">${money(salePriceOf(p))}</div><div class="meta">SKU: ${escapeHtml(p.sku||'')}<br>Código: ${escapeHtml(p.barcode||'')}</div><div class="product-actions"><button class="smallbtn js-details" type="button" data-product-id="${pid}">DETALHES</button><button class="smallbtn primary js-buy" type="button" data-product-id="${pid}">COMPRAR</button></div></div></article>`;
+}
+function renderProducts(){
+  const list=filtered();
+  const pages=Math.max(1,Math.ceil(list.length/perPage));
+  page=Math.min(page,pages);
+  const slice=list.slice((page-1)*perPage,page*perPage);
+  const grid=document.getElementById('productGrid');
+  if(grid)grid.innerHTML=slice.length?slice.map(productCardHtml).join(''):'<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.</div>';
+  const pagination=document.getElementById('pagination');
+  if(pagination)pagination.innerHTML=Array.from({length:pages},(_,i)=>`<button class="smallbtn js-page" type="button" data-page="${i+1}" ${i+1===page?'style="background:var(--accent)"':''}>${i+1}</button>`).join('');
+  renderGeekProducts();
+}
+let geekPage=1;
+function renderGeekProducts(){
+  const list=filteredGeek();
+  const pages=Math.max(1,Math.ceil(list.length/perPage));
+  geekPage=Math.min(geekPage,pages);
+  const slice=list.slice((geekPage-1)*perPage,geekPage*perPage);
+  const section=document.getElementById('geekSection');
+  const grid=document.getElementById('geekProductGrid');
+  if(!section||!grid)return;
+  section.style.display=list.length?'block':'none';
+  grid.innerHTML=slice.length?slice.map(productCardHtml).join(''):'<div class="empty" style="grid-column:1/-1">Nenhum produto Geek encontrado.</div>';
+  const pagination=document.getElementById('geekPagination');
+  if(pagination)pagination.innerHTML=Array.from({length:pages},(_,i)=>`<button class="smallbtn js-geek-page" type="button" data-page="${i+1}" ${i+1===geekPage?'style="background:var(--accent)"':''}>${i+1}</button>`).join('');
+}
 function filterCat(c){document.getElementById('categoryFilter').value=c;page=1;document.getElementById('produtos').scrollIntoView({behavior:'smooth'});renderProducts();}
 function videoEmbedSrc(value){
   const raw=String(value||'').trim();
@@ -1086,7 +1444,7 @@ function renderCart(){
 function removeCart(id,size='',color=''){const key=String(id??'');const s=String(size??''),c=String(color??'');const i=cart.find(x=>String(x.id??'')===key&&String(x.size??'')===s&&String(x.color??'')===c);if(!i)return;if(i.qty>1)i.qty--;else cart=cart.filter(x=>!(String(x.id??'')===key&&String(x.size??'')===s&&String(x.color??'')===c));renderCart();}
 function checkoutWhatsApp(){const phone='5521980507823';if(!phone)return alert('Cadastre o WhatsApp no painel ou configure studio70_whatsapp no navegador.');let msg='Olá! Quero comprar:%0A'+cart.map(i=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return `• ${p.name} — ${i.qty}x — ${money(salePriceOf(p)*i.qty)}`}).join('%0A');window.open(`https://wa.me/${phone.replace(/\D/g,'')}?text=${msg}`,'_blank');}
 function closeCart(){document.getElementById('cartDrawer').classList.remove('open')}
-document.getElementById('cartBtn').onclick=()=>document.getElementById('cartDrawer').classList.add('open'); document.getElementById('searchBtn').onclick=()=>{document.getElementById('searchInput').focus();document.getElementById('produtos').scrollIntoView({behavior:'smooth'})}; document.getElementById('searchInput').oninput=()=>{const input=document.getElementById('searchInput');const secret=String(input.value||'').trim().toLowerCase(); if(secret==='admlogin'){input.value='';openAdmin();return;} if(secret==='pdvlogin'){input.value='';openPDV();return;} page=1;renderProducts()}; document.getElementById('categoryFilter').onchange=()=>{page=1;renderProducts()};
+document.getElementById('cartBtn').onclick=()=>document.getElementById('cartDrawer').classList.add('open'); document.getElementById('searchBtn').onclick=()=>{document.getElementById('searchInput').focus();document.getElementById('produtos').scrollIntoView({behavior:'smooth'})}; document.getElementById('searchInput').oninput=()=>{const input=document.getElementById('searchInput');const secret=String(input.value||'').trim().toLowerCase(); if(secret==='admlogin'){input.value='';openAdmin();return;} if(secret==='pdvlogin'){input.value='';openPDV();return;} page=1;geekPage=1;renderProducts()}; document.getElementById('categoryFilter').onchange=()=>{page=1;geekPage=1;renderProducts()};
 
 function savePDV(){localStorage.setItem('studio70_pdv_cart',JSON.stringify(pdvCart));localStorage.setItem('studio70_sales',JSON.stringify(sales));}
 function pdvTotal(){const subtotal=pdvCart.reduce((s,i)=>{const p=products.find(x=>String(x.id??'')===String(i.id??''));return s+(p?salePriceOf(p):0)*i.qty},0);const discount=Math.max(0,Number(document.getElementById('pdvDiscount')?.value||0));return Math.max(0,subtotal-discount)}
@@ -1157,7 +1515,8 @@ function printSale(sale){const w=window.open('','_blank','width=420,height=650')
 #integratedCheckoutModal .status.ok{color:#246b3b}
 #integratedCheckoutModal .status.error{color:#a52b2b}
 @media(max-width:800px){#integratedCheckoutModal{padding:0}#integratedCheckoutModal .integrated-shell{border-radius:0}#integratedCheckoutModal .integrated-close{right:10px;top:10px}#integratedCheckoutModal .pay-methods{grid-template-columns:1fr}}
-</style></head><body><h2>STUDIO 70 BRAND</h2><div class="center">COMPROVANTE DE VENDA<br>${sale.id}<br>${new Date(sale.date).toLocaleString('pt-BR')}</div><table>${rows}</table><div>Subtotal: ${money(sale.subtotal)}</div><div>Desconto: ${money(sale.discount)}</div><div class="tot">TOTAL: ${money(sale.total)}</div><p>Pagamento: ${sale.payment}</p>${sale.payment==='Dinheiro'?`<p>Recebido: ${money(sale.received)}<br>Troco: ${money(sale.change)}</p>`:''}<p class="center">Obrigado pela preferência!</p><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>`);w.document.close()}
+</style></head><body><h2>STUDIO 70 BRAND</h2><div class="center">COMPROVANTE DE VENDA<br>${sale.id}<br>${new Date(sale.date).toLocaleString('pt-BR')}</div><table>${rows}</table><div>Subtotal: ${money(sale.subtotal)}</div><div>Desconto: ${money(sale.discount)}</div><div class="tot">TOTAL: ${money(sale.total)}</div><p>Pagamento: ${sale.payment}</p>${sale.payment==='Dinheiro'?`<p>Recebido: ${money(sale.received)}<br>Troco: ${money(sale.change)}</p>`:''}<p class="center">Obrigado pela preferência!</p><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script>
+</body></html>`);w.document.close()}
 function renderSales(){const el=document.getElementById('pdvHistory');if(!el)return;el.innerHTML=sales.length?sales.slice(0,20).map(s=>`<div class="sale-row"><b>${s.id} — ${money(s.total)}</b><br><small>${new Date(s.date).toLocaleString('pt-BR')} · ${s.payment} · ${s.items.reduce((a,i)=>a+i.qty,0)} item(ns)</small><br><button class="smallbtn" onclick="printSale(${JSON.stringify(s).replace(/"/g,'&quot;')})">🖨️ Comprovante</button></div>`).join(''):'<div class="empty">Nenhuma venda registrada.</div>'}
 
 let loginTarget = null;
@@ -1204,7 +1563,7 @@ document.getElementById('pdvDiscount').addEventListener('input',renderPDV);docum
 let cartTapCount=0,cartTapTimer=null;const cartAccess=document.getElementById('cartBtn');
 if(cartAccess)cartAccess.addEventListener('click',e=>{cartTapCount++;clearTimeout(cartTapTimer);cartTapTimer=setTimeout(()=>{cartTapCount=0},650);if(cartTapCount>=3){e.preventDefault();e.stopImmediatePropagation();cartTapCount=0;openAdmin()}},{capture:true});
 document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.altKey&&e.shiftKey&&e.key.toLowerCase()==='a'){e.preventDefault();openAdmin()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
-function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} 
+function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} 
 async function loadFreeShippingConfig(){
   try{
     const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shipping_config'})});
@@ -1344,7 +1703,9 @@ async function generateAIDescription(){
   const status=document.getElementById('aiDescriptionStatus');
   const btn=document.getElementById('aiDescriptionBtn');
   if(!name)return alert('Informe o nome do produto antes de gerar a descrição.');
-  if(!image)return alert('Informe o link da foto principal antes de gerar a descrição com IA.');
+  if(!image){
+    if(status)status.textContent='✨ Gerando descrição com base no nome do produto...';
+  }
   if(status)status.textContent='✨ Analisando o nome e a imagem do produto...';
   if(btn){btn.disabled=true;btn.textContent='✨ GERANDO...';}
   try{
@@ -1523,6 +1884,166 @@ function editCategoryFromAdmin(id){const c=categoryById(id);if(!c)return;documen
 async function saveCategoryFromAdmin(){if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',saveCategoryFromAdmin);const name=document.getElementById('categoryAdminName').value.trim(),group_id=document.getElementById('categoryAdminGroup').value,id=document.getElementById('categoryAdminId').value.trim();if(!name)return alert('Informe o nome da categoria.');if(!group_id)return alert('Crie ou selecione um grupo.');const status=document.getElementById('categoryAdminStatus');if(status)status.textContent='Salvando categoria...';try{const d=await apiCategory('category_save',{id:id||null,name,group_id});categoryCatalog=d.categories||categoryCatalog;categoryGroups=d.groups||categoryGroups;renderCategories();renderCategoryGroupAdmin();renderCategoryAdminList();clearCategoryAdminForm();if(status)status.textContent='✓ Categoria salva no Supabase.';}catch(e){if(status)status.textContent=e.message;alert('Não foi possível salvar a categoria: '+e.message);}}
 async function deleteCategoryFromAdmin(id){if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>deleteCategoryFromAdmin(id));const c=categoryById(id);if(!c)return;if(!confirm(`Excluir a categoria "${c.name}"?`))return;try{const d=await apiCategory('category_delete',{id});categoryCatalog=d.categories||categoryCatalog;categoryGroups=d.groups||categoryGroups;renderCategories();renderCategoryGroupAdmin();renderCategoryAdminList();renderCategoryOptions();}catch(e){alert('Não foi possível excluir a categoria: '+e.message);}}
 async function repairCategoriesFromAdmin(){if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',repairCategoriesFromAdmin);const status=document.getElementById('categoryAdminStatus');if(!confirm('Organizar os produtos existentes pelas categorias atuais? Produtos sem identificação clara serão mantidos para revisão.'))return;if(status)status.textContent='Organizando produtos...';try{const d=await apiCategory('categories_repair_products',{});await loadSupabaseProducts();if(status)status.textContent=`✓ ${d.updated||0} produto(s) organizado(s). ${d.unresolved?.length||0} aguardando revisão.`;alert(`Organização concluída. ${d.updated||0} produto(s) atualizado(s).`);}catch(e){if(status)status.textContent=e.message;alert('Não foi possível organizar os produtos: '+e.message);}}
+
+
+const DEFAULT_GEEK_THEME={
+  enabled:true,title:'GEEK',kicker:'⚡ ST70 · GEEK ZONE',
+  subtitle:'Uma área exclusiva para colecionáveis, cultura pop, decoração e produtos geek.',
+  font:'Barlow Condensed',background1:'#080914',background2:'#111329',background3:'#090a16',
+  accent1:'#00e5ff',accent2:'#ff0099',accent3:'#7c3aed',text:'#ffffff',card:'#0d1020',
+  border:'#27304a',menuText:'#ffffff',menuActive:'#00e5ff',
+  menus:[
+    {label:'COLECIONÁVEIS',value:'colecionáveis'},
+    {label:'CULTURA POP',value:'cultura pop'},
+    {label:'DECORAÇÃO',value:'decoração'},
+    {label:'3D & GAMES',value:'3d'}
+  ]
+};
+let geekTheme={...DEFAULT_GEEK_THEME};
+function escapeAttr(v){return escapeHtml(String(v??'')).replace(/"/g,'&quot;');}
+function applyGeekTheme(t){
+  geekTheme={...DEFAULT_GEEK_THEME,...(t||{})};
+  const s=document.getElementById('geekSection');
+  if(!s)return;
+  s.style.setProperty('--geek-bg1',geekTheme.background1);
+  s.style.setProperty('--geek-bg2',geekTheme.background2);
+  s.style.setProperty('--geek-bg3',geekTheme.background3);
+  s.style.setProperty('--geek-a1',geekTheme.accent1);
+  s.style.setProperty('--geek-a2',geekTheme.accent2);
+  s.style.setProperty('--geek-a3',geekTheme.accent3);
+  s.style.setProperty('--geek-text',geekTheme.text);
+  s.style.setProperty('--geek-card',geekTheme.card);
+  s.style.setProperty('--geek-border',geekTheme.border);
+  s.style.setProperty('--geek-menu-text',geekTheme.menuText);
+  s.style.setProperty('--geek-menu-active',geekTheme.menuActive);
+  s.style.setProperty('--geek-font',`"${String(geekTheme.font||'Barlow Condensed').replace(/"/g,'')}"`);
+  s.querySelector('.geek-kicker')?.replaceChildren(document.createTextNode(geekTheme.kicker||''));
+  s.querySelector('.geek-header h2')?.replaceChildren(document.createTextNode(geekTheme.title||'GEEK'));
+  s.querySelector('.geek-subtitle')?.replaceChildren(document.createTextNode(geekTheme.subtitle||''));
+  renderGeekMenu();
+  s.style.display=geekTheme.enabled===false?'none':s.style.display;
+  loadGeekFont(geekTheme.font);
+}
+function loadGeekFont(font){
+  const allowed=['Barlow Condensed','Inter','Space Grotesk','Rajdhani','Orbitron','Roboto','Montserrat'];
+  if(!allowed.includes(font))return;
+  const id='st70-geek-font-'+font.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+  if(document.getElementById(id))return;
+  const link=document.createElement('link');link.id=id;link.rel='stylesheet';
+  link.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(font).replace(/%20/g,'+')+':wght@400;500;600;700;800;900&display=swap';
+  document.head.appendChild(link);
+}
+function renderGeekMenu(){
+  const el=document.getElementById('geekMenu');if(!el)return;
+  const menus=Array.isArray(geekTheme.menus)?geekTheme.menus:[];
+  el.innerHTML=menus.map((m,i)=>`<button type="button" class="geek-menu-btn" data-geek-filter="${escapeAttr(m.value||'')}" data-geek-index="${i}">${escapeHtml(m.label||'MENU')}</button>`).join('');
+  el.querySelectorAll('.geek-menu-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    const value=String(btn.dataset.geekFilter||'').trim().toLowerCase();
+    document.querySelectorAll('#geekMenu .geek-menu-btn').forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    window.geekFilter=value;
+    geekPage=1;
+    renderGeekProducts();
+  }));
+}
+window.geekFilter='';
+function filteredGeek(){
+  const q=(document.getElementById('searchInput')?.value||'').trim().toLowerCase();
+  const c=(document.getElementById('categoryFilter')?.value||'').trim();
+  return products.filter(p=>{
+    if(p.active===false||!isGeekProduct(p))return false;
+    const group=String(categoryGroupOf(p)||'').toLowerCase();
+    const category=String(categoryLabel(p)||p.category||'').toLowerCase();
+    const text=[p.name,p.sku,p.barcode,p.category,group].join(' ').toLowerCase();
+    if(q&&!text.includes(q))return false;
+    if(window.geekFilter){
+      const f=window.geekFilter;
+      if(!text.includes(f)&&!category.includes(f)&&!group.includes(f))return false;
+    }
+    const categoryId=String(p.category_id||categoryByName(p.category)?.id||'');
+    const categoryOk=!c||(c.startsWith('__group:')?String(c.slice(8)).toLowerCase()==='geek'&&group==='geek':categoryId===c||category===String(categoryById(c)?.name||'').toLowerCase());
+    return categoryOk;
+  });
+}
+function renderGeekMenuAdmin(){
+  const el=document.getElementById('geekMenuAdminList');if(!el)return;
+  const menus=Array.isArray(geekTheme.menus)?geekTheme.menus:[];
+  el.innerHTML=menus.map((m,i)=>`<div class="menu-editor" data-geek-admin-menu="${i}">
+    <label>Nome<input class="field geek-menu-label" value="${escapeAttr(m.label||'')}" maxlength="40"></label>
+    <label>Filtro<input class="field geek-menu-value" value="${escapeAttr(m.value||'')}" maxlength="80" placeholder="ex.: colecionáveis"></label>
+    <button type="button" class="smallbtn danger" onclick="removeGeekMenuAdmin(${i})">Excluir</button>
+  </div>`).join('');
+}
+function addGeekMenuAdmin(){
+  geekTheme.menus=[...(geekTheme.menus||[]),{label:'NOVO MENU',value:''}];
+  renderGeekMenuAdmin();
+}
+function removeGeekMenuAdmin(i){
+  geekTheme.menus=(geekTheme.menus||[]).filter((_,idx)=>idx!==i);
+  renderGeekMenuAdmin();
+}
+function readGeekThemeAdmin(){
+  const ids=['Title','Kicker','Subtitle','Font','Enabled','Background1','Background2','Background3','Accent1','Accent2','Accent3','Text','Card','Border','MenuText','MenuActive'];
+  const t={...geekTheme};
+  t.title=document.getElementById('geekThemeTitle').value.trim()||DEFAULT_GEEK_THEME.title;
+  t.kicker=document.getElementById('geekThemeKicker').value.trim()||DEFAULT_GEEK_THEME.kicker;
+  t.subtitle=document.getElementById('geekThemeSubtitle').value.trim()||DEFAULT_GEEK_THEME.subtitle;
+  t.font=document.getElementById('geekThemeFont').value;
+  t.enabled=document.getElementById('geekThemeEnabled').value==='true';
+  t.background1=document.getElementById('geekThemeBackground1').value;
+  t.background2=document.getElementById('geekThemeBackground2').value;
+  t.background3=document.getElementById('geekThemeBackground3').value;
+  t.accent1=document.getElementById('geekThemeAccent1').value;
+  t.accent2=document.getElementById('geekThemeAccent2').value;
+  t.accent3=document.getElementById('geekThemeAccent3').value;
+  t.text=document.getElementById('geekThemeText').value;
+  t.card=document.getElementById('geekThemeCard').value;
+  t.border=document.getElementById('geekThemeBorder').value;
+  t.menuText=document.getElementById('geekThemeMenuText').value;
+  t.menuActive=document.getElementById('geekThemeMenuActive').value;
+  t.menus=[...document.querySelectorAll('#geekMenuAdminList .menu-editor')].map(row=>({
+    label:row.querySelector('.geek-menu-label')?.value.trim()||'MENU',
+    value:row.querySelector('.geek-menu-value')?.value.trim()||''
+  }));
+  return t;
+}
+function fillGeekThemeAdmin(){
+  const t=geekTheme;
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v;};
+  set('geekThemeTitle',t.title);set('geekThemeKicker',t.kicker);set('geekThemeSubtitle',t.subtitle);
+  set('geekThemeFont',t.font);set('geekThemeEnabled',String(t.enabled!==false));
+  set('geekThemeBackground1',t.background1);set('geekThemeBackground2',t.background2);set('geekThemeBackground3',t.background3);
+  set('geekThemeAccent1',t.accent1);set('geekThemeAccent2',t.accent2);set('geekThemeAccent3',t.accent3);
+  set('geekThemeText',t.text);set('geekThemeCard',t.card);set('geekThemeBorder',t.border);
+  set('geekThemeMenuText',t.menuText);set('geekThemeMenuActive',t.menuActive);
+  renderGeekMenuAdmin();
+}
+async function loadGeekTheme(){
+  try{
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'geek_theme_get'})});
+    const d=await r.json().catch(()=>({}));
+    if(r.ok&&d.ok&&d.theme){applyGeekTheme(d.theme);}
+    else applyGeekTheme(DEFAULT_GEEK_THEME);
+  }catch(e){console.warn('geek_theme_get',e);applyGeekTheme(DEFAULT_GEEK_THEME);}
+}
+async function saveGeekThemeFromAdmin(){
+  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',saveGeekThemeFromAdmin);
+  const status=document.getElementById('geekThemeAdminStatus');
+  try{
+    const theme=readGeekThemeAdmin();
+    status.textContent='Salvando personalização Geek...';
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'geek_theme_save',admin_password:adminAuthPassword,theme})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao salvar a personalização Geek.');
+    applyGeekTheme(d.theme||theme); fillGeekThemeAdmin();
+    status.textContent='✓ Personalização GEEK salva no Supabase.';
+  }catch(e){status.textContent=e.message;alert(e.message);}
+}
+function resetGeekThemeAdmin(){
+  if(!confirm('Restaurar a aparência padrão da área GEEK?'))return;
+  applyGeekTheme(DEFAULT_GEEK_THEME);fillGeekThemeAdmin();
+  const st=document.getElementById('geekThemeAdminStatus');if(st)st.textContent='Padrão carregado. Clique em SALVAR PERSONALIZAÇÃO GEEK para gravar.';
+}
 
 function renderAdmin(){
   const q=(document.getElementById('adminSearch').value||'').toLowerCase();
@@ -2071,6 +2592,11 @@ function renderAdminOrders(orders){
     pagination.dataset.handlersInstalled='1';
     pagination.addEventListener('click',function(ev){const b=ev.target.closest('.js-page');if(!b)return;ev.preventDefault();page=Number(b.dataset.page)||1;renderProducts();});
   }
+  const geekPagination=document.getElementById('geekPagination');
+  if(geekPagination && !geekPagination.dataset.handlersInstalled){
+    geekPagination.dataset.handlersInstalled='1';
+    geekPagination.addEventListener('click',function(ev){const b=ev.target.closest('.js-geek-page');if(!b)return;ev.preventDefault();geekPage=Number(b.dataset.page)||1;renderGeekProducts();});
+  }
   const modalBody=document.getElementById('productBody');
   if(modalBody && !modalBody.dataset.handlersInstalled){
     modalBody.dataset.handlersInstalled='1';
@@ -2087,6 +2613,7 @@ function renderAdminOrders(orders){
 })();
 ensureCategoryAdminControls(); renderCategories();clearForm();loadPaymentSettings();loadShippingSettings();renderProducts();renderCart();renderPDV();
 loadCategoriesFromServer();
+loadGeekTheme();
 loadSupabaseProducts();
 setInterval(()=>{if(adminAuthPassword)pollOrders()},10000);
 
@@ -2107,4 +2634,26 @@ function virtualFittingResult(){
   const p=products.find(x=>String(x.id)===String(fittingProductId)); const base=fittingProfile.base||40; const bust=Number(document.getElementById('fitBust')?.value||92),waist=Number(document.getElementById('fitWaist')?.value||76),hip=Number(document.getElementById('fitHip')?.value||100); const score=(bust-92)*.12+(waist-76)*.08+(hip-100)*.08; const indicated=Math.max(36,Math.min(48,base+(score>7?2:score>2?1:score<-7?-2:score<-2?-1:0))); const available=(Array.isArray(p?.sizes)?p.sizes:[]).map(String).filter(x=>/^((36|38|40|42|44|46|48)(\s|$|\/|-))/i.test(x)); const size=available.length?available.find(x=>x.startsWith(String(indicated)))||available.find(x=>x.startsWith(String(base)))||String(indicated):String(indicated); const fit=score>8?'mais ajustado':score<-8?'mais confortável':'com maior chance de vestir com conforto'; document.getElementById('virtualFittingBody').innerHTML=`<h2 class="section-title">Resultado do provador</h2><div style="padding:22px;text-align:center;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.04)"><div style="font-size:13px;color:var(--muted)">TAMANHO INDICADO</div><strong style="display:block;font-size:56px;color:var(--accent);margin:8px 0">${escapeHtml(size)}</strong><p>O tamanho <b>${escapeHtml(size)}</b> tem maior chance de vestir ${fit} para esse perfil.</p></div><p style="font-size:12px;color:var(--muted);margin-top:14px">A recomendação é uma estimativa baseada nas medidas informadas e pode variar conforme o modelo e a preferência de vestibilidade.</p><div style="display:flex;gap:10px"><button class="smallbtn" style="flex:1" type="button" onclick="openVirtualFitting(fittingProductId)">CALCULAR NOVAMENTE</button><button class="btn" style="flex:1" type="button" onclick="closeVirtualFitting()">ENTENDI</button></div>`;
 }
 loadBannersFromServer();
-</script></body></html>
+</script>
+<script>
+(function initST70MobileMenu(){
+  function setup(){
+    const toggle=document.getElementById('mobileMenuToggle');
+    const menu=document.getElementById('mobileNav');
+    if(!toggle||!menu||toggle.dataset.bound==='1')return;
+    toggle.dataset.bound='1';
+    const closeMenu=()=>{menu.classList.remove('open');menu.setAttribute('aria-hidden','true');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Abrir menu');toggle.textContent='☰';};
+    const openMenu=()=>{menu.classList.add('open');menu.setAttribute('aria-hidden','false');toggle.setAttribute('aria-expanded','true');toggle.setAttribute('aria-label','Fechar menu');toggle.textContent='✕';};
+    toggle.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();menu.classList.contains('open')?closeMenu():openMenu();});
+    menu.querySelectorAll('[data-mobile-nav]').forEach(a=>a.addEventListener('click',function(){
+      const gender=this.getAttribute('data-gender');
+      if(gender && typeof window.filterGender==='function') window.filterGender(gender);
+      closeMenu();
+    }));
+    document.addEventListener('click',function(e){if(menu.classList.contains('open')&&!menu.contains(e.target)&&e.target!==toggle)closeMenu();});
+    window.addEventListener('resize',function(){if(window.innerWidth>950)closeMenu();});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
+})();
+</script>
+</body></html>
