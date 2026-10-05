@@ -1436,16 +1436,44 @@ function normalizeList(value){
 }
 function numberOr(value,fallback=0){const n=Number(value);return Number.isFinite(n)?n:fallback;}
 function firstPositiveNumber(...values){for(const value of values){const n=Number(value);if(Number.isFinite(n)&&n>0)return n;}return 0;}
+const ST70_IMAGE_PLACEHOLDER='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800"><rect width="100%" height="100%" fill="#f3f3f3"/><text x="50%" y="47%" dominant-baseline="middle" text-anchor="middle" fill="#777" font-family="Arial" font-size="28">STUDIO 70</text><text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle" fill="#999" font-family="Arial" font-size="22">Imagem indisponível</text></svg>');
 function imageSrc(value){
   const src=normalizeImageUrl(value);
-  return src || 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800"><rect width="100%" height="100%" fill="#f3f3f3"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#777" font-family="Arial" font-size="28">Imagem não cadastrada</text></svg>');
+  return src || ST70_IMAGE_PLACEHOLDER;
 }
-function imageError(img){img.onerror=null;img.src=imageSrc('');img.classList.add('image-missing');}
+function imageProxySrc(src){
+  const u=normalizeImageUrl(src);
+  if(!/^https?:\/\//i.test(u))return '';
+  return 'https://images.weserv.nl/?url='+encodeURIComponent(u.replace(/^https?:\/\//i,''));
+}
+function imageError(img){
+  if(!img)return;
+  const original=img.dataset.st70Original || img.currentSrc || img.src || '';
+  if(!img.dataset.st70ProxyTried){
+    const proxy=imageProxySrc(original);
+    if(proxy){
+      img.dataset.st70ProxyTried='1';
+      img.src=proxy;
+      return;
+    }
+  }
+  img.onerror=null;
+  img.src=ST70_IMAGE_PLACEHOLDER;
+  img.classList.add('image-missing');
+}
 function normalizeProductRecord(p){
   if(!p||typeof p!=='object')return p;
   const sale=firstPositiveNumber(p.sale_price,p.salePrice,p.studio70_sale_price,p.price,p.raw?.sale_price,p.raw?.salePrice);
-  const image=normalizeImageUrl(p.image??p.image_url??p.raw?.image??'');
-  const secondaryImages=normalizeImageList(p.secondaryImages??p.secondary_images??p.images??[]);
+  const imageCandidates=normalizeImageList([
+    p.image,p.image_url,p.raw?.image,p.raw?.image_url,
+    ...(Array.isArray(p.images)?p.images:[]),
+    ...(Array.isArray(p.raw?.images)?p.raw.images:[]),
+    ...(Array.isArray(p.secondaryImages)?p.secondaryImages:[]),
+    ...(Array.isArray(p.secondary_images)?p.secondary_images:[]),
+    ...(Array.isArray(p.raw?.secondary_images)?p.raw.secondary_images:[])
+  ]);
+  const image=imageCandidates.find(x=>/^https?:\/\//i.test(x)||x.startsWith('//')) || imageCandidates[0] || '';
+  const secondaryImages=normalizeImageList(p.secondaryImages??p.secondary_images??p.images??p.raw?.images??[]);
   const videos=normalizeImageList(p.videos??p.videoLinks??p.video_links??p.raw?.videos??[]);
   const url=String(p.url??p.source_url??p.sourceUrl??'').trim();
   const description=String(p.description??p.raw?.description??p.raw?.product_description??p.raw?.description_text??'');
@@ -1537,7 +1565,7 @@ function filtered(){
 function salePriceOf(p){const n=Number(p?.sale_price);if(Number.isFinite(n)&&n>0)return n;return 0;}
 function productCardHtml(p){
   const pid=escapeHtml(String(p.id??''));
-  return `<article class="product" data-product-id="${pid}"><img src="${imageSrc(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><span class="badge">${escapeHtml(categoryLabel(p)||'Outros')}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${escapeHtml(p.name||'Produto')}</h3><div class="price">${money(salePriceOf(p))}</div><div class="meta">SKU: ${escapeHtml(p.sku||'')}<br>Código: ${escapeHtml(p.barcode||'')}</div><div class="product-actions"><button class="smallbtn js-details" type="button" data-product-id="${pid}">DETALHES</button><button class="smallbtn primary js-buy" type="button" data-product-id="${pid}">COMPRAR</button></div></div></article>`;
+  return `<article class="product" data-product-id="${pid}"><img src="${imageSrc(p.image)}" data-st70-original="${escapeAttr(p.image||'')}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><span class="badge">${escapeHtml(categoryLabel(p)||'Outros')}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${escapeHtml(p.name||'Produto')}</h3><div class="price">${money(salePriceOf(p))}</div><div class="meta">SKU: ${escapeHtml(p.sku||'')}<br>Código: ${escapeHtml(p.barcode||'')}</div><div class="product-actions"><button class="smallbtn js-details" type="button" data-product-id="${pid}">DETALHES</button><button class="smallbtn primary js-buy" type="button" data-product-id="${pid}">COMPRAR</button></div></div></article>`;
 }
 function renderProducts(){
   const list=filtered();
