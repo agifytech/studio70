@@ -993,29 +993,10 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
 @media(max-width:768px){.fashion-admin-card .color-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 
-
-<style id="st70-admin-dashboard-styles">
-#adminModal .st70-admin-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 16px;position:sticky;top:0;z-index:5;padding:10px 0;background:#f5f4f1}
-#adminModal .st70-admin-tab{border:1px solid #c8c5be;background:#fff;color:#111;border-radius:9px;padding:11px 9px;font-weight:800;letter-spacing:.3px}
-#adminModal .st70-admin-tab[aria-selected="true"]{background:#111;color:#fff;border-color:#111}
-#adminModal .st70-admin-view[hidden]{display:none!important}
-#adminModal .st70-admin-card{background:#fff;border:1px solid #d2cfc8;border-radius:13px;padding:16px;margin:0 0 14px;min-width:0}
-#adminModal .st70-admin-card h3{margin:0 0 10px;font-size:17px}
-#adminModal .st70-admin-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 14px}
-#adminModal .st70-admin-kpi{background:#f2f1ee;border:1px solid #d9d6cf;border-radius:11px;padding:13px;min-width:0}
-#adminModal .st70-admin-kpi span{display:block;color:#68655f;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
-#adminModal .st70-admin-kpi b{display:block;font-size:24px;margin-top:5px;overflow-wrap:anywhere}
-#adminModal .st70-admin-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
-#adminModal .st70-admin-toolbar .smallbtn{flex:0 0 auto;width:auto}
-#adminModal .st70-admin-status{font-size:11px;color:#68655f;min-height:16px;margin:7px 0}
-#adminModal .st70-admin-table-wrap{overflow:auto;max-width:100%}
-#adminModal .st70-admin-table{width:100%;border-collapse:collapse;font-size:13px}
-#adminModal .st70-admin-table th,#adminModal .st70-admin-table td{text-align:left;padding:9px 8px;border-bottom:1px solid #e5e2dc;vertical-align:top}
-#adminModal .st70-admin-table th{font-size:10px;color:#68655f;text-transform:uppercase;letter-spacing:.5px}
-#adminModal .st70-admin-table td:last-child,#adminModal .st70-admin-table th:last-child{text-align:right;white-space:nowrap}
-@media(max-width:700px){#adminModal .st70-admin-tabs{grid-template-columns:repeat(2,minmax(0,1fr));position:static}#adminModal .st70-admin-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#adminModal .st70-admin-kpi b{font-size:20px}#adminModal .st70-admin-card{padding:12px}}
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style id="st70-shopee-tools-css">
+.st70-shopee-box{margin:14px 0;padding:16px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px}.st70-shopee-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.st70-shopee-grid .full{grid-column:1/-1}.st70-shopee-status{font-size:11px;line-height:1.45;min-height:18px;margin-top:8px}.st70-shopee-results{max-height:240px;overflow:auto;margin-top:10px;display:grid;gap:6px}.st70-shopee-result{padding:8px 10px;background:#fff;border:1px solid #d6d1c8;border-radius:8px;font-size:11px}.st70-shopee-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.st70-shopee-actions .smallbtn{flex:0 1 auto}@media(max-width:650px){.st70-shopee-grid{grid-template-columns:1fr}.st70-shopee-grid .full{grid-column:auto}.st70-shopee-actions{flex-direction:column}.st70-shopee-actions .smallbtn{width:100%}}
 </style>
-
 </head>
 <body>
 <div class="promo-carousel" id="promoCarousel" aria-label="Ofertas e benefícios">
@@ -1230,6 +1211,23 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
     <button type="button" class="smallbtn" onclick="resetGeekThemeAdmin()">RESTAURAR PADRÃO</button>
   </div>
   <div id="geekThemeAdminStatus" style="font-size:11px;margin-top:7px;min-height:16px"></div>
+</div>
+<div class="st70-shopee-box" id="st70ShopeeBox">
+  <b>🛍️ SHOPEE — IMPORTAÇÃO E ENVIO EM MASSA</b>
+  <p style="font-size:11px;color:#666;line-height:1.45;margin:6px 0 12px">Importe anúncios da sua loja Shopee para o catálogo STUDIO 70 ou gere uma planilha usando o modelo oficial da Shopee. O sistema não inventa campos específicos da categoria.</p>
+  <div class="st70-shopee-grid">
+    <label class="full">Links dos anúncios Shopee — um por linha<textarea class="field" id="st70ShopeeUrls" rows="5" placeholder="https://shopee.com.br/...
+https://shopee.com.br/..."></textarea></label>
+    <label>Categoria STUDIO 70<select class="field" id="st70ShopeeCategory"><option value="">Manter / escolher depois</option></select></label>
+    <label>Estoque padrão<input class="field" id="st70ShopeeDefaultStock" type="number" min="0" value="0"></label>
+  </div>
+  <div class="st70-shopee-actions"><button type="button" class="smallbtn primary" onclick="st70ImportShopeeProducts()">⬇️ IMPORTAR DA SHOPEE</button><button type="button" class="smallbtn" onclick="st70ClearShopeeImport()">LIMPAR</button></div>
+  <div id="st70ShopeeImportStatus" class="st70-shopee-status"></div><div id="st70ShopeeImportResults" class="st70-shopee-results"></div>
+  <hr style="border:0;border-top:1px solid #d6d1c8;margin:16px 0">
+  <p style="font-size:11px;color:#666;line-height:1.45;margin:6px 0 12px"><b>Envio em massa:</b> baixe no Seller Center o modelo oficial de cadastro em massa da Shopee, envie-o aqui e o STUDIO 70 preencherá somente as colunas que consegue identificar. As colunas obrigatórias específicas da categoria permanecem no arquivo para conferência.</p>
+  <label style="display:block">Modelo oficial Shopee (.xlsx, .xls ou .csv)<input class="field" id="st70ShopeeTemplate" type="file" accept=".xlsx,.xls,.csv"></label>
+  <div class="st70-shopee-actions"><button type="button" class="smallbtn primary" onclick="st70GenerateShopeeSheet()">📊 GERAR PLANILHA SHOPEE</button><button type="button" class="smallbtn" onclick="st70DownloadShopeeMapping()">⬇️ MODELO ST70</button></div>
+  <div id="st70ShopeeSheetStatus" class="st70-shopee-status"></div>
 </div>
 <div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço de venda<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU <span style="font-size:10px;color:#777;font-weight:500">(gerado automaticamente)</span><input class="field" id="pSku" required></label><label>Código de barras <span style="font-size:10px;color:#777;font-weight:500">(EAN-13 automático)</span><input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Link da foto principal <span style="font-size:10px;color:#777;font-weight:500">(opcional)</span><input class="field" id="pImage" placeholder="Opcional — você também pode enviar a foto pelo Storage abaixo"></label>
 <div class="payment-admin-box full" style="margin:0;padding:14px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px"><b>📸 FOTOS DO PRODUTO — SUPABASE STORAGE</b><p style="font-size:11px;color:#666;margin:6px 0 10px">Envie as fotos diretamente pelo ADM. Elas serão salvas automaticamente no Supabase Storage e a URL será gravada no produto.</p><label>Foto principal<input class="field" id="pImageFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><div id="pImageUploadStatus" class="upload-status" style="font-size:11px;margin-top:5px;min-height:16px"></div><label style="display:block;margin-top:8px">Fotos secundárias<input class="field" id="pSecondaryFiles" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label><div id="pSecondaryUploadStatus" class="upload-status" style="font-size:11px;margin-top:5px;min-height:16px"></div></div>
@@ -1840,6 +1838,21 @@ function printSale(sale){const w=window.open('','_blank','width=420,height=650')
 #integratedCheckoutModal .status.error{color:#a52b2b}
 @media(max-width:800px){#integratedCheckoutModal{padding:0}#integratedCheckoutModal .integrated-shell{border-radius:0}#integratedCheckoutModal .integrated-close{right:10px;top:10px}#integratedCheckoutModal .pay-methods{grid-template-columns:1fr}}
 </style></head><body><h2>STUDIO 70 BRAND</h2><div class="center">COMPROVANTE DE VENDA<br>${sale.id}<br>${new Date(sale.date).toLocaleString('pt-BR')}</div><table>${rows}</table><div>Subtotal: ${money(sale.subtotal)}</div><div>Desconto: ${money(sale.discount)}</div><div class="tot">TOTAL: ${money(sale.total)}</div><p>Pagamento: ${sale.payment}</p>${sale.payment==='Dinheiro'?`<p>Recebido: ${money(sale.received)}<br>Troco: ${money(sale.change)}</p>`:''}<p class="center">Obrigado pela preferência!</p><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script>
+<script id="st70-shopee-js">function st70ShopeeApi(body){return fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(body)}).then(async r=>{const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||'Falha na integração Shopee.');return d;});}
+function st70ShopeeEsc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+async function st70LoadShopeeCategories(){const el=document.getElementById('st70ShopeeCategory');if(!el)return;try{const d=await st70ShopeeApi({action:'categories_list'});const cats=Array.isArray(d.categories)?d.categories:[];const current=el.value;el.innerHTML='<option value="">Manter / escolher depois</option>'+cats.filter(c=>c&&c.active!==false).map(c=>`<option value="${st70ShopeeEsc(c.name)}">${st70ShopeeEsc(c.name)}</option>`).join('');el.value=current;}catch(_){}}
+function st70ClearShopeeImport(){const u=document.getElementById('st70ShopeeUrls');if(u)u.value='';const r=document.getElementById('st70ShopeeImportResults');if(r)r.innerHTML='';const s=document.getElementById('st70ShopeeImportStatus');if(s)s.textContent='';}
+async function st70ImportShopeeProducts(){const status=document.getElementById('st70ShopeeImportStatus'),results=document.getElementById('st70ShopeeImportResults');const urls=[...(new Set(String(document.getElementById('st70ShopeeUrls')?.value||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean)))];if(!urls.length){alert('Cole pelo menos um link de anúncio da Shopee.');return;}if(urls.length>100){alert('Máximo de 100 anúncios por lote.');return;}if(status)status.textContent='Importando anúncios da Shopee...';if(results)results.innerHTML='';try{const d=await st70ShopeeApi({action:'shopee_import_products',admin_password:adminAuthPassword,urls,category:document.getElementById('st70ShopeeCategory')?.value||'',default_stock:Number(document.getElementById('st70ShopeeDefaultStock')?.value||0)});if(results)results.innerHTML=(d.results||[]).map(x=>`<div class="st70-shopee-result"><b>${x.ok?'✓':'✕'} ${st70ShopeeEsc(x.name||x.url||'Anúncio')}</b>${st70ShopeeEsc(x.error||('Produto '+(x.created?'criado':'atualizado')+'.'))}</div>`).join('');if(status)status.textContent=`Concluído: ${Number(d.imported||0)} importado(s), ${Number(d.failed||0)} com erro.`;await loadSupabaseProducts();renderCategories();renderProducts();renderAdmin();}catch(e){if(status)status.textContent='Erro: '+(e?.message||e);}}
+function st70ShopeeProductsForSheet(){return (Array.isArray(products)?products:[]).filter(p=>p&&p.active!==false);}
+function st70NormHeader(v){return String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();}
+function st70HeaderMap(headers){const aliases={name:['nome','titulo','produto','product name','nome do produto','title'],description:['descricao','descricao do produto','description'],sku:['sku','codigo do produto','seller sku'],barcode:['ean','ean 13','codigo de barras','gtin'],price:['preco','preco de venda','preco do produto','price'],stock:['estoque','quantidade','qtd','stock'],image:['imagem principal','imagem','foto','image','main image'],images:['imagens','fotos','imagens adicionais','additional images'],weight:['peso','peso do produto','weight'],height:['altura','height'],width:['largura','width'],length:['comprimento','length'],category:['categoria','categoria do produto','category'],sizes:['tamanho','tamanhos','size'],colors:['cor','cores','color'],url:['url','link do produto','product url']};const out={};headers.forEach((h,i)=>{const n=st70NormHeader(h);for(const [key,list] of Object.entries(aliases)){if(out[key]!=null)continue;if(list.some(a=>n===st70NormHeader(a)||n.includes(st70NormHeader(a)))){out[key]=i;break;}}});return out;}
+function st70Cell(row,map,key){return map[key]==null?'':row[map[key]]??'';}
+function st70FirstNonEmpty(arr){return arr.find(x=>String(x??'').trim()!=='')??'';}
+function st70FillRow(row,map,p,category){const images=[p.image,...(Array.isArray(p.secondary_images)?p.secondary_images:[])].filter(Boolean);const vals={name:p.name,description:p.description,sku:p.sku,barcode:p.barcode,price:Number(p.sale_price??p.salePrice??p.price??0),stock:Number(p.stock??0),image:images[0]||'',images:images.slice(1).join('\n'),weight:Number(p.weightKg??p.weight??0),height:Number(p.heightCm??0),width:Number(p.widthCm??0),length:Number(p.lengthCm??0),category:category||p.category||'',sizes:Array.isArray(p.sizes)?p.sizes.join(', '):String(p.sizes||''),colors:Array.isArray(p.colors)?p.colors.join(', '):String(p.colors||''),url:p.url||''};for(const [key,index] of Object.entries(map)){if(index==null)continue;row[index]=vals[key]??row[index]??'';}return row;}
+async function st70GenerateShopeeSheet(){const status=document.getElementById('st70ShopeeSheetStatus'),input=document.getElementById('st70ShopeeTemplate');if(!window.XLSX){alert('Biblioteca de planilha não carregou. Recarregue a página e tente novamente.');return;}const file=input?.files?.[0];if(!file){alert('Selecione o modelo oficial da Shopee primeiro.');return;}if(status)status.textContent='Lendo modelo oficial e preenchendo produtos...';try{const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});let headerIndex=-1;for(let i=0;i<Math.min(40,rows.length);i++){const non=rows[i].filter(v=>String(v??'').trim()!=='').length;if(non>=2&&st70HeaderMap(rows[i]).name!=null){headerIndex=i;break;}}if(headerIndex<0)throw new Error('Não encontrei a linha de cabeçalho do modelo. Use o arquivo oficial de cadastro em massa da Shopee.');const headers=rows[headerIndex];const map=st70HeaderMap(headers);const base=rows.slice(0,headerIndex+1);const category=document.getElementById('st70ShopeeCategory')?.value||'';const prods=st70ShopeeProductsForSheet();if(!prods.length)throw new Error('Não há produtos ativos no catálogo para exportar.');const outRows=base.concat(prods.map(p=>st70FillRow(headers.map(()=>''),map,p,category)));const out=XLSX.utils.aoa_to_sheet(outRows);wb.Sheets[wb.SheetNames[0]]=out;XLSX.writeFile(wb,'ST70-Shopee-envio-em-massa.xlsx');if(status)status.textContent=`Planilha gerada com ${prods.length} produto(s). Campos específicos da categoria foram preservados do modelo oficial.`;}catch(e){if(status)status.textContent='Erro: '+(e?.message||e);}}
+function st70DownloadShopeeMapping(){const prods=st70ShopeeProductsForSheet();const lines=[['ST70','Nome','SKU','EAN','Preço','Estoque','Categoria','Tamanhos','Cores','Imagem principal','Imagens adicionais','Peso kg','Altura cm','Largura cm','Comprimento cm','URL'],...prods.map(p=>[p.name,p.name,p.sku,p.barcode,Number(p.sale_price??p.salePrice??p.price??0),Number(p.stock??0),p.category,Array.isArray(p.sizes)?p.sizes.join(', '):'',Array.isArray(p.colors)?p.colors.join(', '):'',p.image,Array.isArray(p.secondary_images)?p.secondary_images.join('\n'):'',p.weightKg??p.weight??'',p.heightCm??'',p.widthCm??'',p.lengthCm??'',p.url||''])];const ws=XLSX.utils.aoa_to_sheet(lines);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'ST70');XLSX.writeFile(wb,'ST70-modelo-conferencia-Shopee.xlsx');}
+setTimeout(st70LoadShopeeCategories,500);
+</script>
 </body></html>`);w.document.close()}
 function renderSales(){const el=document.getElementById('pdvHistory');if(!el)return;el.innerHTML=sales.length?sales.slice(0,20).map(s=>`<div class="sale-row"><b>${s.id} — ${money(s.total)}</b><br><small>${new Date(s.date).toLocaleString('pt-BR')} · ${s.payment} · ${s.items.reduce((a,i)=>a+i.qty,0)} item(ns)</small><br><button class="smallbtn" onclick="printSale(${JSON.stringify(s).replace(/"/g,'&quot;')})">🖨️ Comprovante</button></div>`).join(''):'<div class="empty">Nenhuma venda registrada.</div>'}
 
@@ -1887,7 +1900,7 @@ document.getElementById('pdvDiscount').addEventListener('input',renderPDV);docum
 let cartTapCount=0,cartTapTimer=null;const cartAccess=document.getElementById('cartBtn');
 if(cartAccess)cartAccess.addEventListener('click',e=>{cartTapCount++;clearTimeout(cartTapTimer);cartTapTimer=setTimeout(()=>{cartTapCount=0},650);if(cartTapCount>=3){e.preventDefault();e.stopImmediatePropagation();cartTapCount=0;openAdmin()}},{capture:true});
 document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.altKey&&e.shiftKey&&e.key.toLowerCase()==='a'){e.preventDefault();openAdmin()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
-function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();ensureCarmenattoAdminControls();setupAdminNavigation();document.getElementById('adminModal').classList.add('open');setAdminTab('overview');renderAdmin();loadFashionTheme().then(fillFashionThemeAdmin);loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} 
+function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadFashionTheme().then(fillFashionThemeAdmin);loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} 
 async function loadFreeShippingConfig(){
   try{
     const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shipping_config'})});
@@ -2499,93 +2512,6 @@ function resetFashionThemeAdmin(){
   const st=document.getElementById('fashionThemeAdminStatus');if(st)st.textContent='Padrão carregado. Clique em SALVAR IDENTIDADE DA MODA para gravar.';
 }
 
-
-function st70AdminRequest(action){
-  return fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action,admin_password:adminAuthPassword})})
-    .then(async r=>{const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||`Falha ao carregar ${action}.`);return d;});
-}
-function setupAdminNavigation(){
-  const panel=document.querySelector('#adminModal .modal-panel');
-  if(!panel||panel.dataset.st70Tabs==='1')return;
-  const title=panel.querySelector(':scope > .section-title');
-  if(!title)return;
-  const tabs=document.createElement('div');tabs.className='st70-admin-tabs';tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','Seções do painel administrativo');
-  const content=document.createElement('div');content.className='st70-admin-content';
-  const definitions=[['overview','Visão geral'],['sales','Vendas'],['products','Produtos'],['store','Loja e visual']];
-  const views={};
-  for(const [key,label] of definitions){
-    const button=document.createElement('button');button.type='button';button.className='st70-admin-tab';button.dataset.adminTab=key;button.setAttribute('role','tab');button.setAttribute('aria-selected','false');button.textContent=label;button.addEventListener('click',()=>setAdminTab(key));tabs.appendChild(button);
-    const view=document.createElement('section');view.className='st70-admin-view';view.dataset.adminPanel=key;view.setAttribute('role','tabpanel');view.hidden=true;views[key]=view;content.appendChild(view);
-  }
-  views.overview.innerHTML=`<div class="st70-admin-toolbar"><div><h3 style="margin:0">Indicadores da loja</h3><small>Resumo dos últimos 30 dias</small></div><button type="button" class="smallbtn" onclick="refreshAdminReports()">↻ Atualizar</button></div><div id="st70AnalyticsStatus" class="st70-admin-status">Carregando acessos e cliques…</div><div id="st70AnalyticsSummary" class="st70-admin-kpis"></div><div class="st70-admin-card"><h3>Produtos mais clicados</h3><div id="st70TopClicked"></div></div>`;
-  views.sales.innerHTML=`<div class="st70-admin-toolbar"><div><h3 style="margin:0">Vendas e produtos vendidos</h3><small>Somente pagamentos aprovados no site; PDV separado · últimos 30 dias</small></div><button type="button" class="smallbtn" onclick="refreshAdminReports()">↻ Atualizar</button></div><div id="st70SalesStatus" class="st70-admin-status">Carregando relatório de vendas…</div><div id="st70SalesSummary" class="st70-admin-kpis"></div><div class="st70-admin-card"><h3>Produtos vendidos pelo site</h3><div id="st70SoldProducts"></div></div><div class="st70-admin-card"><h3>Pedidos online pagos</h3><div id="st70OnlineOrders"></div></div><div class="st70-admin-card"><h3>Pedidos recebidos / situação e etiquetas</h3><div id="st70OrderInbox" class="admin-list"></div></div>`;
-  const orderBox=document.getElementById('adminOrders');
-  if(orderBox){const orderHeading=orderBox.previousElementSibling;if(orderHeading?.tagName==='H3')orderHeading.remove();views.sales.querySelector('#st70OrderInbox').appendChild(orderBox);}
-  const adminGrid=panel.querySelector(':scope > .admin-grid');
-  if(adminGrid)views.products.appendChild(adminGrid);
-  const known=new Set([tabs,content,title]);
-  for(const node of [...panel.children]){
-    if(known.has(node))continue;
-    if(node.classList?.contains('admin-grid'))continue;
-    views.store.appendChild(node);
-  }
-  title.insertAdjacentElement('afterend',tabs);
-  tabs.insertAdjacentElement('afterend',content);
-  panel.dataset.st70Tabs='1';
-}
-function setAdminTab(tab){
-  const panel=document.querySelector('#adminModal .modal-panel');if(!panel)return;
-  setupAdminNavigation();
-  panel.querySelectorAll('[data-admin-tab]').forEach(button=>{const active=button.dataset.adminTab===tab;button.setAttribute('aria-selected',active?'true':'false');button.classList.toggle('active',active);});
-  panel.querySelectorAll('[data-admin-panel]').forEach(view=>{view.hidden=view.dataset.adminPanel!==tab;});
-  if(tab==='overview'||tab==='sales')refreshAdminReports();
-}
-function adminCurrency(value){return Number(value||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
-function adminDate(value){if(!value)return '—';const d=new Date(value);return Number.isNaN(d.getTime())?'—':d.toLocaleDateString('pt-BR');}
-function renderAdminAnalytics(data){
-  const summary=document.getElementById('st70AnalyticsSummary');if(!summary)return;
-  summary.innerHTML=`<div class="st70-admin-kpi"><span>Acessos · 30 dias</span><b>${Number(data.page_views||0).toLocaleString('pt-BR')}</b></div><div class="st70-admin-kpi"><span>Cliques em produtos · 30 dias</span><b>${Number(data.product_clicks||0).toLocaleString('pt-BR')}</b></div><div class="st70-admin-kpi"><span>Produtos com cliques</span><b>${(data.top_clicked_products||[]).length}</b></div>`;
-  const top=document.getElementById('st70TopClicked');
-  const rows=(data.top_clicked_products||[]).map(p=>`<tr><td>${escapeHtml(p.product_name||'Produto')}</td><td>${Number(p.clicks||0).toLocaleString('pt-BR')}</td></tr>`).join('');
-  if(top)top.innerHTML=rows?`<div class="st70-admin-table-wrap"><table class="st70-admin-table"><thead><tr><th>Produto</th><th>Cliques</th></tr></thead><tbody>${rows}</tbody></table></div>`:'<div class="empty">Ainda não há cliques registrados nos últimos 30 dias.</div>';
-  if(data.click_aggregation_truncated&&top)top.insertAdjacentHTML('beforeend','<p class="st70-admin-status">A lista foi calculada a partir dos 20 mil cliques mais recentes do período.</p>');
-}
-function renderAdminSales(data){
-  const summary=data.summary||{};
-  const kpis=document.getElementById('st70SalesSummary');if(!kpis)return;
-  kpis.innerHTML=`<div class="st70-admin-kpi"><span>Pedidos pagos no site</span><b>${Number(summary.online_order_count||0).toLocaleString('pt-BR')}</b></div><div class="st70-admin-kpi"><span>Faturamento online</span><b>${adminCurrency(summary.online_revenue)}</b></div><div class="st70-admin-kpi"><span>Unidades vendidas online</span><b>${Number(summary.online_units||0).toLocaleString('pt-BR')}</b></div><div class="st70-admin-kpi"><span>Pedidos pendentes</span><b>${Number(summary.pending_order_count||0).toLocaleString('pt-BR')}</b></div><div class="st70-admin-kpi"><span>Vendas PDV</span><b>${Number(summary.pdv_sale_count||0).toLocaleString('pt-BR')}</b></div><div class="st70-admin-kpi"><span>Faturamento PDV</span><b>${adminCurrency(summary.pdv_revenue)}</b></div>`;
-  const products=document.getElementById('st70SoldProducts');
-  const productRows=(data.online_products||[]).map(p=>`<tr><td>${escapeHtml(p.product_name||'Produto')}</td><td>${Number(p.quantity||0).toLocaleString('pt-BR')}</td><td>${adminCurrency(p.revenue)}</td></tr>`).join('');
-  if(products)products.innerHTML=productRows?`<div class="st70-admin-table-wrap"><table class="st70-admin-table"><thead><tr><th>Produto</th><th>Unidades</th><th>Faturamento</th></tr></thead><tbody>${productRows}</tbody></table></div>`:'<div class="empty">Nenhum produto vendido online com pagamento aprovado nos últimos 30 dias.</div>';
-  const orders=document.getElementById('st70OnlineOrders');
-  const orderRows=(data.online_orders||[]).map(o=>`<tr><td>${escapeHtml(o.reference||'Pedido')}<br><small>${adminDate(o.date)} · ${Number(o.item_count||0)} item(ns)</small></td><td>${escapeHtml(o.payment_method||'')}</td><td>${adminCurrency(o.total)}</td></tr>`).join('');
-  if(orders)orders.innerHTML=orderRows?`<div class="st70-admin-table-wrap"><table class="st70-admin-table"><thead><tr><th>Pedido</th><th>Pagamento</th><th>Total</th></tr></thead><tbody>${orderRows}</tbody></table></div>`:'<div class="empty">Nenhum pedido online pago nos últimos 30 dias.</div>';
-}
-async function refreshAdminReports(){
-  if(!adminAuthPassword)return;
-  const analyticsStatus=document.getElementById('st70AnalyticsStatus');
-  const salesStatus=document.getElementById('st70SalesStatus');
-  if(analyticsStatus)analyticsStatus.textContent='Atualizando acessos e cliques…';
-  if(salesStatus)salesStatus.textContent='Atualizando vendas…';
-  const [analyticsResult,salesResult]=await Promise.allSettled([st70AdminRequest('analytics_report'),st70AdminRequest('sales_report')]);
-  if(analyticsResult.status==='fulfilled'){renderAdminAnalytics(analyticsResult.value);if(analyticsStatus)analyticsStatus.textContent='Métricas atualizadas.';}
-  else if(analyticsStatus)analyticsStatus.textContent=`Métricas indisponíveis: ${analyticsResult.reason?.message||'verifique a configuração'}`;
-  if(salesResult.status==='fulfilled'){renderAdminSales(salesResult.value);if(salesStatus)salesStatus.textContent='Relatório atualizado.';}
-  else if(salesStatus)salesStatus.textContent=`Relatório indisponível: ${salesResult.reason?.message||'verifique a configuração'}`;
-}
-function st70RandomId(){try{if(window.crypto&&typeof crypto.randomUUID==='function')return crypto.randomUUID();}catch(_){}return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;}
-async function trackStoreEvent(eventType,product=null){
-  try{
-    let visitorId=localStorage.getItem('studio70_analytics_visitor');
-    if(!visitorId){visitorId=st70RandomId();localStorage.setItem('studio70_analytics_visitor',visitorId);}
-    const day=new Date().toISOString().slice(0,10);
-    const eventKey=eventType==='page_view'?`view:${visitorId}:${day}`:`click:${st70RandomId()}`;
-    const payload={action:'analytics_track',event_type:eventType,visitor_id:visitorId,event_key:eventKey};
-    if(eventType==='product_click'&&product){payload.product_id=String(product.id??product.sku??product.barcode??'');payload.product_name=String(product.name??'Produto');}
-    await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),keepalive:true});
-  }catch(error){console.debug('[STUDIO70] Métrica não enviada:',error?.message||error);}
-}
-
 function renderAdmin(){
   const q=(document.getElementById('adminSearch').value||'').toLowerCase();
   const list=products.filter(p=>[p.name,p.sku,p.barcode].join(' ').toLowerCase().includes(q));
@@ -3133,14 +3059,13 @@ function renderAdminOrders(orders){
       const buy=ev.target.closest?.('#productGrid .js-buy, #geekProductGrid .js-buy');
       const fitting=ev.target.closest?.('#productBody .js-fitting');
       if(fitting){ev.preventDefault();ev.stopPropagation();openVirtualFitting(fitting.dataset.productId);return;}
-      if(details){ev.preventDefault();ev.stopPropagation();const p=products.find(x=>String(x.id??'')===String(details.dataset.productId??''));if(p)trackStoreEvent('product_click',p);openProduct(details.dataset.productId);return;}
+      if(details){ev.preventDefault();ev.stopPropagation();openProduct(details.dataset.productId);return;}
       if(buy){
         ev.preventDefault();
         ev.stopPropagation();
         const productId=buy.dataset.productId;
         const product=products.find(x=>String(x.id??'')===String(productId??''));
         if(!product)return;
-        trackStoreEvent('product_click',product);
         const hasSize=Array.isArray(product.sizes)&&product.sizes.length>0;
         const hasColor=Array.isArray(product.colors)&&product.colors.length>0;
         if(hasSize||hasColor){
@@ -3203,7 +3128,6 @@ function virtualFittingResult(){
   const p=products.find(x=>String(x.id)===String(fittingProductId)); const base=fittingProfile.base||40; const bust=Number(document.getElementById('fitBust')?.value||92),waist=Number(document.getElementById('fitWaist')?.value||76),hip=Number(document.getElementById('fitHip')?.value||100); const score=(bust-92)*.12+(waist-76)*.08+(hip-100)*.08; const indicated=Math.max(36,Math.min(48,base+(score>7?2:score>2?1:score<-7?-2:score<-2?-1:0))); const available=(Array.isArray(p?.sizes)?p.sizes:[]).map(String).filter(x=>/^((36|38|40|42|44|46|48)(\s|$|\/|-))/i.test(x)); const size=available.length?available.find(x=>x.startsWith(String(indicated)))||available.find(x=>x.startsWith(String(base)))||String(indicated):String(indicated); const fit=score>8?'mais ajustado':score<-8?'mais confortável':'com maior chance de vestir com conforto'; document.getElementById('virtualFittingBody').innerHTML=`<h2 class="section-title">Resultado do provador</h2><div style="padding:22px;text-align:center;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.04)"><div style="font-size:13px;color:var(--muted)">TAMANHO INDICADO</div><strong style="display:block;font-size:56px;color:var(--accent);margin:8px 0">${escapeHtml(size)}</strong><p>O tamanho <b>${escapeHtml(size)}</b> tem maior chance de vestir ${fit} para esse perfil.</p></div><p style="font-size:12px;color:var(--muted);margin-top:14px">A recomendação é uma estimativa baseada nas medidas informadas e pode variar conforme o modelo e a preferência de vestibilidade.</p><div style="display:flex;gap:10px"><button class="smallbtn" style="flex:1" type="button" onclick="openVirtualFitting(fittingProductId)">CALCULAR NOVAMENTE</button><button class="btn" style="flex:1" type="button" onclick="closeVirtualFitting()">ENTENDI</button></div>`;
 }
 loadBannersFromServer();
-trackStoreEvent('page_view');
 </script>
 <script>
 (function initST70MobileMenu(){
