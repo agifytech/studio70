@@ -993,6 +993,29 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
 @media(max-width:768px){.fashion-admin-card .color-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 
+
+<style id="st70-admin-dashboard-styles">
+#adminModal .st70-admin-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 16px;position:sticky;top:0;z-index:5;padding:10px 0;background:#f5f4f1}
+#adminModal .st70-admin-tab{border:1px solid #c8c5be;background:#fff;color:#111;border-radius:9px;padding:11px 9px;font-weight:800;letter-spacing:.3px}
+#adminModal .st70-admin-tab[aria-selected="true"]{background:#111;color:#fff;border-color:#111}
+#adminModal .st70-admin-view[hidden]{display:none!important}
+#adminModal .st70-admin-card{background:#fff;border:1px solid #d2cfc8;border-radius:13px;padding:16px;margin:0 0 14px;min-width:0}
+#adminModal .st70-admin-card h3{margin:0 0 10px;font-size:17px}
+#adminModal .st70-admin-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 14px}
+#adminModal .st70-admin-kpi{background:#f2f1ee;border:1px solid #d9d6cf;border-radius:11px;padding:13px;min-width:0}
+#adminModal .st70-admin-kpi span{display:block;color:#68655f;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+#adminModal .st70-admin-kpi b{display:block;font-size:24px;margin-top:5px;overflow-wrap:anywhere}
+#adminModal .st70-admin-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
+#adminModal .st70-admin-toolbar .smallbtn{flex:0 0 auto;width:auto}
+#adminModal .st70-admin-status{font-size:11px;color:#68655f;min-height:16px;margin:7px 0}
+#adminModal .st70-admin-table-wrap{overflow:auto;max-width:100%}
+#adminModal .st70-admin-table{width:100%;border-collapse:collapse;font-size:13px}
+#adminModal .st70-admin-table th,#adminModal .st70-admin-table td{text-align:left;padding:9px 8px;border-bottom:1px solid #e5e2dc;vertical-align:top}
+#adminModal .st70-admin-table th{font-size:10px;color:#68655f;text-transform:uppercase;letter-spacing:.5px}
+#adminModal .st70-admin-table td:last-child,#adminModal .st70-admin-table th:last-child{text-align:right;white-space:nowrap}
+@media(max-width:700px){#adminModal .st70-admin-tabs{grid-template-columns:repeat(2,minmax(0,1fr));position:static}#adminModal .st70-admin-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#adminModal .st70-admin-kpi b{font-size:20px}#adminModal .st70-admin-card{padding:12px}}
+</style>
+
 </head>
 <body>
 <div class="promo-carousel" id="promoCarousel" aria-label="Ofertas e benefícios">
@@ -1864,7 +1887,7 @@ document.getElementById('pdvDiscount').addEventListener('input',renderPDV);docum
 let cartTapCount=0,cartTapTimer=null;const cartAccess=document.getElementById('cartBtn');
 if(cartAccess)cartAccess.addEventListener('click',e=>{cartTapCount++;clearTimeout(cartTapTimer);cartTapTimer=setTimeout(()=>{cartTapCount=0},650);if(cartTapCount>=3){e.preventDefault();e.stopImmediatePropagation();cartTapCount=0;openAdmin()}},{capture:true});
 document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.altKey&&e.shiftKey&&e.key.toLowerCase()==='a'){e.preventDefault();openAdmin()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
-function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadFashionTheme().then(fillFashionThemeAdmin);loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} 
+function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();ensureCarmenattoAdminControls();setupAdminNavigation();document.getElementById('adminModal').classList.add('open');setAdminTab('overview');renderAdmin();loadFashionTheme().then(fillFashionThemeAdmin);loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} 
 async function loadFreeShippingConfig(){
   try{
     const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shipping_config'})});
@@ -2476,6 +2499,93 @@ function resetFashionThemeAdmin(){
   const st=document.getElementById('fashionThemeAdminStatus');if(st)st.textContent='Padrão carregado. Clique em SALVAR IDENTIDADE DA MODA para gravar.';
 }
 
+
+function st70AdminRequest(action){
+  return fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action,admin_password:adminAuthPassword})})
+    .then(async r=>{const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||`Falha ao carregar ${action}.`);return d;});
+}
+function setupAdminNavigation(){
+  const panel=document.querySelector('#adminModal .modal-panel');
+  if(!panel||panel.dataset.st70Tabs==='1')return;
+  const title=panel.querySelector(':scope > .section-title');
+  if(!title)return;
+  const tabs=document.createElement('div');tabs.className='st70-admin-tabs';tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','Seções do painel administrativo');
+  const content=document.createElement('div');content.className='st70-admin-content';
+  const definitions=[['overview','Visão geral'],['sales','Vendas'],['products','Produtos'],['store','Loja e visual']];
+  const views={};
+  for(const [key,label] of definitions){
+    const button=document.createElement('button');button.type='button';button.className='st70-admin-tab';button.dataset.adminTab=key;button.setAttribute('role','tab');button.setAttribute('aria-selected','false');button.textContent=label;button.addEventListener('click',()=>setAdminTab(key));tabs.appendChild(button);
+    const view=document.createElement('section');view.className='st70-admin-view';view.dataset.adminPanel=key;view.setAttribute('role','tabpanel');view.hidden=true;views[key]=view;content.appendChild(view);
+  }
+  views.overview.innerHTML=`<div class="st70-admin-toolbar"><div><h3 style="margin:0">Indicadores da loja</h3><small>Resumo dos últimos 30 dias</small></div><button type="button" class="smallbtn" onclick="refreshAdminReports()">↻ Atualizar</button></div><div id="st70AnalyticsStatus" class="st70-admin-status">Carregando acessos e cliques…</div><div id="st70AnalyticsSummary" class="st70-admin-kpis"></div><div class="st70-admin-card"><h3>Produtos mais clicados</h3><div id="st70TopClicked"></div></div>`;
+  views.sales.innerHTML=`<div class="st70-admin-toolbar"><div><h3 style="margin:0">Vendas e produtos vendidos</h3><small>Somente pagamentos aprovados no site; PDV separado · últimos 30 dias</small></div><button type="button" class="smallbtn" onclick="refreshAdminReports()">↻ Atualizar</button></div><div id="st70SalesStatus" class="st70-admin-status">Carregando relatório de vendas…</div><div id="st70SalesSummary" class="st70-admin-kpis"></div><div class="st70-admin-card"><h3>Produtos vendidos pelo site</h3><div id="st70SoldProducts"></div></div><div class="st70-admin-card"><h3>Pedidos online pagos</h3><div id="st70OnlineOrders"></div></div><div class="st70-admin-card"><h3>Pedidos recebidos / situação e etiquetas</h3><div id="st70OrderInbox" class="admin-list"></div></div>`;
+  const orderBox=document.getElementById('adminOrders');
+  if(orderBox){const orderHeading=orderBox.previousElementSibling;if(orderHeading?.tagName==='H3')orderHeading.remove();views.sales.querySelector('#st70OrderInbox').appendChild(orderBox);}
+  const adminGrid=panel.querySelector(':scope > .admin-grid');
+  if(adminGrid)views.products.appendChild(adminGrid);
+  const known=new Set([tabs,content,title]);
+  for(const node of [...panel.children]){
+    if(known.has(node))continue;
+    if(node.classList?.contains('admin-grid'))continue;
+    views.store.appendChild(node);
+  }
+  title.insertAdjacentElement('afterend',tabs);
+  tabs.insertAdjacentElement('afterend',content);
+  panel.dataset.st70Tabs='1';
+}
+function setAdminTab(tab){
+  const panel=document.querySelector('#adminModal .modal-panel');if(!panel)return;
+  setupAdminNavigation();
+  panel.querySelectorAll('[data-admin-tab]').forEach(button=>{const active=button.dataset.adminTab===tab;button.setAttribute('aria-selected',active?'true':'false');button.classList.toggle('active',active);});
+  panel.querySelectorAll('[data-admin-panel]').forEach(view=>{view.hidden=view.dataset.adminPanel!==tab;});
+  if(tab==='overview'||tab==='sales')refreshAdminReports();
+}
+function adminCurrency(value){return Number(value||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
+function adminDate(value){if(!value)return '—';const d=new Date(value);return Number.isNaN(d.getTime())?'—':d.toLocaleDateString('pt-BR');}
+function renderAdminAnalytics(data){
+  const summary=document.getElementById('st70AnalyticsSummary');if(!summary)return;
+  summary.innerHTML=`<div class="st70-admin-kpi"><span>Acessos · 30 dias</span><b>${Number(data.page_views||0).toLocaleString('pt-BR')}</b></div><div class="st70-admin-kpi"><span>Cliques em produtos · 30 dias</span><b>${Number(data.product_clicks||0).toLocaleString('pt-BR')}</b></div><div class="st70-admin-kpi"><span>Produtos com cliques</span><b>${(data.top_clicked_products||[]).length}</b></div>`;
+  const top=document.getElementById('st70TopClicked');
+  const rows=(data.top_clicked_products||[]).map(p=>`<tr><td>${escapeHtml(p.product_name||'Produto')}</td><td>${Number(p.clicks||0).toLocaleString('pt-BR')}</td></tr>`).join('');
+  if(top)top.innerHTML=rows?`<div class="st70-admin-table-wrap"><table class="st70-admin-table"><thead><tr><th>Produto</th><th>Cliques</th></tr></thead><tbody>${rows}</tbody></table></div>`:'<div class="empty">Ainda não há cliques registrados nos últimos 30 dias.</div>';
+  if(data.click_aggregation_truncated&&top)top.insertAdjacentHTML('beforeend','<p class="st70-admin-status">A lista foi calculada a partir dos 20 mil cliques mais recentes do período.</p>');
+}
+function renderAdminSales(data){
+  const summary=data.summary||{};
+  const kpis=document.getElementById('st70SalesSummary');if(!kpis)return;
+  kpis.innerHTML=`<div class="st70-admin-kpi"><span>Pedidos pagos no site</span><b>${Number(summary.online_order_count||0).toLocaleString('pt-BR')}</b></div><div class="st70-admin-kpi"><span>Faturamento online</span><b>${adminCurrency(summary.online_revenue)}</b></div><div class="st70-admin-kpi"><span>Unidades vendidas online</span><b>${Number(summary.online_units||0).toLocaleString('pt-BR')}</b></div><div class="st70-admin-kpi"><span>Pedidos pendentes</span><b>${Number(summary.pending_order_count||0).toLocaleString('pt-BR')}</b></div><div class="st70-admin-kpi"><span>Vendas PDV</span><b>${Number(summary.pdv_sale_count||0).toLocaleString('pt-BR')}</b></div><div class="st70-admin-kpi"><span>Faturamento PDV</span><b>${adminCurrency(summary.pdv_revenue)}</b></div>`;
+  const products=document.getElementById('st70SoldProducts');
+  const productRows=(data.online_products||[]).map(p=>`<tr><td>${escapeHtml(p.product_name||'Produto')}</td><td>${Number(p.quantity||0).toLocaleString('pt-BR')}</td><td>${adminCurrency(p.revenue)}</td></tr>`).join('');
+  if(products)products.innerHTML=productRows?`<div class="st70-admin-table-wrap"><table class="st70-admin-table"><thead><tr><th>Produto</th><th>Unidades</th><th>Faturamento</th></tr></thead><tbody>${productRows}</tbody></table></div>`:'<div class="empty">Nenhum produto vendido online com pagamento aprovado nos últimos 30 dias.</div>';
+  const orders=document.getElementById('st70OnlineOrders');
+  const orderRows=(data.online_orders||[]).map(o=>`<tr><td>${escapeHtml(o.reference||'Pedido')}<br><small>${adminDate(o.date)} · ${Number(o.item_count||0)} item(ns)</small></td><td>${escapeHtml(o.payment_method||'')}</td><td>${adminCurrency(o.total)}</td></tr>`).join('');
+  if(orders)orders.innerHTML=orderRows?`<div class="st70-admin-table-wrap"><table class="st70-admin-table"><thead><tr><th>Pedido</th><th>Pagamento</th><th>Total</th></tr></thead><tbody>${orderRows}</tbody></table></div>`:'<div class="empty">Nenhum pedido online pago nos últimos 30 dias.</div>';
+}
+async function refreshAdminReports(){
+  if(!adminAuthPassword)return;
+  const analyticsStatus=document.getElementById('st70AnalyticsStatus');
+  const salesStatus=document.getElementById('st70SalesStatus');
+  if(analyticsStatus)analyticsStatus.textContent='Atualizando acessos e cliques…';
+  if(salesStatus)salesStatus.textContent='Atualizando vendas…';
+  const [analyticsResult,salesResult]=await Promise.allSettled([st70AdminRequest('analytics_report'),st70AdminRequest('sales_report')]);
+  if(analyticsResult.status==='fulfilled'){renderAdminAnalytics(analyticsResult.value);if(analyticsStatus)analyticsStatus.textContent='Métricas atualizadas.';}
+  else if(analyticsStatus)analyticsStatus.textContent=`Métricas indisponíveis: ${analyticsResult.reason?.message||'verifique a configuração'}`;
+  if(salesResult.status==='fulfilled'){renderAdminSales(salesResult.value);if(salesStatus)salesStatus.textContent='Relatório atualizado.';}
+  else if(salesStatus)salesStatus.textContent=`Relatório indisponível: ${salesResult.reason?.message||'verifique a configuração'}`;
+}
+function st70RandomId(){try{if(window.crypto&&typeof crypto.randomUUID==='function')return crypto.randomUUID();}catch(_){}return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;}
+async function trackStoreEvent(eventType,product=null){
+  try{
+    let visitorId=localStorage.getItem('studio70_analytics_visitor');
+    if(!visitorId){visitorId=st70RandomId();localStorage.setItem('studio70_analytics_visitor',visitorId);}
+    const day=new Date().toISOString().slice(0,10);
+    const eventKey=eventType==='page_view'?`view:${visitorId}:${day}`:`click:${st70RandomId()}`;
+    const payload={action:'analytics_track',event_type:eventType,visitor_id:visitorId,event_key:eventKey};
+    if(eventType==='product_click'&&product){payload.product_id=String(product.id??product.sku??product.barcode??'');payload.product_name=String(product.name??'Produto');}
+    await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),keepalive:true});
+  }catch(error){console.debug('[STUDIO70] Métrica não enviada:',error?.message||error);}
+}
+
 function renderAdmin(){
   const q=(document.getElementById('adminSearch').value||'').toLowerCase();
   const list=products.filter(p=>[p.name,p.sku,p.barcode].join(' ').toLowerCase().includes(q));
@@ -3023,13 +3133,14 @@ function renderAdminOrders(orders){
       const buy=ev.target.closest?.('#productGrid .js-buy, #geekProductGrid .js-buy');
       const fitting=ev.target.closest?.('#productBody .js-fitting');
       if(fitting){ev.preventDefault();ev.stopPropagation();openVirtualFitting(fitting.dataset.productId);return;}
-      if(details){ev.preventDefault();ev.stopPropagation();openProduct(details.dataset.productId);return;}
+      if(details){ev.preventDefault();ev.stopPropagation();const p=products.find(x=>String(x.id??'')===String(details.dataset.productId??''));if(p)trackStoreEvent('product_click',p);openProduct(details.dataset.productId);return;}
       if(buy){
         ev.preventDefault();
         ev.stopPropagation();
         const productId=buy.dataset.productId;
         const product=products.find(x=>String(x.id??'')===String(productId??''));
         if(!product)return;
+        trackStoreEvent('product_click',product);
         const hasSize=Array.isArray(product.sizes)&&product.sizes.length>0;
         const hasColor=Array.isArray(product.colors)&&product.colors.length>0;
         if(hasSize||hasColor){
@@ -3092,6 +3203,7 @@ function virtualFittingResult(){
   const p=products.find(x=>String(x.id)===String(fittingProductId)); const base=fittingProfile.base||40; const bust=Number(document.getElementById('fitBust')?.value||92),waist=Number(document.getElementById('fitWaist')?.value||76),hip=Number(document.getElementById('fitHip')?.value||100); const score=(bust-92)*.12+(waist-76)*.08+(hip-100)*.08; const indicated=Math.max(36,Math.min(48,base+(score>7?2:score>2?1:score<-7?-2:score<-2?-1:0))); const available=(Array.isArray(p?.sizes)?p.sizes:[]).map(String).filter(x=>/^((36|38|40|42|44|46|48)(\s|$|\/|-))/i.test(x)); const size=available.length?available.find(x=>x.startsWith(String(indicated)))||available.find(x=>x.startsWith(String(base)))||String(indicated):String(indicated); const fit=score>8?'mais ajustado':score<-8?'mais confortável':'com maior chance de vestir com conforto'; document.getElementById('virtualFittingBody').innerHTML=`<h2 class="section-title">Resultado do provador</h2><div style="padding:22px;text-align:center;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.04)"><div style="font-size:13px;color:var(--muted)">TAMANHO INDICADO</div><strong style="display:block;font-size:56px;color:var(--accent);margin:8px 0">${escapeHtml(size)}</strong><p>O tamanho <b>${escapeHtml(size)}</b> tem maior chance de vestir ${fit} para esse perfil.</p></div><p style="font-size:12px;color:var(--muted);margin-top:14px">A recomendação é uma estimativa baseada nas medidas informadas e pode variar conforme o modelo e a preferência de vestibilidade.</p><div style="display:flex;gap:10px"><button class="smallbtn" style="flex:1" type="button" onclick="openVirtualFitting(fittingProductId)">CALCULAR NOVAMENTE</button><button class="btn" style="flex:1" type="button" onclick="closeVirtualFitting()">ENTENDI</button></div>`;
 }
 loadBannersFromServer();
+trackStoreEvent('page_view');
 </script>
 <script>
 (function initST70MobileMenu(){
