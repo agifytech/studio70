@@ -993,10 +993,6 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
 @media(max-width:768px){.fashion-admin-card .color-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<style id="st70-shopee-tools-css">
-.st70-shopee-box{margin:14px 0;padding:16px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px}.st70-shopee-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.st70-shopee-grid .full{grid-column:1/-1}.st70-shopee-status{font-size:11px;line-height:1.45;min-height:18px;margin-top:8px}.st70-shopee-results{max-height:240px;overflow:auto;margin-top:10px;display:grid;gap:6px}.st70-shopee-result{padding:8px 10px;background:#fff;border:1px solid #d6d1c8;border-radius:8px;font-size:11px}.st70-shopee-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.st70-shopee-actions .smallbtn{flex:0 1 auto}@media(max-width:650px){.st70-shopee-grid{grid-template-columns:1fr}.st70-shopee-grid .full{grid-column:auto}.st70-shopee-actions{flex-direction:column}.st70-shopee-actions .smallbtn{width:100%}}
-</style>
 </head>
 <body>
 <div class="promo-carousel" id="promoCarousel" aria-label="Ofertas e benefícios">
@@ -1211,23 +1207,6 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
     <button type="button" class="smallbtn" onclick="resetGeekThemeAdmin()">RESTAURAR PADRÃO</button>
   </div>
   <div id="geekThemeAdminStatus" style="font-size:11px;margin-top:7px;min-height:16px"></div>
-</div>
-<div class="st70-shopee-box" id="st70ShopeeBox">
-  <b>🛍️ SHOPEE — IMPORTAÇÃO E ENVIO EM MASSA</b>
-  <p style="font-size:11px;color:#666;line-height:1.45;margin:6px 0 12px">Importe anúncios da sua loja Shopee para o catálogo STUDIO 70 ou gere uma planilha usando o modelo oficial da Shopee. O sistema não inventa campos específicos da categoria.</p>
-  <div class="st70-shopee-grid">
-    <label class="full">Links dos anúncios Shopee — um por linha<textarea class="field" id="st70ShopeeUrls" rows="5" placeholder="https://shopee.com.br/...
-https://shopee.com.br/..."></textarea></label>
-    <label>Categoria STUDIO 70<select class="field" id="st70ShopeeCategory"><option value="">Manter / escolher depois</option></select></label>
-    <label>Estoque padrão<input class="field" id="st70ShopeeDefaultStock" type="number" min="0" value="0"></label>
-  </div>
-  <div class="st70-shopee-actions"><button type="button" class="smallbtn primary" onclick="st70ImportShopeeProducts()">⬇️ IMPORTAR DA SHOPEE</button><button type="button" class="smallbtn" onclick="st70ClearShopeeImport()">LIMPAR</button></div>
-  <div id="st70ShopeeImportStatus" class="st70-shopee-status"></div><div id="st70ShopeeImportResults" class="st70-shopee-results"></div>
-  <hr style="border:0;border-top:1px solid #d6d1c8;margin:16px 0">
-  <p style="font-size:11px;color:#666;line-height:1.45;margin:6px 0 12px"><b>Envio em massa:</b> baixe no Seller Center o modelo oficial de cadastro em massa da Shopee, envie-o aqui e o STUDIO 70 preencherá somente as colunas que consegue identificar. As colunas obrigatórias específicas da categoria permanecem no arquivo para conferência.</p>
-  <label style="display:block">Modelo oficial Shopee (.xlsx, .xls ou .csv)<input class="field" id="st70ShopeeTemplate" type="file" accept=".xlsx,.xls,.csv"></label>
-  <div class="st70-shopee-actions"><button type="button" class="smallbtn primary" onclick="st70GenerateShopeeSheet()">📊 GERAR PLANILHA SHOPEE</button><button type="button" class="smallbtn" onclick="st70DownloadShopeeMapping()">⬇️ MODELO ST70</button></div>
-  <div id="st70ShopeeSheetStatus" class="st70-shopee-status"></div>
 </div>
 <div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço de venda<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU <span style="font-size:10px;color:#777;font-weight:500">(gerado automaticamente)</span><input class="field" id="pSku" required></label><label>Código de barras <span style="font-size:10px;color:#777;font-weight:500">(EAN-13 automático)</span><input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Link da foto principal <span style="font-size:10px;color:#777;font-weight:500">(opcional)</span><input class="field" id="pImage" placeholder="Opcional — você também pode enviar a foto pelo Storage abaixo"></label>
 <div class="payment-admin-box full" style="margin:0;padding:14px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px"><b>📸 FOTOS DO PRODUTO — SUPABASE STORAGE</b><p style="font-size:11px;color:#666;margin:6px 0 10px">Envie as fotos diretamente pelo ADM. Elas serão salvas automaticamente no Supabase Storage e a URL será gravada no produto.</p><label>Foto principal<input class="field" id="pImageFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><div id="pImageUploadStatus" class="upload-status" style="font-size:11px;margin-top:5px;min-height:16px"></div><label style="display:block;margin-top:8px">Fotos secundárias<input class="field" id="pSecondaryFiles" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label><div id="pSecondaryUploadStatus" class="upload-status" style="font-size:11px;margin-top:5px;min-height:16px"></div></div>
@@ -1838,21 +1817,6 @@ function printSale(sale){const w=window.open('','_blank','width=420,height=650')
 #integratedCheckoutModal .status.error{color:#a52b2b}
 @media(max-width:800px){#integratedCheckoutModal{padding:0}#integratedCheckoutModal .integrated-shell{border-radius:0}#integratedCheckoutModal .integrated-close{right:10px;top:10px}#integratedCheckoutModal .pay-methods{grid-template-columns:1fr}}
 </style></head><body><h2>STUDIO 70 BRAND</h2><div class="center">COMPROVANTE DE VENDA<br>${sale.id}<br>${new Date(sale.date).toLocaleString('pt-BR')}</div><table>${rows}</table><div>Subtotal: ${money(sale.subtotal)}</div><div>Desconto: ${money(sale.discount)}</div><div class="tot">TOTAL: ${money(sale.total)}</div><p>Pagamento: ${sale.payment}</p>${sale.payment==='Dinheiro'?`<p>Recebido: ${money(sale.received)}<br>Troco: ${money(sale.change)}</p>`:''}<p class="center">Obrigado pela preferência!</p><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script>
-<script id="st70-shopee-js">function st70ShopeeApi(body){return fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(body)}).then(async r=>{const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||'Falha na integração Shopee.');return d;});}
-function st70ShopeeEsc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
-async function st70LoadShopeeCategories(){const el=document.getElementById('st70ShopeeCategory');if(!el)return;try{const d=await st70ShopeeApi({action:'categories_list'});const cats=Array.isArray(d.categories)?d.categories:[];const current=el.value;el.innerHTML='<option value="">Manter / escolher depois</option>'+cats.filter(c=>c&&c.active!==false).map(c=>`<option value="${st70ShopeeEsc(c.name)}">${st70ShopeeEsc(c.name)}</option>`).join('');el.value=current;}catch(_){}}
-function st70ClearShopeeImport(){const u=document.getElementById('st70ShopeeUrls');if(u)u.value='';const r=document.getElementById('st70ShopeeImportResults');if(r)r.innerHTML='';const s=document.getElementById('st70ShopeeImportStatus');if(s)s.textContent='';}
-async function st70ImportShopeeProducts(){const status=document.getElementById('st70ShopeeImportStatus'),results=document.getElementById('st70ShopeeImportResults');const urls=[...(new Set(String(document.getElementById('st70ShopeeUrls')?.value||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean)))];if(!urls.length){alert('Cole pelo menos um link de anúncio da Shopee.');return;}if(urls.length>100){alert('Máximo de 100 anúncios por lote.');return;}if(status)status.textContent='Importando anúncios da Shopee...';if(results)results.innerHTML='';try{const d=await st70ShopeeApi({action:'shopee_import_products',admin_password:adminAuthPassword,urls,category:document.getElementById('st70ShopeeCategory')?.value||'',default_stock:Number(document.getElementById('st70ShopeeDefaultStock')?.value||0)});if(results)results.innerHTML=(d.results||[]).map(x=>`<div class="st70-shopee-result"><b>${x.ok?'✓':'✕'} ${st70ShopeeEsc(x.name||x.url||'Anúncio')}</b>${st70ShopeeEsc(x.error||('Produto '+(x.created?'criado':'atualizado')+'.'))}</div>`).join('');if(status)status.textContent=`Concluído: ${Number(d.imported||0)} importado(s), ${Number(d.failed||0)} com erro.`;await loadSupabaseProducts();renderCategories();renderProducts();renderAdmin();}catch(e){if(status)status.textContent='Erro: '+(e?.message||e);}}
-function st70ShopeeProductsForSheet(){return (Array.isArray(products)?products:[]).filter(p=>p&&p.active!==false);}
-function st70NormHeader(v){return String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();}
-function st70HeaderMap(headers){const aliases={name:['nome','titulo','produto','product name','nome do produto','title'],description:['descricao','descricao do produto','description'],sku:['sku','codigo do produto','seller sku'],barcode:['ean','ean 13','codigo de barras','gtin'],price:['preco','preco de venda','preco do produto','price'],stock:['estoque','quantidade','qtd','stock'],image:['imagem principal','imagem','foto','image','main image'],images:['imagens','fotos','imagens adicionais','additional images'],weight:['peso','peso do produto','weight'],height:['altura','height'],width:['largura','width'],length:['comprimento','length'],category:['categoria','categoria do produto','category'],sizes:['tamanho','tamanhos','size'],colors:['cor','cores','color'],url:['url','link do produto','product url']};const out={};headers.forEach((h,i)=>{const n=st70NormHeader(h);for(const [key,list] of Object.entries(aliases)){if(out[key]!=null)continue;if(list.some(a=>n===st70NormHeader(a)||n.includes(st70NormHeader(a)))){out[key]=i;break;}}});return out;}
-function st70Cell(row,map,key){return map[key]==null?'':row[map[key]]??'';}
-function st70FirstNonEmpty(arr){return arr.find(x=>String(x??'').trim()!=='')??'';}
-function st70FillRow(row,map,p,category){const images=[p.image,...(Array.isArray(p.secondary_images)?p.secondary_images:[])].filter(Boolean);const vals={name:p.name,description:p.description,sku:p.sku,barcode:p.barcode,price:Number(p.sale_price??p.salePrice??p.price??0),stock:Number(p.stock??0),image:images[0]||'',images:images.slice(1).join('\n'),weight:Number(p.weightKg??p.weight??0),height:Number(p.heightCm??0),width:Number(p.widthCm??0),length:Number(p.lengthCm??0),category:category||p.category||'',sizes:Array.isArray(p.sizes)?p.sizes.join(', '):String(p.sizes||''),colors:Array.isArray(p.colors)?p.colors.join(', '):String(p.colors||''),url:p.url||''};for(const [key,index] of Object.entries(map)){if(index==null)continue;row[index]=vals[key]??row[index]??'';}return row;}
-async function st70GenerateShopeeSheet(){const status=document.getElementById('st70ShopeeSheetStatus'),input=document.getElementById('st70ShopeeTemplate');if(!window.XLSX){alert('Biblioteca de planilha não carregou. Recarregue a página e tente novamente.');return;}const file=input?.files?.[0];if(!file){alert('Selecione o modelo oficial da Shopee primeiro.');return;}if(status)status.textContent='Lendo modelo oficial e preenchendo produtos...';try{const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});let headerIndex=-1;for(let i=0;i<Math.min(40,rows.length);i++){const non=rows[i].filter(v=>String(v??'').trim()!=='').length;if(non>=2&&st70HeaderMap(rows[i]).name!=null){headerIndex=i;break;}}if(headerIndex<0)throw new Error('Não encontrei a linha de cabeçalho do modelo. Use o arquivo oficial de cadastro em massa da Shopee.');const headers=rows[headerIndex];const map=st70HeaderMap(headers);const base=rows.slice(0,headerIndex+1);const category=document.getElementById('st70ShopeeCategory')?.value||'';const prods=st70ShopeeProductsForSheet();if(!prods.length)throw new Error('Não há produtos ativos no catálogo para exportar.');const outRows=base.concat(prods.map(p=>st70FillRow(headers.map(()=>''),map,p,category)));const out=XLSX.utils.aoa_to_sheet(outRows);wb.Sheets[wb.SheetNames[0]]=out;XLSX.writeFile(wb,'ST70-Shopee-envio-em-massa.xlsx');if(status)status.textContent=`Planilha gerada com ${prods.length} produto(s). Campos específicos da categoria foram preservados do modelo oficial.`;}catch(e){if(status)status.textContent='Erro: '+(e?.message||e);}}
-function st70DownloadShopeeMapping(){const prods=st70ShopeeProductsForSheet();const lines=[['ST70','Nome','SKU','EAN','Preço','Estoque','Categoria','Tamanhos','Cores','Imagem principal','Imagens adicionais','Peso kg','Altura cm','Largura cm','Comprimento cm','URL'],...prods.map(p=>[p.name,p.name,p.sku,p.barcode,Number(p.sale_price??p.salePrice??p.price??0),Number(p.stock??0),p.category,Array.isArray(p.sizes)?p.sizes.join(', '):'',Array.isArray(p.colors)?p.colors.join(', '):'',p.image,Array.isArray(p.secondary_images)?p.secondary_images.join('\n'):'',p.weightKg??p.weight??'',p.heightCm??'',p.widthCm??'',p.lengthCm??'',p.url||''])];const ws=XLSX.utils.aoa_to_sheet(lines);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'ST70');XLSX.writeFile(wb,'ST70-modelo-conferencia-Shopee.xlsx');}
-setTimeout(st70LoadShopeeCategories,500);
-</script>
 </body></html>`);w.document.close()}
 function renderSales(){const el=document.getElementById('pdvHistory');if(!el)return;el.innerHTML=sales.length?sales.slice(0,20).map(s=>`<div class="sale-row"><b>${s.id} — ${money(s.total)}</b><br><small>${new Date(s.date).toLocaleString('pt-BR')} · ${s.payment} · ${s.items.reduce((a,i)=>a+i.qty,0)} item(ns)</small><br><button class="smallbtn" onclick="printSale(${JSON.stringify(s).replace(/"/g,'&quot;')})">🖨️ Comprovante</button></div>`).join(''):'<div class="empty">Nenhuma venda registrada.</div>'}
 
@@ -3151,3 +3115,1859 @@ loadBannersFromServer();
 })();
 </script>
 </body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0c0a09">
+<title>STUDIO 70 — PDV Móvel</title>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0c0a09;color:#f5f5f4;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+main{width:min(100%,520px);margin:auto;padding:16px}
+header{padding:16px;border-bottom:1px solid #292524;background:#090807;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+.brand{font-weight:900;letter-spacing:.12em}.sub{font-size:10px;color:#ef4444;font-weight:800;letter-spacing:.18em;text-transform:uppercase;margin-top:2px}
+.dot{width:11px;height:11px;border-radius:50%;background:#f59e0b}.dot.ok{background:#10b981}.dot.err{background:#ef4444}
+.card{background:#171412;border:1px solid #292524;border-radius:18px;padding:14px;margin-bottom:14px;box-shadow:0 12px 30px #0005}
+h2{font-size:18px;margin:0 0 10px}.muted{color:#a8a29e;font-size:12px}.status{min-height:22px;text-align:center;color:#a8a29e;font-size:12px;margin:8px 0 14px}
+#reader{width:100%;overflow:hidden;border-radius:14px;background:#0c0a09;min-height:40px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+button{border:0;border-radius:12px;padding:13px 12px;font-weight:900;font-size:13px;cursor:pointer}
+.primary{background:#b91c1c;color:#fff}.secondary{background:#292524;color:#e7e5e4}.danger{background:#3f1d1d;color:#fecaca}
+input{width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:13px;font-size:16px;outline:none}
+input:focus{border-color:#dc2626}
+.lookup{display:flex;gap:8px}.lookup input{flex:1}.lookup button{width:110px}
+.product{display:none}.product.show{display:block}
+.badge{display:inline-block;background:#052e1b;color:#6ee7b7;border:1px solid #065f46;border-radius:8px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.title{font-size:21px;font-weight:900;margin:12px 0 4px}.sku{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#78716c}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0}.stat{background:#0c0a09;border:1px solid #292524;border-radius:12px;padding:10px;text-align:center}.stat small{display:block;color:#78716c;text-transform:uppercase;font-size:9px;font-weight:800}.stat b{display:block;margin-top:3px}
+.qty{display:flex;align-items:center;justify-content:space-between;background:#0c0a09;border:1px solid #292524;border-radius:14px;padding:8px;margin:12px 0}.qty button{width:50px;height:48px;padding:0;font-size:22px;background:#292524;color:#fff}.qty input{width:80px;text-align:center;border:0;background:transparent;font-size:22px;font-weight:900}
+.variation-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.variation label{display:block;margin-bottom:6px}.variation select{width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:13px;font-size:15px;outline:none}.variation select:focus{border-color:#dc2626}.variant-stock{font-size:11px;color:#a8a29e;margin-top:6px}.variant-stock strong{color:#6ee7b7}
+.notice{background:#2a1705;border:1px solid #854d0e;color:#fde68a;border-radius:12px;padding:10px;font-size:11px;line-height:1.45}
+.hidden{display:none!important}
+.order-list{display:grid;gap:10px}.order-item{background:#0c0a09;border:1px solid #292524;border-radius:14px;padding:12px}.order-head{display:flex;justify-content:space-between;gap:8px;align-items:center}.order-ref{font:11px ui-monospace,SFMono-Regular,Menlo,monospace;color:#a8a29e}.order-total{font-weight:900}.order-customer{font-weight:800;margin:6px 0}.order-items{font-size:11px;color:#d6d3d1;line-height:1.5}.order-item button{width:100%;margin-top:10px}.new-order{border-color:#b91c1c;box-shadow:0 0 0 1px #b91c1c55}
+#loginBox{position:fixed;inset:0;background:#000b;z-index:20;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{width:min(100%,400px);background:#171412;border:1px solid #44403c;border-radius:18px;padding:18px}
+.modal h3{margin:0 0 8px}.modal p{font-size:12px;color:#a8a29e}.modal button{width:100%;margin-top:10px}
+.success{color:#6ee7b7}.error{color:#fca5a5}
+</style>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#0c0a09">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="STUDIO 70 PDV">
+</head>
+<body>
+<header>
+  <div><div class="brand">STUDIO 70</div><div class="sub">PDV Móvel</div></div>
+  <div id="connectionStatus" class="dot"></div>
+</header>
+
+<main>
+  <div class="card">
+    <h2>Leitura do produto</h2>
+    <div id="reader"></div>
+    <div class="grid">
+      <button class="primary" onclick="startScanner()">📷 ABRIR CÂMERA</button>
+      <button class="secondary" onclick="stopScanner()">⏸ PAUSAR</button>
+    </div>
+    <div id="status" class="status">Carregando estoque do fornecedor...</div>
+    <div class="lookup">
+      <input id="codeInput" inputmode="text" autocomplete="off" placeholder="Código de barras ou SKU">
+      <button class="secondary" onclick="lookupProduct()">BUSCAR</button>
+    </div>
+  </div>
+
+  <div id="productCard" class="card product">
+    <span class="badge">Item identificado</span>
+    <div id="productName" class="title">Produto</div>
+    <div id="productSku" class="sku">SKU: —</div>
+    <div id="productBarcode" class="sku">EAN: —</div>
+
+    <div class="stats">
+      <div class="stat"><small>Preço</small><b id="productPrice">R$ 0,00</b></div>
+      <div class="stat"><small>Estoque total</small><b id="productStock">0</b></div>
+      <div class="stat"><small>Variação</small><b id="productSpecs">—</b></div>
+    </div>
+
+    <div class="variation-grid">
+      <div class="variation">
+        <label class="muted" for="sizeSelect">Tamanho</label>
+        <select id="sizeSelect"><option value="">Selecione</option></select>
+      </div>
+      <div class="variation">
+        <label class="muted" for="colorSelect">Cor</label>
+        <select id="colorSelect"><option value="">Selecione</option></select>
+      </div>
+    </div>
+    <div id="variantStock" class="variant-stock"></div>
+
+    <label class="muted">Quantidade da venda</label>
+    <div class="qty">
+      <button onclick="changeQty(-1)">−</button>
+      <input id="qty" type="number" min="1" value="1">
+      <button onclick="changeQty(1)">+</button>
+    </div>
+
+    <button class="primary" style="width:100%" onclick="finishSale()">⚡ PROCESSAR VENDA E DAR BAIXA</button>
+  </div>
+
+  <div class="card" id="storeOrdersCard">
+    <div class="order-head">
+      <h2>🔔 Pedidos da loja</h2>
+      <span id="ordersBadge" class="badge">0 novos</span>
+    </div>
+    <div id="ordersStatus" class="status">Atualizando pedidos...</div>
+    <div id="storeOrderList" class="order-list"></div>
+  </div>
+
+  <div class="card">
+    <div class="notice">
+      O PDV consulta o estoque do fornecedor no Supabase e a baixa é feita no servidor.
+      O acesso usa a senha administrativa do PDV; ela não fica gravada no HTML.
+    </div>
+  </div>
+</main>
+
+<div id="loginBox">
+  <div class="modal">
+    <h3>Acesso ao PDV</h3>
+    <p>Digite a mesma senha usada para acessar o painel administrativo.</p>
+    <input id="pdvPassword" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Senha do PDV">
+    <button class="primary" onclick="unlockPdv()">ENTRAR NO PDV</button>
+    <div id="loginError" class="status error"></div>
+  </div>
+</div>
+
+<script>
+const API = 'https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler';
+let scanner = null;
+let scanning = false;
+let activeProduct = null;
+let adminPassword = sessionStorage.getItem('studio70_pdv_password') || '';
+let pendingStoreOrders = new Map();
+let ordersPollTimer = null;
+let lastOrderSnapshot = new Set();
+let audioContext = null;
+
+const $ = id => document.getElementById(id);
+const money = n => Number(n || 0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+
+function setStatus(text, type=''){
+  $('status').textContent=text;
+  $('status').className='status '+(type==='success'?'success':type==='error'?'error':'');
+}
+function apiError(data, fallback){ return String(data?.error || data?.message || fallback || 'Erro desconhecido.'); }
+
+async function api(action, body={}){
+  const r=await fetch(API,{
+    method:'POST',
+    mode:'cors',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify({action,...body})
+  });
+  const text=await r.text();
+  let data={};
+  try{data=text?JSON.parse(text):{};}catch{throw new Error(`Resposta inválida da API (HTTP ${r.status}).`);}
+  if(!r.ok) throw new Error(apiError(data,`API HTTP ${r.status}`));
+  return data;
+}
+
+async function unlockPdv(){
+  const value=$('pdvPassword').value.trim();
+  if(!value){$('loginError').textContent='Digite a senha.';return;}
+  $('loginError').textContent='';
+  try{
+    // Ação administrativa simples para validar a senha sem alterar dados.
+    const data=await api('carmenatto_sync_history',{admin_password:value,limit:1});
+    if(!data.ok) throw new Error('Senha recusada.');
+    adminPassword=value;
+    sessionStorage.setItem('studio70_pdv_password',value);
+    $('loginBox').classList.add('hidden');
+    $('connectionStatus').classList.add('ok');
+    setStatus('PDV autorizado. Carregando estoque...');
+    loadInitialProductCount();
+  }catch(e){
+    $('loginError').textContent=e.message || 'Senha inválida.';
+  }
+}
+
+async function loadInitialProductCount(){
+  try{
+    const d=await api('carmenatto_products',{limit:2000});
+    const count=Array.isArray(d.products)?d.products.length:0;
+    setStatus(`${count} produtos disponíveis para consulta. Pronto para bipar.`,'success');
+  }catch(e){
+    setStatus('Falha ao carregar estoque: '+e.message,'error');
+  }
+}
+
+async function lookupProduct(code){
+  code=String(code ?? $('codeInput').value).trim();
+  if(!code){setStatus('Digite ou leia um código.','error');return;}
+  setStatus('Consultando produto...');
+  try{
+    const d=await api('pdv_product',{code});
+
+    // O backend pode devolver found=true mesmo que algum campo visual
+    // (EAN, SKU ou preço) esteja vazio. Nunca trate EAN ausente como
+    // produto inexistente.
+    if(d && d.found && d.product){
+      activeProduct=d.product;
+      renderProduct();
+      setStatus('Produto identificado no Supabase. Confira a quantidade.','success');
+      return;
+    }
+
+    const msg=String(d?.error || d?.message || '').trim();
+    throw new Error(msg || 'Produto não encontrado para este código.');
+  }catch(e){
+    activeProduct=null;
+    $('productCard').classList.remove('show');
+    setStatus(e.message || 'Erro ao consultar produto.','error');
+  }
+}
+
+function asVariationLabel(v){
+  if(v==null)return '';
+  if(typeof v==='string'||typeof v==='number')return String(v).trim();
+  return String(v.name ?? v.label ?? v.value ?? v.color ?? v.size ?? '').trim();
+}
+function variationList(value){
+  if(Array.isArray(value))return value.map(asVariationLabel).filter(Boolean);
+  if(value && typeof value==='object')return Object.values(value).map(asVariationLabel).filter(Boolean);
+  const text=String(value||'').trim();
+  return text ? text.split(/\s*,\s*|\s*\/\s*/).map(x=>x.trim()).filter(Boolean) : [];
+}
+function getVariantStockList(p){
+  const raw=p?.raw||{};
+  const list=raw.variant_stock ?? p?.variant_stock ?? [];
+  return Array.isArray(list) ? list.map(v=>({size:asVariationLabel(v?.size),color:asVariationLabel(v?.color),stock:Math.max(0,Math.trunc(Number(v?.stock||0)))})).filter(v=>v.size||v.color) : [];
+}
+function selectedVariantStock(){
+  const p=activeProduct;if(!p)return Number.MAX_SAFE_INTEGER;
+  const size=$('sizeSelect').value.trim(), color=$('colorSelect').value.trim();
+  const list=getVariantStockList(p);
+  if(!list.length)return Number(p.stock||0);
+  const exact=list.find(v=>(!v.size||v.size===size)&&(!v.color||v.color===color));
+  if(exact)return exact.stock;
+  const candidates=list.filter(v=>(!size||!v.size||v.size===size)&&(!color||!v.color||v.color===color));
+  if(candidates.length)return Math.min(...candidates.map(v=>v.stock));
+  return Number(p.stock||0);
+}
+function updateVariationState(){
+  if(!activeProduct)return;
+  const size=$('sizeSelect').value.trim(), color=$('colorSelect').value.trim();
+  const labels=[size,color].filter(Boolean);
+  $('productSpecs').textContent=labels.length?labels.join(' / '):'Selecione';
+  const available=selectedVariantStock();
+  $('variantStock').innerHTML=labels.length ? `Estoque desta variação: <strong>${available} un</strong>` : 'Selecione tamanho e/ou cor para conferir a variação.';
+  const qty=$('qty');
+  let n=Math.max(1,Math.trunc(Number(qty.value||1)));
+  const max=Math.max(0,Number(available||0));
+  if(max>0)n=Math.min(n,max);
+  qty.value=n;
+}
+function populateVariationSelect(id, values){
+  const el=$(id);el.innerHTML='<option value="">Selecione</option>';
+  values.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o);});
+}
+function renderProduct(){
+  const p=activeProduct;
+  $('productName').textContent=p.name || 'Produto';
+  $('productSku').textContent='STUDIO 70: '+(p.studio70_code || '—')+'  |  SKU: '+(p.sku || '—');
+  $('productBarcode').textContent='EAN: '+(p.barcode ? p.barcode : 'não cadastrado (produto encontrado)');
+  $('productPrice').textContent=Number(p.price||0)>0 ? money(p.price) : 'Preço não cadastrado';
+  $('productStock').textContent=String(Number(p.stock||0))+' un';
+  const sizes=variationList(p.sizes);
+  const colors=variationList(p.colors);
+  populateVariationSelect('sizeSelect',sizes);
+  populateVariationSelect('colorSelect',colors);
+  $('variantStock').textContent=(sizes.length||colors.length)?'Selecione tamanho e/ou cor.':'';
+  $('productSpecs').textContent=(sizes.length||colors.length)?'Selecione':'Único';
+  $('qty').value=1;
+  $('productCard').classList.add('show');
+  updateVariationState();
+}
+
+function changeQty(delta){
+  const input=$('qty');
+  let n=Math.trunc(Number(input.value||1))+delta;
+  n=Math.max(1,n);
+  if(activeProduct){
+    const max=selectedVariantStock();
+    n=Math.min(n,Math.max(1,Number(max||activeProduct.stock||0)));
+  }
+  input.value=n;
+}
+
+async function finishSale(){
+  if(!activeProduct)return setStatus('Nenhum produto selecionado.','error');
+  const qty=Math.max(1,Math.trunc(Number($('qty').value||1)));
+  const stock=Number(activeProduct.stock||0);
+  const size=$('sizeSelect').value.trim();
+  const color=$('colorSelect').value.trim();
+  const hasSizes=variationList(activeProduct.sizes).length>0;
+  const hasColors=variationList(activeProduct.colors).length>0;
+  if(hasSizes && !size)return setStatus('Selecione o tamanho antes de finalizar.','error');
+  if(hasColors && !color)return setStatus('Selecione a cor antes de finalizar.','error');
+  const variantStock=selectedVariantStock();
+  if(qty>stock)return setStatus(`Estoque total insuficiente. Disponível: ${stock} unidade(s).`,'error');
+  if(qty>variantStock)return setStatus(`Estoque da variação insuficiente. Disponível: ${variantStock} unidade(s).`,'error');
+  if(!adminPassword){
+    $('loginBox').classList.remove('hidden');
+    return;
+  }
+
+  setStatus('Processando venda e baixando estoque...');
+  try{
+    const saleId='PDV-'+Date.now();
+    const d=await api('pdv_sale',{
+      admin_password:adminPassword,
+      sale_id:saleId,
+      payment:'store',
+      items:[{
+        id:activeProduct.id,
+        studio70_code:activeProduct.studio70_code,
+        external_id:activeProduct.external_id,
+        sku:activeProduct.sku,
+        barcode:activeProduct.barcode,
+        name:activeProduct.name,
+        size,
+        color,
+        variation:{size,color},
+        qty,
+        unit:Number(activeProduct.price||0)
+      }]
+    });
+
+    if(!d.ok)throw new Error(apiError(d,'Venda não concluída.'));
+    const after=Number(d.items?.[0]?.stock_after ?? (stock-qty));
+    activeProduct.stock=after;
+    renderProduct();
+    $('codeInput').value='';
+    setStatus(`✓ Venda ${saleId} concluída. Estoque atual: ${after} un.`,'success');
+  }catch(e){
+    setStatus('Venda não concluída: '+e.message,'error');
+  }
+}
+
+function orderCustomerName(order){
+  const c=order?.customer||{};
+  return String(c.name||c.full_name||c.nome||'Cliente').trim() || 'Cliente';
+}
+function orderItemsText(order){
+  const items=Array.isArray(order?.items)?order.items:[];
+  if(!items.length)return 'Itens não informados.';
+  return items.map(i=>{
+    const v=i?.variation||{};
+    const spec=[i?.size||v.size,i?.color||v.color].filter(Boolean).join(' / ');
+    return `${Number(i?.qty||0)}x ${i?.name||'Produto'}${spec?' — '+spec:''}`;
+  }).join(' · ');
+}
+function beepNewOrder(){
+  try{
+    audioContext=audioContext||new (window.AudioContext||window.webkitAudioContext)();
+    const osc=audioContext.createOscillator(), gain=audioContext.createGain();
+    osc.frequency.value=880; gain.gain.value=.08;
+    osc.connect(gain);gain.connect(audioContext.destination);osc.start();
+    setTimeout(()=>{osc.frequency.value=1175},120);
+    setTimeout(()=>{osc.stop();gain.disconnect()},240);
+  }catch(_){ }
+}
+async function notifyNewOrder(){
+  beepNewOrder();
+  if('Notification' in window && Notification.permission==='granted'){
+    try{ new Notification('STUDIO 70 — Novo pedido',{body:'Há um pedido aguardando retirada no PDV da loja.'}); }catch(_){ }
+  }
+}
+async function enableOrderNotifications(){
+  if('Notification' in window && Notification.permission==='default'){
+    try{ await Notification.requestPermission(); }catch(_){ }
+  }
+}
+function renderStoreOrders(){
+  const list=$('storeOrderList');
+  const orders=Array.from(pendingStoreOrders.values());
+  $('ordersBadge').textContent=`${orders.length} ${orders.length===1?'novo':'novos'}`;
+  if(!orders.length){ list.innerHTML='<div class="muted">Nenhum pedido aguardando retirada.</div>'; return; }
+  list.innerHTML=orders.map(o=>{
+    const ref=String(o.external_reference||'—');
+    const total=money(o.total);
+    const method=String(o.payment_method||o.payment_provider||'pagamento').replaceAll('_',' ');
+    return `<div class="order-item" data-order-ref="${ref.replaceAll('"','&quot;')}">
+      <div class="order-head"><span class="order-ref">${ref}</span><span class="order-total">${total}</span></div>
+      <div class="order-customer">${orderCustomerName(o)}</div>
+      <div class="order-items">${orderItemsText(o)}</div>
+      <div class="muted" style="margin-top:6px">Pagamento: ${method}</div>
+      <button class="primary" onclick="clientAlreadyTook('${ref.replaceAll("'","\\'")}')">✅ CLIENTE JÁ LEVOU</button>
+    </div>`;
+  }).join('');
+}
+async function loadStoreOrders(initial=false){
+  if(!adminPassword){$('ordersStatus').textContent='Entre no PDV para acompanhar os pedidos.';return;}
+  try{
+    const d=await api('store_pending_orders',{admin_password:adminPassword,limit:50});
+    if(!d.ok)throw new Error(apiError(d,'Não foi possível carregar os pedidos.'));
+    const incoming=Array.isArray(d.orders)?d.orders:[];
+    const next=new Map(incoming.map(o=>[String(o.external_reference),o]));
+    const newRefs=incoming.map(o=>String(o.external_reference)).filter(r=>!lastOrderSnapshot.has(r));
+    pendingStoreOrders=next;
+    lastOrderSnapshot=new Set(incoming.map(o=>String(o.external_reference)));
+    renderStoreOrders();
+    $('ordersStatus').textContent=incoming.length?`Atualizado agora · ${incoming.length} pedido(s) aguardando retirada.`:'Nenhum pedido aguardando retirada.';
+    if(!initial && newRefs.length) await notifyNewOrder();
+  }catch(e){$('ordersStatus').textContent='Pedidos: '+e.message;}
+}
+async function clientAlreadyTook(reference){
+  if(!adminPassword){$('loginBox').classList.remove('hidden');return;}
+  const order=pendingStoreOrders.get(String(reference));
+  if(!confirm(`Confirmar que o cliente já levou o pedido ${reference}?`))return;
+  try{
+    $('ordersStatus').textContent='Registrando retirada...';
+    const d=await api('store_order_picked_up',{admin_password:adminPassword,external_reference:reference,picked_up_by:'PDV da loja'});
+    if(!d.ok)throw new Error(apiError(d,'Não foi possível confirmar a retirada.'));
+    pendingStoreOrders.delete(String(reference));
+    renderStoreOrders();
+    $('ordersStatus').textContent='✓ Cliente já levou. Pedido retirado do painel.';
+  }catch(e){$('ordersStatus').textContent='Retirada não registrada: '+e.message;}
+}
+function startStoreOrderPolling(){
+  clearInterval(ordersPollTimer);
+  loadStoreOrders(true);
+  ordersPollTimer=setInterval(()=>loadStoreOrders(false),5000);
+}
+
+async function startScanner(){
+  if(scanning)return;
+  if(typeof Html5Qrcode==='undefined'){
+    setStatus('Biblioteca da câmera não carregou. Verifique a internet.','error');return;
+  }
+  try{
+    scanner=scanner || new Html5Qrcode('reader');
+    scanning=true;
+    setStatus('Aponte a câmera para o código de barras...');
+    await scanner.start(
+      {facingMode:'environment'},
+      {fps:12,qrbox:{width:280,height:150}},
+      code=>{
+        if(!scanning)return;
+        scanning=false;
+        scanner.stop().catch(()=>{});
+        $('codeInput').value=code;
+        lookupProduct(code);
+      },
+      ()=>{}
+    );
+  }catch(e){
+    scanning=false;
+    setStatus('Não foi possível abrir a câmera. Autorize a câmera no navegador e tente novamente.','error');
+  }
+}
+
+async function stopScanner(){
+  if(!scanner || !scanning)return;
+  scanning=false;
+  try{await scanner.stop();}catch{}
+  setStatus('Scanner pausado.');
+}
+
+$('sizeSelect').addEventListener('change',updateVariationState);
+$('colorSelect').addEventListener('change',updateVariationState);
+$('qty').addEventListener('input',()=>{ if(activeProduct){ const max=selectedVariantStock(); let n=Math.max(1,Math.trunc(Number($('qty').value||1))); if(max>0)n=Math.min(n,max); $('qty').value=n; }});
+
+$('codeInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();lookupProduct();}
+});
+
+if(adminPassword){
+  $('loginBox').classList.add('hidden');
+  $('connectionStatus').classList.add('ok');
+  loadInitialProductCount();
+}
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js', {scope:'./'})
+      .catch(err => console.warn('[STUDIO70 PWA] Service Worker:', err));
+  });
+}
+</script>
+</body>
+</html>
+
+import { createClient } from "npm:@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Content-Type": "application/json; charset=utf-8",
+};
+
+const MP_API = "https://api.mercadopago.com";
+const SF_API = Deno.env.get("SUPERFRETE_API_URL") || "https://api.superfrete.com/api/v0/calculator";
+
+const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+function getSupabaseSecretKey() {
+  const legacy = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (legacy) return legacy;
+
+  const raw = Deno.env.get("SUPABASE_SECRET_KEYS");
+  if (!raw) throw new Error("SUPABASE_SECRET_KEYS não configurado no Supabase.");
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (typeof parsed === "string") return parsed;
+    if (parsed?.service_role) return parsed.service_role;
+    if (parsed?.secret) return parsed.secret;
+    if (parsed?.default) return parsed.default;
+
+    const first = Object.values(parsed).find((v: any) => typeof v === "string" && v.length > 20);
+    if (first) return String(first);
+  } catch {
+    // Caso o Secret seja salvo diretamente como texto.
+    return raw;
+  }
+
+  throw new Error("Não foi possível localizar uma Secret Key válida em SUPABASE_SECRET_KEYS.");
+}
+
+const serviceRoleKey = getSupabaseSecretKey();
+const db = createClient(supabaseUrl, serviceRoleKey);
+
+function json(data: unknown, status = 200) {
+  return new Response(JSON.stringify(data), { status, headers: corsHeaders });
+}
+function digits(v: unknown) { return String(v ?? "").replace(/\D/g, ""); }
+function money(v: unknown) { const n = Number(v); return Number.isFinite(n) ? Number(n.toFixed(2)) : 0; }
+function requiredEnv(name: string) {
+  const v = Deno.env.get(name);
+  if (!v) throw new Error(`Secret ${name} não configurado.`);
+  return v;
+}
+function validEmail(v: unknown) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v ?? "")); }
+
+/* ---------- STORAGE — UPLOAD DE FOTOS PELO ADM ---------- */
+const PRODUCT_IMAGE_BUCKET=String(Deno.env.get('PRODUCT_IMAGE_BUCKET')||'product-images');
+const MAX_PRODUCT_IMAGE_BYTES=10*1024*1024;
+const ALLOWED_PRODUCT_IMAGE_TYPES=new Set(['image/jpeg','image/png','image/webp','image/gif']);
+function safeStoragePart(v:any,fallback='produto'){const s=String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9._-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80);return s||fallback;}
+function imageExtension(file:File){const ext=String(file.name||'').split('.').pop()?.toLowerCase();if(ext&&['jpg','jpeg','png','webp','gif'].includes(ext))return ext==='jpeg'?'jpg':ext;return file.type==='image/png'?'png':file.type==='image/webp'?'webp':file.type==='image/gif'?'gif':'jpg';}
+async function ensureProductImageBucket(){
+  const existing=await db.storage.getBucket(PRODUCT_IMAGE_BUCKET);
+  if(!existing.error&&existing.data){if(existing.data.public!==true)await db.storage.updateBucket(PRODUCT_IMAGE_BUCKET,{public:true});return;}
+  const created=await db.storage.createBucket(PRODUCT_IMAGE_BUCKET,{public:true,fileSizeLimit:'10MB',allowedMimeTypes:[...ALLOWED_PRODUCT_IMAGE_TYPES]});
+  if(created.error&& !/already exists/i.test(created.error.message))throw new Error(`Não foi possível preparar o Storage: ${created.error.message}`);
+}
+async function uploadProductImages(form:FormData){
+  await requireAdmin(form.get('admin_password'));
+  const productId=String(form.get('product_id')||'').trim();const field=String(form.get('field')||'primary')==='secondary'?'secondary':'primary';
+  if(!productId)throw new Error('Produto ainda não possui ID. Salve o produto primeiro.');
+  const productResult=await db.from('products').select('*').eq('id',productId).maybeSingle();if(productResult.error)throw new Error(productResult.error.message);if(!productResult.data)throw new Error('Produto não encontrado.');
+  const files=form.getAll('files').filter((v):v is File=>v instanceof File&&v.size>0);if(!files.length)throw new Error('Nenhuma imagem foi selecionada.');if(field==='primary'&&files.length>1)throw new Error('A foto principal aceita uma imagem por vez.');if(files.length>12)throw new Error('Máximo de 12 imagens por envio.');
+  await ensureProductImageBucket();
+  const folder=safeStoragePart(productResult.data.sku||productId,`produto-${safeStoragePart(productId)}`);const uploaded:string[]=[];
+  for(const file of files){if(!ALLOWED_PRODUCT_IMAGE_TYPES.has(file.type))throw new Error(`Arquivo ${file.name||''}: use JPG, PNG, WEBP ou GIF.`);if(file.size>MAX_PRODUCT_IMAGE_BYTES)throw new Error(`Arquivo ${file.name||''} excede 10 MB.`);const path=`products/${folder}/${Date.now()}-${crypto.randomUUID()}.${imageExtension(file)}`;const up=await db.storage.from(PRODUCT_IMAGE_BUCKET).upload(path,await file.arrayBuffer(),{contentType:file.type,cacheControl:'31536000',upsert:false});if(up.error)throw new Error(`Falha ao salvar a imagem: ${up.error.message}`);const url=db.storage.from(PRODUCT_IMAGE_BUCKET).getPublicUrl(path).data.publicUrl;if(!url)throw new Error('O Supabase não retornou a URL pública.');uploaded.push(url);}
+  let update:any;if(field==='primary')update={image:uploaded[0]};else{const current=Array.isArray(productResult.data.images)?productResult.data.images.map((v:any)=>String(v).trim()).filter(Boolean):[];update={images:Array.from(new Set([...current,...uploaded]))};}
+  const saved=await db.from('products').update(update).eq('id',productId).select('*').single();if(saved.error)throw new Error(`Imagem salva, mas não foi possível atualizar o produto: ${saved.error.message}`);
+  return {ok:true,bucket:PRODUCT_IMAGE_BUCKET,field,urls:uploaded,product:productFromRow(saved.data)};
+}
+
+async function requireAdmin(password: unknown) {
+  const expected = Deno.env.get("ADMIN_PANEL_PASSWORD") || Deno.env.get("STUDIO70_ADMIN_PASSWORD");
+  if (!expected) throw new Error("Secret ADMIN_PANEL_PASSWORD não configurado.");
+  if (!password || String(password) !== expected) throw new Error("Senha administrativa inválida.");
+  return true;
+}
+
+async function mpFetch(path: string, init: RequestInit = {}) {
+  const token = requiredEnv("MP_ACCESS_TOKEN");
+  const headers = new Headers(init.headers);
+  headers.set("Authorization", `Bearer ${token}`);
+  headers.set("Content-Type", "application/json");
+  headers.set("Accept", "application/json");
+  return fetch(`${MP_API}${path}`, { ...init, headers });
+}
+
+function normalizeItems(items: any[]) {
+  return (Array.isArray(items) ? items : []).map(i => ({
+    id: String(i.id ?? ""), title: String(i.title ?? "Produto STUDIO 70").slice(0, 250),
+    quantity: Math.max(1, Math.floor(Number(i.quantity ?? i.qty ?? 1))),
+    unit_price: money(i.unit_price ?? i.price), sku: String(i.sku ?? ""),
+    picture_url: String(i.picture_url ?? i.image ?? ""),
+    size: String(i.size ?? ""), color: String(i.color ?? ""),
+    weightKg: Number(i.weightKg ?? i.weight ?? 0.3) || 0.3,
+    widthCm: Number(i.widthCm ?? i.width ?? 20) || 20,
+    heightCm: Number(i.heightCm ?? i.height ?? 4) || 4,
+    lengthCm: Number(i.lengthCm ?? i.length ?? 30) || 30,
+  }));
+}
+
+/* ---------- PRODUTOS / ADMIN ---------- */
+
+function overrideKey(p: any) {
+  return String(p?.supplierExternalId ?? p?.external_id ?? p?.sku ?? p?.barcode ?? p?.name ?? p?.id ?? "").trim().toLowerCase();
+}
+
+function productFromRow(p: any) {
+  return {
+    id: p.id, name: p.name, description: p.description ?? "",
+    sale_price: money(p.sale_price ?? p.price),
+    salePrice: money(p.sale_price ?? p.price),
+    price: money(p.price ?? p.sale_price),
+    supplier_price: money(p.supplier_price ?? 0),
+    sku: p.sku ?? "", barcode: p.barcode ?? "", category: p.category ?? "",
+    stock: Number(p.stock ?? 0), sizes: p.sizes ?? [], colors: p.colors ?? [], variantStock: p.variant_stock ?? [],
+    image: p.image ?? "", secondary_images: p.images ?? [],
+    url: p.product_url ?? "", weightKg: Number(p.weight_grams ?? 300) / 1000,
+    weight: Number(p.weight_grams ?? 300) / 1000,
+    widthCm: Number(p.width_cm ?? 20), heightCm: Number(p.height_cm ?? 5),
+    lengthCm: Number(p.length_cm ?? 30), active: p.active !== false, featured: !!p.featured,
+    supplier: p.supplier ?? "studio70", external_id: p.external_id ?? "",
+  };
+}
+
+async function getOverrides() {
+  const { data, error } = await db.from("studio70_product_overrides").select("override_key,product,updated_at").order("updated_at", { ascending: false });
+  // A tabela de overrides é complementar. Se ela estiver ausente, vazia ou
+  // indisponível, NUNCA impedir o catálogo principal de public.products de carregar.
+  if (error) {
+    console.warn("Tabela studio70_product_overrides indisponível; carregando produtos sem overrides:", error.message);
+    return [];
+  }
+  return (data ?? []).map(r => ({ key: r.override_key, product: r.product, updated_at: r.updated_at }));
+}
+
+async function saveOverride(body: any) {
+  await requireAdmin(body.admin_password);
+  const product = body.product ?? {};
+  const key = String(body.key || overrideKey(product)).trim().toLowerCase();
+  if (!key) throw new Error("Chave do produto inválida.");
+  const { error } = await db.from("studio70_product_overrides")
+    .upsert({ override_key: key, product, updated_at: new Date().toISOString() }, { onConflict: "override_key" });
+  if (error) throw new Error(`Não foi possível salvar o produto: ${error.message}`);
+  return { ok: true, created: true, product };
+}
+
+async function deleteOverride(body: any) {
+  await requireAdmin(body.admin_password);
+  const key = String(body.key ?? "").trim().toLowerCase();
+  if (!key) throw new Error("Chave do produto inválida.");
+  const { error } = await db.from("studio70_product_overrides").delete().eq("override_key", key);
+  if (error) throw new Error(`Não foi possível remover o produto: ${error.message}`);
+  return { ok: true };
+}
+
+async function listProducts(body: any) {
+  const limit = Math.min(5000, Math.max(1, Number(body.limit ?? 2000)));
+  const { data, error } = await db.from("products").select("*").limit(limit);
+  if (error) throw new Error(`Não foi possível carregar produtos: ${error.message}`);
+
+  const overrides = await getOverrides();
+  const map = new Map(overrides.map(x => [x.key, x.product]));
+  const result = (data ?? []).map(productFromRow).map(p => {
+    const ov = map.get(overrideKey(p));
+    return ov ? { ...p, ...ov, sale_price: money(ov.sale_price ?? ov.salePrice ?? p.sale_price), supplier_price: money(ov.supplier_price ?? p.supplier_price) } : p;
+  });
+  // Overrides criados pelo painel também podem representar produtos novos.
+  // Eles não podem desaparecer só porque ainda não existem em public.products.
+  const dbKeys = new Set(result.map(overrideKey));
+  for (const ov of overrides) {
+    if (!ov.product || dbKeys.has(ov.key)) continue;
+    const p = { ...ov.product };
+    p.id = p.id ?? `override-${ov.key}`;
+    p.sale_price = money(p.sale_price ?? p.salePrice ?? p.price);
+    p.supplier_price = money(p.supplier_price ?? p.cost ?? 0);
+    p.price = p.sale_price;
+    p.active = p.active !== false;
+    result.push(p);
+  }
+  return { ok: true, products: result };
+}
+
+async function listCatalogProducts(body: any) {
+  const limit = Math.min(5000, Math.max(1, Number(body.limit ?? 2000)));
+  const { data, error } = await db.from("products").select("*").limit(limit);
+  if (error) throw new Error(`Não foi possível carregar produtos: ${error.message}`);
+  return { ok: true, products: (data ?? []).map(productFromRow) };
+}
+
+function randomCodeChars(length = 6) {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let out = "";
+  for (let i = 0; i < length; i++) out += chars[Math.floor(Math.random() * chars.length)];
+  return out;
+}
+function skuPart(name: unknown) {
+  return String(name ?? "PRODUTO").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^A-Za-z0-9]+/g, "-").replace(/^-+|-+$/g, "").toUpperCase().slice(0, 16) || "PRODUTO";
+}
+function ean13CheckDigit(first12: string) {
+  const d = String(first12).replace(/\D/g, "").slice(0, 12).padStart(12, "0");
+  let sum = 0;
+  for (let i = 0; i < 12; i++) sum += Number(d[i]) * (i % 2 ? 3 : 1);
+  return String((10 - (sum % 10)) % 10);
+}
+async function generateCatalogCodes(name: unknown) {
+  let sku = "", barcode = "";
+  for (let tries = 0; tries < 20 && !sku; tries++) {
+    const candidate = `ST70-${skuPart(name)}-${randomCodeChars(6)}`;
+    const { data } = await db.from("products").select("id").eq("sku", candidate).limit(1).maybeSingle();
+    if (!data) sku = candidate;
+  }
+  for (let tries = 0; tries < 20 && !barcode; tries++) {
+    let base = "789";
+    for (let i = 0; i < 9; i++) base += String(Math.floor(Math.random() * 10));
+    const candidate = base + ean13CheckDigit(base);
+    const { data } = await db.from("products").select("id").eq("barcode", candidate).limit(1).maybeSingle();
+    if (!data) barcode = candidate;
+  }
+  if (!sku || !barcode) throw new Error("Não foi possível gerar SKU e código de barras únicos.");
+  return { sku, barcode };
+}
+
+async function saveProduct(body: any) {
+  await requireAdmin(body.admin_password);
+  const p = body.product ?? {};
+  const generated = (!String(p.sku ?? "").trim() || !String(p.barcode ?? "").trim()) ? await generateCatalogCodes(p.name) : { sku: String(p.sku).trim(), barcode: String(p.barcode).trim() };
+  const row: any = {
+    name: String(p.name ?? "").trim(),
+    description: String(p.description ?? ""),
+    price: money(p.sale_price ?? p.salePrice ?? p.price),
+    supplier_price: money(p.supplier_price ?? p.cost ?? 0),
+    supplier: String(p.supplier ?? "studio70"),
+    external_id: String(p.external_id ?? ""),
+    sku: generated.sku || null,
+    barcode: generated.barcode || null,
+    category: String(p.category ?? ""),
+    stock: Math.max(0, Math.trunc(Number(p.stock ?? 0))),
+    sizes: Array.isArray(p.sizes) ? p.sizes : [],
+    colors: Array.isArray(p.colors) ? p.colors : [],
+    image: String(p.image ?? ""),
+    images: Array.isArray(p.secondary_images ?? p.secondaryImages) ? (p.secondary_images ?? p.secondaryImages) : [],
+    product_url: String(p.source_url ?? p.url ?? ""),
+    weight_grams: Math.max(0, Number(p.weightKg ?? p.weight ?? 0.3) * 1000),
+    width_cm: Math.max(0, Number(p.widthCm ?? p.width ?? 20)),
+    height_cm: Math.max(0, Number(p.heightCm ?? p.height ?? 5)),
+    length_cm: Math.max(0, Number(p.lengthCm ?? p.length ?? 30)),
+    active: p.active !== false,
+    featured: !!p.featured,
+  };
+  const id = String(p.id ?? "").trim();
+  // products.id é TEXT neste projeto. Atualize qualquer ID existente, não apenas UUID.
+  if (id) {
+    const existing = await db.from("products").select("id").eq("id", id).maybeSingle();
+    if (existing.error) throw new Error(`Não foi possível localizar o produto: ${existing.error.message}`);
+    if (existing.data?.id != null) {
+      const { data, error } = await db.from("products").update(row).eq("id", id).select("*").single();
+      if (error) throw new Error(`Não foi possível atualizar o produto: ${error.message}`);
+      return { ok: true, created: false, product: productFromRow(data) };
+    }
+  }
+  const { data, error } = await db.from("products").insert(row).select("*").single();
+  if (error) throw new Error(`Não foi possível criar o produto: ${error.message}`);
+  return { ok: true, created: true, product: productFromRow(data) };
+}
+
+async function generateAIDescription(body: any) {
+  await requireAdmin(body.admin_password);
+
+  const name = String(body.name ?? '').trim();
+  const image = String(body.image ?? '').trim();
+
+  if (!name) throw new Error('Nome do produto é obrigatório.');
+  const apiKey = requiredEnv('OPENAI_API_KEY');
+
+  // Modelo configurável pelo Secret. O padrão abaixo é um modelo multimodal
+  // compatível com texto + imagem na Responses API.
+  const model = Deno.env.get('OPENAI_DESCRIPTION_MODEL') || 'gpt-5.6-luna';
+
+  const prompt = `Crie uma descrição comercial em português do Brasil para um produto da loja STUDIO 70.
+
+Nome do produto: ${name}
+
+${image
+  ? 'Analise também a imagem enviada. Descreva somente características que sejam visíveis na imagem ou informadas pelo nome. Não invente tecido, composição, medidas, marca, benefícios técnicos ou outras características que não possam ser confirmadas.'
+  : 'Não há foto principal disponível. Baseie a descrição somente no nome do produto e não invente características técnicas, tecido, composição, medidas ou informações que não estejam indicadas no nome.'}
+
+Escreva um texto profissional, claro e atraente para uma loja de moda urbana. Destaque aparência, modelagem aparente, estilo e ocasiões de uso somente quando forem visíveis na imagem ou razoavelmente indicados pelo nome. Não use emojis, não coloque título, não use listas e não mencione que a descrição foi criada por IA. Entregue apenas a descrição final, com 1 ou 2 parágrafos curtos.`;
+
+  const content: any[] = [{ type: 'input_text', text: prompt }];
+  if (image) content.push({ type: 'input_image', image_url: image });
+
+  let response: Response;
+
+  try {
+    response = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        model,
+        input: [{
+          role: 'user',
+          content
+        }],
+        max_output_tokens: 300
+      })
+    });
+  } catch (err) {
+    throw new Error(`Não foi possível conectar à API da OpenAI: ${err instanceof Error ? err.message : String(err)}`);
+  }
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const apiMessage =
+      data?.error?.message ||
+      data?.message ||
+      `A API da OpenAI retornou HTTP ${response.status}.`;
+
+    throw new Error(`OpenAI: ${apiMessage}`);
+  }
+
+  // A API pode retornar o texto diretamente em output_text ou dentro
+  // de output[].content[].text. Aceitamos os dois formatos.
+  let description = String(data?.output_text ?? '').trim();
+
+  if (!description && Array.isArray(data?.output)) {
+    const parts: string[] = [];
+
+    for (const item of data.output) {
+      if (!Array.isArray(item?.content)) continue;
+
+      for (const content of item.content) {
+        if (typeof content?.text === 'string') {
+          parts.push(content.text);
+        }
+      }
+    }
+
+    description = parts.join('\n\n').trim();
+  }
+
+  if (!description) {
+    throw new Error('A OpenAI respondeu, mas não retornou texto para a descrição.');
+  }
+
+  return { ok: true, description };
+}
+
+async function deleteProduct(body: any) {
+  await requireAdmin(body.admin_password);
+  const id = String(body.id ?? "").trim();
+  if (!id) throw new Error("ID do produto inválido.");
+  const { error } = await db.from("products").delete().eq("id", id);
+  if (error) throw new Error(`Não foi possível remover o produto: ${error.message}`);
+  return { ok: true };
+}
+
+async function adminSetCodePrices(body: any) {
+  await requireAdmin(body.admin_password);
+  const list = Array.isArray(body.products) ? body.products : [];
+  let updated = 0; const errors: any[] = [];
+  for (const item of list) {
+    const price = money(item.sale_price ?? item.price);
+    if (price <= 0) continue;
+    let q = db.from("products").update({ price });
+    if (item.sku) q = q.eq("sku", String(item.sku));
+    else if (item.barcode) q = q.eq("barcode", String(item.barcode));
+    else { errors.push({ item, error: "SKU ou código de barras ausente." }); continue; }
+    const { data, error } = await q.select("id");
+    if (error || !data?.length) errors.push({ item, error: error?.message || "Produto não encontrado." });
+    else updated += data.length;
+  }
+  return { ok: true, updated, errors };
+}
+
+/* ---------- CATEGORIAS ---------- */
+const DEFAULT_CATEGORY_GROUPS = [
+  { id: "00000000-0000-0000-0000-000000000001", name: "Feminino", order: 1, active: true, system: true },
+  { id: "00000000-0000-0000-0000-000000000015", name: "Masculino", order: 2, active: true, system: true },
+  { id: "00000000-0000-0000-0000-000000000024", name: "Outros", order: 999, active: true, system: true }
+];
+async function getCategoryGroupsRaw(){
+  const current=await getSetting("category_groups", null);
+  if(Array.isArray(current) && current.length) return current;
+  await setSetting("category_groups", DEFAULT_CATEGORY_GROUPS);
+  return DEFAULT_CATEGORY_GROUPS;
+}
+async function listCategoryGroups(){
+  const groups=await getCategoryGroupsRaw();
+  return {ok:true,groups:groups.filter((g:any)=>g && g.active!==false).sort((a:any,b:any)=>Number(a.order??999)-Number(b.order??999))};
+}
+async function saveCategoryGroup(body:any){
+  await requireAdmin(body.admin_password);
+  const name=String(body.name??"").trim();
+  if(!name) throw new Error("Informe o nome do grupo.");
+  if(name.length>60) throw new Error("O nome do grupo é muito grande.");
+  let groups=await getCategoryGroupsRaw();
+  const id=String(body.id??"").trim() || crypto.randomUUID();
+  const duplicate=groups.find((g:any)=>String(g.name).trim().toLowerCase()===name.toLowerCase() && String(g.id)!==id);
+  if(duplicate) throw new Error("Já existe um grupo com esse nome.");
+  const existing=groups.find((g:any)=>String(g.id)===id);
+  const item={id,name,order:Number(body.order??(groups.length+1))*1,active:body.active!==false,system:existing?.system===true};
+  groups=existing?groups.map((g:any)=>String(g.id)===id?{...g,...item}:g):[...groups,item];
+  await setSetting("category_groups",groups);
+  if(existing && String(existing.name)!==name){
+    const categories=await getCategoriesRaw();
+    const updatedCategories=categories.map((c:any)=>String(c.parent_id)===id?{...c,group:name,group_id:id}:c);
+    await setSetting("categories",updatedCategories);
+  }
+  return {ok:true,group:item,groups:(await listCategoryGroups()).groups,categories:(await listCategories()).categories};
+}
+async function deleteCategoryGroup(body:any){
+  await requireAdmin(body.admin_password);
+  const id=String(body.id??"").trim();
+  if(!id) throw new Error("ID do grupo inválido.");
+  const groups=await getCategoryGroupsRaw();
+  const target=groups.find((g:any)=>String(g.id)===id);
+  if(!target) throw new Error("Grupo não encontrado.");
+  const categories=await getCategoriesRaw();
+  const children=categories.filter((c:any)=>String(c.parent_id)===id);
+  if(children.length) throw new Error(`O grupo possui ${children.length} categoria(s). Mova ou exclua as categorias antes de excluir o grupo.`);
+  await setSetting("category_groups",groups.filter((g:any)=>String(g.id)!==id));
+  return {ok:true,groups:(await listCategoryGroups()).groups};
+}
+
+const DEFAULT_CATEGORIES = [
+  { id: "00000000-0000-0000-0000-000000000001", name: "Feminino", group: "Feminino", parent_id: null, order: 1, active: true, system: true },
+  { id: "00000000-0000-0000-0000-000000000002", name: "Vestidos", group: "Feminino", parent_id: "00000000-0000-0000-0000-000000000001", order: 10, active: true },
+  { id: "00000000-0000-0000-0000-000000000003", name: "Conjuntos", group: "Feminino", parent_id: "00000000-0000-0000-0000-000000000001", order: 20, active: true },
+  { id: "00000000-0000-0000-0000-000000000004", name: "Croppeds", group: "Feminino", parent_id: "00000000-0000-0000-0000-000000000001", order: 30, active: true },
+  { id: "00000000-0000-0000-0000-000000000005", name: "Bodies", group: "Feminino", parent_id: "00000000-0000-0000-0000-000000000001", order: 40, active: true },
+  { id: "00000000-0000-0000-0000-000000000006", name: "Biquínis", group: "Feminino", parent_id: "00000000-0000-0000-0000-000000000001", order: 50, active: true },
+  { id: "00000000-0000-0000-0000-000000000007", name: "Macacões", group: "Feminino", parent_id: "00000000-0000-0000-0000-000000000001", order: 60, active: true },
+  { id: "00000000-0000-0000-0000-000000000008", name: "Blusas", group: "Feminino", parent_id: "00000000-0000-0000-0000-000000000001", order: 70, active: true },
+  { id: "00000000-0000-0000-0000-000000000009", name: "Calças", group: "Feminino", parent_id: "00000000-0000-0000-0000-000000000001", order: 80, active: true },
+  { id: "00000000-0000-0000-0000-000000000010", name: "Shorts", group: "Feminino", parent_id: "00000000-0000-0000-0000-000000000001", order: 90, active: true },
+  { id: "00000000-0000-0000-0000-000000000011", name: "Saias", group: "Feminino", parent_id: "00000000-0000-0000-0000-000000000001", order: 100, active: true },
+  { id: "00000000-0000-0000-0000-000000000012", name: "Maiôs", group: "Feminino", parent_id: "00000000-0000-0000-0000-000000000001", order: 110, active: true },
+  { id: "00000000-0000-0000-0000-000000000013", name: "Duos", group: "Feminino", parent_id: "00000000-0000-0000-0000-000000000001", order: 120, active: true },
+  { id: "00000000-0000-0000-0000-000000000014", name: "Tule", group: "Feminino", parent_id: "00000000-0000-0000-0000-000000000001", order: 130, active: true },
+  { id: "00000000-0000-0000-0000-000000000015", name: "Masculino", group: "Masculino", parent_id: null, order: 2, active: true, system: true },
+  { id: "00000000-0000-0000-0000-000000000016", name: "Camisetas", group: "Masculino", parent_id: "00000000-0000-0000-0000-000000000015", order: 210, active: true },
+  { id: "00000000-0000-0000-0000-000000000017", name: "Camisas", group: "Masculino", parent_id: "00000000-0000-0000-0000-000000000015", order: 220, active: true },
+  { id: "00000000-0000-0000-0000-000000000018", name: "Calças", group: "Masculino", parent_id: "00000000-0000-0000-0000-000000000015", order: 230, active: true },
+  { id: "00000000-0000-0000-0000-000000000019", name: "Bermudas", group: "Masculino", parent_id: "00000000-0000-0000-0000-000000000015", order: 240, active: true },
+  { id: "00000000-0000-0000-0000-000000000020", name: "Shorts", group: "Masculino", parent_id: "00000000-0000-0000-0000-000000000015", order: 250, active: true },
+  { id: "00000000-0000-0000-0000-000000000021", name: "Moletons", group: "Masculino", parent_id: "00000000-0000-0000-0000-000000000015", order: 260, active: true },
+  { id: "00000000-0000-0000-0000-000000000022", name: "Jaquetas", group: "Masculino", parent_id: "00000000-0000-0000-0000-000000000015", order: 270, active: true },
+  { id: "00000000-0000-0000-0000-000000000023", name: "Regatas", group: "Masculino", parent_id: "00000000-0000-0000-0000-000000000015", order: 280, active: true },
+  { id: "00000000-0000-0000-0000-000000000024", name: "Outros", group: "Outros", parent_id: null, order: 999, active: true, system: true }
+];
+function categorySlug(name:string){
+  return String(name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9]+/g,"-").replace(/^-+|-+$/g,"").toLowerCase().slice(0,60) || `categoria-${Date.now()}`;
+}
+async function getCategoriesRaw(){
+  const current=await getSetting("categories", null);
+  if(Array.isArray(current) && current.length) return current;
+  await setSetting("categories", DEFAULT_CATEGORIES);
+  return DEFAULT_CATEGORIES;
+}
+async function listCategories(){
+  const categories=await getCategoriesRaw();
+  const groups=await getCategoryGroupsRaw();
+  return {ok:true,categories:categories.filter((c:any)=>c && c.active!==false).sort((a:any,b:any)=>Number(a.order??999)-Number(b.order??999)),groups:groups.filter((g:any)=>g && g.active!==false).sort((a:any,b:any)=>Number(a.order??999)-Number(b.order??999))};
+}
+async function saveCategory(body:any){
+  await requireAdmin(body.admin_password);
+  const name=String(body.name??"").trim();
+  if(!name) throw new Error("Informe o nome da categoria.");
+  if(name.length>80) throw new Error("O nome da categoria é muito grande.");
+  let categories=await getCategoriesRaw();
+  const groups=await getCategoryGroupsRaw();
+  const id=String(body.id??"").trim() || crypto.randomUUID();
+  const existing=categories.find((c:any)=>String(c.id)===id);
+  let groupId=String(body.group_id??"").trim();
+  let groupName=String(body.group??"").trim();
+  if(!groupId && groupName){ const g=groups.find((x:any)=>String(x.name).trim().toLowerCase()===groupName.toLowerCase()); if(g) groupId=String(g.id); }
+  if(!groupId && existing?.parent_id) groupId=String(existing.parent_id);
+  const group=groups.find((g:any)=>String(g.id)===groupId && g.active!==false);
+  if(!group) throw new Error("Selecione um grupo válido.");
+  const duplicate=categories.find((c:any)=>String(c.name).trim().toLowerCase()===name.toLowerCase() && String(c.id)!==id && String(c.parent_id)===String(group.id));
+  if(duplicate) throw new Error("Já existe uma categoria com esse nome neste grupo.");
+  const item={id,name,group:group.name,parent_id:group.id,group_id:group.id,order:Number(body.order??(categories.length+1))*1,active:body.active!==false,system:existing?.system===true};
+  categories=existing?categories.map((c:any)=>String(c.id)===id?{...c,...item}:c):[...categories,item];
+  await setSetting("categories",categories);
+  return {ok:true,category:item,categories:(await listCategories()).categories,groups:(await listCategoryGroups()).groups};
+}
+async function deleteCategory(body:any){
+  await requireAdmin(body.admin_password);
+  const id=String(body.id??"").trim();
+  if(!id) throw new Error("ID da categoria inválido.");
+  const categories=await getCategoriesRaw();
+  const target=categories.find((c:any)=>String(c.id)===id);
+  if(!target) throw new Error("Categoria não encontrada.");
+  const productCheck=await db.from("products").select("id").eq("category_id",id).limit(1);
+  if(!productCheck.error && productCheck.data?.length) throw new Error("A categoria possui produtos. Realoque os produtos antes de excluí-la.");
+  const next=categories.filter((c:any)=>String(c.id)!==id);
+  await setSetting("categories",next);
+  return {ok:true,categories:(await listCategories()).categories};
+}
+function inferCategoryForProduct(p:any,categories:any[]){
+  const text=`${String(p?.name??"")} ${String(p?.category??"")}`.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  const masc=/(masculin|camiseta|camisa|bermuda|moletom|jaqueta|regata masculina|short masculino|calca masculina)/.test(text);
+  const fem=/(feminin|vestido|cropped|body|biquini|maio|saia|tule|conjunto feminino|blusa feminina|short feminino|calca feminina|macacao feminino)/.test(text);
+  let group=masc&&!fem?"Masculino":fem&&!masc?"Feminino":null;
+  const clean=String(p?.category??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  if(!group){
+    if(["vestidos","conjuntos","croppeds","bodies","biquinis","maios","saias","tule","duos","blusas","calcas","shorts","macacoes"].some(x=>clean===x)) group="Feminino";
+    if(["camisetas","camisas","bermudas","moletons","jaquetas","regatas"].some(x=>clean===x)) group="Masculino";
+  }
+  if(!group)return null;
+  const inGroup=categories.filter((c:any)=>c.group===group && c.parent_id);
+  const match=inGroup.find((c:any)=>clean===String(c.name).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase());
+  return match || null;
+}
+async function repairProductCategories(body:any){
+  await requireAdmin(body.admin_password);
+  const categories=await getCategoriesRaw();
+  const {data,error}=await db.from("products").select("id,name,category,category_id").limit(5000);
+  if(error)throw new Error(`Não foi possível ler os produtos: ${error.message}`);
+  let updated=0; const unresolved:any[]=[];
+  for(const p of data??[]){
+    const match=inferCategoryForProduct(p,categories);
+    if(!match){ if(p.category) unresolved.push({id:p.id,name:p.name,category:p.category}); continue; }
+    const {error:upError}=await db.from("products").update({category_id:match.id,category:match.name}).eq("id",p.id);
+    if(upError) unresolved.push({id:p.id,name:p.name,category:p.category,error:upError.message}); else updated++;
+  }
+  return {ok:true,updated,unresolved};
+}
+
+/* ---------- CONFIG ---------- */
+
+async function getSetting(key: string, fallback: any = null) {
+  const { data, error } = await db.from("store_settings").select("value").eq("key", key).maybeSingle();
+  if (error) throw new Error(error.message);
+  return data?.value ?? fallback;
+}
+async function setSetting(key: string, value: any) {
+  const { error } = await db.from("store_settings").upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: "key" });
+  if (error) throw new Error(error.message);
+}
+async function saveConfig(body: any) {
+  await requireAdmin(body.admin_password);
+  const provider = String(body.provider ?? "");
+  if (provider !== "mercadopago") throw new Error("Provedor não suportado.");
+  /* Access Token enviado pelo painel não é devolvido nem exposto. Para produção, mantenha
+     MP_ACCESS_TOKEN como Secret da Edge Function. Public key/installments ficam no banco. */
+  await setSetting("payment", { public_key: String(body.public_key ?? ""), max_installments: Math.min(24, Math.max(1, Number(body.max_installments ?? 12))) });
+  return { ok: true, secret_required: !!body.access_token, message: body.access_token ? "Configuração pública salva. O Access Token deve permanecer no Secret MP_ACCESS_TOKEN da Edge Function." : "Configuração salva." };
+}
+async function pricingConfig() {
+  const p = await getSetting("pricing", { mode: "margin", margin_percent: 100 });
+  return { ok: true, pricing: p };
+}
+async function savePricingConfig(body: any) {
+  await requireAdmin(body.admin_password);
+  const mode = body.mode === "code" ? "code" : "margin";
+  const margin = Math.max(0, Math.min(1000, Number(body.margin_percent ?? 100)));
+  await setSetting("pricing", { mode, margin_percent: margin });
+  return { ok: true, pricing: { mode, margin_percent: margin } };
+}
+
+/* ---------- BANNERS ---------- */
+
+async function listBanners() {
+  let value = await getSetting("banners", null);
+  if (!Array.isArray(value) || value.length === 0) {
+    for (const legacyKey of ["banner_carousel", "banner"]) {
+      const legacy = await getSetting(legacyKey, null);
+      if (Array.isArray(legacy) && legacy.length) { value = legacy; break; }
+    }
+  }
+  const banners = (Array.isArray(value) ? value : []).map((b:any, index:number) => ({
+    id: String(b?.id ?? crypto.randomUUID()),
+    title: String(b?.title ?? b?.name ?? ""),
+    subtitle: String(b?.subtitle ?? b?.description ?? ""),
+    image: String(b?.image ?? b?.image_url ?? b?.src ?? ""),
+    link: String(b?.link ?? b?.url ?? ""),
+    active: b?.active !== false,
+    order: Number.isFinite(Number(b?.order)) ? Number(b.order) : index
+  }));
+  banners.sort((a:any,b:any) => Number(a.order) - Number(b.order));
+  return { ok: true, banners };
+}
+
+async function saveBanners(body: any) {
+  await requireAdmin(body.admin_password);
+  const banners = Array.isArray(body.banners) ? body.banners : [];
+  const existing = await listBanners();
+  if (!banners.length && existing.banners.length) return { ok: true, banners: existing.banners, preserved: true };
+  const normalized = banners.map((b: any, index: number) => ({
+    id: String(b.id ?? crypto.randomUUID()),
+    title: String(b.title ?? ""), subtitle: String(b.subtitle ?? ""),
+    image: String(b.image ?? b.image_url ?? ""), link: String(b.link ?? b.url ?? ""),
+    active: b.active !== false, order: Number.isFinite(Number(b.order)) ? Number(b.order) : index
+  }));
+  await setSetting("banners", normalized);
+  return { ok: true, banners: normalized };
+}
+
+async function deleteBanner(body: any) {
+  await requireAdmin(body.admin_password);
+  const current = await listBanners();
+  const id = String(body.id ?? "");
+  const banners = current.banners.filter((b: any) => b.id !== id);
+  await setSetting("banners", banners);
+  return { ok: true, banners };
+}
+
+
+
+/* ---------- FASHION / MODA THEME ---------- */
+const DEFAULT_FASHION_THEME = {
+  background: "#e9e7e3",
+  card: "#ffffff",
+  text: "#11110f",
+  muted: "#66645f",
+  accent: "#111111",
+  accent2: "#8f8b84",
+  line: "#c9c6c0",
+  button: "#111111",
+  buttonText: "#ffffff",
+  hero1: "#ffffff",
+  hero2: "#bdbab3",
+  header: "#e9e7e3",
+  headerText: "#111111",
+  footer: "#111111",
+  footerText: "#ffffff",
+  fontDisplay: "Black Ops One",
+  fontBody: "Barlow Condensed",
+  backgroundImage: ""
+};
+
+async function fashionThemeGet() {
+  const value = await getSetting("fashion_theme", null);
+  return { ok: true, theme: { ...DEFAULT_FASHION_THEME, ...(value && typeof value === "object" ? value : {}) } };
+}
+
+async function fashionThemeSave(body:any) {
+  await requireAdmin(body.admin_password);
+  const incoming = body.theme && typeof body.theme === "object" ? body.theme : {};
+  const base = { ...DEFAULT_FASHION_THEME, ...(incoming || {}) };
+  const cleanHex = (v:any, fallback:string) => /^#[0-9a-fA-F]{6}$/.test(String(v||"")) ? String(v) : fallback;
+  const saved = {
+    background: cleanHex(base.background, DEFAULT_FASHION_THEME.background),
+    card: cleanHex(base.card, DEFAULT_FASHION_THEME.card),
+    text: cleanHex(base.text, DEFAULT_FASHION_THEME.text),
+    muted: cleanHex(base.muted, DEFAULT_FASHION_THEME.muted),
+    accent: cleanHex(base.accent, DEFAULT_FASHION_THEME.accent),
+    accent2: cleanHex(base.accent2, DEFAULT_FASHION_THEME.accent2),
+    line: cleanHex(base.line, DEFAULT_FASHION_THEME.line),
+    button: cleanHex(base.button, DEFAULT_FASHION_THEME.button),
+    buttonText: cleanHex(base.buttonText, DEFAULT_FASHION_THEME.buttonText),
+    hero1: cleanHex(base.hero1, DEFAULT_FASHION_THEME.hero1),
+    hero2: cleanHex(base.hero2, DEFAULT_FASHION_THEME.hero2),
+    header: cleanHex(base.header, DEFAULT_FASHION_THEME.header),
+    headerText: cleanHex(base.headerText, DEFAULT_FASHION_THEME.headerText),
+    footer: cleanHex(base.footer, DEFAULT_FASHION_THEME.footer),
+    footerText: cleanHex(base.footerText, DEFAULT_FASHION_THEME.footerText),
+    fontDisplay: String(base.fontDisplay ?? DEFAULT_FASHION_THEME.fontDisplay).slice(0,60),
+    fontBody: String(base.fontBody ?? DEFAULT_FASHION_THEME.fontBody).slice(0,60),
+    backgroundImage: /^https?:\/\//i.test(String(base.backgroundImage ?? "").trim())
+      ? String(base.backgroundImage).trim().slice(0,1000)
+      : ""
+  };
+  await setSetting("fashion_theme", saved);
+  return { ok: true, theme: saved };
+}
+
+/* ---------- GEEK THEME ---------- */
+const DEFAULT_GEEK_THEME = {
+  enabled: true,
+  title: "GEEK",
+  kicker: "⚡ ST70 · GEEK ZONE",
+  subtitle: "Uma área exclusiva para colecionáveis, cultura pop, decoração e produtos geek.",
+  fontDisplay: "Black Ops One",
+  fontBody: "Barlow Condensed",
+  background1: "#080914",
+  background2: "#111329",
+  background3: "#090a16",
+  accent1: "#00e5ff",
+  accent2: "#ff0099",
+  accent3: "#7c3aed",
+  text: "#ffffff",
+  card: "#0d1020",
+  border: "#27304a",
+  menuText: "#ffffff",
+  menuActive: "#00e5ff",
+  backgroundImage: "",
+  menus: [
+    {"label":"COLECIONÁVEIS","value":"colecionáveis","image":""},
+    {"label":"CULTURA POP","value":"cultura pop","image":""},
+    {"label":"DECORAÇÃO","value":"decoração","image":""},
+    {"label":"3D & GAMES","value":"3d","image":""}
+  ]
+};
+
+async function uploadGeekMenuImage(form: FormData) {
+  await requireAdmin(form.get("admin_password"));
+  const file = form.get("file");
+  if (!(file instanceof File) || !file.size) throw new Error("Nenhuma imagem foi selecionada.");
+  const allowed = new Set(["image/jpeg","image/png","image/webp","image/gif"]);
+  if (!allowed.has(file.type)) throw new Error("Use JPG, PNG, WEBP ou GIF.");
+  if (file.size > 10 * 1024 * 1024) throw new Error("A imagem excede 10 MB.");
+  await ensureProductImageBucket();
+  const ext = file.type === "image/jpeg" ? "jpg" : file.type === "image/png" ? "png" : file.type === "image/gif" ? "gif" : "webp";
+  const path = `geek-menus/${Date.now()}-${crypto.randomUUID()}.${ext}`;
+  const up = await db.storage.from(PRODUCT_IMAGE_BUCKET).upload(path, await file.arrayBuffer(), {contentType:file.type, cacheControl:"31536000", upsert:false});
+  if (up.error) throw new Error(`Falha ao salvar a imagem: ${up.error.message}`);
+  const url = db.storage.from(PRODUCT_IMAGE_BUCKET).getPublicUrl(path).data.publicUrl;
+  if (!url) throw new Error("O Supabase não retornou a URL pública.");
+  return {ok:true,url};
+}
+
+async function geekThemeGet() {
+  const value = await getSetting("geek_theme", null);
+  return { ok: true, theme: { ...DEFAULT_GEEK_THEME, ...(value && typeof value === "object" ? value : {}) } };
+}
+
+async function geekThemeSave(body:any) {
+  await requireAdmin(body.admin_password);
+  const incoming = body.theme && typeof body.theme === "object" ? body.theme : {};
+  const base = { ...DEFAULT_GEEK_THEME, ...(incoming || {}) };
+  const cleanHex = (v:any, fallback:string) => /^#[0-9a-fA-F]{6}$/.test(String(v||"")) ? String(v) : fallback;
+  const menus = Array.isArray(base.menus) ? base.menus.slice(0,8).map((m:any, i:number) => ({
+    label: String(m?.label ?? "").trim().slice(0,40),
+    value: String(m?.value ?? "").trim().slice(0,80),
+    image: /^https?:\/\//i.test(String(m?.image ?? "").trim()) ? String(m.image).trim().slice(0,1000) : "",
+    order: i
+  })).filter((m:any)=>m.label) : DEFAULT_GEEK_THEME.menus;
+  const saved = {
+    enabled: base.enabled !== false,
+    title: String(base.title ?? DEFAULT_GEEK_THEME.title).slice(0,50),
+    kicker: String(base.kicker ?? DEFAULT_GEEK_THEME.kicker).slice(0,80),
+    subtitle: String(base.subtitle ?? DEFAULT_GEEK_THEME.subtitle).slice(0,220),
+    fontDisplay: String(base.fontDisplay ?? base.font ?? DEFAULT_GEEK_THEME.fontDisplay).slice(0,60),
+    fontBody: String(base.fontBody ?? DEFAULT_GEEK_THEME.fontBody).slice(0,60),
+    background1: cleanHex(base.background1, DEFAULT_GEEK_THEME.background1),
+    background2: cleanHex(base.background2, DEFAULT_GEEK_THEME.background2),
+    background3: cleanHex(base.background3, DEFAULT_GEEK_THEME.background3),
+    accent1: cleanHex(base.accent1, DEFAULT_GEEK_THEME.accent1),
+    accent2: cleanHex(base.accent2, DEFAULT_GEEK_THEME.accent2),
+    accent3: cleanHex(base.accent3, DEFAULT_GEEK_THEME.accent3),
+    text: cleanHex(base.text, DEFAULT_GEEK_THEME.text),
+    card: cleanHex(base.card, DEFAULT_GEEK_THEME.card),
+    border: cleanHex(base.border, DEFAULT_GEEK_THEME.border),
+    menuText: cleanHex(base.menuText, DEFAULT_GEEK_THEME.menuText),
+    menuActive: cleanHex(base.menuActive, DEFAULT_GEEK_THEME.menuActive),
+    backgroundImage: /^https?:\/\//i.test(String(base.backgroundImage ?? "").trim())
+      ? String(base.backgroundImage).trim().slice(0,1000)
+      : "",
+    menus
+  };
+  await setSetting("geek_theme", saved);
+  return { ok: true, theme: saved };
+}
+
+/* ---------- PDV ---------- */
+
+async function pdvProduct(body: any) {
+  const code = String(body.code ?? "").trim();
+  if (!code) throw new Error("Código obrigatório.");
+  const overrides = await getOverrides();
+  const ov = overrides.find(x => {
+    const p = x.product ?? {};
+    return [p.id,p.sku,p.barcode,p.external_id,p.name].some(v => String(v ?? "").trim().toLowerCase() === code.toLowerCase());
+  })?.product;
+  if (ov) return { ok: true, found: true, product: { ...ov, sale_price: money(ov.sale_price ?? ov.salePrice ?? ov.price), supplier_price: money(ov.supplier_price ?? ov.cost ?? 0) } };
+
+  const { data, error } = await db.from("products").select("*")
+    .or(`sku.ilike.${code},barcode.ilike.${code},name.ilike.${code}`)
+    .limit(1).maybeSingle();
+  if (error) throw new Error(error.message);
+  if (!data) return { ok: true, found: false };
+  const p = productFromRow(data);
+  const merged = overrides.find(x => x.key === overrideKey(p))?.product;
+  return { ok: true, found: true, product: merged ? { ...p, ...merged } : p };
+}
+
+async function resolveProductId(item: any) {
+  const id = String(item.product_id ?? item.id ?? "").trim();
+  const sku = String(item.sku ?? "").trim();
+  const barcode = String(item.barcode ?? "").trim();
+  if (/^[0-9a-f-]{36}$/i.test(id)) return id;
+  let q = db.from("products").select("id").limit(1);
+  if (sku) q = q.eq("sku", sku); else if (barcode) q = q.eq("barcode", barcode); else return "";
+  const found = await q.maybeSingle();
+  return found.data?.id ?? "";
+}
+
+async function storeSale(body: any) {
+  await requireAdmin(body.admin_password);
+  const items = Array.isArray(body.items) ? body.items : [];
+  if (!items.length) throw new Error("A venda não possui itens.");
+  const subtotal = money(body.subtotal);
+  const discount = Math.max(0, money(body.discount));
+  const calculatedTotal = Math.max(0, subtotal - discount);
+  const total = body.total === undefined ? calculatedTotal : money(body.total);
+  if (Math.abs(total - calculatedTotal) > 0.01) throw new Error("Total da venda não confere com subtotal e desconto.");
+
+  const resolved: any[] = [];
+  for (const item of items) {
+    const productId = await resolveProductId(item);
+    if (!productId) throw new Error(`Produto não encontrado para ${String(item.sku ?? item.barcode ?? item.id ?? item.name ?? "item")}.`);
+    const qty = Math.max(1, Math.trunc(Number(item.quantity ?? item.qty ?? 1)));
+    resolved.push({ ...item, product_id: productId, quantity: qty, qty });
+  }
+
+  const deducted: any[] = [];
+  try {
+    for (const item of resolved) {
+      const { data, error } = await db.rpc("decrease_product_stock", { p_product_id: item.product_id, p_quantity: item.quantity });
+      if (error || data !== true) throw new Error(error?.message || `Estoque insuficiente para ${item.name ?? item.sku ?? item.barcode}.`);
+      deducted.push({ productId: item.product_id, qty: item.quantity });
+    }
+    const { data: sale, error } = await db.from("pdv_sales").insert({
+      items: resolved, subtotal, discount, total,
+      payment_method: String(body.payment_method ?? body.payment ?? ""),
+      received_amount: money(body.received_amount ?? body.received),
+      change_amount: money(body.change_amount ?? body.change),
+    }).select("id,sale_number").single();
+    if (error) throw new Error(`Não foi possível registrar a venda: ${error.message}`);
+    return { ok: true, sale, stock_errors: [] };
+  } catch (err) {
+    for (const d of deducted) await db.rpc("increase_product_stock", { p_product_id: d.productId, p_quantity: d.qty });
+    throw err;
+  }
+}
+
+async function pdvHistory(body: any) {
+  await requireAdmin(body.admin_password);
+  const limit = Math.min(200, Math.max(1, Number(body.limit ?? 50)));
+  const { data, error } = await db.from("pdv_sales").select("*").order("created_at", { ascending: false }).limit(limit);
+  if (error) throw new Error(error.message);
+  return { ok: true, sales: data ?? [] };
+}
+
+/* ---------- FORNECEDOR ---------- */
+
+function normalizeSupplierProduct(p: any) {
+  return {
+    name: String(p.name ?? "Produto"), description: String(p.description ?? ""),
+    price: money(p.price ?? p.supplier_price), supplier_price: money(p.supplier_price ?? p.cost ?? p.price),
+    sku: String(p.sku ?? ""), barcode: String(p.barcode ?? ""), category: String(p.category ?? "Outros"),
+    stock: Math.max(0, Math.trunc(Number(p.stock ?? 0))), sizes: p.sizes ?? [], colors: p.colors ?? [],
+    image: String(p.image ?? p.image_url ?? ""), images: p.images ?? p.secondary_images ?? [],
+    product_url: String(p.product_url ?? p.source_url ?? p.url ?? ""),
+    weight_grams: Number(p.weight_grams ?? (Number(p.weightKg ?? p.weight ?? .3) * 1000)),
+    width_cm: Number(p.width_cm ?? p.widthCm ?? 20), height_cm: Number(p.height_cm ?? p.heightCm ?? 5),
+    length_cm: Number(p.length_cm ?? p.lengthCm ?? 30), active: p.active !== false, featured: !!p.featured,
+  };
+}
+
+async function syncSupplier(body: any) {
+  await requireAdmin(body.admin_password);
+  const base = Deno.env.get("CARMENATTO_API_URL");
+  if (!base) throw new Error("Secret CARMENATTO_API_URL não configurado. Sem uma API/feed do fornecedor não é possível sincronizar o catálogo automaticamente.");
+  const page = Math.max(1, Number(body.start_page ?? 1));
+  const url = new URL(base);
+  url.searchParams.set("page", String(page));
+  url.searchParams.set("limit", String(Math.min(100, Number(body.max_products ?? 20))));
+  const r = await fetch(url.toString(), { headers: { Accept: "application/json", Authorization: Deno.env.get("CARMENATTO_API_TOKEN") ? `Bearer ${Deno.env.get("CARMENATTO_API_TOKEN")}` : "" } });
+  const payload = await r.json();
+  if (!r.ok) throw new Error(payload?.message || payload?.error || `Fornecedor HTTP ${r.status}`);
+  const list = Array.isArray(payload) ? payload : (payload.products ?? payload.data ?? payload.items ?? []);
+  let imported = 0; const errors: any[] = [];
+  for (const p of list) {
+    const row = normalizeSupplierProduct(p);
+    const existing = row.sku ? await db.from("products").select("id").eq("sku", row.sku).maybeSingle() : { data: null };
+    const q = existing.data?.id
+      ? db.from("products").update(row).eq("id", existing.data.id)
+      : db.from("products").insert(row);
+    const { error } = await q;
+    if (error) errors.push({ sku: row.sku, error: error.message }); else imported++;
+  }
+  await db.from("supplier_sync_history").insert({ supplier: "carmenatto", page, imported, errors });
+  return { ok: true, imported, pages: 1, errors, has_more: Boolean(payload.has_more ?? payload.next_page), next_page: payload.next_page ?? null };
+}
+
+async function syncHistory(body: any) {
+  await requireAdmin(body.admin_password);
+  const limit = Math.min(100, Math.max(1, Number(body.limit ?? 20)));
+  const { data, error } = await db.from("supplier_sync_history").select("*").order("created_at", { ascending: false }).limit(limit);
+  if (error) throw new Error(error.message);
+  return { ok: true, history: data ?? [] };
+}
+
+const DEFAULT_FREE_SHIPPING_THRESHOLD = 250;
+async function getFreeShippingThreshold() {
+  const cfg = await getSetting("shipping", { free_shipping_threshold: DEFAULT_FREE_SHIPPING_THRESHOLD });
+  const value = Number(cfg?.free_shipping_threshold ?? DEFAULT_FREE_SHIPPING_THRESHOLD);
+  return Number.isFinite(value) && value >= 0 ? value : DEFAULT_FREE_SHIPPING_THRESHOLD;
+}
+async function shippingConfig() {
+  const cfg = await getSetting("shipping", { free_shipping_threshold: DEFAULT_FREE_SHIPPING_THRESHOLD, origin_cep: "" });
+  const threshold = Number(cfg?.free_shipping_threshold ?? DEFAULT_FREE_SHIPPING_THRESHOLD);
+  const origin_cep = digits(cfg?.origin_cep ?? cfg?.originCep ?? cfg?.cep_origem ?? cfg?.cepOrigem ?? "");
+  return { ok: true, shipping: { free_shipping_threshold: Number.isFinite(threshold) && threshold >= 0 ? threshold : DEFAULT_FREE_SHIPPING_THRESHOLD, origin_cep } };
+}
+async function saveShippingConfig(body:any) {
+  await requireAdmin(body.admin_password);
+  const threshold = Math.max(0, Math.min(100000, Number(body.free_shipping_threshold ?? DEFAULT_FREE_SHIPPING_THRESHOLD)));
+  if (!Number.isFinite(threshold)) throw new Error("Valor mínimo para frete grátis inválido.");
+  const origin_cep = digits(body.origin_cep ?? body.originCep ?? body.cep_origem ?? body.cepOrigem ?? body.from ?? "");
+  if (origin_cep && origin_cep.length !== 8) throw new Error("CEP de origem inválido. Informe 8 dígitos.");
+  const current = await getSetting("shipping", {});
+  const shipping = { ...(current && typeof current === "object" ? current : {}), free_shipping_threshold: money(threshold), origin_cep };
+  await setSetting("shipping", shipping);
+  return { ok: true, shipping: { free_shipping_threshold: money(threshold), origin_cep } };
+}
+
+function itemsSubtotal(items:any[]) {
+  return money((Array.isArray(items) ? items : []).reduce((sum:number, i:any) => {
+    const qty = Math.max(1, Math.floor(Number(i?.quantity ?? 1)));
+    const unit = money(i?.unit_price ?? i?.price ?? 0);
+    return sum + unit * qty;
+  }, 0));
+}
+async function effectiveShippingCost(body:any, items:any[]) {
+  const threshold = await getFreeShippingThreshold();
+  return itemsSubtotal(items) >= threshold ? 0 : money(body?.shipping_cost);
+}
+
+
+/* ---------- NOTIFICAÇÕES — E-MAIL + SMS ---------- */
+
+function emailHtmlEscape(v:any) {
+  return String(v ?? "").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m] as string));
+}
+function orderItemsFromPayment(data:any) {
+  const direct=data?.additional_info?.items;
+  if(Array.isArray(direct)&&direct.length)return normalizeItems(direct);
+  const meta=data?.metadata;
+  if(Array.isArray(meta?.items)&&meta.items.length)return normalizeItems(meta.items);
+  if(typeof meta?.items_json==='string'){try{const parsed=JSON.parse(meta.items_json);if(Array.isArray(parsed)&&parsed.length)return normalizeItems(parsed);}catch(_){}
+  }
+  return [];
+}
+function notificationItemsHtml(items:any[]) {
+  if(!Array.isArray(items)||!items.length)return '<p>Nenhum item detalhado foi retornado.</p>';
+  return `<ul style="margin:8px 0;padding-left:20px">${items.map((item:any)=>{
+    const qty=Math.max(1,Math.floor(Number(item.quantity??1)));
+    const variation=[item.size?`Tam.: ${emailHtmlEscape(item.size)}`:'',item.color?`Cor: ${emailHtmlEscape(item.color)}`:''].filter(Boolean).join(' · ');
+    return `<li style="margin:5px 0"><b>${qty}x ${emailHtmlEscape(item.title)}</b>${variation?` — ${variation}`:''} · ${money(item.unit_price).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</li>`;
+  }).join('')}</ul>`;
+}
+
+async function sendEmailViaGateway(to:string,subject:string,html:string) {
+  const url=String(Deno.env.get('GOOGLE_EMAIL_WEBHOOK_URL')||'').trim();
+  const secret=String(Deno.env.get('GOOGLE_EMAIL_WEBHOOK_SECRET')||'').trim();
+  if(!url||!secret||!validEmail(to))return {sent:false,skipped:true,reason:'Gateway de e-mail não configurado ou destinatário inválido.'};
+  try{
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({secret,to,subject,html})});
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok||data?.ok===false)return {sent:false,error:data?.error||`Gateway de e-mail HTTP ${r.status}`};
+    return {sent:true};
+  }catch(error){return {sent:false,error:error instanceof Error?error.message:String(error)};}
+}
+
+async function sendOwnerSms(order:any,payment:any={},statusLabel='PENDENTE') {
+  const sid=String(Deno.env.get('TWILIO_ACCOUNT_SID')||'').trim();
+  const token=String(Deno.env.get('TWILIO_AUTH_TOKEN')||'').trim();
+  const from=String(Deno.env.get('TWILIO_FROM_NUMBER')||'').trim();
+  const to=String(Deno.env.get('STORE_NOTIFICATION_PHONE')||'').trim();
+  if(!sid||!token||!from||!to)return {sent:false,skipped:true,reason:'Twilio não configurado.'};
+  const ref=String(order?.external_reference||payment?.external_reference||'ST70');
+  const total=money(order?.total??payment?.transaction_amount??0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  const customer=String(order?.customer_name||order?.customer?.name||payment?.payer?.first_name||'Cliente');
+  const body=`ST70 — VENDA ${statusLabel}\n${ref}\nCliente: ${customer}\nTotal: ${total}\nPagamento: ${String(payment?.payment_method_id||order?.payment_method||'online')}`;
+  const auth=btoa(`${sid}:${token}`);
+  const form=new URLSearchParams({To:to,From:from,Body:body});
+  const r=await fetch(`https://api.twilio.com/2010-04-01/Accounts/${encodeURIComponent(sid)}/Messages.json`,{method:'POST',headers:{Authorization:`Basic ${auth}`,'Content-Type':'application/x-www-form-urlencoded'},body:form.toString()});
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok)return {sent:false,error:data?.message||`Twilio HTTP ${r.status}`};
+  return {sent:true,id:data?.sid||null};
+}
+
+async function sendCustomerStatusEmail(order:any,payment:any,status:'pending'|'approved'|'rejected') {
+  const customerEmail=String(order?.customer_email||order?.customer?.email||payment?.payer?.email||'').trim();
+  if(!validEmail(customerEmail))return {sent:false,skipped:true,reason:'E-mail do cliente inválido.'};
+  const ref=String(order?.external_reference||payment?.external_reference||'');
+  const name=String(order?.customer_name||order?.customer?.name||payment?.payer?.first_name||'Cliente');
+  const total=money(order?.total??payment?.transaction_amount??0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  const items=Array.isArray(order?.items)&&order.items.length?normalizeItems(order.items):orderItemsFromPayment(payment);
+  let subject='',title='',message='';
+  if(status==='approved'){
+    subject=`STUDIO 70 — Pagamento confirmado — ${ref}`;
+    title='Pagamento confirmado!';
+    message=`Recebemos a confirmação do pagamento do seu pedido <b>${emailHtmlEscape(ref)}</b>. Seu pedido será preparado para envio.`;
+  }else if(status==='rejected'){
+    subject=`STUDIO 70 — Pagamento não aprovado — ${ref}`;
+    title='Pagamento não aprovado';
+    message=`O pagamento do pedido <b>${emailHtmlEscape(ref)}</b> não foi aprovado pelo meio de pagamento. Você poderá tentar novamente conforme as opções disponíveis no checkout.`;
+  }else{
+    subject=`STUDIO 70 — Pagamento pendente — ${ref}`;
+    title='Pagamento pendente';
+    message=`Recebemos seu pedido <b>${emailHtmlEscape(ref)}</b>, mas o pagamento ainda está pendente de confirmação.`;
+  }
+  const html=`<!doctype html><html lang="pt-BR"><body style="margin:0;background:#efede8;padding:20px;font-family:Arial,sans-serif;color:#111"><div style="max-width:620px;margin:auto;background:#fff;border-radius:14px;overflow:hidden;border:1px solid #ddd"><div style="background:#111;color:#fff;padding:20px"><b style="font-size:22px;letter-spacing:2px">STUDIO 70</b></div><div style="padding:22px"><h2>${title}</h2><p>Olá, <b>${emailHtmlEscape(name)}</b>.</p><p>${message}</p><div style="background:#f3f1ec;padding:14px;border-radius:10px"><b>Pedido:</b> ${emailHtmlEscape(ref)}<br><b>Total:</b> ${emailHtmlEscape(total)}</div><h3>Itens</h3>${notificationItemsHtml(items)}<p style="font-size:12px;color:#666;margin-top:24px">Esta é uma mensagem automática da STUDIO 70.</p></div></div></body></html>`;
+  return sendEmailViaGateway(customerEmail,subject,html);
+}
+
+async function ensureOnlineOrderFromPayment(payment:any) {
+  const externalReference=String(payment?.external_reference??'').trim();
+  if(!externalReference)return null;
+  const existing=await db.from('store_orders').select('*').eq('external_reference',externalReference).maybeSingle();
+  if(!existing.error&&existing.data)return existing.data;
+  let items=orderItemsFromPayment(payment);
+  const preferenceId=String(payment?.preference_id??'').trim();
+  if(!items.length&&preferenceId){const prefResponse=await mpFetch(`/checkout/preferences/${encodeURIComponent(preferenceId)}`,{method:'GET'});const pref=await prefResponse.json().catch(()=>({}));if(prefResponse.ok&&Array.isArray(pref?.items))items=normalizeItems(pref.items.filter((i:any)=>String(i?.id??'')!=='FRETE'));}
+  const customer={name:String(payment?.payer?.first_name??'Cliente'),email:String(payment?.payer?.email??''),cpf:digits(payment?.payer?.identification?.number??'')};
+  const order={external_reference:externalReference,customer_name:customer.name,customer_email:customer.email,customer_cpf:customer.cpf||null,payment_method:String(payment?.payment_type_id??payment?.payment_method_id??'online'),payment_status:String(payment?.status??'pending'),order_status:String(payment?.status??'pending')==='approved'?'paid':'pending',payment_id:payment?.id?String(payment.id):null,total:money(payment?.transaction_amount??payment?.transaction_details?.total_paid_amount??0),shipping:payment?.metadata?.shipping??null,items};
+  const inserted=await db.from('store_orders').upsert(order,{onConflict:'external_reference'}).select('*').single();
+  if(inserted.error){console.error('Não foi possível criar pedido a partir do pagamento',inserted.error);return null;}
+  return inserted.data;
+}
+
+async function notifyApprovedSale(payment:any,fallbackOrder:any=null) {
+  if(String(payment?.status??'')!=='approved')return {sent:false,skipped:true,reason:'pagamento não aprovado'};
+  const externalReference=String(payment?.external_reference??fallbackOrder?.external_reference??'').trim();
+  if(!externalReference)return {sent:false,skipped:true,reason:'external_reference ausente'};
+  let order=fallbackOrder;
+  if(!order){const q=await db.from('store_orders').select('*').eq('external_reference',externalReference).maybeSingle();order=q.data??null;}
+  if(!order)order=await ensureOnlineOrderFromPayment(payment);
+  if(!order)order={external_reference:externalReference,items:orderItemsFromPayment(payment),total:payment.transaction_amount,payment_status:payment.status};
+
+  const results:any={email:null,sms:null};
+  if(!order.customer_notification_approved_sent_at){
+    results.email=await sendCustomerStatusEmail(order,payment,'approved');
+    if(results.email.sent&&order.id)await db.from('store_orders').update({customer_notification_approved_sent_at:new Date().toISOString(),customer_notification_error:null,updated_at:new Date().toISOString()}).eq('id',order.id);
+  }
+  if(!order.owner_notification_sent_at){
+    results.sms=await sendOwnerSms(order,payment,'PAGAMENTO APROVADO');
+    if(results.sms.sent&&order.id)await db.from('store_orders').update({owner_notification_sent_at:new Date().toISOString(),owner_notification_error:null,updated_at:new Date().toISOString()}).eq('id',order.id);
+  }
+  return {sent:Boolean(results.email?.sent||results.sms?.sent),results};
+}
+
+async function notifyPendingSale(order:any,payment:any={}) {
+  if(!order?.id)return {sent:false,skipped:true};
+  const results:any={email:null,sms:null};
+  if(!order.customer_notification_pending_sent_at){
+    results.email=await sendCustomerStatusEmail(order,payment,'pending');
+    if(results.email.sent)await db.from('store_orders').update({customer_notification_pending_sent_at:new Date().toISOString(),customer_notification_error:null,updated_at:new Date().toISOString()}).eq('id',order.id);
+  }
+  if(!order.owner_notification_sent_at){
+    results.sms=await sendOwnerSms(order,payment,'PAGAMENTO PENDENTE');
+    if(results.sms.sent)await db.from('store_orders').update({owner_notification_sent_at:new Date().toISOString(),owner_notification_error:null,updated_at:new Date().toISOString()}).eq('id',order.id);
+  }
+  return {sent:Boolean(results.email?.sent||results.sms?.sent),results};
+}
+
+/* ---------- MERCADO PAGO ---------- */
+
+async function createPix(body: any) {
+  const customer = body.customer ?? {}; const items = normalizeItems(body.items); const subtotal = itemsSubtotal(items); const threshold = await getFreeShippingThreshold(); const shipping = subtotal >= threshold ? 0 : money(body?.shipping_cost); const amount = subtotal + shipping;
+  if (amount <= 0) throw new Error("Valor do Pix inválido.");
+  if (!validEmail(customer.email)) throw new Error("E-mail inválido.");
+  if (digits(customer.cpf).length !== 11) throw new Error("CPF inválido.");
+  const externalReference = String(body.external_reference ?? `ST70-${Date.now()}`);
+  const payment = {
+    transaction_amount: amount, description: String(body.description ?? "Compra STUDIO 70").slice(0,250),
+    payment_method_id: "pix", external_reference: externalReference,
+    payer: { email: String(customer.email), first_name: String(customer.name ?? "Cliente").split(" ")[0],
+      last_name: String(customer.name ?? "").split(" ").slice(1).join(" ") || "STUDIO 70",
+      identification: { type: "CPF", number: digits(customer.cpf) } },
+    notification_url: requiredEnv("FUNCTION_PUBLIC_URL"),
+    metadata: { store: "STUDIO70", items_count: items.reduce((s,i)=>s+i.quantity,0), shipping_cost: shipping, free_shipping: subtotal >= threshold, items_json: JSON.stringify(items), customer: { name:String(customer.name ?? ""), email:String(customer.email ?? ""), cpf:digits(customer.cpf) }, shipping: body.shipping ?? null }
+  };
+  const r = await mpFetch("/v1/payments", { method:"POST", headers:{"X-Idempotency-Key":crypto.randomUUID()}, body:JSON.stringify(payment) });
+  const data = await r.json(); if(!r.ok) throw new Error(data?.message || data?.error || "Mercado Pago recusou o Pix.");
+  const order=await ensureOnlineOrderFromPayment({...data,external_reference:externalReference,metadata:payment.metadata});
+  if(order) await notifyPendingSale(order,data).catch(e=>console.error("Falha na notificação pendente",e));
+  return { payment_id:data.id,status:data.status,qr_code:data.point_of_interaction?.transaction_data?.qr_code ?? "",qr_code_base64:data.point_of_interaction?.transaction_data?.qr_code_base64 ?? "",external_reference:data.external_reference };
+}
+async function pixStatus(id: any) {
+  if(!id) throw new Error("payment_id obrigatório.");
+  const r=await mpFetch(`/v1/payments/${encodeURIComponent(String(id))}`,{method:"GET"});
+  const data=await r.json(); if(!r.ok) throw new Error(data?.message || "Não foi possível consultar o pagamento.");
+  return {id:data.id,status:data.status,status_detail:data.status_detail,external_reference:data.external_reference};
+}
+async function createCardCheckout(body:any) {
+  const customer=body.customer??{}, items=normalizeItems(body.items), subtotal=itemsSubtotal(items), threshold=await getFreeShippingThreshold(), shipping=subtotal>=threshold?0:money(body?.shipping_cost), total=subtotal+shipping;
+  if(total<=0) throw new Error("Total do pedido inválido."); if(!validEmail(customer.email)) throw new Error("E-mail inválido.");
+  const site=requiredEnv("SITE_URL").replace(/\/+$/,""), max=Math.min(24,Math.max(1,Number(body.max_installments??12)));
+  const mpItems:any[]=items.map(i=>({id:i.id||i.sku||undefined,title:i.title,quantity:i.quantity,currency_id:"BRL",unit_price:i.unit_price,picture_url:i.picture_url||undefined}));
+  if(shipping>0) mpItems.push({id:"FRETE",title:`Frete - ${String(body.shipping_service??"Entrega")}`,quantity:1,currency_id:"BRL",unit_price:shipping});
+  const preference={items:mpItems,payer:{name:String(customer.name??""),email:String(customer.email),identification:digits(customer.cpf).length===11?{type:"CPF",number:digits(customer.cpf)}:undefined},
+    external_reference:String(body.external_reference??`ST70-${Date.now()}`),notification_url:requiredEnv("FUNCTION_PUBLIC_URL"),
+    back_urls:{success:`${site}/?payment=success`,pending:`${site}/?payment=pending`,failure:`${site}/?payment=failure`},auto_return:"approved",
+    payment_methods:{installments:max},statement_descriptor:"STUDIO70",
+     metadata:{store:"STUDIO70",items_json:JSON.stringify(items),customer:{name:String(customer.name??""),email:String(customer.email??""),cpf:digits(customer.cpf)},shipping:body.shipping??null,shipping_cost:shipping}};
+  const r=await mpFetch("/checkout/preferences",{method:"POST",body:JSON.stringify(preference)}); const data=await r.json();
+  if(!r.ok) throw new Error(data?.message||data?.error||"Não foi possível criar o checkout.");
+  const order=await ensureOnlineOrderFromPayment({external_reference:String(body.external_reference??''),preference_id:data.id,status:'pending',transaction_amount:total,payer:{first_name:String(customer.name??'Cliente'),email:String(customer.email??'')},metadata:preference.metadata,items});
+  if(order) await notifyPendingSale(order,{status:'pending',payment_method_id:'mercado_pago'}).catch(e=>console.error('Falha na notificação pendente',e));
+  return {id:data.id,init_point:data.init_point,sandbox_init_point:data.sandbox_init_point,external_reference:data.external_reference};
+}
+
+/* ---------- SUPERFRETE ---------- */
+
+async function quoteShipping(body:any) {
+  const token = requiredEnv("SUPERFRETE_TOKEN");
+  const shippingCfg = await getSetting("shipping", {});
+  const configuredOriginCep = digits(shippingCfg?.origin_cep ?? shippingCfg?.originCep ?? shippingCfg?.cep_origem ?? shippingCfg?.cepOrigem ?? "");
+  const from = digits(body.from ?? configuredOriginCep ?? Deno.env.get("SUPERFRETE_ORIGIN_CEP") ?? Deno.env.get("STORE_ORIGIN_CEP"));
+  const to = digits(body.to);
+  if (from.length !== 8) throw new Error("CEP de origem não configurado ou inválido. Configure o CEP de origem no painel ADM ou no Secret SUPERFRETE_ORIGIN_CEP.");
+  if (to.length !== 8) throw new Error("CEP de destino inválido.");
+  const products=(Array.isArray(body.products)?body.products:[]).map((p:any)=>({quantity:Math.max(1,Math.floor(Number(p.quantity??1))),weight:Number(p.weight??.3)||.3,height:Number(p.height??4)||4,width:Number(p.width??20)||20,length:Number(p.length??30)||30}));
+  const payload={from:{postal_code:from},to:{postal_code:to},services:String(body.services??"1,2,17,3,33"),options:{own_hand:false,receipt:false,insurance_value:money(body.insurance_value),use_insurance_value:Boolean(body.use_insurance_value??false)},products};
+  const r=await fetch(SF_API,{method:"POST",headers:{Authorization:`Bearer ${token}`,"User-Agent":Deno.env.get("SUPERFRETE_USER_AGENT")||"STUDIO 70",Accept:"application/json","Content-Type":"application/json"},body:JSON.stringify(payload)});
+  const data=await r.json(); if(!r.ok) throw new Error(data?.message||data?.error||"SuperFrete recusou a cotação.");
+  const services=Array.isArray(data)?data:(data?.services??data?.shipping??data?.result??data);
+  if(!Array.isArray(services)) return {ok:true,services:[]};
+  return {ok:true,services};
+}
+
+/* ---------- SUPERFRETE — ETIQUETAS ---------- */
+
+function sfApiBase(){return Deno.env.get('SUPERFRETE_SANDBOX')==='true'?'https://sandbox.superfrete.com/':'https://api.superfrete.com/';}
+async function sfRequest(path:string,method='GET',body:any=undefined){
+  const token=requiredEnv('SUPERFRETE_TOKEN');
+  const r=await fetch(`${sfApiBase()}${path}`,{method,headers:{Authorization:`Bearer ${token}`,'User-Agent':Deno.env.get('SUPERFRETE_USER_AGENT')||'STUDIO70',Accept:'application/json','Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});
+  const text=await r.text();let data:any={};try{data=text?JSON.parse(text):{};}catch(_){data={message:text};}
+  if(!r.ok)throw new Error(data?.message||data?.error||`SuperFrete HTTP ${r.status}`);
+  return data;
+}
+function sfSender(){
+  const v=(name:string)=>String(Deno.env.get(name)||'').trim();
+  const out={name:v('SUPERFRETE_FROM_NAME'),address:v('SUPERFRETE_FROM_ADDRESS'),number:v('SUPERFRETE_FROM_NUMBER'),complement:v('SUPERFRETE_FROM_COMPLEMENT'),district:v('SUPERFRETE_FROM_DISTRICT'),city:v('SUPERFRETE_FROM_CITY'),state_abbr:v('SUPERFRETE_FROM_STATE').toUpperCase(),postal_code:digits(v('SUPERFRETE_FROM_CEP')),document:digits(v('SUPERFRETE_FROM_DOCUMENT'))};
+  for(const k of ['name','address','district','city','state_abbr','postal_code'])if(!String((out as any)[k]))throw new Error(`Secret SUPERFRETE_FROM_${k.toUpperCase()} não configurado.`);
+  return out;
+}
+function sfOrderAddress(order:any){
+  const a=order?.shipping??{};
+  const name=String(order?.customer_name||order?.customer?.name||'Cliente');
+  const out={name,address:String(a.street||a.address||''),number:String(a.number||''),complement:String(a.complement||''),district:String(a.neighborhood||a.district||''),city:String(a.city||''),state_abbr:String(a.state||a.state_abbr||'').toUpperCase(),postal_code:digits(a.cep||a.postal_code||''),document:digits(order?.customer_cpf||order?.customer?.cpf||''),email:String(order?.customer_email||order?.customer?.email||'')};
+  for(const k of ['name','address','district','city','state_abbr','postal_code'])if(!String((out as any)[k]))throw new Error(`Endereço do pedido incompleto: ${k}.`);
+  return out;
+}
+async function createSuperfreteLabel(body:any){
+  await requireAdmin(body.admin_password);
+  const id=String(body.order_id||'').trim(),ref=String(body.external_reference||'').trim();
+  let q:any=db.from('store_orders').select('*');
+  if(id)q=q.eq('id',id);else if(ref)q=q.eq('external_reference',ref);else throw new Error('Informe order_id ou external_reference.');
+  const found=await q.maybeSingle();if(found.error)throw new Error(found.error.message);if(!found.data)throw new Error('Pedido não encontrado.');
+  const order=found.data;
+  if(String(order.payment_status||'')!=='approved' && String(order.order_status||'')!=='paid')throw new Error('A etiqueta só pode ser gerada para pedido com pagamento aprovado.');
+  if(order.superfrete_label_url)return {ok:true,already:true,order_id:order.id,tracking_code:order.superfrete_tracking_code,label_url:order.superfrete_label_url,superfrete_order_id:order.superfrete_order_id};
+  const shipping=order.shipping||{};const service=Number(body.service_id??shipping.service_id??shipping.serviceId??shipping.id??Deno.env.get('SUPERFRETE_DEFAULT_SERVICE_ID')??1);
+  if(!service)throw new Error('Serviço SuperFrete não identificado.');
+  const items=normalizeItems(order.items);
+  if(!items.length)throw new Error('O pedido não possui itens para a etiqueta.');
+  const dimensions=Array.isArray(order.items)?order.items:[];
+  const totalWeight=Math.max(.01,dimensions.reduce((sum:number,i:any)=>sum+Number(i.weightKg??i.weight??.3)*Math.max(1,Number(i.quantity??1)),0));
+  const maxWidth=Math.max(16,...dimensions.map((i:any)=>Number(i.widthCm??i.width??20)));
+  const maxHeight=Math.max(4,...dimensions.map((i:any)=>Number(i.heightCm??i.height??4)));
+  const maxLength=Math.max(24,...dimensions.map((i:any)=>Number(i.lengthCm??i.length??30)));
+  const products=items.map((i:any)=>({name:i.title,quantity:String(i.quantity),unitary_value:String(money(i.unit_price))}));
+  const options={insurance_value:money(order.total),receipt:false,own_hand:false,non_commercial:String(Deno.env.get('SUPERFRETE_NON_COMMERCIAL')||'false')==='true',tags:[`ST70:${String(order.external_reference)}`]};
+  const invoiceKey=String(Deno.env.get('SUPERFRETE_INVOICE_KEY')||'').trim();
+  const invoiceNumber=String(Deno.env.get('SUPERFRETE_INVOICE_NUMBER')||'').trim();
+  if(!options.non_commercial){if(!invoiceKey&&!invoiceNumber)throw new Error('Para emissão comercial, configure SUPERFRETE_INVOICE_KEY e/ou SUPERFRETE_INVOICE_NUMBER. Se sua operação usar declaração de conteúdo, configure SUPERFRETE_NON_COMMERCIAL=true.');(options as any).invoice={key:invoiceKey,number:invoiceNumber};}
+  const cart=await sfRequest('api/v0/cart','POST',{from:sfSender(),to:sfOrderAddress(order),products,service,volumes:{width:maxWidth,height:maxHeight,length:maxLength,weight:totalWeight},options});
+  const cartId=String(cart?.id??cart?.order?.id??cart?.orders?.[0]?.id??'');if(!cartId)throw new Error('A SuperFrete recebeu o envio, mas não retornou o ID do pedido.');
+  const checkout=await sfRequest('api/v0/checkout','POST',{orders:[cartId]});
+  const purchased=checkout?.purchase?.orders?.[0]??checkout?.orders?.[0]??checkout?.purchase??checkout;
+  const tracking=String(purchased?.tracking??purchased?.tracking_code??checkout?.tracking??'').trim();
+  const labelUrl=String(purchased?.print?.url??purchased?.label?.url??purchased?.print_url??checkout?.print?.url??'').trim();
+  const price=money(purchased?.price??purchased?.total??checkout?.price??0);
+  const status=String(purchased?.status??checkout?.status??'paid');
+  const upd={superfrete_order_id:cartId,superfrete_tracking_code:tracking||null,superfrete_label_url:labelUrl||null,superfrete_status:status,superfrete_price:price,superfrete_service:String(shipping.service||service),superfrete_created_at:new Date().toISOString(),updated_at:new Date().toISOString()};
+  const saved=await db.from('store_orders').update(upd).eq('id',order.id).select('*').single();if(saved.error)throw new Error(`Etiqueta gerada, mas não foi possível salvar os dados no pedido: ${saved.error.message}`);
+  return {ok:true,order_id:order.id,superfrete_order_id:cartId,tracking_code:tracking,label_url:labelUrl,price,status,order:saved.data};
+}
+
+async function getSuperfreteLabel(body:any){
+  await requireAdmin(body.admin_password);const id=String(body.order_id||'').trim();if(!id)throw new Error('order_id obrigatório.');
+  const found=await db.from('store_orders').select('*').eq('id',id).maybeSingle();if(found.error)throw new Error(found.error.message);if(!found.data)throw new Error('Pedido não encontrado.');
+  const sfid=String(found.data.superfrete_order_id||'').trim();if(!sfid)throw new Error('Este pedido ainda não possui etiqueta SuperFrete.');
+  const data=await sfRequest(`api/v0/order/info/${encodeURIComponent(sfid)}`,'GET');
+  const order=data?.order??data;const tracking=String(order?.tracking??order?.tracking_code??found.data.superfrete_tracking_code??'').trim();const labelUrl=String(order?.print?.url??order?.print_url??found.data.superfrete_label_url??'').trim();
+  await db.from('store_orders').update({superfrete_tracking_code:tracking||null,superfrete_label_url:labelUrl||null,superfrete_status:String(order?.status??found.data.superfrete_status??''),updated_at:new Date().toISOString()}).eq('id',id);
+  return {ok:true,order_id:id,tracking_code:tracking,label_url:labelUrl,status:order?.status??null};
+}
+
+/* ---------- PEDIDOS / WEBHOOK ---------- */
+
+async function createStoreOrder(body:any) {
+  const method=body.payment_method==="cash_store"?"cash_store":"pix_store";
+  const items=normalizeItems(body.items);
+  const subtotal=itemsSubtotal(items);
+  const shipping=await effectiveShippingCost(body,items);
+  const total=money(subtotal+shipping);
+  const customer=body.customer??{};
+  const externalReference=String(body.external_reference??`ST70-${Date.now()}`);
+
+  if(!String(customer.name??"").trim()) throw new Error("Nome do cliente é obrigatório.");
+  if(!validEmail(customer.email)) throw new Error("E-mail inválido.");
+  if(digits(customer.cpf).length!==11) throw new Error("CPF inválido.");
+  if(!items.length) throw new Error("O carrinho está vazio.");
+  if(total<=0) throw new Error("Total do pedido inválido.");
+
+  // Esta instalação usa public.store_orders para as reservas/pedidos da loja.
+  // Não existe fallback para public.orders: essa tabela não faz parte do fluxo atual
+  // e tentar acessá-la causava o erro "Could not find the table public.orders".
+  const order={
+    external_reference:externalReference,
+    customer_name:String(customer.name).trim(),
+    customer_email:String(customer.email).trim(),
+    customer_cpf:digits(customer.cpf),
+    payment_method:method,
+    payment_status:"pending",
+    order_status:"reserved",
+    total,
+    shipping:body.shipping??null,
+    items
+  };
+
+  const {data,error}=await db.from("store_orders")
+    .upsert(order,{onConflict:"external_reference"})
+    .select("id,external_reference,total,payment_method,payment_status,order_status,owner_notification_sent_at")
+    .single();
+
+  if(error) {
+    throw new Error(`Não foi possível registrar o pedido em public.store_orders: ${error.message}`);
+  }
+
+  try {
+    const fresh=await db.from('store_orders').select('*').eq('id',data.id).maybeSingle();
+    if(fresh.data) await notifyPendingSale(fresh.data,{status:'pending',payment_method_id:method});
+  } catch (notifyError) { console.error('Falha na notificação da reserva',notifyError); }
+
+  return {
+    order_id:data.id,
+    external_reference:data.external_reference,
+    status:data.order_status??"reserved",
+    payment_status:data.payment_status??"pending",
+    total:money(data.total),
+    table:"store_orders"
+  };
+}
+async function handleWebhook(body:any) {
+  const type=body?.type??body?.topic,paymentId=body?.data?.id;
+  if(type!=="payment"||!paymentId) return {ok:true};
+  const r=await mpFetch(`/v1/payments/${encodeURIComponent(String(paymentId))}`,{method:"GET"}), data=await r.json();
+  if(!r.ok) throw new Error(data?.message || data?.error || "Não foi possível consultar o pagamento no Mercado Pago.");
+
+  await db.from("payment_webhooks").insert({provider:"mercado_pago",event_type:type,payment_id:String(paymentId),external_reference:String(data.external_reference??""),payload:body,processed:true,processed_at:new Date().toISOString()});
+
+  let order:any=null;
+  if(data.external_reference) {
+    const update:any={payment_status:data.status??null,payment_id:String(paymentId),updated_at:new Date().toISOString()};
+    if(data.status==="approved") update.order_status="paid";
+    const updated=await db.from("store_orders").update(update).eq("external_reference",String(data.external_reference)).select("*").maybeSingle();
+    order=updated.data ?? null;
+  }
+
+  try {
+    if(data.status==="approved") await notifyApprovedSale(data,order);
+    else if(order && (data.status==="pending" || data.status==="in_process")) await notifyPendingSale(order,data);
+    else if(order && data.status==="rejected" && !order.customer_notification_pending_sent_at) await sendCustomerStatusEmail(order,data,'rejected');
+  } catch(notifyError) { console.error('Falha na notificação do pagamento',notifyError); }
+
+  return {ok:true,status:data.status??null,notified:['approved','pending','in_process','rejected'].includes(String(data.status??''))};
+}
+
+async function listOrders(body:any) {
+  await requireAdmin(body.admin_password);
+  const limit=Math.min(100,Math.max(1,Number(body.limit??30)));
+  const after=body.after?String(body.after):"";
+
+  let query=db.from("store_orders")
+    .select("*")
+    .order("updated_at",{ascending:false})
+    .limit(limit);
+
+  if(after) query=query.gt("updated_at",after);
+
+  const {data,error}=await query;
+  if(error) throw new Error(`Não foi possível carregar os pedidos: ${error.message}`);
+
+  const orders=(data??[]).map((o:any)=>({...o,payment_provider:o.payment_provider??"store"}));
+  return {ok:true,orders};
+}
+
+async function pushSubscribe(body:any) {
+  await requireAdmin(body.admin_password);
+  const sub=body.subscription ?? body;
+  if(!sub || typeof sub!=="object") throw new Error("Assinatura inválida.");
+  const endpoint=String(sub.endpoint??""); if(!endpoint) throw new Error("Endpoint da assinatura ausente.");
+  const {error}=await db.from("push_subscriptions").upsert({endpoint,subscription:sub,updated_at:new Date().toISOString()},{onConflict:"endpoint"});
+  if(error) throw new Error(error.message); return {ok:true};
+}
+
+Deno.serve(async (req) => {
+  if(req.method==="OPTIONS") return new Response("ok",{headers:corsHeaders});
+  try {
+    const contentType=String(req.headers.get("content-type")||"").toLowerCase();
+    if(contentType.includes("multipart/form-data")){
+      const form=await req.formData();
+      if(String(form.get("action")||"")==="product_image_upload") return json(await uploadProductImages(form));
+      if(String(form.get("action")||"")==="geek_menu_image_upload") return json(await uploadGeekMenuImage(form));
+      return json({error:"Ação multipart inválida."},400);
+    }
+    const body=await req.json();
+    if(body?.type==="payment"||body?.topic==="payment") return json(await handleWebhook(body));
+    switch(body?.action) {
+      case "admin_login": await requireAdmin(body.password); return json({ok:true,authenticated:true});
+      case "get_overrides": return json({ok:true,overrides:await getOverrides()});
+      case "save_override": return json(await saveOverride(body));
+      case "product_save": return json(await saveProduct(body));
+      case "ai_generate_description": return json(await generateAIDescription(body));
+      case "delete_override": return json(await deleteOverride(body));
+      case "product_delete": return json(await deleteProduct(body));
+      case "categories_list": return json(await listCategories());
+      case "category_groups_list": return json(await listCategoryGroups());
+      case "category_group_save": return json(await saveCategoryGroup(body));
+      case "category_group_delete": return json(await deleteCategoryGroup(body));
+      case "category_save": return json(await saveCategory(body));
+      case "category_delete": return json(await deleteCategory(body));
+      case "categories_repair_products": return json(await repairProductCategories(body));
+      case "fashion_theme_get": return json(await fashionThemeGet());
+      case "fashion_theme_save": return json(await fashionThemeSave(body));
+      case "geek_theme_get": return json(await geekThemeGet());
+      case "geek_theme_save": return json(await geekThemeSave(body));
+      case "products_list": return json(await listProducts(body));
+      case "carmenatto_products": return json(await listProducts(body));
+      case "carmenatto_sync": return json(await syncSupplier(body));
+      case "carmenatto_sync_history": return json(await syncHistory(body));
+      case "admin_set_code_prices": return json(await adminSetCodePrices(body));
+      case "save_config": return json(await saveConfig(body));
+      case "pricing_config": return json(await pricingConfig());
+      case "save_pricing_config": return json(await savePricingConfig(body));
+      case "shipping_config": return json(await shippingConfig());
+      case "save_shipping_config": return json(await saveShippingConfig(body));
+      case "banners": return json(await listBanners());
+      case "banner_save": return json(await saveBanners(body));
+      case "banner_delete": return json(await deleteBanner(body));
+      case "pdv_product": return json(await pdvProduct(body));
+      case "store_sale": return json(await storeSale(body));
+      case "pdv_history": return json(await pdvHistory(body));
+      case "orders": return json(await listOrders(body));
+      case "push_subscribe": return json(await pushSubscribe(body));
+      case "shipping": return json(await quoteShipping(body));
+      case "superfrete_label_create": return json(await createSuperfreteLabel(body));
+      case "superfrete_label_get": return json(await getSuperfreteLabel(body));
+      case "pix": return json(await createPix(body));
+      case "pix_status": return json(await pixStatus(body.payment_id));
+      case "card": return json(await createCardCheckout(body));
+      case "store_order": return json(await createStoreOrder(body));
+      default: return json({error:`Ação inválida: ${String(body?.action??"")}`},400);
+    }
+  } catch(error) {
+    console.error(error);
+    return json({error:error instanceof Error?error.message:"Erro interno."},400);
+  }
+});
