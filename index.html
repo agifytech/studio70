@@ -6,6 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root{--bg:#e9e7e3;--card:#ffffff;--muted:#66645f;--text:#11110f;--accent:#2a2926;--green:#1b1b19;--line:#c9c6c0;--white:#fff;--cement:#b8b5ae;--cement-dark:#8f8b84;--font-display:'Black Ops One',Impact,sans-serif;--font-body:'Barlow Condensed',Arial,sans-serif}
 *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body)} button,input,select,textarea{font:inherit;font-family:var(--font-body)} button{cursor:pointer}
@@ -1208,6 +1209,27 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
   </div>
   <div id="geekThemeAdminStatus" style="font-size:11px;margin-top:7px;min-height:16px"></div>
 </div>
+<div class="st70-shopee-box" id="st70ShopeeBulkBox">
+  <b>🛍️ INCLUSÃO EM MASSA — PADRÃO SHOPEE</b>
+  <p style="font-size:11px;color:#666;margin:6px 0 12px;line-height:1.45">Selecione o arquivo padrão de produtos da Shopee (.xlsx, .xls ou .csv). O STUDIO 70 lê os cabeçalhos, converte os produtos e cadastra tudo no Supabase usando o mesmo fluxo do cadastro individual.</p>
+  <label>Arquivo padrão Shopee
+    <input class="field" id="st70ShopeeBulkFile" type="file" accept=".xlsx,.xls,.csv">
+  </label>
+  <div class="st70-shopee-grid" style="margin-top:10px">
+    <label>Categoria STUDIO 70 (opcional)
+      <select class="field" id="st70ShopeeBulkCategory"><option value="">Usar categoria da planilha</option></select>
+    </label>
+    <label>Estoque padrão se a planilha não informar
+      <input class="field" id="st70ShopeeBulkStock" type="number" min="0" value="0">
+    </label>
+  </div>
+  <div class="st70-shopee-actions">
+    <button type="button" class="smallbtn primary" onclick="st70ImportShopeeFile()">📦 IMPORTAR PRODUTOS EM MASSA</button>
+    <button type="button" class="smallbtn" onclick="st70DownloadShopeeTemplate()">⬇️ BAIXAR MODELO ST70</button>
+  </div>
+  <div id="st70ShopeeBulkStatus" class="st70-shopee-status"></div>
+  <div id="st70ShopeeBulkResults" class="st70-shopee-results"></div>
+</div>
 <div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço de venda<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU <span style="font-size:10px;color:#777;font-weight:500">(gerado automaticamente)</span><input class="field" id="pSku" required></label><label>Código de barras <span style="font-size:10px;color:#777;font-weight:500">(EAN-13 automático)</span><input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Link da foto principal <span style="font-size:10px;color:#777;font-weight:500">(opcional)</span><input class="field" id="pImage" placeholder="Opcional — você também pode enviar a foto pelo Storage abaixo"></label>
 <div class="payment-admin-box full" style="margin:0;padding:14px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px"><b>📸 FOTOS DO PRODUTO — SUPABASE STORAGE</b><p style="font-size:11px;color:#666;margin:6px 0 10px">Envie as fotos diretamente pelo ADM. Elas serão salvas automaticamente no Supabase Storage e a URL será gravada no produto.</p><label>Foto principal<input class="field" id="pImageFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><div id="pImageUploadStatus" class="upload-status" style="font-size:11px;margin-top:5px;min-height:16px"></div><label style="display:block;margin-top:8px">Fotos secundárias<input class="field" id="pSecondaryFiles" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label><div id="pSecondaryUploadStatus" class="upload-status" style="font-size:11px;margin-top:5px;min-height:16px"></div></div>
 <label class="full">Links das fotos secundárias<textarea class="field" id="pSecondaryImages" placeholder="Um link por linha"></textarea></label>
@@ -1844,7 +1866,16 @@ function printSale(sale){const w=window.open('','_blank','width=420,height=650')
 #integratedCheckoutModal .status.ok{color:#246b3b}
 #integratedCheckoutModal .status.error{color:#a52b2b}
 @media(max-width:800px){#integratedCheckoutModal{padding:0}#integratedCheckoutModal .integrated-shell{border-radius:0}#integratedCheckoutModal .integrated-close{right:10px;top:10px}#integratedCheckoutModal .pay-methods{grid-template-columns:1fr}}
-</style></head><body><h2>STUDIO 70 BRAND</h2><div class="center">COMPROVANTE DE VENDA<br>${sale.id}<br>${new Date(sale.date).toLocaleString('pt-BR')}</div><table>${rows}</table><div>Subtotal: ${money(sale.subtotal)}</div><div>Desconto: ${money(sale.discount)}</div><div class="tot">TOTAL: ${money(sale.total)}</div><p>Pagamento: ${sale.payment}</p>${sale.payment==='Dinheiro'?`<p>Recebido: ${money(sale.received)}<br>Troco: ${money(sale.change)}</p>`:''}<p class="center">Obrigado pela preferência!</p><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script>
+</style>
+<style id="st70-shopee-bulk-css">
+.st70-shopee-box{margin:14px 0;padding:16px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px}
+.st70-shopee-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.st70-shopee-grid .full{grid-column:1/-1}
+.st70-shopee-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.st70-shopee-actions .smallbtn{min-width:180px}
+.st70-shopee-status{font-size:11px;margin-top:9px;min-height:18px}.st70-shopee-results{display:grid;gap:6px;margin-top:10px;max-height:280px;overflow:auto}.st70-shopee-result{padding:9px 10px;background:#fff;border:1px solid #d5d1c9;border-radius:8px;font-size:11px}
+.st70-wa-box{margin:14px 0;padding:16px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px}.st70-wa-status{font-size:11px;margin-top:7px;min-height:18px}
+@media(max-width:650px){.st70-shopee-grid{grid-template-columns:1fr}.st70-shopee-grid .full{grid-column:auto}.st70-shopee-actions{display:grid;grid-template-columns:1fr}.st70-shopee-actions .smallbtn{width:100%}}
+</style>
+</head><body><h2>STUDIO 70 BRAND</h2><div class="center">COMPROVANTE DE VENDA<br>${sale.id}<br>${new Date(sale.date).toLocaleString('pt-BR')}</div><table>${rows}</table><div>Subtotal: ${money(sale.subtotal)}</div><div>Desconto: ${money(sale.discount)}</div><div class="tot">TOTAL: ${money(sale.total)}</div><p>Pagamento: ${sale.payment}</p>${sale.payment==='Dinheiro'?`<p>Recebido: ${money(sale.received)}<br>Troco: ${money(sale.change)}</p>`:''}<p class="center">Obrigado pela preferência!</p><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script>
 </body></html>`);w.document.close()}
 function renderSales(){const el=document.getElementById('pdvHistory');if(!el)return;el.innerHTML=sales.length?sales.slice(0,20).map(s=>`<div class="sale-row"><b>${s.id} — ${money(s.total)}</b><br><small>${new Date(s.date).toLocaleString('pt-BR')} · ${s.payment} · ${s.items.reduce((a,i)=>a+i.qty,0)} item(ns)</small><br><button class="smallbtn" onclick="printSale(${JSON.stringify(s).replace(/"/g,'&quot;')})">🖨️ Comprovante</button></div>`).join(''):'<div class="empty">Nenhuma venda registrada.</div>'}
 
@@ -2562,7 +2593,8 @@ function printLabels(productsToPrint,title){
 .geek-theme-tile::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 20%,rgba(0,0,0,.72));pointer-events:none}
 .geek-theme-tile>*{position:relative;z-index:1}
 @media(max-width:768px){.geek-menu-editor{grid-template-columns:1fr 1fr}.geek-menu-editor .geek-menu-upload{grid-column:1/-1}.geek-menu-image-preview{width:100%;height:90px;grid-column:1/-1}}
-</style></head><body><main class="label-sheet">${markup}</main><script>const LABELS=${safeData};function renderBarcodes(){LABELS.forEach((item,index)=>{const el=document.getElementById('barcode-'+index);if(window.JsBarcode&&el&&item.code){try{JsBarcode(el,item.code,{format:'CODE128',displayValue:false,width:1.15,height:32,margin:0});}catch(_){}}});setTimeout(()=>window.print(),180)}window.addEventListener('load',()=>setTimeout(renderBarcodes,120));<\/script><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"><\/script></body></html>`);
+</style></head><body><main class="label-sheet">${markup}</main><script>const LABELS=${safeData};function renderBarcodes(){LABELS.forEach((item,index)=>{const el=document.getElementById('barcode-'+index);if(window.JsBarcode&&el&&item.code){try{JsBarcode(el,item.code,{format:'CODE128',displayValue:false,width:1.15,height:32,margin:0});}catch(_){}}});setTimeout(()=>window.print(),180)}window.addEventListener('load',function(){setTimeout(st70LoadShopeeCategories,900);});
+window.addEventListener('load',()=>setTimeout(renderBarcodes,120));<\/script><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"><\/script></body></html>`);
   w.document.close();
 }
 function printSingleLabelFor(id){
@@ -2583,6 +2615,81 @@ function printAllLabels(){
   printLabels(list,'ETIQUETA EM MASSA');
 }
 document.getElementById('scannerInput').addEventListener('keydown',e=>{if(e.key!=='Enter')return;e.preventDefault();const code=e.target.value.trim();if(!code)return;const p=products.find(x=>String(x.barcode).toLowerCase()===code.toLowerCase()||String(x.sku).toLowerCase()===code.toLowerCase());const result=document.getElementById('scanResult');if(p){result.textContent=`✓ ${p.name} encontrado — estoque: ${totalStockOf(p)}`;}else result.textContent='✕ Código não cadastrado: '+code;e.target.value='';setTimeout(()=>e.target.focus(),50);});
+function st70ShopeeHeaderKey(v){return String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'').trim();}
+function st70ShopeeCell(row,map,keys){for(const k of keys){const i=map[st70ShopeeHeaderKey(k)];if(i!=null&&row[i]!=null&&String(row[i]).trim()!=='')return row[i];}return '';}
+function st70ShopeeRowsToProducts(rows){
+  if(!Array.isArray(rows)||!rows.length)throw new Error('A planilha está vazia.');
+  let headerIndex=-1,headers=[],map={};
+  for(let i=0;i<Math.min(rows.length,80);i++){
+    const r=Array.isArray(rows[i])?rows[i]:[];const m={};r.forEach((v,j)=>{const k=st70ShopeeHeaderKey(v);if(k)m[k]=j;});
+    const hasName=['Nome do Produto','Nome','Product Name','Título','Titulo'].some(k=>m[st70ShopeeHeaderKey(k)]!=null);
+    const hasPrice=['Preço','Preco','Preço de venda','Price','Preço de Venda'].some(k=>m[st70ShopeeHeaderKey(k)]!=null);
+    if(hasName&&hasPrice){headerIndex=i;headers=r;map=m;break;}
+  }
+  if(headerIndex<0)throw new Error('Não encontrei o cabeçalho padrão Shopee. Use o arquivo oficial de cadastro em massa da Shopee.');
+  const defaultStock=Math.max(0,Number(document.getElementById('st70ShopeeBulkStock')?.value||0));
+  const forcedCategory=String(document.getElementById('st70ShopeeBulkCategory')?.value||'').trim();
+  const out=[];
+  for(let i=headerIndex+1;i<rows.length;i++){
+    const row=rows[i]||[];if(!row.some(v=>String(v??'').trim()))continue;
+    const name=String(st70ShopeeCell(row,map,['Nome do Produto','Nome','Product Name','Título','Titulo'])).trim();if(!name)continue;
+    const priceRaw=st70ShopeeCell(row,map,['Preço','Preco','Preço de venda','Price','Preço de Venda','Valor','Selling Price']);
+    const price=Number(String(priceRaw??'').replace(/[^0-9,.-]/g,'').replace(/\.(?=.*\.)/g,'').replace(',','.'))||0;
+    const stockRaw=st70ShopeeCell(row,map,['Estoque','Quantidade','Quantidade de estoque','Stock','Qtd','Stock/Quantity']);
+    const stock=stockRaw!==''?Math.max(0,Number(String(stockRaw).replace(',','.'))||0):defaultStock;
+    const sku=String(st70ShopeeCell(row,map,['SKU','SKU Reference No.','SKU Referência','Código do Produto','Product SKU','Reference No.'])).trim();
+    const barcode=String(st70ShopeeCell(row,map,['Código de barras','Codigo de barras','EAN','GTIN','Barcode'])).replace(/\.0$/,'').trim();
+    const description=String(st70ShopeeCell(row,map,['Descrição','Descricao','Descrição do Produto','Product Description','Description'])).trim();
+    const category=forcedCategory||String(st70ShopeeCell(row,map,['Categoria','Categoria do produto','Category'])).trim()||'Outros';
+    const sizes=String(st70ShopeeCell(row,map,['Tamanho','Tamanhos','Size','Variação de tamanho'])).split(/[,;|\n]/).map(x=>x.trim()).filter(Boolean);
+    const colors=String(st70ShopeeCell(row,map,['Cor','Cores','Color','Variação de cor'])).split(/[,;|\n]/).map(x=>x.trim()).filter(Boolean);
+    const image=String(st70ShopeeCell(row,map,['Imagem','Imagem principal','URL da imagem','Image','Image URL','Link da imagem'])).trim();
+    const extra=String(st70ShopeeCell(row,map,['Imagens','Imagens adicionais','Image URLs','Additional Images'])).split(/\n|[|;]/).map(x=>x.trim()).filter(Boolean);
+    const url=String(st70ShopeeCell(row,map,['URL','Link do produto','Product URL','Link'])).trim();
+    const weight=Number(String(st70ShopeeCell(row,map,['Peso','Peso (kg)','Weight','Peso do produto','Package Weight (kg)'])).replace(',','.'))||0.3;
+    const height=Number(String(st70ShopeeCell(row,map,['Altura','Altura (cm)','Height','Package Height (cm)'])).replace(',','.'))||4;
+    const width=Number(String(st70ShopeeCell(row,map,['Largura','Largura (cm)','Width','Package Width (cm)'])).replace(',','.'))||20;
+    const length=Number(String(st70ShopeeCell(row,map,['Comprimento','Comprimento (cm)','Length','Package Length (cm)'])).replace(',','.'))||30;
+    out.push({name,price,sale_price:price,sku,barcode,description,category,stock,sizes,colors,image,secondary_images:extra,source_url:url,weightKg:weight,heightCm:height,widthCm:width,lengthCm:length,active:true,featured:false});
+  }
+  return out;
+}
+async function st70ImportShopeeFile(){
+  const file=document.getElementById('st70ShopeeBulkFile')?.files?.[0],status=document.getElementById('st70ShopeeBulkStatus'),results=document.getElementById('st70ShopeeBulkResults');
+  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',st70ImportShopeeFile);
+  if(!file)return alert('Selecione o arquivo padrão da Shopee.');
+  if(!window.XLSX)return alert('A biblioteca XLSX não carregou. Recarregue a página e tente novamente.');
+  if(status)status.textContent='Lendo a planilha Shopee...';if(results)results.innerHTML='';
+  try{
+    const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});if(!wb.SheetNames.length)throw new Error('Arquivo sem planilha.');
+    const ws=wb.Sheets[wb.SheetNames[0]],rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+    const items=st70ShopeeRowsToProducts(rows);if(!items.length)throw new Error('Nenhum produto válido foi encontrado na planilha.');
+    if(items.length>500){if(!confirm('Foram encontrados '+items.length+' produtos. Deseja importar todos?'))return;}
+    if(status)status.textContent='Cadastrando '+items.length+' produto(s) no Supabase...';
+    let ok=0,fail=0,logs=[];
+    for(let i=0;i<items.length;i++){
+      const payload=items[i];
+      try{
+        const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'product_save',admin_password:adminAuthPassword,product:payload,...payload})});
+        const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao salvar');ok++;logs.push('<div class="st70-shopee-result"><b>✓ '+escapeHtml(payload.name)+'</b> — cadastrado</div>');
+      }catch(e){fail++;logs.push('<div class="st70-shopee-result"><b>✕ '+escapeHtml(payload.name)+'</b> — '+escapeHtml(e?.message||e)+'</div>');}
+      if(status)status.textContent=`Processando ${i+1}/${items.length}... ${ok} sucesso(s), ${fail} erro(s).`;
+    }
+    if(results)results.innerHTML=logs.join('');
+    await loadSupabaseProducts();if(typeof renderCategories==='function')renderCategories();if(typeof renderAdmin==='function')renderAdmin();
+    if(status)status.textContent=`✓ Importação concluída: ${ok} produto(s) cadastrado(s), ${fail} erro(s).`;
+  }catch(e){if(status)status.textContent='Erro: '+(e?.message||e);}
+}
+function st70DownloadShopeeTemplate(){
+  if(!window.XLSX)return alert('A biblioteca XLSX não carregou.');
+  const rows=[['Nome do Produto','Descrição','SKU','Código de barras','Preço','Estoque','Categoria','Tamanho','Cor','Imagem principal','Imagens adicionais','Peso (kg)','Altura (cm)','Largura (cm)','Comprimento (cm)','URL'],['Exemplo Camiseta ST70','Descrição do produto','ST70-EXEMPLO','7890000000000',99.90,10,'Camisetas','M','Preta','https://.../camiseta.jpg','',0.3,4,20,30,'']];
+  const ws=XLSX.utils.aoa_to_sheet(rows),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'ST70');XLSX.writeFile(wb,'ST70-modelo-importacao-Shopee.xlsx');
+}
+async function st70LoadShopeeCategories(){
+  const el=document.getElementById('st70ShopeeBulkCategory');if(!el)return;
+  try{const d=await apiCall({action:'categories_list'});const cats=Array.isArray(d.categories)?d.categories:[];el.innerHTML='<option value="">Usar categoria da planilha</option>'+cats.filter(c=>c&&c.active!==false).map(c=>`<option value="${escapeAttr(c.name||'')}">${escapeHtml(c.name||'')}</option>`).join('');}catch(_){ }
+}
+
 document.getElementById('importData').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=async()=>{try{const imported=JSON.parse(r.result);if(!Array.isArray(imported))throw new Error('O backup precisa ser uma lista de produtos.');if(!adminAuthPassword){alert('Faça login no painel antes de importar.');return;}let ok=0;for(const item of imported){const payload={...item,id:undefined,sale_price:Number(item.sale_price??item.price??0),price:Number(item.sale_price??item.price??0)};const resp=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'product_save',admin_password:adminAuthPassword,product:payload})});const d=await resp.json().catch(()=>({}));if(resp.ok&&d.ok)ok++;}await loadSupabaseProducts();alert(`Importação concluída no Supabase. ${ok} produto(s) processado(s).`);}catch(err){alert('Arquivo inválido ou falha na importação: '+(err?.message||err));}};r.readAsText(f)};
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(products,null,2)],{type:'application/json'}));a.download='studio70-produtos-backup.json';a.click();}
 
@@ -2893,10 +3000,10 @@ async function integratedCepLookup(){
 }
 async function createPixPayment(){
   if(!integratedSelectedShipping)return integratedSetCheckoutStatus('Calcule e selecione o frete antes de pagar.','error');
-  const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));if(!name||!email||cpf.length<11)return integratedSetCheckoutStatus('Preencha nome, e-mail e CPF.','error');
+  const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));const phone=integratedDigits(integratedVal('phone'));if(!name||!email||cpf.length<11||phone.length<10)return integratedSetCheckoutStatus('Preencha nome, e-mail, CPF e telefone/WhatsApp.','error');
   const total=integratedSubtotal()+(integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0));const btn=document.getElementById('pixBtn');btn.disabled=true;integratedSetCheckoutStatus('Gerando Pix...');
   try{
-    const payload={action:'pix',external_reference:'ST70-'+Date.now(),description:'Compra STUDIO 70 BRAND',transaction_amount:Number(total.toFixed(2)),customer:{name,email,cpf},items:cart.map(i=>{const p=integratedProduct(i.id);const d=integratedDimensions(p);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||'',size:i.size||'',color:i.color||'',weightKg:d.weight,widthCm:d.width,heightCm:d.height,lengthCm:d.length}}),shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement'),service_id:integratedSelectedShipping?.id||'',service:integratedSelectedShipping?.name||''},shipping_cost:integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name,service_id:integratedSelectedShipping.id};
+    const payload={action:'pix',external_reference:'ST70-'+Date.now(),description:'Compra STUDIO 70 BRAND',transaction_amount:Number(total.toFixed(2)),customer:{name,email,cpf,phone:integratedVal('phone')},items:cart.map(i=>{const p=integratedProduct(i.id);const d=integratedDimensions(p);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||'',size:i.size||'',color:i.color||'',weightKg:d.weight,widthCm:d.width,heightCm:d.height,lengthCm:d.length}}),shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement'),service_id:integratedSelectedShipping?.id||'',service:integratedSelectedShipping?.name||''},shipping_cost:integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name,service_id:integratedSelectedShipping.id};
     const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao gerar Pix.');
     integratedPixPaymentId=data.payment_id||data.id;const qr=document.getElementById('pixQr');if(qr){qr.src=data.qr_code_base64?.startsWith('data:')?data.qr_code_base64:'data:image/png;base64,'+data.qr_code_base64;qr.style.display='block';}
     document.getElementById('pixCode').value=data.qr_code||'';document.getElementById('pixBox').classList.add('show');integratedSetCheckoutStatus('Pix gerado. Escaneie o QR Code ou copie o código.','ok');
@@ -2906,19 +3013,19 @@ async function createPixPayment(){
 async function checkPixStatus(){if(!integratedPixPaymentId)return;try{const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'pix_status',payment_id:integratedPixPaymentId})});const d=await r.json();if(d.status==='approved'){clearInterval(integratedPixTimer);integratedSetCheckoutStatus('Pagamento Pix aprovado!','ok');localStorage.removeItem('studio70_cart');cart.length=0;renderCart();setTimeout(closeIntegratedCheckout,1800);}else if(d.status==='rejected'||d.status==='cancelled'){clearInterval(integratedPixTimer);integratedSetCheckoutStatus('Pagamento não aprovado. Gere um novo Pix.','error');}}catch(_){} }
 async function integratedCardCheckout(){
   if(!integratedSelectedShipping)return integratedSetCheckoutStatus('Calcule e selecione o frete antes de continuar.','error');
-  const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));if(!name||!email||cpf.length<11)return integratedSetCheckoutStatus('Preencha nome, e-mail e CPF.','error');
+  const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));const phone=integratedDigits(integratedVal('phone'));if(!name||!email||cpf.length<11||phone.length<10)return integratedSetCheckoutStatus('Preencha nome, e-mail, CPF e telefone/WhatsApp.','error');
   const btn=document.getElementById('cardBtn');btn.disabled=true;integratedSetCheckoutStatus('Criando checkout seguro...');
-  try{const total=integratedSubtotal()+(integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0));const payload={action:'card',external_reference:'ST70-'+Date.now(),max_installments:Number(paymentSettings().maxInstallments||12),customer:{name,email,cpf},shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement'),service_id:integratedSelectedShipping?.id||'',service:integratedSelectedShipping?.name||''},shipping_cost:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name,items:[...cart.map(i=>{const p=integratedProduct(i.id);const d=integratedDimensions(p);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||'',picture_url:p.image||'',size:i.size||'',color:i.color||'',weightKg:d.weight,widthCm:d.width,heightCm:d.height,lengthCm:d.length}}),{id:'frete',title:integratedSelectedShipping.name,quantity:1,unit_price:integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0),sku:'FRETE'}],total:Number(total.toFixed(2))};const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao criar checkout.');if(!data.init_point)throw new Error('Mercado Pago não retornou o link.');localStorage.setItem('studio70_last_order',JSON.stringify(payload));window.location.href=data.init_point;}catch(e){integratedSetCheckoutStatus(e.message,'error');btn.disabled=false;}
+  try{const total=integratedSubtotal()+(integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0));const payload={action:'card',external_reference:'ST70-'+Date.now(),max_installments:Number(paymentSettings().maxInstallments||12),customer:{name,email,cpf,phone:integratedVal('phone')},shipping:{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement'),service_id:integratedSelectedShipping?.id||'',service:integratedSelectedShipping?.name||''},shipping_cost:Number(integratedSelectedShipping.price||0),shipping_service:integratedSelectedShipping.name,items:[...cart.map(i=>{const p=integratedProduct(i.id);const d=integratedDimensions(p);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||'',picture_url:p.image||'',size:i.size||'',color:i.color||'',weightKg:d.weight,widthCm:d.width,heightCm:d.height,lengthCm:d.length}}),{id:'frete',title:integratedSelectedShipping.name,quantity:1,unit_price:integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0),sku:'FRETE'}],total:Number(total.toFixed(2))};const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Falha ao criar checkout.');if(!data.init_point)throw new Error('Mercado Pago não retornou o link.');localStorage.setItem('studio70_last_order',JSON.stringify(payload));window.location.href=data.init_point;}catch(e){integratedSetCheckoutStatus(e.message,'error');btn.disabled=false;}
 }
 async function createStoreOrder(){
   const name=integratedVal('name'),email=integratedVal('email'),cpf=integratedDigits(integratedVal('cpf'));
-  if(!name||!email||cpf.length<11)return integratedSetCheckoutStatus('Preencha nome, e-mail e CPF.','error');
+  const phone=integratedDigits(integratedVal('phone'));if(!name||!email||cpf.length<11||phone.length<10)return integratedSetCheckoutStatus('Preencha nome, e-mail, CPF e telefone/WhatsApp.','error');
   const method=integratedPaymentMethod==='store_cash'?'cash_store':'pix_store';
   const total=integratedSubtotal()+(integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping?.price||0));
   const btn=document.getElementById('storePayBtn');if(btn)btn.disabled=true;
   integratedSetCheckoutStatus('Registrando sua reserva...');
   try{
-    const payload={action:'store_order',payment_method:method,external_reference:'ST70-'+Date.now(),customer:{name,email,cpf},items:cart.map(i=>{const p=integratedProduct(i.id);const d=integratedDimensions(p);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||'',size:i.size||'',color:i.color||'',weightKg:d.weight,widthCm:d.width,heightCm:d.height,lengthCm:d.length}}),shipping:integratedSelectedShipping?{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement'),cost:integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0),service:integratedSelectedShipping.name,service_id:integratedSelectedShipping.id}:null,total:Number(total.toFixed(2))};
+    const payload={action:'store_order',payment_method:method,external_reference:'ST70-'+Date.now(),customer:{name,email,cpf,phone:integratedVal('phone')},items:cart.map(i=>{const p=integratedProduct(i.id);const d=integratedDimensions(p);return {id:p.id,title:p.name,quantity:Number(i.qty||1),unit_price:salePriceOf(p),sku:p.sku||'',size:i.size||'',color:i.color||'',weightKg:d.weight,widthCm:d.width,heightCm:d.height,lengthCm:d.length}}),shipping:integratedSelectedShipping?{cep:integratedDigits(integratedVal('cep')),street:integratedVal('street'),number:integratedVal('number'),neighborhood:integratedVal('neighborhood'),city:integratedVal('city'),state:integratedVal('state'),complement:integratedVal('complement'),cost:integratedSubtotal()>=FREE_SHIPPING_THRESHOLD?0:Number(integratedSelectedShipping.price||0),service:integratedSelectedShipping.name,service_id:integratedSelectedShipping.id}:null,total:Number(total.toFixed(2))};
     const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const data=await r.json();if(!r.ok)throw new Error(data.error||'Não foi possível reservar o pedido.');
     localStorage.setItem('studio70_last_order',JSON.stringify({...payload,order_id:data.order_id||null,status:'pending_store_payment'}));
