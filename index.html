@@ -993,34 +993,6 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
 @media(max-width:768px){.fashion-admin-card .color-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
-<style id="st70-shopee-css">
-.st70-shopee-box{margin:18px 0;padding:18px;background:#fff;border:1px solid #c8c5be;border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.05)}
-.st70-shopee-grid{display:grid;grid-template-columns:1fr 220px;gap:12px}.st70-shopee-grid .full{grid-column:1/-1}
-.st70-shopee-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.st70-shopee-actions .smallbtn{flex:0 0 auto}
-.st70-shopee-status{min-height:18px;margin-top:9px;font-size:11px;font-weight:800}.st70-shopee-results{display:grid;gap:7px;margin-top:9px}.st70-shopee-result{padding:10px;border:1px solid #d6d1c8;border-radius:9px;background:#f6f4ef;font-size:11px;line-height:1.35}
-@media(max-width:650px){.st70-shopee-grid{grid-template-columns:1fr}.st70-shopee-grid .full{grid-column:auto}.st70-shopee-actions{flex-direction:column}.st70-shopee-actions .smallbtn{width:100%}}
-</style>
-<style id="st70-admin-tabs-css">
-.admin-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 16px;padding:6px;background:#eceae6;border:1px solid #c8c5be;border-radius:12px;position:sticky;top:0;z-index:20}
-.admin-tab{border:1px solid #c8c5be;background:#fff;color:#111;border-radius:9px;padding:10px 12px;font-weight:900;font-size:11px;cursor:pointer;min-height:40px}
-.admin-tab.active{background:#111;color:#fff;border-color:#111}
-.admin-tab-panel{display:none!important}
-.admin-tab-panel.active{display:block!important}
-#adminModal .modal-panel{overflow-x:hidden}
-#adminModal .admin-grid{width:100%;box-sizing:border-box}
-.st70-product-load-status{margin:8px 0;padding:9px 11px;border-radius:8px;background:#f3f1ec;color:#555;font-size:11px;display:none}
-@media(max-width:650px){
- .admin-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));position:static}
- .admin-tab{width:100%;padding:10px 7px;font-size:10px}
- #adminModal .modal-panel{width:calc(100vw - 18px);max-width:none;padding:14px}
- #adminModal .admin-grid{grid-template-columns:1fr}
- #adminModal .form-grid{grid-template-columns:1fr}
- #adminModal .banner-admin-row{grid-template-columns:1fr}
- #adminModal .st70-shopee-grid{grid-template-columns:1fr}
-}
-</style>
 </head>
 <body>
 <div class="promo-carousel" id="promoCarousel" aria-label="Ofertas e benefícios">
@@ -1059,8 +1031,7 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
 <main id="inicio"><section class="hero-banner-section" style="padding:0;max-width:none"><div class="banner-carousel" id="bannerCarousel"><div class="banner-track" id="bannerTrack"></div><button class="banner-arrow prev" type="button" id="bannerPrev" aria-label="Banner anterior">‹</button><button class="banner-arrow next" type="button" id="bannerNext" aria-label="Próximo banner">›</button><div class="banner-dots" id="bannerDots"></div></div></section>
 <div class="trustbar"><span>🚚 Frete grátis acima de R$250</span><span>🔄 Troca fácil em 7 dias</span><span>🔒 Compra 100% segura</span><span>💳 Parcele suas compras</span></div>
 
-<section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="st70ProductLoadStatus" class="st70-product-load-status"></div>
-<div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section>
+<section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section>
 <section id="geekSection" class="geek-section" style="display:none">
   <div class="geek-header">
     <div class="geek-kicker">⚡ ST70 · GEEK ZONE</div>
@@ -1236,40 +1207,6 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
     <button type="button" class="smallbtn" onclick="resetGeekThemeAdmin()">RESTAURAR PADRÃO</button>
   </div>
   <div id="geekThemeAdminStatus" style="font-size:11px;margin-top:7px;min-height:16px"></div>
-</div>
-
-<div class="st70-shopee-box" id="st70ShopeeBox">
-  <div style="font-size:16px;font-weight:900;letter-spacing:.5px">🛍️ SHOPEE — IMPORTAÇÃO E ENVIO EM MASSA</div>
-  <div style="font-size:11px;color:#666;margin:7px 0 14px;line-height:1.45">Cole links de anúncios da Shopee para copiar os dados para o catálogo STUDIO 70. Para envio em massa, selecione o arquivo oficial baixado no Seller Center.</div>
-  <div class="st70-shopee-grid">
-    <label class="full">Links dos anúncios ou da loja Shopee — um por linha
-      <textarea class="field" id="st70ShopeeUrls" rows="5" placeholder="https://shopee.com.br/...\nhttps://shopee.com.br/...-"></textarea>
-    </label>
-    <label>Categoria STUDIO 70
-      <select class="field" id="st70ShopeeCategory"><option value="">Usar a categoria encontrada / escolher depois</option></select>
-    </label>
-    <label>Estoque padrão
-      <input class="field" id="st70ShopeeDefaultStock" type="number" min="0" value="0">
-    </label>
-  </div>
-  <div class="st70-shopee-actions">
-    <button type="button" class="smallbtn primary" onclick="st70ImportShopeeProducts()">⬇️ IMPORTAR DA SHOPEE</button>
-    <button type="button" class="smallbtn" onclick="st70ClearShopeeImport()">LIMPAR</button>
-  </div>
-  <div id="st70ShopeeImportStatus" class="st70-shopee-status"></div>
-  <div id="st70ShopeeImportResults" class="st70-shopee-results"></div>
-  <hr style="border:0;border-top:1px solid #d6d1c8;margin:16px 0">
-  <div style="font-size:13px;font-weight:900">📊 ENVIO EM MASSA PARA A SHOPEE</div>
-  <div style="font-size:11px;color:#666;margin:7px 0 12px;line-height:1.45">Use o modelo oficial da Shopee. O sistema preserva as colunas do arquivo e preenche os campos que consegue identificar pelo cabeçalho; os campos obrigatórios específicos da categoria continuam no arquivo.</div>
-  <label style="display:block">Modelo oficial Shopee (.xlsx, .xls ou .csv)
-    <input class="field" id="st70ShopeeTemplate" type="file" accept=".xlsx,.xls,.csv">
-  </label>
-  <div class="st70-shopee-actions">
-    <button type="button" class="smallbtn primary" onclick="st70GenerateShopeeSheet()">📥 GERAR PLANILHA SHOPEE</button>
-    <button type="button" class="smallbtn primary" onclick="st70ImportShopeeTemplateToST70()">⬆️ CADASTRAR NO ST70</button>
-    <button type="button" class="smallbtn" onclick="st70DownloadShopeeMapping()">⬇️ EXPORTAR MODELO ST70</button>
-  </div>
-  <div id="st70ShopeeSheetStatus" class="st70-shopee-status"></div>
 </div>
 <div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço de venda<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU <span style="font-size:10px;color:#777;font-weight:500">(gerado automaticamente)</span><input class="field" id="pSku" required></label><label>Código de barras <span style="font-size:10px;color:#777;font-weight:500">(EAN-13 automático)</span><input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Link da foto principal <span style="font-size:10px;color:#777;font-weight:500">(opcional)</span><input class="field" id="pImage" placeholder="Opcional — você também pode enviar a foto pelo Storage abaixo"></label>
 <div class="payment-admin-box full" style="margin:0;padding:14px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px"><b>📸 FOTOS DO PRODUTO — SUPABASE STORAGE</b><p style="font-size:11px;color:#666;margin:6px 0 10px">Envie as fotos diretamente pelo ADM. Elas serão salvas automaticamente no Supabase Storage e a URL será gravada no produto.</p><label>Foto principal<input class="field" id="pImageFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><div id="pImageUploadStatus" class="upload-status" style="font-size:11px;margin-top:5px;min-height:16px"></div><label style="display:block;margin-top:8px">Fotos secundárias<input class="field" id="pSecondaryFiles" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label><div id="pSecondaryUploadStatus" class="upload-status" style="font-size:11px;margin-top:5px;min-height:16px"></div></div>
@@ -1880,16 +1817,6 @@ function printSale(sale){const w=window.open('','_blank','width=420,height=650')
 #integratedCheckoutModal .status.error{color:#a52b2b}
 @media(max-width:800px){#integratedCheckoutModal{padding:0}#integratedCheckoutModal .integrated-shell{border-radius:0}#integratedCheckoutModal .integrated-close{right:10px;top:10px}#integratedCheckoutModal .pay-methods{grid-template-columns:1fr}}
 </style></head><body><h2>STUDIO 70 BRAND</h2><div class="center">COMPROVANTE DE VENDA<br>${sale.id}<br>${new Date(sale.date).toLocaleString('pt-BR')}</div><table>${rows}</table><div>Subtotal: ${money(sale.subtotal)}</div><div>Desconto: ${money(sale.discount)}</div><div class="tot">TOTAL: ${money(sale.total)}</div><p>Pagamento: ${sale.payment}</p>${sale.payment==='Dinheiro'?`<p>Recebido: ${money(sale.received)}<br>Troco: ${money(sale.change)}</p>`:''}<p class="center">Obrigado pela preferência!</p><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script>
-<script id="st70-catalog-guard">
-(function(){
-  function boot(){
-    if(typeof loadSupabaseProducts!=='function')return;
-    setTimeout(function(){ if(!Array.isArray(window.products)||window.products.length===0) loadSupabaseProducts(true); },1200);
-    setTimeout(function(){ if(!Array.isArray(window.products)||window.products.length===0) loadSupabaseProducts(true); },4000);
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
-})();
-</script>
 </body></html>`);w.document.close()}
 function renderSales(){const el=document.getElementById('pdvHistory');if(!el)return;el.innerHTML=sales.length?sales.slice(0,20).map(s=>`<div class="sale-row"><b>${s.id} — ${money(s.total)}</b><br><small>${new Date(s.date).toLocaleString('pt-BR')} · ${s.payment} · ${s.items.reduce((a,i)=>a+i.qty,0)} item(ns)</small><br><button class="smallbtn" onclick="printSale(${JSON.stringify(s).replace(/"/g,'&quot;')})">🖨️ Comprovante</button></div>`).join(''):'<div class="empty">Nenhuma venda registrada.</div>'}
 
@@ -1937,36 +1864,7 @@ document.getElementById('pdvDiscount').addEventListener('input',renderPDV);docum
 let cartTapCount=0,cartTapTimer=null;const cartAccess=document.getElementById('cartBtn');
 if(cartAccess)cartAccess.addEventListener('click',e=>{cartTapCount++;clearTimeout(cartTapTimer);cartTapTimer=setTimeout(()=>{cartTapCount=0},650);if(cartTapCount>=3){e.preventDefault();e.stopImmediatePropagation();cartTapCount=0;openAdmin()}},{capture:true});
 document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.altKey&&e.shiftKey&&e.key.toLowerCase()==='a'){e.preventDefault();openAdmin()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
-function setupAdminTabs(){
-  const panel=document.querySelector('#adminModal .modal-panel');
-  if(!panel || panel.dataset.tabsReady==='1')return;
-  const targets=[
-    ['scanner','📟 LEITOR / ESTOQUE','.scanner'],
-    ['banners','🖼️ BANNERS','.banner-admin-card'],
-    ['moda','👕 MODA','.fashion-admin-card'],
-    ['geek','🎮 GEEK','.geek-admin-card'],
-    ['shopee','🛍️ SHOPEE','#st70ShopeeBox'],
-    ['produtos','📦 PRODUTOS','.admin-grid']
-  ];
-  const tabbar=document.createElement('div');tabbar.className='admin-tabs';tabbar.setAttribute('role','tablist');
-  const sections=[];
-  targets.forEach((item,i)=>{
-    const el=panel.querySelector(item[2]); if(!el)return;
-    el.classList.add('admin-tab-panel'); el.dataset.adminTab=item[0];
-    const b=document.createElement('button');b.type='button';b.className='admin-tab';b.textContent=item[1];b.dataset.tab=item[0];b.setAttribute('role','tab');
-    b.onclick=()=>{
-      panel.querySelectorAll('.admin-tab').forEach(x=>x.classList.toggle('active',x===b));
-      panel.querySelectorAll('.admin-tab-panel').forEach(x=>x.classList.toggle('active',x.dataset.adminTab===item[0]));
-    };
-    tabbar.appendChild(b);sections.push({b,el});
-  });
-  const heading=panel.querySelector('.section-title');
-  if(heading)heading.insertAdjacentElement('afterend',tabbar); else panel.insertBefore(tabbar,panel.firstChild);
-  const first=sections[0]; if(first)first.b.click();
-  panel.dataset.tabsReady='1';
-}
-
-function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');setupAdminTabs();ensureCarmenattoAdminControls();renderAdmin();loadFashionTheme().then(fillFashionThemeAdmin);loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} 
+function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCarmenattoAdminControls();renderAdmin();loadFashionTheme().then(fillFashionThemeAdmin);loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';} 
 async function loadFreeShippingConfig(){
   try{
     const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shipping_config'})});
@@ -2708,35 +2606,46 @@ function mapSupplierCategory(name){
   if(n.includes('saia'))return 'Saias';
   return 'Outros';
 }
-async function loadSupabaseProducts(force=false){
-  if(productsLoading && !force)return;
+async function loadSupabaseProducts(){
+  if(productsLoading)return;
   productsLoading=true;
   const grid=document.getElementById('productGrid');
-  const status=document.getElementById('st70ProductLoadStatus');
-  const setStatus=(msg,show=false)=>{if(status){status.textContent=msg||'';status.style.display=show?'block':'none';}};
-  setStatus('Carregando produtos...',true);
   try{
-    const r=await fetch(checkoutApiUrl(),{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json','Cache-Control':'no-cache'},body:JSON.stringify({action:'products_list',limit:5000})});
+    const r=await fetch(checkoutApiUrl(),{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'products_list',limit:5000})});
     const rawText=await r.text();
     let d={}; try{d=rawText?JSON.parse(rawText):{};}catch(_){d={};}
-    if(!r.ok||!d.ok||!Array.isArray(d.products))throw new Error(String(d.error||d.message||rawText||`HTTP ${r.status}`).slice(0,500));
+    if(!r.ok||!d.ok||!Array.isArray(d.products)){
+      throw new Error(String(d.error||d.message||rawText||`HTTP ${r.status}`).slice(0,500));
+    }
+    // Nunca usar seed, localStorage, fornecedor ou overrides locais.
     products=cleanProducts(d.products.map(p=>normalizeProductRecord({
-      ...p,id:p.id,name:p.name,description:p.description||'',sale_price:Number(p.sale_price??p.price??0),price:Number(p.price??p.sale_price??0),
-      supplier_price:Number(p.supplier_price??0),sku:p.sku||'',barcode:p.barcode||'',category:p.category||'',category_id:p.category_id||null,
-      stock:Number(p.stock??0),sizes:p.sizes??[],colors:p.colors??[],image:p.image||'',secondaryImages:p.secondaryImages??p.secondary_images??p.images??[],
-      videos:p.videos??p.videoLinks??p.video_links??[],url:p.url||p.product_url||'',product_url:p.product_url||p.url||'',active:p.active!==false,featured:!!p.featured,supplier:p.supplier||'studio70'
+      ...p,
+      id:p.id,
+      name:p.name,
+      description:p.description||'',
+      sale_price:Number(p.sale_price??p.price??0),
+      price:Number(p.price??p.sale_price??0),
+      supplier_price:Number(p.supplier_price??0),
+      sku:p.sku||'', barcode:p.barcode||'', category:p.category||'', category_id:p.category_id||null,
+      stock:Number(p.stock??0), sizes:p.sizes??[], colors:p.colors??[],
+      image:p.image||'', secondaryImages:p.secondaryImages??p.secondary_images??p.images??[], videos:p.videos??p.videoLinks??p.video_links??[],
+      url:p.url||p.product_url||'', active:p.active!==false, featured:!!p.featured,
+      supplier:p.supplier||'studio70'
     })));
-    renderCategories();renderProducts();renderAdmin();renderCart();renderPDV();
-    setStatus(products.length?`${products.length} produto(s) carregado(s) do Supabase.`:'O Supabase respondeu sem produtos.',!products.length);
-    if(!products.length)console.warn('[STUDIO70] products_list retornou lista vazia.',d);
-    else console.info(`[STUDIO70] Catálogo Supabase carregado: ${products.length} produto(s).`);
+    renderCategories();
+    renderProducts();
+    renderAdmin();
+    renderCart();
+    renderPDV();
+    console.info(`[STUDIO70] Catálogo Supabase carregado: ${products.length} produto(s).`);
   }catch(e){
     console.error('[STUDIO70] Falha ao carregar catálogo do Supabase:',e);
-    if(grid)grid.innerHTML='<div class="empty" style="grid-column:1/-1">Não foi possível carregar os produtos agora. Tente novamente.</div>';
-    setStatus('Falha ao carregar produtos: '+(e?.message||e),true);
-  }finally{productsLoading=false;}
+    products=[];
+    if(grid)grid.innerHTML='<div class="empty" style="grid-column:1/-1">Não foi possível carregar os produtos do Supabase. Verifique o super-handler e tente novamente.</div>';
+  }finally{
+    productsLoading=false;
+  }
 }
-
 function ensureCarmenattoAdminControls(){
   if(document.getElementById('carmenattoSyncBtn'))return;
   const scanner=document.querySelector('#adminModal .scanner');
@@ -3205,107 +3114,4 @@ loadBannersFromServer();
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
 })();
 </script>
-
-<script id="st70-shopee-js">
-(function(){
-  function apiCall(body){
-    return fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(body)})
-      .then(async function(r){var d=await r.json().catch(function(){return {};});if(!r.ok||d.ok===false)throw new Error(d.error||('Falha na requisição Shopee. HTTP '+r.status));return d;});
-  }
-  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m];});}
-  function norm(v){return String(v==null?'':v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();}
-  var aliases={
-    name:['nome do produto','nome','titulo do produto','titulo','product name','title'],
-    description:['descricao do produto','descricao','description'],sku:['seller sku','sku','codigo do produto'],barcode:['ean','ean 13','gtin','codigo de barras'],
-    price:['preco de venda','preco','price'],stock:['estoque','quantidade','qtd','stock'],image:['imagem principal','imagem','foto principal','foto','image','main image'],
-    images:['imagens adicionais','imagens','fotos adicionais','fotos','additional images'],weight:['peso do produto','peso','weight'],height:['altura','height'],width:['largura','width'],length:['comprimento','length'],
-    category:['categoria do produto','categoria','category'],sizes:['tamanho','tamanhos','size'],colors:['cor','cores','color'],url:['url do produto','link do produto','url','product url']
-  };
-  function mapHeaders(headers){var out={};(headers||[]).forEach(function(h,i){var n=norm(h);Object.keys(aliases).some(function(k){if(out[k]!=null)return false;return aliases[k].some(function(a){var an=norm(a);if(n===an||n.indexOf(an)>=0){out[k]=i;return true;}return false;});});});return out;}
-  function fillRow(headers,p,category){
-    var row=(headers||[]).map(function(){return '';});
-    var imgs=[p.image].concat(Array.isArray(p.secondary_images)?p.secondary_images:[]).filter(Boolean);
-    var vals={name:p.name||'',description:p.description||'',sku:p.sku||'',barcode:p.barcode||'',price:Number(p.sale_price!=null?p.sale_price:(p.salePrice!=null?p.salePrice:p.price||0)),stock:Number(p.stock||0),image:imgs[0]||'',images:imgs.slice(1).join('\n'),weight:Number(p.weightKg!=null?p.weightKg:(p.weight||0)),height:Number(p.heightCm||0),width:Number(p.widthCm||0),length:Number(p.lengthCm||0),category:category||p.category||'',sizes:Array.isArray(p.sizes)?p.sizes.join(', '):String(p.sizes||''),colors:Array.isArray(p.colors)?p.colors.join(', '):String(p.colors||''),url:p.url||''};
-    var map=mapHeaders(headers||[]);Object.keys(map).forEach(function(k){row[map[k]]=vals[k]==null?'':vals[k];});return row;
-  }
-  window.st70ClearShopeeImport=function(){var u=document.getElementById('st70ShopeeUrls');if(u)u.value='';var r=document.getElementById('st70ShopeeImportResults');if(r)r.innerHTML='';var s=document.getElementById('st70ShopeeImportStatus');if(s)s.textContent='';};
-  window.st70ImportShopeeProducts=async function(){
-    var status=document.getElementById('st70ShopeeImportStatus'),results=document.getElementById('st70ShopeeImportResults');
-    var urls=Array.from(new Set(String(document.getElementById('st70ShopeeUrls')&&document.getElementById('st70ShopeeUrls').value||'').split(/\r?\n/).map(function(x){return x.trim();}).filter(Boolean)));
-    if(!urls.length){alert('Cole pelo menos um link da Shopee.');return;} if(urls.length>100){alert('Máximo de 100 links por lote.');return;}
-    if(!adminAuthPassword){alert('Faça login no painel administrativo antes de importar produtos.');return;}
-    if(status)status.textContent='Importando produtos da Shopee...';if(results)results.innerHTML='';
-    try{var d=await apiCall({action:'shopee_import_products',admin_password:adminAuthPassword,urls:urls,category:(document.getElementById('st70ShopeeCategory')||{}).value||'',default_stock:Number((document.getElementById('st70ShopeeDefaultStock')||{}).value||0)});
-      if(results)results.innerHTML=(d.results||[]).map(function(x){return '<div class="st70-shopee-result"><b>'+(x.ok?'✓':'✕')+' '+esc(x.name||x.url||'Anúncio')+'</b><br>'+esc(x.error||('Produto '+(x.created?'criado':'atualizado')+'.'))+'</div>';}).join('');
-      if(status)status.textContent='Concluído: '+Number(d.imported||0)+' importado(s) e '+Number(d.failed||0)+' erro(s).';
-      if(typeof loadSupabaseProducts==='function')await loadSupabaseProducts();
-      if(typeof renderCategories==='function')renderCategories();if(typeof renderProducts==='function')renderProducts();if(typeof renderAdmin==='function')renderAdmin();
-    }catch(e){if(status)status.textContent='Erro: '+(e&&e.message?e.message:String(e));}
-  };
-  window.st70GenerateShopeeSheet=async function(){
-    var status=document.getElementById('st70ShopeeSheetStatus'),input=document.getElementById('st70ShopeeTemplate');
-    if(!window.XLSX){if(status)status.textContent='Erro: biblioteca XLSX não carregada. Recarregue a página.';return;}
-    var file=input&&input.files&&input.files[0];if(!file){alert('Selecione o modelo oficial da Shopee primeiro.');return;}
-    var active=(Array.isArray(products)?products:[]).filter(function(p){return p&&p.active!==false;});if(!active.length){alert('Não há produtos ativos no catálogo.');return;}
-    if(status)status.textContent='Lendo o modelo e preenchendo os produtos...';
-    try{
-      var wb=XLSX.read(await file.arrayBuffer(),{type:'array'});if(!wb.SheetNames.length)throw new Error('O arquivo não possui planilhas.');
-      var ws=wb.Sheets[wb.SheetNames[0]],rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});var hi=-1,map=null;
-      for(var i=0;i<Math.min(50,rows.length);i++){var m=mapHeaders(rows[i]);if(m.name!=null&&Object.keys(m).length>=2){hi=i;map=m;break;}}
-      if(hi<0)throw new Error('Não encontrei o cabeçalho do modelo. Use o arquivo oficial de cadastro em massa da Shopee.');
-      var header=rows[hi],base=rows.slice(0,hi+1),category=(document.getElementById('st70ShopeeCategory')||{}).value||'';
-      var outRows=base.concat(active.map(function(p){return fillRow(header,p,category);}));
-      wb.Sheets[wb.SheetNames[0]]=XLSX.utils.aoa_to_sheet(outRows);XLSX.writeFile(wb,'ST70-Shopee-envio-em-massa.xlsx');
-      if(status)status.textContent='Planilha gerada com '+active.length+' produto(s). As colunas do modelo oficial foram preservadas.';
-    }catch(e){if(status)status.textContent='Erro: '+(e&&e.message?e.message:String(e));}
-  };
-  window.st70ImportShopeeTemplateToST70=async function(){
-    var status=document.getElementById('st70ShopeeSheetStatus'),input=document.getElementById('st70ShopeeTemplate');
-    if(!window.XLSX){if(status)status.textContent='Erro: biblioteca XLSX não carregada. Recarregue a página.';return;}
-    var file=input&&input.files&&input.files[0];if(!file){alert('Selecione primeiro o modelo oficial da Shopee.');return;}
-    if(!adminAuthPassword){alert('Faça login no painel administrativo antes de cadastrar produtos.');return;}
-    if(status)status.textContent='Lendo a planilha Shopee...';
-    try{
-      var wb=XLSX.read(await file.arrayBuffer(),{type:'array'});if(!wb.SheetNames.length)throw new Error('O arquivo não possui planilhas.');
-      var ws=wb.Sheets[wb.SheetNames[0]],rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});var hi=-1;
-      for(var i=0;i<Math.min(80,rows.length);i++){var m=mapHeaders(rows[i]);if(m.name!=null){hi=i;break;}}
-      if(hi<0)throw new Error('Não encontrei a coluna de nome do produto. Use o modelo oficial da Shopee.');
-      var header=rows[hi],map=mapHeaders(header),dataRows=rows.slice(hi+1).filter(function(row){return row&&row.some(function(v){return String(v??'').trim()!=='';});});
-      if(!dataRows.length)throw new Error('A planilha não possui produtos para cadastrar.');
-      if(dataRows.length>500){if(!confirm('A planilha possui '+dataRows.length+' linhas. Processar até 500 produtos?'))return;dataRows=dataRows.slice(0,500);}
-      var category=(document.getElementById('st70ShopeeCategory')||{}).value||'';
-      var get=function(row,key,def){return map[key]!=null?row[map[key]]:def;};
-      var ok=0,fail=0,errors=[];
-      for(var n=0;n<dataRows.length;n++){
-        var row=dataRows[n];
-        var name=String(get(row,'name','')).trim(); if(!name)continue;
-        var imgs=String(get(row,'images','')||'').split(/\r?\n|\s*\|\s*/).map(function(v){return v.trim();}).filter(Boolean);
-        var main=String(get(row,'image','')||imgs.shift()||'').trim();
-        var sizes=String(get(row,'sizes','')||'').split(/[,;|]/).map(function(v){return v.trim();}).filter(Boolean);
-        var colors=String(get(row,'colors','')||'').split(/[,;|]/).map(function(v){return v.trim();}).filter(Boolean);
-        var payload={name:name,description:String(get(row,'description','')||''),sku:String(get(row,'sku','')||'').trim(),barcode:String(get(row,'barcode','')||'').trim(),
-          sale_price:Number(String(get(row,'price',0)).replace(',','.'))||0,price:Number(String(get(row,'price',0)).replace(',','.'))||0,stock:Math.max(0,parseInt(get(row,'stock',0),10)||0),
-          category:category||String(get(row,'category','')||'').trim()||'Outros',sizes:sizes,colors:colors,image:main,secondary_images:imgs,
-          url:String(get(row,'url','')||''),weightKg:Number(get(row,'weight',0.3))||0.3,heightCm:Number(get(row,'height',4))||4,widthCm:Number(get(row,'width',20))||20,lengthCm:Number(get(row,'length',30))||30,active:true};
-        try{
-          var d=await apiCall({action:'product_save',admin_password:adminAuthPassword,product:payload});
-          if(d&&d.ok)ok++;else throw new Error((d&&d.error)||'Falha ao salvar');
-        }catch(e){fail++;errors.push(name+': '+(e&&e.message?e.message:String(e)));}
-        if(status)status.textContent='Cadastrando '+(n+1)+'/'+dataRows.length+' — '+ok+' OK / '+fail+' erro(s)';
-      }
-      await loadSupabaseProducts(true);renderCategories();renderProducts();renderAdmin();
-      if(errors.length)status.textContent='Concluído: '+ok+' cadastrado(s), '+fail+' erro(s). '+errors.slice(0,3).join(' | ');
-      else status.textContent='Concluído: '+ok+' produto(s) cadastrado(s) no STUDIO 70.';
-    }catch(e){if(status)status.textContent='Erro: '+(e&&e.message?e.message:String(e));}
-  };
-  window.st70DownloadShopeeMapping=function(){
-    if(!window.XLSX){alert('Biblioteca XLSX não carregou.');return;}var active=(Array.isArray(products)?products:[]).filter(function(p){return p&&p.active!==false;});
-    var lines=[['ST70','Nome','Descrição','SKU','EAN','Preço','Estoque','Categoria','Tamanhos','Cores','Imagem principal','Imagens adicionais','Peso kg','Altura cm','Largura cm','Comprimento cm','URL']];
-    active.forEach(function(p){lines.push(['ST70',p.name||'',p.description||'',p.sku||'',p.barcode||'',Number(p.sale_price!=null?p.sale_price:(p.salePrice!=null?p.salePrice:p.price||0)),Number(p.stock||0),p.category||'',Array.isArray(p.sizes)?p.sizes.join(', '):'',Array.isArray(p.colors)?p.colors.join(', '):'',p.image||'',Array.isArray(p.secondary_images)?p.secondary_images.join('\n'):'',p.weightKg!=null?p.weightKg:p.weight||'',p.heightCm||'',p.widthCm||'',p.lengthCm||'',p.url||'']);});
-    var ws=XLSX.utils.aoa_to_sheet(lines),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'ST70');XLSX.writeFile(wb,'ST70-modelo-conferencia-Shopee.xlsx');
-  };
-  window.addEventListener('load',function(){setTimeout(function(){apiCall({action:'categories_list'}).then(function(d){var el=document.getElementById('st70ShopeeCategory');if(!el)return;var cats=Array.isArray(d.categories)?d.categories:[];var current=el.value;el.innerHTML='<option value="">Usar a categoria encontrada / escolher depois</option>'+cats.filter(function(c){return c&&c.active!==false;}).map(function(c){return '<option value="'+esc(c.name)+'">'+esc(c.name)+'</option>';}).join('');el.value=current;}).catch(function(){});},500);});
-})();
-</script>
-
 </body></html>
