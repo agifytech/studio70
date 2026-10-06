@@ -1437,9 +1437,24 @@ function normalizeList(value){
 function numberOr(value,fallback=0){const n=Number(value);return Number.isFinite(n)?n:fallback;}
 function firstPositiveNumber(...values){for(const value of values){const n=Number(value);if(Number.isFinite(n)&&n>0)return n;}return 0;}
 const ST70_IMAGE_PLACEHOLDER='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800"><rect width="100%" height="100%" fill="#f3f3f3"/><text x="50%" y="47%" dominant-baseline="middle" text-anchor="middle" fill="#777" font-family="Arial" font-size="28">STUDIO 70</text><text x="50%" y="53%" dominant-baseline="middle" text-anchor="middle" fill="#999" font-family="Arial" font-size="22">Imagem indisponível</text></svg>');
+function isShopeeImageUrl(value){
+  const u=normalizeImageUrl(value);
+  if(!/^https?:\/\//i.test(u))return false;
+  try{
+    const host=new URL(u).hostname.toLowerCase();
+    return host.includes('shopee') || host.includes('susercontent') || host.includes('shopeeimg');
+  }catch(_){return false;}
+}
 function imageSrc(value){
   const src=normalizeImageUrl(value);
-  return src || ST70_IMAGE_PLACEHOLDER;
+  if(!src)return ST70_IMAGE_PLACEHOLDER;
+  // Imagens hospedadas pela Shopee/Shopee CDN podem bloquear hotlink direto.
+  // Mantemos a URL original no data-st70-original para o fallback.
+  if(isShopeeImageUrl(src)){
+    const proxy=imageProxySrc(src);
+    return proxy || src;
+  }
+  return src;
 }
 function imageProxySrc(src){
   const u=normalizeImageUrl(src);
