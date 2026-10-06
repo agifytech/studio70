@@ -1443,11 +1443,9 @@ function isShopeeImageUrl(value){
   if(!/^https?:\/\//i.test(u))return false;
   try{
     const host=new URL(u).hostname.toLowerCase();
-    return host==='susercontent.com' || host.endsWith('.susercontent.com') ||
-           host==='shopeeimg.com' || host.endsWith('.shopeeimg.com') ||
-           host==='shopee.com.br' || host.endsWith('.shopee.com.br') ||
-           host==='shopee.com' || host.endsWith('.shopee.com') ||
-           host==='shopee.co.id' || host.endsWith('.shopee.co.id');
+    return host.includes('shopee') ||
+           host==='susercontent.com' || host.endsWith('.susercontent.com') ||
+           host==='shopeeimg.com' || host.endsWith('.shopeeimg.com');
   }catch(_){return false;}
 }
 function imageProxySrc(src){
@@ -1459,9 +1457,11 @@ function imageProxySrc(src){
   return 'https://images.weserv.nl/?url='+encodeURIComponent(u.replace(/^https?:\/\//i,''));
 }
 function imageSrc(value){
+  // IMPORTANTE: entrega a URL original ao <img>.
+  // Para Shopee, o proxy fica apenas como fallback caso o navegador bloqueie
+  // o CDN diretamente. Assim a URL cf.shopee.com.br/file/... não é alterada.
   const src=normalizeImageUrl(value);
-  if(!src)return ST70_IMAGE_PLACEHOLDER;
-  return isShopeeImageUrl(src) ? imageProxySrc(src) : src;
+  return src || ST70_IMAGE_PLACEHOLDER;
 }
 function originalImageFromElement(img){
   if(!img)return '';
@@ -1470,27 +1470,47 @@ function originalImageFromElement(img){
   const current=String(img.currentSrc||img.src||'');
   try{
     const u=new URL(current,location.href);
-    if(u.searchParams.get('action')==='image_proxy')return normalizeImageUrl(u.searchParams.get('url')||'');
-  }catch(_){ }
+    if(u.searchParams.get('action')==='image_proxy'){
+      return normalizeImageUrl(u.searchParams.get('url')||'');
+    }
+  }catch(_){}
   return current;
 }
 function imageError(img){
   if(!img)return;
   const original=originalImageFromElement(img);
-  if(!img.dataset.st70ProxyTried){
+  if(!original){
+    img.onerror=null;
+    img.src=ST70_IMAGE_PLACEHOLDER;
+    img.classList.add('image-missing');
+    return;
+  }
+
+  // 1) A URL original da Shopee foi entregue ao <img>.
+  // Se o CDN bloquear o carregamento no navegador, usa o proxy que já foi
+  // testado e está retornando os bytes da imagem corretamente.
+  if(isShopeeImageUrl(original) && !img.dataset.st70ProxyTried){
     const proxy=imageProxySrc(original);
-    if(proxy && proxy!==img.src){
+    if(proxy){
       img.dataset.st70ProxyTried='1';
+      img.onerror=imageError;
       img.src=proxy;
       return;
     }
   }
-  // Último recurso: tenta a URL original uma vez antes do placeholder.
-  if(!img.dataset.st70OriginalTried && original && /^https?:\/\//i.test(original) && original!==img.src){
-    img.dataset.st70OriginalTried='1';
-    img.src=original;
-    return;
+
+  // 2) Para imagens não-Shopee, preserva o fallback já existente via weserv.
+  if(!isShopeeImageUrl(original) && !img.dataset.st70ProxyTried){
+    const proxy=imageProxySrc(original);
+    if(proxy){
+      img.dataset.st70ProxyTried='1';
+      img.onerror=imageError;
+      img.src=proxy;
+      return;
+    }
   }
+
+  // 3) Último recurso.
   img.onerror=null;
   img.src=ST70_IMAGE_PLACEHOLDER;
   img.classList.add('image-missing');
@@ -1599,7 +1619,7 @@ function filtered(){
 function salePriceOf(p){const n=Number(p?.sale_price);if(Number.isFinite(n)&&n>0)return n;return 0;}
 function productCardHtml(p){
   const pid=escapeHtml(String(p.id??''));
-  return `<article class="product" data-product-id="${pid}"><img src="${imageSrc(p.image)}" data-st70-original="${escapeAttr(p.image||'')}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><span class="badge">${escapeHtml(categoryLabel(p)||'Outros')}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${escapeHtml(p.name||'Produto')}</h3><div class="price">${money(salePriceOf(p))}</div><div class="meta">SKU: ${escapeHtml(p.sku||'')}<br>Código: ${escapeHtml(p.barcode||'')}</div><div class="product-actions"><button class="smallbtn js-details" type="button" data-product-id="${pid}">DETALHES</button><button class="smallbtn primary js-buy" type="button" data-product-id="${pid}">COMPRAR</button></div></div></article>`;
+  return `<article class="product" data-product-id="${pid}"><img src="${imageSrc(p.image)}" data-st70-original="${escapeAttr(p.image||'')}" data-st70-shopee="${isShopeeImageUrl(p.image)?'1':'0'}" referrerpolicy="no-referrer" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><span class="badge">${escapeHtml(categoryLabel(p)||'Outros')}</span>${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${escapeHtml(p.name||'Produto')}</h3><div class="price">${money(salePriceOf(p))}</div><div class="meta">SKU: ${escapeHtml(p.sku||'')}<br>Código: ${escapeHtml(p.barcode||'')}</div><div class="product-actions"><button class="smallbtn js-details" type="button" data-product-id="${pid}">DETALHES</button><button class="smallbtn primary js-buy" type="button" data-product-id="${pid}">COMPRAR</button></div></div></article>`;
 }
 function renderProducts(){
   const list=filtered();
