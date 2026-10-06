@@ -738,6 +738,7 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
   <p class="admin-tab-note">Os dados enviados não possuem preço/estoque. Se a opção acima ficar desmarcada, os produtos entram no ADM inativos para você definir preço e estoque antes de vender.</p>
   <div class="admin-tools">
     <button class="smallbtn primary" type="button" id="shopeeImportBtn" onclick="importShopeeCatalog()">⬇️ IMPORTAR 90 PRODUTOS DA SHOPEE</button>
+    <button class="smallbtn" type="button" id="shopeeRepairImagesBtn" onclick="repairShopeeImages()">🖼️ CORRIGIR FOTOS DOS PRODUTOS JÁ IMPORTADOS</button>
     <button class="smallbtn" type="button" onclick="showShopeeSeedStatus()">ℹ️ VER STATUS</button>
   </div>
   <div id="shopeeImportStatus" class="shopee-import-status"></div>
@@ -1483,6 +1484,29 @@ async function importShopeePublicStore(){
     alert('Não foi possível importar a loja Shopee: '+(e.message||e));
   }finally{
     if(btn){btn.disabled=!ST70_SHOPEE_PUBLIC_PRODUCTS.length;btn.textContent='⬇️ IMPORTAR PRODUTOS ENCONTRADOS';}
+  }
+}
+async function repairShopeeImages(){
+  if(!adminAuthPassword)return requestLogin('CORRIGIR FOTOS DA SHOPEE',repairShopeeImages);
+  const btn=document.getElementById('shopeeRepairImagesBtn');
+  const status=document.getElementById('shopeeImportStatus');
+  if(!confirm('Corrigir as fotos dos produtos Shopee já importados?\n\nO ST70 vai copiar as imagens para o Supabase Storage e substituir os links externos pelas URLs do próprio ST70. Isso não altera preços, estoque, SKU, categorias ou pedidos.'))return;
+  if(btn){btn.disabled=true;btn.textContent='⏳ COPIANDO FOTOS...';}
+  if(status)status.textContent='Copiando as fotos da Shopee para o Supabase Storage. Aguarde...';
+  try{
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shopee_repair_images',admin_password:adminAuthPassword,max_products:100})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok)throw new Error(d.error||`Falha na correção das fotos (HTTP ${r.status}).`);
+    const detail=Array.isArray(d.errors)&&d.errors.length?` Primeiros avisos: ${d.errors.slice(0,3).join(' || ')}`:'';
+    if(status)status.textContent=`✓ Fotos corrigidas: ${Number(d.repaired||0)} produto(s). Processados: ${Number(d.processed||0)}. Falhas: ${Number(d.failed||0)}.${detail}`;
+    await loadSupabaseProducts();
+    renderAdmin();
+    alert(`Correção concluída.\n\nProdutos processados: ${Number(d.processed||0)}\nProdutos corrigidos: ${Number(d.repaired||0)}\nFalhas: ${Number(d.failed||0)}${Array.isArray(d.errors)&&d.errors.length?'\n\nVeja os avisos no status do catálogo.':''}`);
+  }catch(e){
+    if(status)status.textContent=`✕ ${e.message||e}`;
+    alert('Não foi possível corrigir as fotos da Shopee: '+(e.message||e));
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='🖼️ CORRIGIR FOTOS DOS PRODUTOS JÁ IMPORTADOS';}
   }
 }
 function showShopeeSeedStatus(){
