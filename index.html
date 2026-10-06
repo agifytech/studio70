@@ -1462,7 +1462,7 @@ async function importShopeePublicStore(){
     const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shopee_public_import',admin_password:adminAuthPassword,activate,products:ST70_SHOPEE_PUBLIC_PRODUCTS})});
     const d=await r.json().catch(()=>({}));
     if(!r.ok||!d.ok)throw new Error(d.error||`Falha na importação (HTTP ${r.status}).`);
-    if(status)status.textContent=`✓ Importação concluída: ${Number(d.imported||0)} processados, ${Number(d.updated||0)} atualizados, ${Number(d.created||0)} criados, ${Number(d.error_count ?? (Array.isArray(d.errors)?d.errors.length:0))} erros.`;
+    if(status){const ec=Number(d.error_count ?? (Array.isArray(d.errors)?d.errors.length:0)); const detail=ec&&Array.isArray(d.errors)?` | Primeiros erros: ${d.errors.slice(0,3).join(' || ')}`:''; status.textContent=`✓ Importação concluída: ${Number(d.imported||0)} processados, ${Number(d.updated||0)} atualizados, ${Number(d.created||0)} criados, ${ec} erros.${detail}`;}
     await loadSupabaseProducts();
     renderAdmin();
   }catch(e){
@@ -1505,7 +1505,7 @@ async function importShopeeCatalog(){
     })});
     const d=await r.json().catch(()=>({}));
     if(!r.ok||!d.ok)throw new Error(d.error||`Falha na importação (HTTP ${r.status}).`);
-    if(status)status.textContent=`✓ Importação concluída: ${Number(d.imported||0)} processados, ${Number(d.updated||0)} atualizados, ${Number(d.created||0)} criados, ${Number(d.error_count ?? (Array.isArray(d.errors)?d.errors.length:0))} erros.`;
+    if(status){const ec=Number(d.error_count ?? (Array.isArray(d.errors)?d.errors.length:0)); const detail=ec&&Array.isArray(d.errors)?` | Primeiros erros: ${d.errors.slice(0,3).join(' || ')}`:''; status.textContent=`✓ Importação concluída: ${Number(d.imported||0)} processados, ${Number(d.updated||0)} atualizados, ${Number(d.created||0)} criados, ${ec} erros.${detail}`;}
     await loadSupabaseProducts();
     renderAdmin();
   }catch(e){
