@@ -993,6 +993,7 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
 @media(max-width:768px){.fashion-admin-card .color-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="promo-carousel" id="promoCarousel" aria-label="Ofertas e benefícios">
@@ -1910,6 +1911,167 @@ function printSale(sale){const w=window.open('','_blank','width=420,height=650')
 #integratedCheckoutModal .status.error{color:#a52b2b}
 @media(max-width:800px){#integratedCheckoutModal{padding:0}#integratedCheckoutModal .integrated-shell{border-radius:0}#integratedCheckoutModal .integrated-close{right:10px;top:10px}#integratedCheckoutModal .pay-methods{grid-template-columns:1fr}}
 </style></head><body><h2>STUDIO 70 BRAND</h2><div class="center">COMPROVANTE DE VENDA<br>${sale.id}<br>${new Date(sale.date).toLocaleString('pt-BR')}</div><table>${rows}</table><div>Subtotal: ${money(sale.subtotal)}</div><div>Desconto: ${money(sale.discount)}</div><div class="tot">TOTAL: ${money(sale.total)}</div><p>Pagamento: ${sale.payment}</p>${sale.payment==='Dinheiro'?`<p>Recebido: ${money(sale.received)}<br>Troco: ${money(sale.change)}</p>`:''}<p class="center">Obrigado pela preferência!</p><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script>
+
+<style>
+.st70-shopee-template-box{margin:18px 0;padding:18px;border:1px solid #d9d9d9;border-radius:12px;background:#fff}
+.st70-shopee-template-box h3{margin:0 0 7px;font-size:16px}
+.st70-shopee-template-box p{font-size:12px;color:#666;line-height:1.45}
+.st70-shopee-template-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.st70-shopee-template-box textarea{width:100%;min-height:110px;box-sizing:border-box;resize:vertical}
+.st70-shopee-template-status{font-size:12px;margin-top:10px;min-height:18px}
+.st70-shopee-template-results{max-height:280px;overflow:auto;margin-top:8px;font-size:11px}
+.st70-shopee-template-result{padding:5px 7px;border-bottom:1px solid #eee}
+@media(max-width:700px){.st70-shopee-template-grid{grid-template-columns:1fr}}
+</style>
+<div class="st70-shopee-template-box" id="st70ShopeeExactTemplateBox">
+  <h3>🛍️ IMPORTAR CATÁLOGO SHOPEE — MODELO EXATO</h3>
+  <p>
+    Aceita o arquivo exportado pela Shopee com as colunas <b>SKU de referência, Nome do Produto, Categoria, Imagem de capa, Imagem do produto 1–8, Nome da Variação 1 e Opção 1–10</b>.
+    As URLs <b>https://cf.shopee.com.br/file/...</b> são preservadas diretamente no produto.
+  </p>
+  <div class="st70-shopee-template-grid">
+    <label>Arquivo Shopee (.xlsx, .xls, .csv, .txt)
+      <input id="st70ShopeeExactFile" class="field" type="file" accept=".xlsx,.xls,.csv,.txt">
+    </label>
+    <label>Ou cole a tabela TSV/CSV aqui
+      <textarea id="st70ShopeeExactPaste" placeholder="Cole aqui o conteúdo copiado da planilha Shopee, incluindo a linha de cabeçalho."></textarea>
+    </label>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+    <button type="button" class="smallbtn primary" onclick="st70ImportExactShopeeTemplate()">IMPORTAR PRODUTOS SHOPEE</button>
+    <button type="button" class="smallbtn" onclick="document.getElementById('st70ShopeeExactFile').value='';document.getElementById('st70ShopeeExactPaste').value='';document.getElementById('st70ShopeeExactStatus').textContent=''">LIMPAR</button>
+  </div>
+  <div id="st70ShopeeExactStatus" class="st70-shopee-template-status"></div>
+  <div id="st70ShopeeExactResults" class="st70-shopee-template-results"></div>
+</div>
+<script>
+(function(){
+  function shKey(v){return String(v??'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'').trim();}
+  function cleanUrl(v){const x=String(v??'').trim();return /^https?:\\/\\//i.test(x)?x:'';}
+  function exactCell(row,map,names){for(const n of names){const i=map[shKey(n)];if(i!=null)return String(row[i]??'').trim();}return '';}
+  function splitLines(v){return String(v??'').split(/[\\n|;]/).map(x=>x.trim()).filter(Boolean);}
+  function parseDelimited(text){
+    text=String(text??'').replace(/^\\uFEFF/,'');
+    const lines=text.split(/\\r?\\n/).filter(l=>l.trim()!=='');
+    if(!lines.length)return [];
+    const delim=lines[0].includes('\\t')?'\\t':(lines[0].includes(';')?';':',');
+    return lines.map(line=>{
+      const out=[];let cur='',q=false;
+      for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'){if(q&&line[i+1]==='"'){cur+='"';i++;}else q=!q;}else if(c===delim&&!q){out.push(cur);cur='';}else cur+=c;}out.push(cur);return out;
+    });
+  }
+  function rowsToExactProducts(rows){
+    if(!Array.isArray(rows)||!rows.length)throw new Error('A planilha está vazia.');
+    let header=-1,map={};
+    for(let i=0;i<Math.min(rows.length,20);i++){
+      const r=Array.isArray(rows[i])?rows[i]:[];const m={};r.forEach((v,j)=>{const k=shKey(v);if(k)m[k]=j;});
+      if(m[shKey('Nome do Produto')]!=null && (m[shKey('Imagem de capa')]!=null || m[shKey('Categoria')]!=null)){header=i;map=m;break;}
+    }
+    if(header<0)throw new Error('Não encontrei o cabeçalho do modelo Shopee informado.');
+    const out=[];
+    for(let r=header+1;r<rows.length;r++){
+      const row=rows[r]||[];if(!row.some(v=>String(v??'').trim()))continue;
+      const name=exactCell(row,map,['Nome do Produto']);if(!name)continue;
+      const referenceSku=exactCell(row,map,['SKU de referência']);
+      const category=exactCell(row,map,['Categoria']);
+      const imageColumns=['Imagem de capa','Imagem do produto 1','Imagem do produto 2','Imagem do produto 3','Imagem do produto 4','Imagem do produto 5','Imagem do produto 6','Imagem do produto 7','Imagem do produto 8'];
+      const allImages=imageColumns.map(x=>cleanUrl(exactCell(row,map,[x]))).filter(Boolean);
+      const options=[];
+      const variationName=exactCell(row,map,['Nome da Variação 1']);
+      for(let n=1;n<=10;n++){
+        const optionName=exactCell(row,map,[`Opção ${n} de nome`,`Opção ${n}  de nome`]);
+        const optionImage=cleanUrl(exactCell(row,map,[`Opção ${n} de imagem`,`Opção ${n}  de imagem`]));
+        if(optionName||optionImage)options.push({name:optionName,image:optionImage});
+      }
+      const optionNames=options.map(o=>o.name).filter(Boolean);
+      const lowerVar=variationName.toLowerCase();
+      const isSize=/tamanho|size/.test(lowerVar);
+      const product={
+        id:null,
+        supplier:'shopee',
+        external_id:referenceSku||('shopee-'+String(name).toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,80)),
+        name,
+        description:'',
+        sale_price:0,
+        salePrice:0,
+        price:0,
+        supplier_price:0,
+        sku:referenceSku,
+        barcode:'',
+        category,
+        stock:0,
+        sizes:isSize?optionNames:[],
+        colors:isSize?[]:optionNames,
+        image:allImages[0]||'',
+        secondary_images:allImages.slice(1),
+        source_url:'',
+        active:true,
+        featured:false,
+        weightKg:.3,heightCm:4,widthCm:20,lengthCm:30,
+        shopee_template:{
+          sku_reference:referenceSku,
+          name,
+          category,
+          cover_image:allImages[0]||'',
+          product_images:allImages.slice(1),
+          measure_template:exactCell(row,map,['Template da Tabela de Medidas']),
+          size_image:cleanUrl(exactCell(row,map,['Imagem de Tamanhos'])),
+          variation_name:variationName,
+          options,
+          original_columns:Object.fromEntries((Array.isArray(row)?row:[]).map((v,i)=>[String((rows[header]||[])[i]??`col_${i}`),String(v??'')]))
+        },
+        variation_name:variationName,
+        variation_options:options
+      };
+      out.push(product);
+    }
+    return out;
+  }
+  async function readExactFile(file){
+    if(!file)throw new Error('Selecione o arquivo ou cole a tabela.');
+    const name=String(file.name||'').toLowerCase();
+    const buf=await file.arrayBuffer();
+    if((name.endsWith('.xlsx')||name.endsWith('.xls')) && window.XLSX){
+      const wb=XLSX.read(buf,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];return XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+    }
+    return parseDelimited(new TextDecoder('utf-8').decode(buf));
+  }
+  window.st70ImportExactShopeeTemplate=async function(){
+    const status=document.getElementById('st70ShopeeExactStatus'),results=document.getElementById('st70ShopeeExactResults');
+    try{
+      if(typeof adminAuthPassword==='undefined' || !adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',window.st70ImportExactShopeeTemplate);
+      status.textContent='Lendo o modelo Shopee...';results.innerHTML='';
+      const file=document.getElementById('st70ShopeeExactFile')?.files?.[0];
+      const pasted=document.getElementById('st70ShopeeExactPaste')?.value||'';
+      const rows=file?await readExactFile(file):parseDelimited(pasted);
+      const products=rowsToExactProducts(rows);
+      if(!products.length)throw new Error('Nenhum produto válido encontrado.');
+      if(products.length>500 && !confirm(`Foram encontrados ${products.length} produtos. Deseja importar todos?`))return;
+      let ok=0,fail=0,logs=[];
+      for(let i=0;i<products.length;i++){
+        const payload=products[i];
+        try{
+          const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'product_save',admin_password:adminAuthPassword,product:payload,...payload})});
+          const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||`HTTP ${r.status}`);
+          const saved=d.product||payload;
+          const key=String(saved.sku||saved.barcode||saved.external_id||saved.name||saved.id||'').trim().toLowerCase();
+          // Guarda TODAS as colunas Shopee no override, sem depender de nova coluna SQL.
+          const ov={...payload,...saved,id:saved.id||payload.id,shopee_template:payload.shopee_template,variation_options:payload.variation_options,variation_name:payload.variation_name};
+          const ro=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'save_override',admin_password:adminAuthPassword,key,product:ov})});
+          const od=await ro.json().catch(()=>({}));if(!ro.ok||!od.ok)throw new Error(od.error||`Falha ao guardar dados Shopee (HTTP ${ro.status})`);
+          ok++;logs.push('<div class="st70-shopee-template-result">✓ '+escapeHtml(payload.name)+' — '+payload.shopee_template.product_images.length+' imagem(ns) + '+payload.variation_options.length+' opção(ões)</div>');
+        }catch(e){fail++;logs.push('<div class="st70-shopee-template-result">✕ '+escapeHtml(payload.name)+' — '+escapeHtml(e?.message||e)+'</div>');}
+        status.textContent=`Processando ${i+1}/${products.length} — ${ok} sucesso(s), ${fail} erro(s)`;
+      }
+      results.innerHTML=logs.join('');
+      await loadSupabaseProducts();
+      if(typeof renderCategories==='function')renderCategories();
+      if(typeof renderAdmin==='function')renderAdmin();
+      status.textContent=`✓ Importação concluída: ${ok} produto(s) cadastrado(s), ${fail} erro(s).`;
+    }catch(e){status.textContent='Erro: '+(e?.message||e);}
+  };
+})();
+</script>
 </body></html>`);w.document.close()}
 function renderSales(){const el=document.getElementById('pdvHistory');if(!el)return;el.innerHTML=sales.length?sales.slice(0,20).map(s=>`<div class="sale-row"><b>${s.id} — ${money(s.total)}</b><br><small>${new Date(s.date).toLocaleString('pt-BR')} · ${s.payment} · ${s.items.reduce((a,i)=>a+i.qty,0)} item(ns)</small><br><button class="smallbtn" onclick="printSale(${JSON.stringify(s).replace(/"/g,'&quot;')})">🖨️ Comprovante</button></div>`).join(''):'<div class="empty">Nenhuma venda registrada.</div>'}
 
