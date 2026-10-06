@@ -1440,7 +1440,7 @@ async function discoverShopeePublicStore(){
     if(!r.ok||!d.ok)throw new Error(d.error||`Falha na leitura da loja (HTTP ${r.status}).`);
     ST70_SHOPEE_PUBLIC_PRODUCTS=Array.isArray(d.products)?d.products:[];
     renderShopeePublicPreview(ST70_SHOPEE_PUBLIC_PRODUCTS);
-    if(status)status.textContent=`✓ ${ST70_SHOPEE_PUBLIC_PRODUCTS.length} produto(s) encontrados de ${Number(d.discovered_links||0)} link(s) públicos.${d.errors?.length?` ${d.errors.length} produto(s) não puderam ser lidos.`:''}`;
+    if(status)status.textContent=`${ST70_SHOPEE_PUBLIC_PRODUCTS.length?'✓':'⚠'} ${ST70_SHOPEE_PUBLIC_PRODUCTS.length} produto(s) encontrados${Number(d.discovered_links||0)?` de ${Number(d.discovered_links||0)} item(ns)`:''}. ${String(d.message||'')}${Array.isArray(d.errors)&&d.errors.length?` Falhas: ${d.errors.slice(0,2).join(' | ')}`:''}`;
     if(imp)imp.disabled=!ST70_SHOPEE_PUBLIC_PRODUCTS.length;
   }catch(e){
     if(status)status.textContent=`✕ ${e.message||e}`;
@@ -1462,7 +1462,7 @@ async function importShopeePublicStore(){
     const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shopee_public_import',admin_password:adminAuthPassword,activate,products:ST70_SHOPEE_PUBLIC_PRODUCTS})});
     const d=await r.json().catch(()=>({}));
     if(!r.ok||!d.ok)throw new Error(d.error||`Falha na importação (HTTP ${r.status}).`);
-    if(status)status.textContent=`✓ Importação concluída: ${Number(d.imported||0)} processados, ${Number(d.updated||0)} atualizados, ${Number(d.created||0)} criados, ${Number(d.errors||0)} erros.`;
+    if(status)status.textContent=`✓ Importação concluída: ${Number(d.imported||0)} processados, ${Number(d.updated||0)} atualizados, ${Number(d.created||0)} criados, ${Number(d.error_count ?? (Array.isArray(d.errors)?d.errors.length:0))} erros.`;
     await loadSupabaseProducts();
     renderAdmin();
   }catch(e){
@@ -1505,7 +1505,7 @@ async function importShopeeCatalog(){
     })});
     const d=await r.json().catch(()=>({}));
     if(!r.ok||!d.ok)throw new Error(d.error||`Falha na importação (HTTP ${r.status}).`);
-    if(status)status.textContent=`✓ Importação concluída: ${Number(d.imported||0)} processados, ${Number(d.updated||0)} atualizados, ${Number(d.created||0)} criados, ${Number(d.errors||0)} erros.`;
+    if(status)status.textContent=`✓ Importação concluída: ${Number(d.imported||0)} processados, ${Number(d.updated||0)} atualizados, ${Number(d.created||0)} criados, ${Number(d.error_count ?? (Array.isArray(d.errors)?d.errors.length:0))} erros.`;
     await loadSupabaseProducts();
     renderAdmin();
   }catch(e){
