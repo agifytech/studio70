@@ -1208,9 +1208,20 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
   </div>
   <div id="geekThemeAdminStatus" style="font-size:11px;margin-top:7px;min-height:16px"></div>
 </div>
-<div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço de venda<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU <span style="font-size:10px;color:#777;font-weight:500">(gerado automaticamente)</span><input class="field" id="pSku" required></label><label>Código de barras <span style="font-size:10px;color:#777;font-weight:500">(EAN-13 automático)</span><input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Link da foto principal <span style="font-size:10px;color:#777;font-weight:500">(opcional)</span><input class="field" id="pImage" placeholder="Opcional — você também pode enviar a foto pelo Storage abaixo"></label>
+<div class="admin-grid"><div><h3 id="formTitle">Novo produto</h3><form id="productForm"><input type="hidden" id="editId"><div class="form-grid"><label>Nome<input class="field" id="pName" required></label><label>Preço de venda<input class="field" id="pPrice" type="number" step="0.01" min="0" required></label><label>SKU <span style="font-size:10px;color:#777;font-weight:500">(gerado automaticamente)</span><input class="field" id="pSku" required></label><label>Código de barras <span style="font-size:10px;color:#777;font-weight:500">(EAN-13 automático)</span><input class="field" id="pBarcode" required></label><label>Categoria<select class="field" id="pCategory"></select></label><label>Estoque<input class="field" id="pStock" type="number" min="0" value="0"></label><label>Tamanhos<input class="field" id="pSizes" placeholder="P, M, G, GG"></label><label>Cores<input class="field" id="pColors" placeholder="Preto, Branco"></label><label>Peso (kg)<input class="field" id="pWeight" type="number" min="0.001" step="0.001" value="0.300"></label><label>Altura (cm)<input class="field" id="pHeight" type="number" min="1" step="0.1" value="4"></label><label>Largura (cm)<input class="field" id="pWidth" type="number" min="1" step="0.1" value="20"></label><label>Comprimento (cm)<input class="field" id="pLength" type="number" min="1" step="0.1" value="30"></label><label class="full">Link da foto principal <span style="font-size:10px;color:#777;font-weight:500">(opcional)</span><input class="field" id="pImage" placeholder="Cole aqui o link direto da imagem — ex.: https://cf.shopee.com.br/file/..." autocomplete="off"></label>
+<div class="payment-admin-box full" style="margin:0;padding:14px;background:#fff8ed;border:1px solid #e1c28f;border-radius:12px">
+  <b>🛍️ IMAGENS DIRETAS DA SHOPEE</b>
+  <p style="font-size:11px;color:#666;margin:6px 0 10px;line-height:1.45">Cole aqui os links das imagens da Shopee exatamente como aparecem, incluindo <b>https://cf.shopee.com.br/file/...</b>. O primeiro link será a foto principal e os demais serão fotos secundárias. Não é necessário baixar a imagem.</p>
+  <label>Links das imagens da Shopee
+    <textarea class="field" id="pShopeeImages" rows="4" placeholder="https://cf.shopee.com.br/file/br-11134201-...
+https://cf.shopee.com.br/file/br-11134207-...
+https://cf.shopee.com.br/file/br-11134207-..."></textarea>
+  </label>
+  <div id="pShopeeImagesStatus" style="font-size:11px;color:#777;margin-top:5px;min-height:16px"></div>
+  <button class="smallbtn" type="button" style="margin-top:7px" onclick="applyShopeeImageLinksToProduct()">↳ USAR LINKS DA SHOPEE NO PRODUTO</button>
+</div>
 <div class="payment-admin-box full" style="margin:0;padding:14px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px"><b>📸 FOTOS DO PRODUTO — SUPABASE STORAGE</b><p style="font-size:11px;color:#666;margin:6px 0 10px">Envie as fotos diretamente pelo ADM. Elas serão salvas automaticamente no Supabase Storage e a URL será gravada no produto.</p><label>Foto principal<input class="field" id="pImageFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label><div id="pImageUploadStatus" class="upload-status" style="font-size:11px;margin-top:5px;min-height:16px"></div><label style="display:block;margin-top:8px">Fotos secundárias<input class="field" id="pSecondaryFiles" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label><div id="pSecondaryUploadStatus" class="upload-status" style="font-size:11px;margin-top:5px;min-height:16px"></div></div>
-<label class="full">Links das fotos secundárias<textarea class="field" id="pSecondaryImages" placeholder="Um link por linha"></textarea></label>
+<label class="full">Links das fotos secundárias<textarea class="field" id="pSecondaryImages" placeholder="Um link por linha — também aceita links https://cf.shopee.com.br/file/..." ></textarea></label>
 <label class="full">Links dos vídeos do produto<textarea class="field" id="pVideos" placeholder="Um link por linha — MP4/WebM ou YouTube/Vimeo"></textarea><small style="display:block;color:#777;margin-top:4px">Os vídeos serão exibidos junto com as fotos na galeria do produto.</small></label>
 <label class="full">URL do produto<input class="field" id="pUrl" placeholder="https://..."></label>
 <label class="full">Descrição<div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap"><textarea class="field" id="pDescription" style="flex:1;min-width:240px"></textarea><button class="smallbtn" type="button" id="aiDescriptionBtn" onclick="generateAIDescription()" style="white-space:nowrap">✨ GERAR DESCRIÇÃO COM IA</button></div><div id="aiDescriptionStatus" style="font-size:11px;color:#777;margin-top:6px;min-height:16px"></div></label></div><div class="checkrow"><label><input type="checkbox" id="pActive" checked> Ativo</label><label><input type="checkbox" id="pFeatured"> Destaque</label></div>
@@ -2046,6 +2057,8 @@ function clearForm(){
   document.getElementById('pFeatured').checked=false;
   document.getElementById('pSku').value='';
   document.getElementById('pBarcode').value='';
+  const shopeeImages=document.getElementById('pShopeeImages'); if(shopeeImages)shopeeImages.value='';
+  const shopeeStatus=document.getElementById('pShopeeImagesStatus'); if(shopeeStatus)shopeeStatus.textContent='';
   document.getElementById('labelPreview').style.display='none';
   document.querySelectorAll('.admin-item').forEach(x=>x.classList.remove('admin-editing'));
   loadPaymentSettings();
@@ -2061,6 +2074,8 @@ function editProduct(id){
   set('pWeight',p.weightKg??p.weight??0.3);set('pHeight',p.heightCm??p.height??4);
   set('pWidth',p.widthCm??p.width??20);set('pLength',p.lengthCm??p.length??30);
   set('pImage',normalizeImageUrl(p.image||''));
+  const editImageList=[normalizeImageUrl(p.image||''),...(Array.isArray(p.secondaryImages)?p.secondaryImages:(p.secondaryImages?[p.secondaryImages]:[]))].map(normalizeImageUrl).filter(Boolean);
+  set('pShopeeImages',editImageList.filter(isShopeeImageUrl).join('\n'));
   set('pSecondaryImages',(Array.isArray(p.secondaryImages)?p.secondaryImages:(p.secondaryImages?[p.secondaryImages]:[])).map(normalizeImageUrl).filter(Boolean).join('\n'));
   set('pVideos',(Array.isArray(p.videos)?p.videos:(p.videos?[p.videos]:[])).map(x=>String(x).trim()).filter(Boolean).join('\n'));
   set('pUrl',p.url);set('pDescription',p.description);
@@ -2079,6 +2094,47 @@ function editProduct(id){
   setTimeout(()=>document.getElementById('pName')?.focus(),250);
 }
 document.getElementById('pName')?.addEventListener('input',ensureGeneratedCodes);
+
+function shopeeImageLinksFromAdmin(){
+  const raw=String(document.getElementById('pShopeeImages')?.value||'');
+  return [...new Set(raw.split(/\n|[|;]/).map(x=>normalizeImageUrl(x.trim())).filter(x=>{
+    if(!/^https?:\/\//i.test(x))return false;
+    try{
+      const host=new URL(x).hostname.toLowerCase();
+      return host.includes('shopee') || host==='susercontent.com' || host.endsWith('.susercontent.com') || host==='shopeeimg.com' || host.endsWith('.shopeeimg.com');
+    }catch(_){return false;}
+  }))];
+}
+
+function applyShopeeImageLinksToProduct(){
+  const links=shopeeImageLinksFromAdmin();
+  const status=document.getElementById('pShopeeImagesStatus');
+  if(!links.length){
+    if(status)status.textContent='Cole pelo menos um link válido da Shopee.';
+    return;
+  }
+  const primary=document.getElementById('pImage');
+  const secondary=document.getElementById('pSecondaryImages');
+  if(primary)primary.value=links[0];
+  if(secondary){
+    const current=secondary.value.split(/\n|,/).map(x=>normalizeImageUrl(x.trim())).filter(Boolean);
+    secondary.value=[...new Set([...links.slice(1),...current.filter(x=>!links.includes(x))])].join('\n');
+  }
+  if(status)status.textContent=`✓ ${links.length} link(s) da Shopee preparados. O primeiro é a foto principal.`;
+}
+
+function syncShopeeImagesBeforeSave(){
+  const links=shopeeImageLinksFromAdmin();
+  if(!links.length)return;
+  const primary=document.getElementById('pImage');
+  const secondary=document.getElementById('pSecondaryImages');
+  if(primary && !normalizeImageUrl(primary.value.trim()))primary.value=links[0];
+  if(secondary){
+    const current=secondary.value.split(/\n|,/).map(x=>normalizeImageUrl(x.trim())).filter(Boolean);
+    secondary.value=[...new Set([...links.slice(1),...current])].join('\n');
+  }
+}
+
 async function generateAIDescription(){
   if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',generateAIDescription);
   const name=String(document.getElementById('pName')?.value||'').trim();
@@ -2127,6 +2183,7 @@ document.getElementById('productForm').onsubmit=async e=>{
   const id=document.getElementById('editId').value||'';
   ensureGeneratedCodes();
   const old=products.find(p=>String(p.id)===String(id));
+  syncShopeeImagesBeforeSave();
   const typedPrice=Number(String(document.getElementById('pPrice').value||'').trim().replace(',','.'));
   const previousPrice=firstPositiveNumber(old?.sale_price,old?.salePrice,old?.price,old?.supplier_price);
   const salePrice=typedPrice>0?typedPrice:previousPrice;
