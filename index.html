@@ -745,7 +745,7 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
 </div>
 <div class="banner-admin-card" id="shopeePublicImportCard">
   <h3 style="margin-top:0">🌐 IMPORTAR LOJA PÚBLICA DA SHOPEE</h3>
-  <p style="font-size:12px;color:#666;line-height:1.5;margin:6px 0 12px">Informe o endereço público da sua loja. O ST70 consulta somente dados públicos, sem API oficial da Shopee e sem login. Se a página bloquear a leitura direta, o servidor usa um leitor público como fallback. Os produtos existentes no ST70 não serão apagados.</p>
+  <p style="font-size:12px;color:#666;line-height:1.5;margin:6px 0 12px">A loja pública da Shopee é a fonte do catálogo. O ST70 lê nome, descrição, preço, categoria, fotos e identificador público; copia as fotos para o próprio Supabase quando possível. Não usa login da Shopee e não apaga os demais produtos do ST70.</p>
   <div class="banner-admin-row">
     <label>Link público da loja Shopee<input class="field" id="shopeePublicShopUrl" value="https://shopee.com.br/forja_coliseu" placeholder="https://shopee.com.br/nome-da-loja"></label>
     <label>Máximo de produtos<input class="field" id="shopeePublicMax" type="number" min="1" max="100" value="70"></label>
@@ -754,6 +754,7 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
     <label><input type="checkbox" id="shopeePublicActivate"> Ativar produtos imediatamente</label>
   </div>
   <div class="admin-tools">
+    <button class="smallbtn primary" type="button" id="shopeePublicSyncBtn" onclick="syncShopeePublicStore()">🔄 SINCRONIZAR LOJA PÚBLICA DA SHOPEE</button>
     <button class="smallbtn" type="button" id="shopeePublicDiscoverBtn" onclick="discoverShopeePublicStore()">🔎 LER LOJA PÚBLICA</button>
     <button class="smallbtn primary" type="button" id="shopeePublicImportBtn" onclick="importShopeePublicStore()" disabled>⬇️ IMPORTAR PRODUTOS ENCONTRADOS</button>
   </div>
@@ -995,22 +996,41 @@ function imageProxySrc(src){
 }
 function imageSrc(value){const src=normalizeImageUrl(value);if(!src)return ST70_IMAGE_PLACEHOLDER;return shopeeImageProxyUrl(src)||src;}
 function originalImageFromElement(img){
-  if(!img)return '';
-  const stored=normalizeImageUrl(img.dataset.st70Original||'');
+  if(!img || typeof img!=='object') return '';
+  const dataset=img.dataset || {};
+  const stored=normalizeImageUrl(dataset.st70Original || '');
   if(stored)return stored;
-  const current=String(img.currentSrc||img.src||'');
-  try{const u=new URL(current,location.href);if(u.searchParams.get('action')==='image_proxy')return normalizeImageUrl(u.searchParams.get('url')||'');}catch(_){}
-  return current;
+  const current=String(img.currentSrc || img.src || '');
+  try{
+    const u=new URL(current,location.href);
+    if(u.searchParams.get('action')==='image_proxy'){
+      return normalizeImageUrl(u.searchParams.get('url') || '');
+    }
+  }catch(_){}
+  return normalizeImageUrl(current);
 }
 function imageError(img){
-  if(!img)return;
+  if(!img || typeof img!=='object') return;
+  const dataset=img.dataset || (img.dataset={});
   const original=originalImageFromElement(img);
-  if(!original){img.onerror=null;img.src=ST70_IMAGE_PLACEHOLDER;img.classList.add('image-missing');return;}
-  if(!img.dataset.st70ProxyTried){
-    const proxy=imageProxySrc(original);
-    if(proxy){img.dataset.st70ProxyTried='1';img.onerror=imageError;img.src=proxy;return;}
+  if(!original){
+    img.onerror=null;
+    try{img.src=ST70_IMAGE_PLACEHOLDER;}catch(_){}
+    try{img.classList.add('image-missing');}catch(_){}
+    return;
   }
-  img.onerror=null;img.src=ST70_IMAGE_PLACEHOLDER;img.classList.add('image-missing');
+  if(!dataset.st70ProxyTried){
+    const proxy=imageProxySrc(original);
+    if(proxy && proxy!==String(img.src||'')){
+      dataset.st70ProxyTried='1';
+      img.onerror=function(){imageError(this);};
+      img.src=proxy;
+      return;
+    }
+  }
+  img.onerror=null;
+  try{img.src=ST70_IMAGE_PLACEHOLDER;}catch(_){}
+  try{img.classList.add('image-missing');}catch(_){}
 }
 function normalizeProductRecord(p){
   if(!p||typeof p!=='object')return p;
@@ -1463,6 +1483,34 @@ async function discoverShopeePublicStore(){
     if(btn){btn.disabled=false;btn.textContent='🔎 LER LOJA PÚBLICA';}
   }
 }
+async function syncShopeePublicStore(){
+  if(!adminAuthPassword)return requestLogin('SINCRONIZAÇÃO DA LOJA SHOPEE',syncShopeePublicStore);
+  const url=String(document.getElementById('shopeePublicShopUrl')?.value||'https://shopee.com.br/forja_coliseu').trim();
+  const max=Math.min(100,Math.max(1,Number(document.getElementById('shopeePublicMax')?.value||70)));
+  const activate=!!document.getElementById('shopeePublicActivate')?.checked;
+  const btn=document.getElementById('shopeePublicSyncBtn');
+  const status=document.getElementById('shopeePublicStatus');
+  if(!confirm(`Sincronizar o ST70 diretamente com a loja pública da Shopee?\n\nFonte: ${url}\nMáximo: ${max} produtos\n\nOs produtos Shopee existentes serão atualizados pelo ID da Shopee. Os demais produtos do ST70 não serão apagados.`))return;
+  if(btn){btn.disabled=true;btn.textContent='⏳ SINCRONIZANDO...';}
+  if(status)status.textContent='Lendo a loja pública e atualizando produtos, descrições, preços e fotos. Aguarde...';
+  try{
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shopee_public_sync',admin_password:adminAuthPassword,shop_url:url,max_products:max,activate})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok)throw new Error(d.error||`Falha na sincronização (HTTP ${r.status}).`);
+    const ec=Number(d.error_count ?? (Array.isArray(d.errors)?d.errors.length:0));
+    const warnings=Array.isArray(d.discover_errors)?d.discover_errors.length:0;
+    if(status)status.textContent=`✓ Loja sincronizada: ${Number(d.products_found||0)} encontrados, ${Number(d.imported||0)} processados, ${Number(d.updated||0)} atualizados, ${Number(d.created||0)} criados, ${ec} erros${warnings?` e ${warnings} aviso(s) de leitura`:''}.`;
+    await loadSupabaseProducts();
+    renderAdmin();
+    alert(`Sincronização concluída.\n\nProdutos encontrados: ${Number(d.products_found||0)}\nProcessados: ${Number(d.imported||0)}\nAtualizados: ${Number(d.updated||0)}\nCriados: ${Number(d.created||0)}\nErros: ${ec}`);
+  }catch(e){
+    if(status)status.textContent=`✕ ${e.message||e}`;
+    alert('Não foi possível sincronizar a loja pública da Shopee: '+(e.message||e));
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='🔄 SINCRONIZAR LOJA PÚBLICA DA SHOPEE';}
+  }
+}
+
 async function importShopeePublicStore(){
   if(!adminAuthPassword)return requestLogin('IMPORTAÇÃO DA LOJA SHOPEE',importShopeePublicStore);
   if(!ST70_SHOPEE_PUBLIC_PRODUCTS.length)return alert('Primeiro clique em “LER LOJA PÚBLICA”.');
