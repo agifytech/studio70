@@ -930,17 +930,13 @@ let page=1; const perPage=24;
 const money=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
 function shopeeImageProxyUrl(value){
-  const raw=String(value??'').trim();
+  const raw=normalizeImageUrl(value);
   if(!raw)return '';
-  if(/action=image_proxy/i.test(raw))return raw;
-  try{
-    const u=new URL(raw);
-    const h=u.hostname.toLowerCase().replace(/^www\./,'');
-    const isShopeeImage=h.includes('shopee')||h==='susercontent.com'||h.endsWith('.susercontent.com')||h==='shopeeimg.com'||h.endsWith('.shopeeimg.com');
-    if(!isShopeeImage)return raw;
-    const endpoint='https://ubngmysjtrdydvigjjwk.supabase.co/functions/v1/super-handler';
-    return endpoint+'?action=image_proxy&url='+encodeURIComponent(raw);
-  }catch(_){return raw;}
+  // Depois da correção, o navegador NUNCA deve abrir CDN da Shopee.
+  // As fotos Shopee precisam estar previamente no Storage do ST70.
+  if(isSupabaseStorageImage(raw))return raw;
+  if(isShopeeImageUrl(raw))return ST70_IMAGE_PLACEHOLDER;
+  return raw;
 }
 function normalizeImageUrl(value){
   const raw=String(value??'').trim();
@@ -948,6 +944,10 @@ function normalizeImageUrl(value){
   const first=raw.split(/\s*\|\s*/)[0].trim().replace(/\s+\d+w\s*$/i,'').trim();
   if(first.startsWith('//'))return 'https:'+first;
   return first;
+}
+function isSupabaseStorageImage(value){
+  const u=normalizeImageUrl(value);
+  return /^https?:\/\/[^/]+\/storage\/v1\/object\/public\//i.test(u);
 }
 function normalizeImageList(value){
   const values=Array.isArray(value)?value:[value];
@@ -991,18 +991,22 @@ function isShopeeImageUrl(value){
 function imageProxySrc(src){
   const u=normalizeImageUrl(src);
   if(!/^https?:\/\//i.test(u))return '';
-  if(isShopeeImageUrl(u))return shopeeImageProxyUrl(u);
+  if(isSupabaseStorageImage(u))return u;
+  // Shopee: somente Storage próprio. Nunca enviar CDN Shopee ao navegador.
+  if(isShopeeImageUrl(u))return '';
   return 'https://images.weserv.nl/?url='+encodeURIComponent(u.replace(/^https?:\/\//i,''));
 }
 function imageFallbackProxySrc(src){
   const u=normalizeImageUrl(src);
-  if(!/^https?:\/\//i.test(u))return '';
+  if(!/^https?:\/\//i.test(u) || isShopeeImageUrl(u))return '';
   return 'https://images.weserv.nl/?url='+encodeURIComponent(u.replace(/^https?:\/\//i,''));
 }
 function imageSrc(value){
   const src=normalizeImageUrl(value);
   if(!src)return ST70_IMAGE_PLACEHOLDER;
-  return shopeeImageProxyUrl(src)||src;
+  if(isSupabaseStorageImage(src))return src;
+  if(isShopeeImageUrl(src))return ST70_IMAGE_PLACEHOLDER;
+  return src;
 }
 function originalImageFromElement(imgOrEvent){
   const img=imgOrEvent?.currentTarget||imgOrEvent?.target||imgOrEvent;
@@ -1023,20 +1027,13 @@ function imageError(imgOrEvent){
   if(!img||typeof img!=='object')return;
   const dataset=img.dataset||(img.dataset={});
   const original=originalImageFromElement(img);
-  if(!original){
-    img.onerror=null;
-    try{img.src=ST70_IMAGE_PLACEHOLDER;}catch(_){}
+  if(!original){ img.onerror=null; img.src=ST70_IMAGE_PLACEHOLDER; return; }
+  // Fotos Shopee: não tentar CDN, proxy externo ou URL original.
+  // Se chegou aqui, o produto ainda não foi convertido para Storage.
+  if(isShopeeImageUrl(original)){
+    img.onerror=null; img.src=ST70_IMAGE_PLACEHOLDER;
     try{img.classList.add('image-missing');}catch(_){}
     return;
-  }
-  if(!dataset.st70ProxyTried){
-    const proxy=imageProxySrc(original);
-    if(proxy&&proxy!==String(img.src||'')){
-      dataset.st70ProxyTried='1';
-      img.onerror=function(){imageError(this);};
-      img.src=proxy;
-      return;
-    }
   }
   if(!dataset.st70FallbackTried){
     const fallback=imageFallbackProxySrc(original);
@@ -1047,14 +1044,7 @@ function imageError(imgOrEvent){
       return;
     }
   }
-  if(!dataset.st70DirectTried&&!isShopeeImageUrl(original)){
-    dataset.st70DirectTried='1';
-    img.onerror=function(){imageError(this);};
-    img.src=original;
-    return;
-  }
-  img.onerror=null;
-  try{img.src=ST70_IMAGE_PLACEHOLDER;}catch(_){}
+  img.onerror=null; img.src=ST70_IMAGE_PLACEHOLDER;
   try{img.classList.add('image-missing');}catch(_){}
 }
 function normalizeProductRecord(p){
@@ -1480,7 +1470,7 @@ function renderShopeePublicPreview(products){
   if(!Array.isArray(products)||!products.length){el.innerHTML='';return;}
   const visible=products.slice(0,100);
   el.innerHTML=`<div style="font-size:11px;color:#555;margin-bottom:6px"><b>${products.length}</b> produto(s) encontrados. A importação usará os dados públicos lidos da Shopee.</div>`+
-    visible.map((p,i)=>`<div style="display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:7px;margin:5px 0;background:#fff"><img src="${escapeAttr(shopeeImageProxyUrl(String(p.images?.[0]||'')))}" style="width:44px;height:44px;object-fit:cover;border-radius:7px;background:#eee" onerror="this.style.display='none'"><div style="min-width:0;flex:1"><b style="font-size:11px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(String(p.name||'Produto'))}</b><small style="color:#777">${Number(p.sale_price||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})} · ID ${escapeHtml(String(p.external_id||''))}</small></div></div>`).join('');
+    visible.map((p,i)=>`<div style="display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:7px;margin:5px 0;background:#fff"><img src="${escapeAttr(imageSrc(String(p.images?.[0]||'')))}" style="width:44px;height:44px;object-fit:cover;border-radius:7px;background:#eee" onerror="this.style.display='none'"><div style="min-width:0;flex:1"><b style="font-size:11px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(String(p.name||'Produto'))}</b><small style="color:#777">${Number(p.sale_price||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})} · ID ${escapeHtml(String(p.external_id||''))}</small></div></div>`).join('');
 }
 async function discoverShopeePublicStore(){
   if(!adminAuthPassword)return requestLogin('IMPORTAÇÃO DA LOJA SHOPEE',discoverShopeePublicStore);
