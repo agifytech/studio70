@@ -986,7 +986,6 @@ function shopeeDirectImageCandidates(value){
       add(`https://down-br.img.susercontent.com/file/${key}`);
       add(`https://cf.shopee.com.br/file/${key}`);
       add(`https://cf.shopee.com/file/${key}`);
-      add(`https://s-cdn-sg.shopeesz.com/file/${key}`);
       // Último recurso: proxy público de imagens, sem API da Shopee.
       add(`https://images.weserv.nl/?url=${encodeURIComponent(raw)}`);
     }
@@ -1060,7 +1059,7 @@ function imageSrc(value){
   const src=normalizeImageUrl(value);
   if(!src)return ST70_IMAGE_PLACEHOLDER;
   if(isShopeeImageUrl(src)){
-    return shopeeImageProxyUrl(src)||shopeeDirectImageCandidates(src)[0]||src;
+    return shopeeImageProxyUrl(src)||ST70_IMAGE_PLACEHOLDER;
   }
   return src;
 }
@@ -1088,14 +1087,54 @@ function imageError(imgOrEvent){
   if(!dataset){ try{img.onerror=null;img.src=ST70_IMAGE_PLACEHOLDER;}catch(_){} return; }
   const original=originalImageFromElement(img);
   if(!original){ try{img.onerror=null;img.src=ST70_IMAGE_PLACEHOLDER;img.classList.add('image-missing');}catch(_){} return; }
+
+  // Para imagens da Shopee, NUNCA enviamos o navegador diretamente para
+  // s-cdn-sg.shopeesz.com ou outro CDN instável. O Supabase Edge Function
+  // busca a imagem no CDN correto e entrega o arquivo ao ST70.
   if(isShopeeImageUrl(original)){
-    const direct=nextShopeeImageCandidate(img,original);
-    if(direct && direct!==String(img.src||'')){ dataset.st70ShopeeCandidateIndex=String(Number(dataset.st70ShopeeCandidateIndex||0)+1); img.onerror=function(){imageError(this);}; try{img.src=direct;}catch(_){} return; }
-    if(!dataset.st70FallbackTried){ dataset.st70FallbackTried='1'; const fallback=imageFallbackProxySrc(original); if(fallback && fallback!==String(img.src||'')){img.onerror=function(){imageError(this);};try{img.src=fallback;}catch(_){}return;} }
+    if(!dataset.st70ProxyTried){
+      dataset.st70ProxyTried='1';
+      const proxy=shopeeImageProxyUrl(original);
+      if(proxy && proxy!==String(img.src||'')){
+        img.onerror=function(){imageError(this);};
+        try{img.src=proxy;}catch(_){}
+        return;
+      }
+    }
+    if(!dataset.st70FallbackTried){
+      dataset.st70FallbackTried='1';
+      const fallback=imageFallbackProxySrc(original);
+      if(fallback && fallback!==String(img.src||'')){
+        img.onerror=function(){imageError(this);};
+        try{img.src=fallback;}catch(_){}
+        return;
+      }
+    }
   }else{
-    if(!dataset.st70ProxyTried){ dataset.st70ProxyTried='1'; const proxy=imageProxySrc(original); if(proxy && proxy!==String(img.src||'')){img.onerror=function(){imageError(this);};try{img.src=proxy;}catch(_){}return;} }
-    if(!dataset.st70FallbackTried){ dataset.st70FallbackTried='1'; const fallback=imageFallbackProxySrc(original); if(fallback && fallback!==String(img.src||'')){img.onerror=function(){imageError(this);};try{img.src=fallback;}catch(_){}return;} }
-    if(!dataset.st70DirectTried){ dataset.st70DirectTried='1'; img.onerror=function(){imageError(this);}; try{img.src=original;}catch(_){} return; }
+    if(!dataset.st70ProxyTried){
+      dataset.st70ProxyTried='1';
+      const proxy=imageProxySrc(original);
+      if(proxy && proxy!==String(img.src||'')){
+        img.onerror=function(){imageError(this);};
+        try{img.src=proxy;}catch(_){}
+        return;
+      }
+    }
+    if(!dataset.st70FallbackTried){
+      dataset.st70FallbackTried='1';
+      const fallback=imageFallbackProxySrc(original);
+      if(fallback && fallback!==String(img.src||'')){
+        img.onerror=function(){imageError(this);};
+        try{img.src=fallback;}catch(_){}
+        return;
+      }
+    }
+    if(!dataset.st70DirectTried){
+      dataset.st70DirectTried='1';
+      img.onerror=function(){imageError(this);};
+      try{img.src=original;}catch(_){}
+      return;
+    }
   }
   try{img.onerror=null;img.src=ST70_IMAGE_PLACEHOLDER;img.classList.add('image-missing');}catch(_){}
 }
