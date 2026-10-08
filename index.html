@@ -1058,10 +1058,10 @@ function imageFallbackProxySrc(src){
 function imageSrc(value){
   const src=normalizeImageUrl(value);
   if(!src)return ST70_IMAGE_PLACEHOLDER;
-  if(isShopeeImageUrl(src)){
-    return shopeeImageProxyUrl(src)||ST70_IMAGE_PLACEHOLDER;
-  }
-  return src;
+  // IMAGENS SHOPEE: nunca entregar o CDN diretamente ao navegador.
+  // A imagem passa sempre pelo Edge Function do ST70.
+  if(isShopeeImageUrl(src)) return shopeeImageProxyUrl(src)||ST70_IMAGE_PLACEHOLDER;
+  return /^https?:\/\//i.test(src) ? src : ST70_IMAGE_PLACEHOLDER;
 }
 function originalImageFromElement(imgOrEvent){
   let img=null;
@@ -1089,9 +1089,10 @@ function imageError(imgOrEvent){
   if(!original){ try{img.onerror=null;img.src=ST70_IMAGE_PLACEHOLDER;img.classList.add('image-missing');}catch(_){} return; }
 
   // Para imagens da Shopee, NUNCA enviamos o navegador diretamente para
-  // s-cdn-sg.shopeesz.com ou outro CDN instável. O Supabase Edge Function
+  // CDN_SHOPEE_BLOQUEADO ou outro CDN instável. O Supabase Edge Function
   // busca a imagem no CDN correto e entrega o arquivo ao ST70.
   if(isShopeeImageUrl(original)){
+    // Nunca usar original diretamente para Shopee.
     if(!dataset.st70ProxyTried){
       dataset.st70ProxyTried='1';
       const proxy=shopeeImageProxyUrl(original);
