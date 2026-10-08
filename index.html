@@ -766,6 +766,7 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
   <div class="admin-tools">
     <button class="smallbtn primary" type="button" id="shopeeImportBtn" onclick="importShopeeCatalog()">⬇️ IMPORTAR 90 PRODUTOS DA SHOPEE</button>
     <button class="smallbtn" type="button" id="shopeeRepairImagesBtn" onclick="repairShopeeImages()">🖼️ CORRIGIR FOTOS DOS PRODUTOS JÁ IMPORTADOS</button>
+    <button class="smallbtn" type="button" id="shopeeRepairDataBtn" onclick="repairShopeeData()">🛠️ RECUPERAR FOTOS + DESCRIÇÕES</button>
     <button class="smallbtn" type="button" onclick="showShopeeSeedStatus()">ℹ️ VER STATUS</button>
   </div>
   <div id="shopeeImportStatus" class="shopee-import-status"></div>
@@ -969,6 +970,29 @@ function shopeeImageProxyUrl(value){
     return endpoint+'?action=image_proxy&v=2&url='+encodeURIComponent(raw);
   }catch(_){return raw;}
 }
+function shopeeDirectImageCandidates(value){
+  const raw=normalizeImageUrl(value);
+  if(!raw)return [];
+  const out=[]; const add=x=>{x=String(x||'').trim();if(x&&!out.includes(x))out.push(x);};
+  add(raw);
+  try{
+    const u=new URL(raw); const host=u.hostname.toLowerCase();
+    const m=u.pathname.match(/\/file\/([^/?#]+)/i);
+    if(m){
+      const key=m[1];
+      add(`https://down-br.img.susercontent.com/file/${key}`);
+      add(`https://cf.shopee.com.br/file/${key}`);
+      add(`https://cf.shopee.com/file/${key}`);
+      add(`https://s-cdn-sg.shopeesz.com/file/${key}`);
+    }
+  }catch(_){}
+  return out;
+}
+function nextShopeeImageCandidate(img, original){
+  const list=shopeeDirectImageCandidates(original);
+  const idx=Number(img?.dataset?.st70ShopeeCandidateIndex||0);
+  return list[idx]||'';
+}
 function normalizeImageUrl(value){
   const raw=String(value??'').trim();
   if(!raw)return '';
@@ -1029,7 +1053,10 @@ function imageFallbackProxySrc(src){
 function imageSrc(value){
   const src=normalizeImageUrl(value);
   if(!src)return ST70_IMAGE_PLACEHOLDER;
-  return shopeeImageProxyUrl(src)||src;
+  if(isShopeeImageUrl(src)){
+    return shopeeImageProxyUrl(src)||shopeeDirectImageCandidates(src)[0]||src;
+  }
+  return src;
 }
 function originalImageFromElement(imgOrEvent){
   const img=imgOrEvent?.currentTarget||imgOrEvent?.target||imgOrEvent;
@@ -1050,39 +1077,34 @@ function imageError(imgOrEvent){
   if(!img||typeof img!=='object')return;
   const dataset=img.dataset||(img.dataset={});
   const original=originalImageFromElement(img);
-  if(!original){
-    img.onerror=null;
-    try{img.src=ST70_IMAGE_PLACEHOLDER;}catch(_){}
-    try{img.classList.add('image-missing');}catch(_){}
-    return;
-  }
-  if(!dataset.st70ProxyTried){
-    const proxy=imageProxySrc(original);
-    if(proxy&&proxy!==String(img.src||'')){
-      dataset.st70ProxyTried='1';
+  if(!original){img.onerror=null;try{img.src=ST70_IMAGE_PLACEHOLDER;}catch(_){}try{img.classList.add('image-missing');}catch(_){}return;}
+
+  if(isShopeeImageUrl(original)){
+    const direct=nextShopeeImageCandidate(img,original);
+    if(direct && direct!==String(img.src||'')){
+      dataset.st70ShopeeCandidateIndex=String(Number(dataset.st70ShopeeCandidateIndex||0)+1);
       img.onerror=function(){imageError(this);};
-      img.src=proxy;
+      img.src=direct;
       return;
     }
-  }
-  if(!dataset.st70FallbackTried){
-    const fallback=imageFallbackProxySrc(original);
-    if(fallback&&fallback!==String(img.src||'')){
+    // Última tentativa: proxy externo, sem repetir o proxy do próprio handler.
+    if(!dataset.st70FallbackTried){
       dataset.st70FallbackTried='1';
-      img.onerror=function(){imageError(this);};
-      img.src=fallback;
-      return;
+      const fallback=imageFallbackProxySrc(original);
+      if(fallback&&fallback!==String(img.src||'')){img.onerror=function(){imageError(this);};img.src=fallback;return;}
     }
+  } else {
+    if(!dataset.st70ProxyTried){
+      const proxy=imageProxySrc(original);
+      if(proxy&&proxy!==String(img.src||'')){dataset.st70ProxyTried='1';img.onerror=function(){imageError(this);};img.src=proxy;return;}
+    }
+    if(!dataset.st70FallbackTried){
+      const fallback=imageFallbackProxySrc(original);
+      if(fallback&&fallback!==String(img.src||'')){dataset.st70FallbackTried='1';img.onerror=function(){imageError(this);};img.src=fallback;return;}
+    }
+    if(!dataset.st70DirectTried){dataset.st70DirectTried='1';img.onerror=function(){imageError(this);};img.src=original;return;}
   }
-  if(!dataset.st70DirectTried&&!isShopeeImageUrl(original)){
-    dataset.st70DirectTried='1';
-    img.onerror=function(){imageError(this);};
-    img.src=original;
-    return;
-  }
-  img.onerror=null;
-  try{img.src=ST70_IMAGE_PLACEHOLDER;}catch(_){}
-  try{img.classList.add('image-missing');}catch(_){}
+  img.onerror=null;try{img.src=ST70_IMAGE_PLACEHOLDER;}catch(_){}try{img.classList.add('image-missing');}catch(_){}
 }
 function normalizeProductRecord(p){
   if(!p||typeof p!=='object')return p;
@@ -1599,6 +1621,29 @@ async function importShopeePublicStore(){
     alert('Não foi possível importar a loja Shopee: '+(e.message||e));
   }finally{
     if(btn){btn.disabled=!ST70_SHOPEE_PUBLIC_PRODUCTS.length;btn.textContent='⬇️ IMPORTAR PRODUTOS ENCONTRADOS';}
+  }
+}
+async function repairShopeeData(){
+  if(!adminAuthPassword)return requestLogin('RECUPERAR DADOS DA SHOPEE',repairShopeeData);
+  const btn=document.getElementById('shopeeRepairDataBtn');
+  const status=document.getElementById('shopeeImportStatus');
+  if(!confirm('Recuperar fotos e descrições dos produtos Shopee já cadastrados?\n\nO ST70 consultará as páginas públicas dos produtos que estiverem sem descrição e tentará copiar novamente as imagens para o Supabase Storage. Não altera preço, estoque, SKU, código de barras ou pedidos.'))return;
+  if(btn){btn.disabled=true;btn.textContent='⏳ RECUPERANDO DADOS...';}
+  if(status)status.textContent='Recuperando descrições e fotos da Shopee. Aguarde...';
+  try{
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shopee_repair_data',admin_password:adminAuthPassword,max_products:100})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok)throw new Error(d.error||`Falha na recuperação (HTTP ${r.status}).`);
+    const detail=Array.isArray(d.errors)&&d.errors.length?` Primeiros avisos: ${d.errors.slice(0,3).join(' || ')}`:'';
+    if(status)status.textContent=`✓ Recuperação concluída: ${Number(d.repaired||0)} produto(s), ${Number(d.descriptions||0)} descrição(ões), ${Number(d.images||0)} conjunto(s) de fotos.${detail}`;
+    await loadSupabaseProducts();
+    renderAdmin();
+    alert(`Recuperação concluída.\n\nProdutos reparados: ${Number(d.repaired||0)}\nDescrições recuperadas: ${Number(d.descriptions||0)}\nFotos processadas: ${Number(d.images||0)}\nFalhas: ${Number(d.error_count||0)}`);
+  }catch(e){
+    if(status)status.textContent=`✕ ${e.message||e}`;
+    alert('Não foi possível recuperar os dados da Shopee: '+(e.message||e));
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='🛠️ RECUPERAR FOTOS + DESCRIÇÕES';}
   }
 }
 async function repairShopeeImages(){
