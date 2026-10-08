@@ -973,25 +973,11 @@ function shopeeImageProxyUrl(value){
 function shopeeDirectImageCandidates(value){
   const raw=normalizeImageUrl(value);
   if(!raw)return [];
-  const out=[]; const add=x=>{x=String(x||'').trim();if(x&&!out.includes(x))out.push(x);};
-  add(raw);
-  try{
-    const u=new URL(raw); const host=u.hostname.toLowerCase();
-    const m=u.pathname.match(/\/file\/([^/?#]+)/i);
-    if(m){
-      const key=m[1];
-      // A própria loja pública da Shopee entrega imagens pelo CDN mms.img.susercontent.com.
-      // Esse é o primeiro fallback para as fotos da forja_coliseu.
-      add(`https://mms.img.susercontent.com/file/${key}`);
-      add(`https://down-br.img.susercontent.com/file/${key}`);
-      add(`https://cf.shopee.com.br/file/${key}`);
-      add(`https://cf.shopee.com/file/${key}`);
-      // Último recurso: proxy público de imagens, sem API da Shopee.
-      add(`https://images.weserv.nl/?url=${encodeURIComponent(raw)}`);
-    }
-  }catch(_){}
-  return out;
+  // O navegador nunca deve acessar diretamente os CDNs da Shopee.
+  // Toda tentativa passa pelo Edge Function do ST70.
+  return [shopeeImageProxyUrl(raw)];
 }
+
 function nextShopeeImageCandidate(img, original){
   const list=shopeeDirectImageCandidates(original);
   const idx=Number(img?.dataset?.st70ShopeeCandidateIndex||0);
@@ -1056,10 +1042,11 @@ function imageFallbackProxySrc(src){
   return 'https://images.weserv.nl/?url='+encodeURIComponent(u.replace(/^https?:\/\//i,''));
 }
 function imageSrc(value){
-  const src=normalizeImageUrl(value);
+  let src=normalizeImageUrl(value);
   if(!src)return ST70_IMAGE_PLACEHOLDER;
-  // IMAGENS SHOPEE: nunca entregar o CDN diretamente ao navegador.
-  // A imagem passa sempre pelo Edge Function do ST70.
+  // Se algum registro antigo ainda tiver s-cdn-sg.shopeesz.com, ele também
+  // passa obrigatoriamente pelo Edge Function. Nunca sai para o navegador.
+  if(/s-cdn-sg\.shopeesz\.com/i.test(src)) return shopeeImageProxyUrl(src)||ST70_IMAGE_PLACEHOLDER;
   if(isShopeeImageUrl(src)) return shopeeImageProxyUrl(src)||ST70_IMAGE_PLACEHOLDER;
   return /^https?:\/\//i.test(src) ? src : ST70_IMAGE_PLACEHOLDER;
 }
