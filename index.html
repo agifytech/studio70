@@ -211,6 +211,34 @@ footer a{color:#111!important}
 .category-group{border:1px solid #d7d4ce;border-radius:14px;padding:14px;margin-bottom:14px;background:#fff}.category-parent{font-weight:900!important;font-size:18px!important;width:100%;margin-bottom:10px}.category-subgrid{display:flex;flex-wrap:wrap;gap:8px}.category-child{font-size:12px!important;padding:9px 13px!important}.category-group[data-category-group="Masculino"] .category-parent{border-style:solid}.category-group[data-category-group="Feminino"] .category-parent{border-style:solid}
 
 .nav-cat-wrap{position:relative;display:flex;align-items:center}.nav-cat-link{display:flex;align-items:center;gap:4px}.nav-cat-menu{display:none;position:absolute;top:100%;left:0;min-width:180px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:7px;box-shadow:0 10px 25px rgba(0,0,0,.15);z-index:50}.nav-cat-wrap:hover .nav-cat-menu,.nav-cat-wrap:focus-within .nav-cat-menu{display:grid;gap:3px}.nav-cat-menu button{border:0;background:#fff;text-align:left;padding:8px 10px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer}.nav-cat-menu button:hover{background:#eee}.nav-cat-menu button{color:#111}
+
+/* Gestão de pedidos estilo marketplace: filtros rápidos e detalhes expansíveis */
+.st70-order-filters{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 12px;padding:8px;background:#f2f1ee;border:1px solid #d5d2cb;border-radius:10px;position:sticky;top:0;z-index:2}
+.st70-order-filters .smallbtn{flex:0 0 auto;display:flex;align-items:center;gap:7px;min-height:36px}
+.st70-order-count{display:inline-flex;min-width:20px;height:20px;align-items:center;justify-content:center;border-radius:20px;background:#ddd9d0;font-size:10px;padding:0 5px}
+.st70-order-card{display:block!important;padding:12px!important}
+.st70-order-card-main{min-width:0;width:100%}
+.st70-order-title-row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.st70-order-open{border:0;background:transparent;padding:0;text-align:left;font-weight:900;font-size:14px;cursor:pointer;color:#111}
+.st70-order-open span{display:block;margin-top:3px;font-size:9px;letter-spacing:.5px;color:#666;font-weight:700}
+.st70-status-pill{display:inline-block;padding:5px 8px;border-radius:20px;background:#e5e2dc;color:#222;font-size:10px;font-weight:800;white-space:nowrap}
+.st70-status-pill.status-preparing{background:#fff0c2}.st70-status-pill.status-shipped,.st70-status-pill.status-delivered{background:#d9f2df}.st70-status-pill.status-pending,.st70-status-pill.status-reserved{background:#f7dfdc}
+.st70-order-meta,.st70-order-label-summary{font-size:11px;color:#555;margin-top:6px}
+.st70-order-label-summary{font-weight:800;color:#555}
+.st70-order-products{display:grid;gap:4px;margin:9px 0}
+.st70-product-link{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;border:1px solid #e2dfd8;border-radius:7px;background:#faf9f6;color:#111;padding:8px;text-align:left;font-size:11px;cursor:pointer}
+.st70-product-link span{font-size:9px;font-weight:900;white-space:nowrap;color:#555}
+.st70-order-actions{justify-content:flex-start!important;flex-wrap:wrap!important;margin-top:8px}
+.st70-order-actions .smallbtn{flex:0 1 auto}
+.st70-shipping-detail{margin-top:12px;border:1px solid #c9c5bc;border-radius:10px;padding:12px;background:#f8f7f4;color:#111}
+.st70-detail-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;font-size:12px}
+.st70-shipping-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.st70-shipping-detail h4{font-size:10px;letter-spacing:.7px;margin:10px 0 7px;color:#555}
+.st70-shipping-line{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid #e5e2dc;font-size:11px}
+.st70-shipping-line span{color:#666;flex:0 0 38%}.st70-shipping-line b{text-align:right;overflow-wrap:anywhere}
+.st70-label-state{font-size:11px;font-weight:900;padding:9px;border-radius:7px;margin-bottom:8px}.st70-label-state.has-label{background:#d9f2df;color:#135c2b}.st70-label-state.no-label{background:#fff0c2;color:#765000}
+.st70-detail-actions{margin-top:10px;flex-wrap:wrap}.st70-shipping-warning{background:#fff0c2;padding:8px;border-radius:6px;font-size:11px}.st70-detail-items{font-size:11px;padding-left:20px}.st70-detail-items li{margin:5px 0}
+@media(max-width:650px){.st70-shipping-columns{grid-template-columns:1fr}.st70-order-filters{position:static}.st70-order-filters .smallbtn{font-size:10px;padding:7px}.st70-order-title-row{align-items:flex-start}.st70-order-actions{display:grid!important;grid-template-columns:1fr 1fr}.st70-order-actions .smallbtn{width:100%;font-size:9px}.st70-shipping-line{gap:8px}.st70-shipping-line span{flex-basis:34%}}
 </style>
 <style>
 html,body{max-width:100%;overflow-x:hidden}
@@ -2744,27 +2772,51 @@ async function updateAdminOrderStatus(orderId,status){
     if(!d.notification?.sent)alert('A etapa foi salva, mas o e-mail ao cliente não foi enviado. Verifique GOOGLE_EMAIL_WEBHOOK_URL e GOOGLE_EMAIL_WEBHOOK_SECRET nos Secrets do Supabase.');
   }catch(e){alert('Não foi possível atualizar o pedido: '+(e?.message||e));}
 }
-function renderAdminOrders(orders){
-  let box=document.getElementById('adminOrders');
-  if(!box)return;
-  box.innerHTML=(orders||[]).map(o=>{
-    const status=String(o.order_status||'pending').toLowerCase();
-    const paid=String(o.payment_status||'').toLowerCase()==='approved'||['paid','preparing','prepared','shipped','delivered'].includes(status);
-    const label=o.superfrete_label_url;
-    const items=Array.isArray(o.items)?o.items:[];
-    const itemsHtml=items.length?`<div style="margin:7px 0;padding:8px;background:#f5f5f4;border-radius:7px"><b>Separar:</b><ul style="margin:5px 0;padding-left:18px">${items.map(i=>`<li>${Math.max(1,Number(i.quantity||1))}× ${escapeHtml(i.title||i.name||'Produto')}${i.size?` · Tam. ${escapeHtml(i.size)}`:''}${i.color?` · ${escapeHtml(i.color)}`:''}</li>`).join('')}</ul></div>`:'<small>Itens não detalhados neste pedido.</small>';
-    const unpaid=['pending','in_process','in_mediation','unpaid',''].includes(String(o.payment_status||'').toLowerCase())&&['pending','reserved','awaiting_payment','pending_payment',''].includes(status);
-    const addressPayload=encodeURIComponent(JSON.stringify(o)).replace(/'/g,'%27');
-    let workflow='';
-    if(paid&&status==='paid')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'preparing')">▶ INICIAR SEPARAÇÃO</button>`;
-    else if(status==='preparing')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'prepared')">✓ PEDIDO PREPARADO</button>`;
-    else if(status==='prepared')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'shipped')">🚚 MARCAR COMO ENVIADO</button>`;
-    const addressButton=paid?`<button class="smallbtn" type="button" onclick="printOrderAddressLabel('${addressPayload}')">🖨️ IMPRIMIR ENDEREÇO</button>`:'';
-    const shippingButton=paid?(label?`<button class="smallbtn" type="button" onclick="printShippingLabel(${JSON.stringify(String(label))})">📦 IMPRIMIR ETIQUETA SUPERFRETE</button>`:`<button class="smallbtn" type="button" onclick="generateShippingLabel(${JSON.stringify(String(o.id))})">📦 GERAR ETIQUETA SUPERFRETE</button>`):'<small>Aguardando pagamento para liberar preparação e etiquetas.</small>';
-    const deleteButton=unpaid?`<button class="smallbtn" style="background:#8b1e1e;color:#fff" type="button" onclick="deletePendingOrderAdmin(${JSON.stringify(String(o.id))},${JSON.stringify(String(o.external_reference||o.id))})">🗑 EXCLUIR PEDIDO PENDENTE</button>`:'';
-    return `<div class="admin-item" style="align-items:flex-start"><span style="flex:1;min-width:0"><b>${escapeHtml(o.external_reference||'Pedido')}</b><br><b>${money(o.total||0)}</b> · Pagamento: ${escapeHtml(o.payment_status||'pendente')} · Etapa: <b>${escapeHtml(orderStatusLabel(status))}</b> · ${escapeHtml(o.payment_method||'')} ${o.superfrete_tracking_code?`<br>Rastreio: ${escapeHtml(o.superfrete_tracking_code)}`:''}${itemsHtml}<div class="admin-tools" style="margin-top:6px;flex-wrap:wrap">${workflow}${addressButton}${shippingButton}${deleteButton}</div></span><small>${o.updated_at?new Date(o.updated_at).toLocaleString('pt-BR'):''}</small></div>`;
-  }).join('')||'<div class="empty">Nenhuma venda sincronizada.</div>';
+let latestAdminOrders=[];
+let adminOrderFilter='all';
+let selectedAdminOrderId='';
+function setAdminOrderFilter(filter){adminOrderFilter=String(filter||'all');renderAdminOrders(latestAdminOrders);}
+function toggleAdminOrderDetails(orderId){const id=String(orderId||'');selectedAdminOrderId=selectedAdminOrderId===id?'':id;renderAdminOrders(latestAdminOrders);}
+function orderShippingAddress(o){
+  const s=o?.shipping&&typeof o.shipping==='object'?o.shipping:{};
+  const c=o?.customer&&typeof o.customer==='object'?o.customer:{};
+  const pick=(...values)=>{for(const v of values){if(v!==undefined&&v!==null&&String(v).trim()!=='')return String(v).trim()}return '';};
+  return {name:pick(s.name,s.recipient_name,s.receiver_name,o.customer_name,c.name),street:pick(s.street,s.address,s.address_line,s.logradouro,s.street_name),number:pick(s.number,s.numero,s.street_number),complement:pick(s.complement,s.complemento),district:pick(s.neighborhood,s.district,s.bairro),city:pick(s.city,s.cidade),state:pick(s.state,s.state_abbr,s.uf),cep:pick(s.cep,s.postal_code,s.zip_code,s.zip),phone:pick(s.phone,s.telephone,o.customer_phone,o.phone,c.phone),email:pick(o.customer_email,c.email),service:pick(s.service,o.shipping_service,o.superfrete_service),tracking:pick(o.superfrete_tracking_code,o.tracking_code),label:pick(o.superfrete_label_url,o.shipping_label_url,o.label_url)};
 }
+function renderAdminOrders(orders){
+  let box=document.getElementById('adminOrders');if(!box)return;
+  latestAdminOrders=Array.isArray(orders)?orders:[];
+  const counts={all:latestAdminOrders.length,awaiting:0,shipping:0,preparing:0,shipped:0};
+  const isPaid=o=>String(o.payment_status||'').toLowerCase()==='approved'||['paid','preparing','prepared','shipped','delivered'].includes(String(o.order_status||'').toLowerCase());
+  const isUnpaid=o=>!isPaid(o)&&['pending','in_process','in_mediation','unpaid',''].includes(String(o.payment_status||'').toLowerCase())&&['pending','reserved','awaiting_payment','pending_payment',''].includes(String(o.order_status||'pending').toLowerCase());
+  for(const o of latestAdminOrders){const st=String(o.order_status||'pending').toLowerCase();if(isUnpaid(o))counts.awaiting++;if(isPaid(o)&&['paid','prepared'].includes(st))counts.shipping++;if(isPaid(o)&&st==='preparing')counts.preparing++;if(isPaid(o)&&['shipped','delivered'].includes(st))counts.shipped++;}
+  const filters=[['all','Todos',counts.all],['shipping','Falta enviar',counts.shipping],['preparing','Em separação',counts.preparing],['shipped','Enviados',counts.shipped],['awaiting','Aguardando pagamento',counts.awaiting]];
+  const filterHtml=`<div class="st70-order-filters" role="group" aria-label="Filtrar pedidos">${filters.map(([key,label,count])=>`<button type="button" class="smallbtn ${adminOrderFilter===key?'primary':''}" onclick="setAdminOrderFilter('${key}')">${label} <span class="st70-order-count">${count}</span></button>`).join('')}</div>`;
+  const visible=latestAdminOrders.filter(o=>{const st=String(o.order_status||'pending').toLowerCase();if(adminOrderFilter==='awaiting')return isUnpaid(o);if(adminOrderFilter==='shipping')return isPaid(o)&&['paid','prepared'].includes(st);if(adminOrderFilter==='preparing')return isPaid(o)&&st==='preparing';if(adminOrderFilter==='shipped')return isPaid(o)&&['shipped','delivered'].includes(st);return true;});
+  const detailHtml=(o)=>{
+    const a=orderShippingAddress(o),label=!!a.label,items=Array.isArray(o.items)?o.items:[];
+    const line=(label,value)=>value?`<div class="st70-shipping-line"><span>${label}</span><b>${escapeHtml(value)}</b></div>`:'';
+    const address=[a.street,a.number].filter(Boolean).join(', '),city=[a.city,a.state].filter(Boolean).join(' - '),cep=a.cep?('CEP '+a.cep):'';
+    const addressPayload=encodeURIComponent(JSON.stringify(o)).replace(/'/g,'%27');
+    const addressComplete=!!(a.street&&a.city&&a.cep);
+    const labelAction=label?`<button class="smallbtn primary" type="button" onclick="printShippingLabel(${JSON.stringify(a.label)})">🖨️ ABRIR / IMPRIMIR ETIQUETA</button>`:`<button class="smallbtn primary" type="button" onclick="generateShippingLabel(${JSON.stringify(String(o.id))})">📦 GERAR ETIQUETA SUPERFRETE</button>`;
+    return `<section class="st70-shipping-detail"><div class="st70-detail-head"><b>INFORMAÇÕES DE ENVIO</b><button class="smallbtn" type="button" onclick="toggleAdminOrderDetails(${JSON.stringify(String(o.id))})">FECHAR ×</button></div><div class="st70-shipping-columns"><div><h4>DESTINATÁRIO</h4>${line('Nome',a.name)}${line('Rua e número',address)}${line('Complemento',a.complement)}${line('Bairro',a.district)}${line('Cidade / UF',city)}${line('CEP',cep)}${line('Telefone',a.phone)}${line('E-mail',a.email)}${!addressComplete?'<p class="st70-shipping-warning">⚠️ Endereço incompleto: confira os dados antes de despachar.</p>':''}</div><div><h4>ETIQUETA E RASTREIO</h4><div class="st70-label-state ${label?'has-label':'no-label'}">${label?'✓ ETIQUETA DISPONÍVEL':'! AINDA NÃO HÁ ETIQUETA'}</div>${line('Transportadora / serviço',a.service)}${line('Código de rastreio',a.tracking)}<div class="admin-tools st70-detail-actions"><button class="smallbtn" type="button" onclick="printOrderAddressLabel('${addressPayload}')">🖨️ IMPRIMIR ENDEREÇO</button>${labelAction}</div></div></div><h4>PRODUTOS DO PEDIDO</h4>${items.length?`<ul class="st70-detail-items">${items.map(i=>`<li><b>${Math.max(1,Number(i.quantity||1))}× ${escapeHtml(i.title||i.name||'Produto')}</b>${i.size?` · Tam. ${escapeHtml(i.size)}`:''}${i.color?` · ${escapeHtml(i.color)}`:''}${i.sku?` · SKU ${escapeHtml(i.sku)}`:''}</li>`).join('')}</ul>`:'<p>Não há detalhamento dos produtos neste pedido.</p>'}</section>`;
+  };
+  const cards=visible.map(o=>{
+    const status=String(o.order_status||'pending').toLowerCase(),paid=isPaid(o),label=o.superfrete_label_url;
+    const items=Array.isArray(o.items)?o.items:[];
+    const itemsHtml=items.length?`<div class="st70-order-products">${items.map(i=>`<button class="st70-product-link" type="button" onclick="toggleAdminOrderDetails(${JSON.stringify(String(o.id))})">${Math.max(1,Number(i.quantity||1))}× ${escapeHtml(i.title||i.name||'Produto')}${i.size?` · Tam. ${escapeHtml(i.size)}`:''}${i.color?` · ${escapeHtml(i.color)}`:''} <span>VER ENVIO ↗</span></button>`).join('')}</div>`:'<small>Itens não detalhados neste pedido.</small>';
+    const unpaid=isUnpaid(o),addressPayload=encodeURIComponent(JSON.stringify(o)).replace(/'/g,'%27');
+    let workflow='';if(paid&&status==='paid')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'preparing')">▶ INICIAR SEPARAÇÃO</button>`;else if(status==='preparing')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'prepared')">✓ PEDIDO PREPARADO</button>`;else if(status==='prepared')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'shipped')">🚚 MARCAR COMO ENVIADO</button>`;
+    const addressButton=paid?`<button class="smallbtn" type="button" onclick="printOrderAddressLabel('${addressPayload}')">🖨️ IMPRIMIR ENDEREÇO</button>`:'';
+    const shippingButton=paid?(label?`<button class="smallbtn" type="button" onclick="printShippingLabel(${JSON.stringify(String(label))})">📦 IMPRIMIR ETIQUETA</button>`:`<button class="smallbtn" type="button" onclick="toggleAdminOrderDetails(${JSON.stringify(String(o.id))})">📦 VER / GERAR ETIQUETA</button>`):'<small>Aguardando confirmação do pagamento.</small>';
+    const deleteButton=unpaid?`<button class="smallbtn danger" type="button" onclick="deletePendingOrderAdmin(${JSON.stringify(String(o.id))},${JSON.stringify(String(o.external_reference||o.id))})">🗑 EXCLUIR PENDENTE</button>`:'';
+    const a=orderShippingAddress(o),opened=selectedAdminOrderId===String(o.id);
+    return `<article class="admin-item st70-order-card"><div class="st70-order-card-main"><div class="st70-order-title-row"><button class="st70-order-open" type="button" onclick="toggleAdminOrderDetails(${JSON.stringify(String(o.id))})">${escapeHtml(o.external_reference||'Pedido')} <span>⌄ DETALHES DE ENVIO</span></button><span class="st70-status-pill status-${escapeHtml(status)}">${escapeHtml(orderStatusLabel(status))}</span></div><div class="st70-order-meta"><b>${money(o.total||0)}</b> · Pagamento: ${escapeHtml(o.payment_status||'pendente')} · ${escapeHtml(o.payment_method||'')}${o.updated_at?` · ${new Date(o.updated_at).toLocaleString('pt-BR')}`:''}</div><div class="st70-order-label-summary">${a.label?'✓ Etiqueta SuperFrete disponível':'! Sem etiqueta SuperFrete'}${a.tracking?` · Rastreio: ${escapeHtml(a.tracking)}`:''}</div>${itemsHtml}<div class="admin-tools st70-order-actions">${workflow}${addressButton}${shippingButton}${deleteButton}</div>${opened?detailHtml(o):''}</div></article>`;
+  }).join('');
+  box.innerHTML=filterHtml+(cards||'<div class="empty">Nenhum pedido nesta categoria.</div>');
+}
+
 (function installProductButtonHandlers(){
   if(!document.documentElement.dataset.studio70ProductHandlers){
     document.documentElement.dataset.studio70ProductHandlers='1';
