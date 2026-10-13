@@ -21,11 +21,11 @@ button{border:0;border-radius:12px;padding:13px 12px;font-weight:900;font-size:1
 .primary{background:#b91c1c;color:#fff}.secondary{background:#292524;color:#e7e5e4}.danger{background:#3f1d1d;color:#fecaca}
 input{width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:13px;font-size:16px;outline:none}
 input:focus{border-color:#dc2626}
-.lookup{display:flex;gap:8px;margin-top:10px}.lookup input{flex:1}.lookup button{width:90px}.quick-qty{display:grid;grid-template-columns:1fr 44px 72px 44px;gap:6px;align-items:center;margin-top:10px}.quick-qty>span{font-size:12px;color:#a8a29e;font-weight:800}.quick-qty input{text-align:center;font-weight:900}.quick-qty .mini{height:44px;padding:0;font-size:20px}
+.lookup{display:flex;gap:8px}.lookup input{flex:1}.lookup button{width:110px}
 .product{display:none}.product.show{display:block}
 .badge{display:inline-block;background:#052e1b;color:#6ee7b7;border:1px solid #065f46;border-radius:8px;padding:5px 8px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
 .title{font-size:21px;font-weight:900;margin:12px 0 4px}.sku{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;color:#78716c}
-.compact-product{display:flex;justify-content:space-between;gap:12px;align-items:center}.compact-product b{font-size:16px}.compact-product strong{font-size:18px}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0}.stat{background:#0c0a09;border:1px solid #292524;border-radius:12px;padding:10px;text-align:center}.stat small{display:block;color:#78716c;text-transform:uppercase;font-size:9px;font-weight:800}.stat b{display:block;margin-top:3px}
 .qty{display:flex;align-items:center;justify-content:space-between;background:#0c0a09;border:1px solid #292524;border-radius:14px;padding:8px;margin:12px 0}.qty button{width:50px;height:48px;padding:0;font-size:22px;background:#292524;color:#fff}.qty input{width:80px;text-align:center;border:0;background:transparent;font-size:22px;font-weight:900}
 .variation-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.variation label{display:block;margin-bottom:6px}.variation select{width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:13px;font-size:15px;outline:none}.variation select:focus{border-color:#dc2626}.variant-stock{font-size:11px;color:#a8a29e;margin-top:6px}.variant-stock strong{color:#6ee7b7}
 .notice{background:#2a1705;border:1px solid #854d0e;color:#fde68a;border-radius:12px;padding:10px;font-size:11px;line-height:1.45}
@@ -36,6 +36,23 @@ input:focus{border-color:#dc2626}
 .modal h3{margin:0 0 8px}.modal p{font-size:12px;color:#a8a29e}.modal button{width:100%;margin-top:10px}
 .success{color:#6ee7b7}.error{color:#fca5a5}
 .cart-list{display:grid;gap:8px;margin-top:10px}.cart-item{background:#0c0a09;border:1px solid #292524;border-radius:12px;padding:10px}.cart-item-head{display:flex;justify-content:space-between;gap:8px}.cart-item-name{font-weight:900}.cart-item-meta{font-size:11px;color:#a8a29e;margin-top:3px}.cart-item-actions{display:flex;align-items:center;gap:6px;margin-top:8px}.mini{padding:7px 10px;font-size:11px}.cart-total{display:flex;justify-content:space-between;font-size:17px;font-weight:900;margin-top:12px;padding-top:12px;border-top:1px solid #292524}.sale-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.sale-grid label{display:block}.sale-grid input,.sale-grid select{margin-top:5px;width:100%;background:#0c0a09;color:#fff;border:1px solid #44403c;border-radius:12px;padding:12px;font-size:14px}.full{grid-column:1/-1}.status-pill{display:inline-block;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:900}.paid{background:#052e1b;color:#6ee7b7}.pending{background:#2a1705;color:#fde68a}
+
+.ship-filter-row{display:flex;gap:6px;overflow-x:auto;padding:3px 0 10px;margin:0 -2px}
+.ship-filter{flex:0 0 auto;background:#292524;color:#e7e5e4;padding:9px 11px;font-size:10px;border:1px solid #44403c}
+.ship-filter.active{background:#b91c1c;border-color:#b91c1c;color:#fff}
+.ship-count{display:inline-block;margin-left:5px;padding:2px 5px;border-radius:6px;background:#0005}
+.ship-order{border-color:#44403c}
+.ship-order .order-title-link{display:block;width:100%;margin:8px 0 5px;text-align:left;background:transparent;color:#fff;padding:0;font-size:15px;line-height:1.4}
+.ship-order .order-title-link span{display:block;color:#ef4444;font-size:10px;margin-top:3px}
+.ship-detail{margin-top:10px;padding:11px;background:#171412;border:1px solid #44403c;border-radius:12px;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.ship-detail h3{font-size:11px;color:#a8a29e;letter-spacing:.08em;margin:8px 0 4px}
+.ship-state{display:inline-block;border-radius:7px;padding:5px 7px;font-size:10px;font-weight:900;background:#292524;color:#e7e5e4;margin:4px 0}
+.ship-state.ok{background:#052e1b;color:#6ee7b7}.ship-state.warn{background:#2a1705;color:#fde68a}.ship-state.bad{background:#3f1d1d;color:#fecaca}
+.ship-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.ship-actions button,.ship-actions a{width:100%;margin:0;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;min-height:42px;padding:10px 7px;font-size:10px}
+.ship-filter-status{font-size:11px;color:#a8a29e;margin-bottom:8px}
+@media(max-width:380px){.ship-actions{grid-template-columns:1fr}.ship-order .order-head{align-items:flex-start}}
+
 </style>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0c0a09">
@@ -51,64 +68,102 @@ input:focus{border-color:#dc2626}
 </header>
 
 <main>
-  <div class="card scan-card">
-    <div class="order-head"><h2>📷 Bipar produtos</h2><span id="cartCount" class="badge">0 itens</span></div>
+  <div class="card">
+    <h2>Leitura do produto</h2>
     <div id="reader"></div>
     <div class="grid">
-      <button class="primary" onclick="startScanner()">📷 ESCANEAR</button>
-      <button class="secondary" onclick="stopScanner()">⏸ PARAR</button>
+      <button class="primary" onclick="startScanner()">📷 ABRIR CÂMERA</button>
+      <button class="secondary" onclick="stopScanner()">⏸ PAUSAR</button>
     </div>
+    <div id="status" class="status">Carregando estoque do fornecedor...</div>
     <div class="lookup">
-      <input id="codeInput" inputmode="text" autocomplete="off" placeholder="Código de barras / SKU">
+      <input id="codeInput" inputmode="text" autocomplete="off" placeholder="Código de barras ou SKU">
       <button class="secondary" onclick="lookupProduct()">BUSCAR</button>
     </div>
-    <div class="quick-qty">
-      <span>Quantidade</span>
-      <button class="secondary mini" onclick="changeQty(-1)">−</button>
-      <input id="qty" type="number" min="1" value="1" aria-label="Quantidade">
-      <button class="secondary mini" onclick="changeQty(1)">+</button>
-    </div>
-    <div id="status" class="status">Pronto para bipar.</div>
   </div>
 
   <div id="productCard" class="card product">
-    <div class="compact-product">
-      <div><b id="productName">Produto</b><div id="productMeta" class="muted">—</div></div>
-      <strong id="productPrice">R$ 0,00</strong>
+    <span class="badge">Item identificado</span>
+    <div id="productName" class="title">Produto</div>
+    <div id="productSku" class="sku">SKU: —</div>
+    <div id="productBarcode" class="sku">EAN: —</div>
+
+    <div class="stats">
+      <div class="stat"><small>Preço</small><b id="productPrice">R$ 0,00</b></div>
+      <div class="stat"><small>Estoque total</small><b id="productStock">0</b></div>
+      <div class="stat"><small>Variação</small><b id="productSpecs">—</b></div>
     </div>
+
     <div class="variation-grid">
-      <div class="variation"><label class="muted" for="sizeSelect">Tamanho</label><select id="sizeSelect"><option value="">Selecione</option></select></div>
-      <div class="variation"><label class="muted" for="colorSelect">Cor</label><select id="colorSelect"><option value="">Selecione</option></select></div>
+      <div class="variation">
+        <label class="muted" for="sizeSelect">Tamanho</label>
+        <select id="sizeSelect"><option value="">Selecione</option></select>
+      </div>
+      <div class="variation">
+        <label class="muted" for="colorSelect">Cor</label>
+        <select id="colorSelect"><option value="">Selecione</option></select>
+      </div>
     </div>
     <div id="variantStock" class="variant-stock"></div>
-    <button class="primary" style="width:100%" onclick="addCurrentToCart()">➕ ADICIONAR</button>
+
+    <label class="muted">Quantidade da venda</label>
+    <div class="qty">
+      <button onclick="changeQty(-1)">−</button>
+      <input id="qty" type="number" min="1" value="1">
+      <button onclick="changeQty(1)">+</button>
+    </div>
+
+    <button class="primary" style="width:100%" onclick="addCurrentToCart()">➕ ADICIONAR À VENDA</button>
   </div>
 
   <div class="card">
-    <div class="order-head"><h2>🛒 Venda</h2><strong id="cartSubtotal">R$ 0,00</strong></div>
-    <div id="cartList" class="cart-list"><div class="muted">Bipe os produtos para montar a venda.</div></div>
+    <div class="order-head">
+      <h2>🛒 Venda atual</h2>
+      <span id="cartCount" class="badge">0 itens</span>
+    </div>
+    <div id="cartList" class="cart-list"><div class="muted">Nenhum produto adicionado.</div></div>
+    <div class="cart-total"><span>Subtotal</span><span id="cartSubtotal">R$ 0,00</span></div>
     <div class="sale-grid">
       <label>Desconto (R$)<input id="saleDiscount" type="number" min="0" step="0.01" value="0" oninput="renderCart()"></label>
       <label>Total<input id="saleTotal" type="text" value="R$ 0,00" readonly></label>
-      <label>Pagamento<select id="paymentMethod"><option value="dinheiro">Dinheiro</option><option value="pix">PIX</option><option value="cartao">Cartão</option></select></label>
-      <label>Status<select id="paymentStatus"><option value="paid">Pago</option><option value="pending_payment">Aguardando</option></select></label>
+      <label>Forma de pagamento<select id="paymentMethod"><option value="dinheiro">Dinheiro</option><option value="pix">PIX</option><option value="cartao">Cartão</option></select></label>
+      <label>Status do pagamento<select id="paymentStatus"><option value="paid">Pago</option><option value="pending_payment">Aguardando pagamento</option></select></label>
     </div>
     <button class="primary full" style="width:100%;margin-top:10px" onclick="finishSale()">⚡ FINALIZAR VENDA</button>
   </div>
 
-  <div class="card" id="storeOrdersCard">
-    <div class="order-head"><h2>🔔 Pedidos da loja</h2><span id="ordersBadge" class="badge">0 novos</span></div>
-    <div id="ordersStatus" class="status">Atualizando pedidos...</div>
-    <div id="storeOrderList" class="order-list"></div>
-  </div>
-
   <div class="card" id="salesHistoryCard">
-    <div class="order-head"><h2>🧾 Vendas do PDV</h2><button class="secondary mini" onclick="loadSalesHistory()">↻ ATUALIZAR</button></div>
-    <div id="salesHistoryStatus" class="status">Carregando...</div>
+    <div class="order-head">
+      <h2>🧾 VENDAS REALIZADAS</h2>
+      <button class="secondary" onclick="loadSalesHistory()">↻ ATUALIZAR</button>
+    </div>
+    <div id="salesHistoryStatus" class="status">Carregando vendas de hoje...</div>
     <div id="salesHistoryList" class="order-list"></div>
   </div>
 
-  <div class="notice">PDV conectado ao Supabase. As vendas finalizadas neste PDV ficam registradas no painel e os pedidos da loja são atualizados automaticamente.</div>
+  <div class="card" id="storeOrdersCard">
+    <div class="order-head">
+      <h2>📦 Pedidos e envios</h2>
+      <button class="secondary" type="button" onclick="loadStoreOrders(true)">↻ ATUALIZAR</button>
+    </div>
+    <div id="ordersStatus" class="status">Carregando pedidos...</div>
+    <div class="ship-filter-row" id="shipFilterRow">
+      <button class="ship-filter active" data-filter="all" onclick="setShipmentFilter('all')">TODOS <span class="ship-count" id="shipCountAll">0</span></button>
+      <button class="ship-filter" data-filter="to_send" onclick="setShipmentFilter('to_send')">FALTA ENVIAR <span class="ship-count" id="shipCountToSend">0</span></button>
+      <button class="ship-filter" data-filter="preparing" onclick="setShipmentFilter('preparing')">EM SEPARAÇÃO <span class="ship-count" id="shipCountPreparing">0</span></button>
+      <button class="ship-filter" data-filter="shipped" onclick="setShipmentFilter('shipped')">ENVIADOS <span class="ship-count" id="shipCountShipped">0</span></button>
+      <button class="ship-filter" data-filter="unpaid" onclick="setShipmentFilter('unpaid')">AGUARDANDO PAGAMENTO <span class="ship-count" id="shipCountUnpaid">0</span></button>
+    </div>
+    <div class="ship-filter-status" id="shipFilterStatus">Todos os pedidos</div>
+    <div id="storeOrderList" class="order-list"></div>
+  </div>
+
+  <div class="card">
+    <div class="notice">
+      O PDV consulta o estoque do fornecedor no Supabase e a baixa é feita no servidor.
+      O acesso usa a senha administrativa do PDV; ela não fica gravada no HTML.
+    </div>
+  </div>
 </main>
 
 <div id="loginBox">
@@ -129,6 +184,9 @@ let activeProduct = null;
 let saleCart = [];
 let adminPassword = sessionStorage.getItem('studio70_pdv_password') || '';
 let pendingStoreOrders = new Map();
+let shipmentOrders = [];
+let shipmentFilter = 'all';
+let selectedShipmentOrderId = '';
 let ordersPollTimer = null;
 let lastOrderSnapshot = new Set();
 let audioContext = null;
@@ -200,10 +258,7 @@ async function lookupProduct(code){
     if(d && d.found && d.product){
       activeProduct=d.product;
       renderProduct();
-      const hasSizes=variationList(activeProduct.sizes).length>0;
-      const hasColors=variationList(activeProduct.colors).length>0;
-      if(!hasSizes && !hasColors){ addCurrentToCart(); }
-      else setStatus('Produto identificado. Se houver tamanho/cor, selecione e adicione.','success');
+      setStatus('Produto identificado no Supabase. Confira a quantidade.','success');
       return;
     }
 
@@ -247,6 +302,7 @@ function updateVariationState(){
   if(!activeProduct)return;
   const size=$('sizeSelect').value.trim(), color=$('colorSelect').value.trim();
   const labels=[size,color].filter(Boolean);
+  $('productSpecs').textContent=labels.length?labels.join(' / '):'Selecione';
   const available=selectedVariantStock();
   $('variantStock').innerHTML=labels.length ? `Estoque desta variação: <strong>${available} un</strong>` : 'Selecione tamanho e/ou cor para conferir a variação.';
   const qty=$('qty');
@@ -262,13 +318,16 @@ function populateVariationSelect(id, values){
 function renderProduct(){
   const p=activeProduct;
   $('productName').textContent=p.name || 'Produto';
-  $('productMeta').textContent='SKU: '+(p.sku||'—')+' · Código: '+(p.barcode||'—')+' · Estoque: '+String(Number(p.stock||0))+' un';
+  $('productSku').textContent='STUDIO 70: '+(p.studio70_code || '—')+'  |  SKU: '+(p.sku || '—');
+  $('productBarcode').textContent='EAN: '+(p.barcode ? p.barcode : 'não cadastrado (produto encontrado)');
   $('productPrice').textContent=Number(p.price||0)>0 ? money(p.price) : 'Preço não cadastrado';
+  $('productStock').textContent=String(Number(p.stock||0))+' un';
   const sizes=variationList(p.sizes);
   const colors=variationList(p.colors);
   populateVariationSelect('sizeSelect',sizes);
   populateVariationSelect('colorSelect',colors);
   $('variantStock').textContent=(sizes.length||colors.length)?'Selecione tamanho e/ou cor.':'';
+  $('productSpecs').textContent=(sizes.length||colors.length)?'Selecione':'Único';
   $('qty').value=1;
   $('productCard').classList.add('show');
   updateVariationState();
@@ -305,11 +364,7 @@ function addCurrentToCart(){
   const item={key,id:activeProduct.id,studio70_code:activeProduct.studio70_code,external_id:activeProduct.external_id,sku:activeProduct.sku,barcode:activeProduct.barcode,name:activeProduct.name,size,color,variation:{size,color},qty:newQty,unit:Number(activeProduct.price||0)};
   if(existing)Object.assign(existing,item); else saleCart.push(item);
   renderCart();
-  $('qty').value=1;
-  $('codeInput').value='';
-  $('productCard').classList.remove('show');
   setStatus(`✓ ${qty} unidade(s) de ${activeProduct.name} adicionada(s) à venda.`,'success');
-  if(!scanning) setTimeout(()=>startScanner(),120);
 }
 function cartSubtotal(){return saleCart.reduce((sum,i)=>sum+(Number(i.unit)||0)*(Number(i.qty)||0),0);}
 function renderCart(){
@@ -489,51 +544,54 @@ async function enableOrderNotifications(){
     try{ await Notification.requestPermission(); }catch(_){ }
   }
 }
+function shipEscape(value){return String(value??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));}
+function shipmentPaid(o){const p=String(o.payment_status||'').toLowerCase(),s=String(o.order_status||'').toLowerCase();return p==='approved'||['paid','preparing','prepared','shipped','delivered'].includes(s);}
+function shipmentUnpaid(o){const p=String(o.payment_status||'').toLowerCase(),s=String(o.order_status||'').toLowerCase();return !shipmentPaid(o)&&['pending','pending_payment','in_process','in_mediation','unpaid',''].includes(p)&&['pending','reserved','awaiting_payment','pending_payment',''].includes(s);}
+function shipmentStage(o){const s=String(o.order_status||'pending').toLowerCase();if(shipmentUnpaid(o))return 'unpaid';if(s==='preparing')return 'preparing';if(s==='shipped'||s==='delivered')return 'shipped';if(['paid','prepared',''].includes(s))return 'to_send';return 'to_send';}
+function shipmentStatusLabel(o){const s=String(o.order_status||'pending').toLowerCase();if(shipmentUnpaid(o))return 'AGUARDANDO PAGAMENTO';return ({paid:'FALTA ENVIAR',preparing:'EM SEPARAÇÃO',prepared:'PRONTO PARA ENVIO',shipped:'ENVIADO',delivered:'ENTREGUE',reserved:'AGUARDANDO PAGAMENTO',pending:'PAGAMENTO PENDENTE'})[s]||s.toUpperCase();}
+function shipmentAddress(o){const a=o.shipping&&typeof o.shipping==='object'?o.shipping:{};const c=o.customer&&typeof o.customer==='object'?o.customer:{};const pick=(...v)=>v.map(x=>String(x??'').trim()).find(Boolean)||'';return {name:pick(o.customer_name,o.recipient_name,a.name,c.name),street:pick(a.street,a.address,a.address_line,a.logradouro,a.street_name),number:pick(a.number,a.numero,a.street_number),complement:pick(a.complement,a.complemento),district:pick(a.neighborhood,a.district,a.bairro),city:pick(a.city,a.cidade),state:pick(a.state,a.state_abbr,a.uf).toUpperCase(),cep:pick(a.cep,a.postal_code,a.zip_code,a.zip).replace(/\D/g,''),phone:pick(a.phone,a.telephone,o.customer_phone,o.phone,c.phone),email:pick(o.customer_email,c.email),service:pick(a.service,o.shipping_service,o.superfrete_service),tracking:pick(o.superfrete_tracking_code,o.tracking_code),label:pick(o.superfrete_label_url,o.shipping_label_url,o.label_url)};}
+function setShipmentFilter(filter){shipmentFilter=String(filter||'all');renderStoreOrders();}
+function toggleShipmentDetails(orderId){const id=String(orderId||'');selectedShipmentOrderId=selectedShipmentOrderId===id?'':id;renderStoreOrders();}
+function printShipmentAddress(encoded){let o;try{o=JSON.parse(decodeURIComponent(encoded));}catch(_){alert('Não foi possível ler o endereço do pedido.');return;}const a=shipmentAddress(o);const address=[a.street,a.number].filter(Boolean).join(', ');const city=[a.city,a.state].filter(Boolean).join(' - ');if(!a.street||!a.city||!a.cep){if(!confirm('Endereço incompleto (rua, cidade ou CEP). Imprimir mesmo assim?'))return;}const rows=[a.name,address,a.complement,a.district,city,a.cep?'CEP: '+a.cep:'',a.phone?'Telefone: '+a.phone:'','Pedido: '+(o.external_reference||o.id||'')].filter(Boolean);const html=rows.map((v,i)=>`<div class="line ${i===0?'recipient':''}">${shipEscape(v)}</div>`).join('');const w=window.open('','_blank','width=600,height=720');if(!w){alert('Permita pop-ups para imprimir a etiqueta.');return;}w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Etiqueta de envio ST70</title><style>@page{size:100mm 150mm;margin:7mm}*{box-sizing:border-box}body{font-family:Arial,sans-serif;color:#111;margin:0;padding:7mm}.brand{font-size:13pt;font-weight:900;letter-spacing:2px;border-bottom:2px solid #111;padding-bottom:4mm;margin-bottom:8mm}.caption{font-size:8pt;font-weight:700;margin-bottom:3mm}.line{font-size:14pt;line-height:1.35;overflow-wrap:anywhere;margin:1.8mm 0}.recipient{font-size:17pt;font-weight:900;margin-bottom:4mm}.order{font-size:8pt;margin-top:7mm;color:#444}</style></head><body><div class="brand">STUDIO 70 · ST70</div><div class="caption">DESTINATÁRIO / ENDEREÇO DE ENTREGA</div>${html}<div class="order">Conferir endereço e CEP antes de despachar.</div><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>`);w.document.close();}
+async function shipmentApi(action,body={}){const d=await api(action,{admin_password:adminPassword,...body});if(!d?.ok)throw new Error(apiError(d,'Não foi possível concluir a operação.'));return d;}
+async function generateShipmentLabel(orderId){if(!adminPassword)return $('loginBox').classList.remove('hidden');if(!confirm('Gerar e pagar a etiqueta SuperFrete para este pedido?'))return;const printTab=window.open('about:blank','_blank');try{const d=await shipmentApi('superfrete_label_create',{order_id:String(orderId)});if(d.label_url&&printTab)printTab.location.href=d.label_url;else{if(printTab)printTab.close();alert('A etiqueta foi solicitada, mas a SuperFrete não retornou o link de impressão. Use ATUALIZAR ETIQUETA.');}await loadStoreOrders(true);}catch(e){if(printTab)printTab.close();alert('SuperFrete: '+e.message);}}
+async function refreshShipmentLabel(orderId){const printTab=window.open('about:blank','_blank');try{const d=await shipmentApi('superfrete_label_get',{order_id:String(orderId)});if(d.label_url&&printTab)printTab.location.href=d.label_url;else{if(printTab)printTab.close();alert('A SuperFrete ainda não disponibilizou o PDF de impressão.');}await loadStoreOrders(true);}catch(e){if(printTab)printTab.close();alert('SuperFrete: '+e.message);}}
+function openShipmentLabel(url){if(url)window.open(url,'_blank','noopener');}
+async function updateShipmentStatus(orderId,status){const labels={preparing:'iniciar a separação',prepared:'marcar como preparado',shipped:'marcar como enviado'};if(!confirm(`Confirma ${labels[status]||'atualizar o pedido'}?`))return;try{const d=await shipmentApi('order_status_update',{order_id:String(orderId),order_status:status});await loadStoreOrders(true);if(d.notification&&!d.notification.sent)alert('Etapa atualizada, mas o aviso por e-mail ao cliente não foi enviado. Confira as configurações de e-mail no Supabase.');}catch(e){alert('Não foi possível atualizar o pedido: '+e.message);}}
+async function deleteShipmentOrder(orderId,reference){if(!confirm(`Excluir o pedido ${reference||orderId} que está aguardando pagamento? Esta ação não pode ser desfeita.`))return;try{await shipmentApi('order_delete_pending',{order_id:String(orderId)});await loadStoreOrders(true);$('ordersStatus').textContent='Pedido pendente excluído.';}catch(e){alert('Não foi possível excluir o pedido: '+e.message);}}
 function renderStoreOrders(){
-  const list=$('storeOrderList');
-  const orders=Array.from(pendingStoreOrders.values());
-  $('ordersBadge').textContent=`${orders.length} ${orders.length===1?'novo':'novos'}`;
-  if(!orders.length){ list.innerHTML='<div class="muted">Nenhum pedido aguardando retirada.</div>'; return; }
-  list.innerHTML=orders.map(o=>{
-    const ref=String(o.external_reference||'—');
-    const total=money(o.total);
-    const method=String(o.payment_method||o.payment_provider||'pagamento').replaceAll('_',' ');
-    return `<div class="order-item" data-order-ref="${ref.replaceAll('"','&quot;')}">
-      <div class="order-head"><span class="order-ref">${ref}</span><span class="order-total">${total}</span></div>
-      <div class="order-customer">${orderCustomerName(o)}</div>
-      <div class="order-items">${orderItemsText(o)}</div>
-      <div class="muted" style="margin-top:6px">Pagamento: ${method}</div>
-      <button class="primary" onclick="clientAlreadyTook('${ref.replaceAll("'","\\'")}')">✅ CLIENTE JÁ LEVOU</button>
-    </div>`;
+  const list=$('storeOrderList');if(!list)return;const all=shipmentOrders;const counts={all:all.length,to_send:0,preparing:0,shipped:0,unpaid:0};
+  all.forEach(o=>{const st=shipmentStage(o);counts[st]=(counts[st]||0)+1;});
+  for(const [id,key] of [['shipCountAll','all'],['shipCountToSend','to_send'],['shipCountPreparing','preparing'],['shipCountShipped','shipped'],['shipCountUnpaid','unpaid']]){const el=$(id);if(el)el.textContent=counts[key]||0;}
+  document.querySelectorAll('.ship-filter').forEach(b=>b.classList.toggle('active',b.dataset.filter===shipmentFilter));
+  const names={all:'Todos os pedidos',to_send:'Pedidos pagos que ainda precisam ser enviados',preparing:'Pedidos em separação',shipped:'Pedidos enviados',unpaid:'Pedidos aguardando pagamento'};$('shipFilterStatus').textContent=names[shipmentFilter]||names.all;
+  const visible=all.filter(o=>shipmentFilter==='all'||shipmentStage(o)===shipmentFilter);
+  if(!visible.length){list.innerHTML='<div class="muted">Nenhum pedido nesta categoria.</div>';return;}
+  list.innerHTML=visible.map(o=>{
+    const id=String(o.id||''),ref=String(o.external_reference||id||'Pedido'),idArg=JSON.stringify(id).replace(/"/g,'&quot;'),refArg=JSON.stringify(ref).replace(/"/g,'&quot;'),a=shipmentAddress(o),items=Array.isArray(o.items)?o.items:[];const paid=shipmentPaid(o),unpaid=shipmentUnpaid(o),stage=String(o.order_status||'pending').toLowerCase(),opened=selectedShipmentOrderId===id;
+    const itemText=items.map(i=>`${Math.max(1,Number(i.quantity||1))}× ${shipEscape(i.title||i.name||'Produto')}${i.size?' · Tam. '+shipEscape(i.size):''}${i.color?' · '+shipEscape(i.color):''}`).join('<br>');
+    const labelButton=a.label?`<a class="primary" href="${shipEscape(a.label)}" target="_blank" rel="noopener">🖨️ ABRIR / IMPRIMIR ETIQUETA</a><button class="secondary" type="button" onclick="refreshShipmentLabel(${idArg})">↻ ATUALIZAR ETIQUETA</button>`:paid?`<button class="primary" type="button" onclick="generateShipmentLabel(${idArg})">📦 GERAR ETIQUETA SUPERFRETE</button><button class="secondary" type="button" onclick="refreshShipmentLabel(${idArg})">↻ BUSCAR ETIQUETA</button>`:'<div class="muted">Etiqueta disponível após aprovação do pagamento.</div>';
+    let workflow='';if(paid&&stage==='paid')workflow=`<button class="primary" type="button" onclick="updateShipmentStatus(${idArg},'preparing')">▶ INICIAR SEPARAÇÃO</button>`;else if(stage==='preparing')workflow=`<button class="primary" type="button" onclick="updateShipmentStatus(${idArg},'prepared')">✓ PEDIDO PREPARADO</button>`;else if(stage==='prepared')workflow=`<button class="primary" type="button" onclick="updateShipmentStatus(${idArg},'shipped')">🚚 MARCAR COMO ENVIADO</button>`;
+    const details=opened?`<div class="ship-detail"><h3>DESTINATÁRIO</h3><b>${shipEscape(a.name||'Nome não cadastrado')}</b><br>${shipEscape([a.street,a.number].filter(Boolean).join(', ')||'Rua não informada')}<br>${a.complement?shipEscape(a.complement)+'<br>':''}${shipEscape(a.district||'Bairro não informado')}<br>${shipEscape([a.city,a.state].filter(Boolean).join(' - ')||'Cidade/UF não informada')}<br><b>CEP: ${shipEscape(a.cep||'não informado')}</b><br>Telefone: ${shipEscape(a.phone||'não informado')}<br>E-mail: ${shipEscape(a.email||'não informado')}<h3>ITENS DO PEDIDO</h3>${itemText||'Itens não detalhados neste pedido.'}<h3>ETIQUETA E RASTREIO</h3><span class="ship-state ${a.label?'ok':'warn'}">${a.label?'✓ ETIQUETA DISPONÍVEL':'! SEM ETIQUETA SUPERFRETE'}</span><br>Serviço: ${shipEscape(a.service||'não informado')}<br>Rastreio: ${shipEscape(a.tracking||'não informado')}<div class="ship-actions"><button class="secondary" type="button" onclick="printShipmentAddress('${encodeURIComponent(JSON.stringify(o)).replace(/'/g,'%27')}')">🖨️ IMPRIMIR ENDEREÇO</button>${labelButton}</div></div>`:'';
+    const actions=`<div class="ship-actions">${workflow}<button class="secondary" type="button" onclick="toggleShipmentDetails(${idArg})">${opened?'FECHAR DETALHES':'VER ENVIO / PRODUTOS'}</button>${unpaid?`<button class="danger" type="button" onclick="deleteShipmentOrder(${idArg},${refArg})">🗑 EXCLUIR PEDIDO PENDENTE</button>`:''}</div>`;
+    return `<article class="order-item ship-order"><div class="order-head"><span class="order-ref">${shipEscape(ref)}</span><span class="order-total">${money(o.total)}</span></div><button class="order-title-link" type="button" onclick="toggleShipmentDetails(${idArg})">${shipEscape(items[0]?.title||items[0]?.name||'Pedido '+ref)} <span>CLIQUE PARA VER ENDEREÇO, ITENS E ETIQUETA ↗</span></button><div class="order-customer">${shipEscape(a.name||o.customer_name||'Cliente')}</div><div class="order-items">${itemText||'Itens não detalhados'}</div><div style="margin-top:8px"><span class="ship-state ${unpaid?'bad':stage==='shipped'?'ok':stage==='preparing'?'warn':''}">${shipEscape(shipmentStatusLabel(o))}</span> <span class="ship-state ${a.label?'ok':'warn'}">${a.label?'ETIQUETA DISPONÍVEL':'SEM ETIQUETA'}</span></div><div class="muted" style="margin-top:5px">Pagamento: ${shipEscape(o.payment_status||'pendente')} · ${shipEscape(o.payment_method||'')}</div>${actions}${details}</article>`;
   }).join('');
 }
 async function loadStoreOrders(initial=false){
   if(!adminPassword){$('ordersStatus').textContent='Entre no PDV para acompanhar os pedidos.';return;}
   try{
-    const d=await api('store_pending_orders',{admin_password:adminPassword,limit:50});
+    const d=await api('orders',{admin_password:adminPassword,limit:100});
     if(!d.ok)throw new Error(apiError(d,'Não foi possível carregar os pedidos.'));
-    const incoming=Array.isArray(d.orders)?d.orders:[];
-    const next=new Map(incoming.map(o=>[String(o.external_reference),o]));
-    const newRefs=incoming.map(o=>String(o.external_reference)).filter(r=>!lastOrderSnapshot.has(r));
-    pendingStoreOrders=next;
-    lastOrderSnapshot=new Set(incoming.map(o=>String(o.external_reference)));
-    renderStoreOrders();
-    $('ordersStatus').textContent=incoming.length?`Atualizado agora · ${incoming.length} pedido(s) aguardando retirada.`:'Nenhum pedido aguardando retirada.';
-    if(!initial && newRefs.length) await notifyNewOrder();
+    const incoming=Array.isArray(d.orders)?d.orders:[];const previous=lastOrderSnapshot;
+    const newRefs=incoming.map(o=>String(o.external_reference||o.id)).filter(r=>!previous.has(r));
+    shipmentOrders=incoming;pendingStoreOrders=new Map(incoming.map(o=>[String(o.external_reference||o.id),o]));lastOrderSnapshot=new Set(incoming.map(o=>String(o.external_reference||o.id)));
+    renderStoreOrders();$('ordersStatus').textContent=`Atualizado agora · ${incoming.length} pedido(s).`;
+    if(!initial&&newRefs.length)await notifyNewOrder();
   }catch(e){$('ordersStatus').textContent='Pedidos: '+e.message;}
 }
 async function clientAlreadyTook(reference){
-  if(!adminPassword){$('loginBox').classList.remove('hidden');return;}
-  const order=pendingStoreOrders.get(String(reference));
-  if(!confirm(`Confirmar que o cliente já levou o pedido ${reference}?`))return;
-  try{
-    $('ordersStatus').textContent='Registrando retirada...';
-    const d=await api('store_order_picked_up',{admin_password:adminPassword,external_reference:reference,picked_up_by:'PDV da loja'});
-    if(!d.ok)throw new Error(apiError(d,'Não foi possível confirmar a retirada.'));
-    pendingStoreOrders.delete(String(reference));
-    renderStoreOrders();
-    $('ordersStatus').textContent='✓ Cliente já levou. Pedido retirado do painel.';
-  }catch(e){$('ordersStatus').textContent='Retirada não registrada: '+e.message;}
+  // Compatibilidade com versões antigas do PDV: os pedidos agora são controlados pelo fluxo de envio acima.
+  return loadStoreOrders(true);
 }
 function startStoreOrderPolling(){
   clearInterval(ordersPollTimer);
