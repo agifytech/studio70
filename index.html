@@ -816,7 +816,7 @@ https://cf.shopee.com.br/file/br-11134207-..."></textarea></label>
   <button type="button" class="smallbtn" style="margin-top:8px" onclick="saveShippingSettings()">SALVAR FRETE</button>
   <div id="shippingAdminStatus" style="font-size:11px;margin-top:6px"></div>
 </div>
-<button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><div id="labelPrice"></div><svg id="barcodeSvg"></svg><div id="labelCode"></div><div id="labelStock"></div></div></div><div><h3>🔔 Vendas recebidas</h3><div id="adminOrders" class="admin-list" style="max-height:260px;overflow:auto;margin-bottom:18px"></div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" type="button" onclick="printSelectedLabel()">🏷️ ETIQUETA UNICA</button><button class="smallbtn" type="button" onclick="printAllLabels()">🏷️ ETIQUETA EM MASSA</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden></label></div><div id="adminList" class="admin-list"></div></div></div></div></div>
+<button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><div id="labelPrice"></div><svg id="barcodeSvg"></svg><div id="labelCode"></div><div id="labelStock"></div></div></div><div><h3>📦 PEDIDOS · SEPARAÇÃO E PREPARAÇÃO</h3><p style="font-size:12px;color:#777;margin:0 0 8px">Acompanhe o pagamento, confira os itens e avance uma etapa por vez. O cliente recebe e-mail quando o pedido muda de etapa.</p><div id="adminOrders" class="admin-list" style="max-height:260px;overflow:auto;margin-bottom:18px"></div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" type="button" onclick="printSelectedLabel()">🏷️ ETIQUETA UNICA</button><button class="smallbtn" type="button" onclick="printAllLabels()">🏷️ ETIQUETA EM MASSA</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden></label></div><div id="adminList" class="admin-list"></div></div></div></div></div>
 
 <div class="modal" id="pdvModal"><div class="modal-panel"><button class="close" onclick="closePDV()">×</button><h2 class="section-title">PDV — PONTO DE VENDA</h2>
 <div class="pdv-layout">
@@ -2677,7 +2677,7 @@ async function pollOrders(){
   if(!adminAuthPassword)return;
   try{
     const url=checkoutApiUrl();
-    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'orders',admin_password:adminAuthPassword,after:lastOrderPoll||null,limit:30})});
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'orders',admin_password:adminAuthPassword,limit:30})});
     const d=await r.json().catch(()=>({}));
     if(!r.ok||!Array.isArray(d.orders))return;
     for(const o of d.orders){
@@ -2700,10 +2700,35 @@ async function refreshShippingLabel(orderId){
   try{const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'superfrete_label_get',admin_password:adminAuthPassword,order_id:orderId})});const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||'Não foi possível consultar a etiqueta.');if(d.label_url)window.open(d.label_url,'_blank','noopener');else alert('A SuperFrete ainda não disponibilizou o PDF de impressão.');await pollOrders();}catch(e){alert('SuperFrete: '+(e?.message||e));}
 }
 function printShippingLabel(url){if(url)window.open(url,'_blank','noopener');}
+function orderStatusLabel(status){return ({reserved:'Aguardando pagamento',pending:'Pagamento pendente',paid:'Pagamento aprovado',preparing:'Em separação',prepared:'Pronto para envio',shipped:'Enviado',delivered:'Entregue'})[String(status||'').toLowerCase()]||String(status||'Aguardando atualização');}
+async function updateAdminOrderStatus(orderId,status){
+  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>updateAdminOrderStatus(orderId,status));
+  const labels={preparing:'iniciar a separação dos produtos',prepared:'marcar o pedido como pronto para envio',shipped:'marcar o pedido como enviado'};
+  if(!confirm(`Confirma ${labels[status]||'atualizar este pedido'}? O cliente será avisado por e-mail se o gateway estiver configurado.`))return;
+  try{
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'order_status_update',admin_password:adminAuthPassword,order_id:String(orderId),order_status:status})});
+    const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||'Não foi possível atualizar o pedido.');
+    if(d.notification?.sent)notifySale('Pedido atualizado','O cliente foi notificado por e-mail.');
+    else console.warn('Etapa salva, mas o e-mail não foi enviado:',d.notification||d.message);
+    await pollOrders();
+    if(!d.notification?.sent)alert('A etapa foi salva, mas o e-mail ao cliente não foi enviado. Verifique GOOGLE_EMAIL_WEBHOOK_URL e GOOGLE_EMAIL_WEBHOOK_SECRET nos Secrets do Supabase.');
+  }catch(e){alert('Não foi possível atualizar o pedido: '+(e?.message||e));}
+}
 function renderAdminOrders(orders){
   let box=document.getElementById('adminOrders');
   if(!box)return;
-  box.innerHTML=(orders||[]).map(o=>{const paid=String(o.payment_status||'').toLowerCase()==='approved'||String(o.order_status||'').toLowerCase()==='paid';const label=o.superfrete_label_url;return `<div class="admin-item"><span><b>${escapeHtml(o.external_reference||'Pedido')}</b><br>${money(o.total||0)} · ${escapeHtml(o.payment_status||'pendente')} · ${escapeHtml(o.payment_method||'')} ${o.superfrete_tracking_code?`· Rastreio: ${escapeHtml(o.superfrete_tracking_code)}`:''}<br>${paid?(label?`<button class="smallbtn" type="button" onclick="printShippingLabel(${JSON.stringify(String(label))})">📦 IMPRIMIR ETIQUETA</button>`:`<button class="smallbtn" type="button" onclick="generateShippingLabel(${JSON.stringify(String(o.id))})">📦 GERAR ETIQUETA SUPERFRETE</button>`):'<small>Aguardando pagamento para liberar etiqueta.</small>'}</span><small>${o.updated_at?new Date(o.updated_at).toLocaleString('pt-BR'):''}</small></div>`}).join('')||'<div class="empty">Nenhuma venda sincronizada.</div>';
+  box.innerHTML=(orders||[]).map(o=>{
+    const status=String(o.order_status||'pending').toLowerCase();
+    const paid=String(o.payment_status||'').toLowerCase()==='approved'||['paid','preparing','prepared','shipped','delivered'].includes(status);
+    const label=o.superfrete_label_url;
+    const items=Array.isArray(o.items)?o.items:[];
+    const itemsHtml=items.length?`<div style="margin:7px 0;padding:8px;background:#f5f5f4;border-radius:7px"><b>Separar:</b><ul style="margin:5px 0;padding-left:18px">${items.map(i=>`<li>${Math.max(1,Number(i.quantity||1))}× ${escapeHtml(i.title||i.name||'Produto')}${i.size?` · Tam. ${escapeHtml(i.size)}`:''}${i.color?` · ${escapeHtml(i.color)}`:''}</li>`).join('')}</ul></div>`:'<small>Itens não detalhados neste pedido.</small>';
+    let workflow='';
+    if(paid&&status==='paid')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'preparing')">▶ INICIAR SEPARAÇÃO</button>`;
+    else if(status==='preparing')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'prepared')">✓ PEDIDO PREPARADO</button>`;
+    else if(status==='prepared')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'shipped')">🚚 MARCAR COMO ENVIADO</button>`;
+    return `<div class="admin-item" style="align-items:flex-start"><span style="flex:1;min-width:0"><b>${escapeHtml(o.external_reference||'Pedido')}</b><br><b>${money(o.total||0)}</b> · Pagamento: ${escapeHtml(o.payment_status||'pendente')} · Etapa: <b>${escapeHtml(orderStatusLabel(status))}</b> · ${escapeHtml(o.payment_method||'')} ${o.superfrete_tracking_code?`<br>Rastreio: ${escapeHtml(o.superfrete_tracking_code)}`:''}${itemsHtml}<div class="admin-tools" style="margin-top:6px;flex-wrap:wrap">${workflow}${paid?(label?`<button class="smallbtn" type="button" onclick="printShippingLabel(${JSON.stringify(String(label))})">📦 IMPRIMIR ETIQUETA</button>`:`<button class="smallbtn" type="button" onclick="generateShippingLabel(${JSON.stringify(String(o.id))})">📦 GERAR ETIQUETA SUPERFRETE</button>`):'<small>Aguardando pagamento para liberar preparação e etiqueta.</small>'}</div></span><small>${o.updated_at?new Date(o.updated_at).toLocaleString('pt-BR'):''}</small></div>`;
+  }).join('')||'<div class="empty">Nenhuma venda sincronizada.</div>';
 }
 (function installProductButtonHandlers(){
   if(!document.documentElement.dataset.studio70ProductHandlers){
