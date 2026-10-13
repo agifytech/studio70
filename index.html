@@ -2700,6 +2700,36 @@ async function refreshShippingLabel(orderId){
   try{const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'superfrete_label_get',admin_password:adminAuthPassword,order_id:orderId})});const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||'Não foi possível consultar a etiqueta.');if(d.label_url)window.open(d.label_url,'_blank','noopener');else alert('A SuperFrete ainda não disponibilizou o PDF de impressão.');await pollOrders();}catch(e){alert('SuperFrete: '+(e?.message||e));}
 }
 function printShippingLabel(url){if(url)window.open(url,'_blank','noopener');}
+function printOrderAddressLabel(encodedOrder){
+  let o;try{o=JSON.parse(decodeURIComponent(encodedOrder));}catch(_){alert('Não foi possível ler os dados do endereço deste pedido.');return;}
+  const a=o.shipping&&typeof o.shipping==='object'?o.shipping:{};
+  const customer=String(o.customer_name||o.customer?.name||a.name||'Cliente');
+  const street=String(a.street||a.address||a.address_line||a.logradouro||'');
+  const number=String(a.number||a.numero||'');
+  const complement=String(a.complement||a.complemento||'');
+  const district=String(a.neighborhood||a.district||a.bairro||'');
+  const city=String(a.city||a.cidade||'');
+  const state=String(a.state||a.state_abbr||a.uf||'').toUpperCase();
+  const cep=String(a.cep||a.postal_code||a.zip_code||a.zip||'').replace(/\D/g,'');
+  const phone=String(a.phone||a.telephone||o.customer_phone||o.phone||'');
+  const addressLine=[street,number].filter(Boolean).join(', ');
+  const cityLine=[city,state].filter(Boolean).join(' - ');
+  if(!street||!city||!cep){if(!confirm('O pedido parece estar sem endereço completo (rua, cidade ou CEP). Deseja imprimir mesmo assim?'))return;}
+  const rows=[customer,addressLine,complement,district,cityLine,cep?('CEP: '+cep):'',phone?('Telefone: '+phone):'',o.external_reference?('Pedido: '+o.external_reference):''].filter(Boolean);
+  const markup=rows.map((line,i)=>`<div class="line ${i===0?'recipient':''}">${escapeHtml(line)}</div>`).join('');
+  const w=window.open('','_blank','width=600,height=720');if(!w){alert('Permita pop-ups para imprimir a etiqueta.');return;}
+  w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Etiqueta de envio ST70</title><style>@page{size:100mm 150mm;margin:7mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0;padding:0}.brand{font-size:13pt;font-weight:900;letter-spacing:2px;border-bottom:2px solid #111;padding-bottom:4mm;margin-bottom:8mm}.caption{font-size:8pt;letter-spacing:1px;font-weight:700;margin-bottom:3mm}.line{font-size:14pt;line-height:1.35;overflow-wrap:anywhere;margin:1.8mm 0}.recipient{font-size:17pt;font-weight:900;margin-bottom:4mm}.separator{border-top:1px solid #999;margin:5mm 0}.order{font-size:8pt;margin-top:7mm;color:#444}@media screen{body{width:100mm;min-height:150mm;padding:7mm;border:1px dashed #bbb;margin:12px auto}}@media print{body{width:auto}}</style></head><body><div class="brand">STUDIO 70 · ST70</div><div class="caption">DESTINATÁRIO / ENDEREÇO DE ENTREGA</div>${markup}<div class="separator"></div><div class="order">Conferir endereço e CEP antes de despachar.</div><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>`);
+  w.document.close();
+}
+async function deletePendingOrderAdmin(orderId,reference){
+  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>deletePendingOrderAdmin(orderId,reference));
+  if(!confirm(`Excluir definitivamente o pedido ${reference||orderId} que está aguardando pagamento? Esta ação não pode ser desfeita.`))return;
+  try{
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'order_delete_pending',admin_password:adminAuthPassword,order_id:String(orderId)})});
+    const d=await r.json().catch(()=>({}));if(!r.ok||!d.ok)throw new Error(d.error||'Não foi possível excluir o pedido.');
+    await pollOrders();alert('Pedido aguardando pagamento excluído.');
+  }catch(e){alert('Não foi possível excluir o pedido: '+(e?.message||e));}
+}
 function orderStatusLabel(status){return ({reserved:'Aguardando pagamento',pending:'Pagamento pendente',paid:'Pagamento aprovado',preparing:'Em separação',prepared:'Pronto para envio',shipped:'Enviado',delivered:'Entregue'})[String(status||'').toLowerCase()]||String(status||'Aguardando atualização');}
 async function updateAdminOrderStatus(orderId,status){
   if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>updateAdminOrderStatus(orderId,status));
@@ -2723,11 +2753,16 @@ function renderAdminOrders(orders){
     const label=o.superfrete_label_url;
     const items=Array.isArray(o.items)?o.items:[];
     const itemsHtml=items.length?`<div style="margin:7px 0;padding:8px;background:#f5f5f4;border-radius:7px"><b>Separar:</b><ul style="margin:5px 0;padding-left:18px">${items.map(i=>`<li>${Math.max(1,Number(i.quantity||1))}× ${escapeHtml(i.title||i.name||'Produto')}${i.size?` · Tam. ${escapeHtml(i.size)}`:''}${i.color?` · ${escapeHtml(i.color)}`:''}</li>`).join('')}</ul></div>`:'<small>Itens não detalhados neste pedido.</small>';
+    const unpaid=['pending','in_process','in_mediation','unpaid',''].includes(String(o.payment_status||'').toLowerCase())&&['pending','reserved','awaiting_payment','pending_payment',''].includes(status);
+    const addressPayload=encodeURIComponent(JSON.stringify(o)).replace(/'/g,'%27');
     let workflow='';
     if(paid&&status==='paid')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'preparing')">▶ INICIAR SEPARAÇÃO</button>`;
     else if(status==='preparing')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'prepared')">✓ PEDIDO PREPARADO</button>`;
     else if(status==='prepared')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'shipped')">🚚 MARCAR COMO ENVIADO</button>`;
-    return `<div class="admin-item" style="align-items:flex-start"><span style="flex:1;min-width:0"><b>${escapeHtml(o.external_reference||'Pedido')}</b><br><b>${money(o.total||0)}</b> · Pagamento: ${escapeHtml(o.payment_status||'pendente')} · Etapa: <b>${escapeHtml(orderStatusLabel(status))}</b> · ${escapeHtml(o.payment_method||'')} ${o.superfrete_tracking_code?`<br>Rastreio: ${escapeHtml(o.superfrete_tracking_code)}`:''}${itemsHtml}<div class="admin-tools" style="margin-top:6px;flex-wrap:wrap">${workflow}${paid?(label?`<button class="smallbtn" type="button" onclick="printShippingLabel(${JSON.stringify(String(label))})">📦 IMPRIMIR ETIQUETA</button>`:`<button class="smallbtn" type="button" onclick="generateShippingLabel(${JSON.stringify(String(o.id))})">📦 GERAR ETIQUETA SUPERFRETE</button>`):'<small>Aguardando pagamento para liberar preparação e etiqueta.</small>'}</div></span><small>${o.updated_at?new Date(o.updated_at).toLocaleString('pt-BR'):''}</small></div>`;
+    const addressButton=paid?`<button class="smallbtn" type="button" onclick="printOrderAddressLabel('${addressPayload}')">🖨️ IMPRIMIR ENDEREÇO</button>`:'';
+    const shippingButton=paid?(label?`<button class="smallbtn" type="button" onclick="printShippingLabel(${JSON.stringify(String(label))})">📦 IMPRIMIR ETIQUETA SUPERFRETE</button>`:`<button class="smallbtn" type="button" onclick="generateShippingLabel(${JSON.stringify(String(o.id))})">📦 GERAR ETIQUETA SUPERFRETE</button>`):'<small>Aguardando pagamento para liberar preparação e etiquetas.</small>';
+    const deleteButton=unpaid?`<button class="smallbtn" style="background:#8b1e1e;color:#fff" type="button" onclick="deletePendingOrderAdmin(${JSON.stringify(String(o.id))},${JSON.stringify(String(o.external_reference||o.id))})">🗑 EXCLUIR PEDIDO PENDENTE</button>`:'';
+    return `<div class="admin-item" style="align-items:flex-start"><span style="flex:1;min-width:0"><b>${escapeHtml(o.external_reference||'Pedido')}</b><br><b>${money(o.total||0)}</b> · Pagamento: ${escapeHtml(o.payment_status||'pendente')} · Etapa: <b>${escapeHtml(orderStatusLabel(status))}</b> · ${escapeHtml(o.payment_method||'')} ${o.superfrete_tracking_code?`<br>Rastreio: ${escapeHtml(o.superfrete_tracking_code)}`:''}${itemsHtml}<div class="admin-tools" style="margin-top:6px;flex-wrap:wrap">${workflow}${addressButton}${shippingButton}${deleteButton}</div></span><small>${o.updated_at?new Date(o.updated_at).toLocaleString('pt-BR'):''}</small></div>`;
   }).join('')||'<div class="empty">Nenhuma venda sincronizada.</div>';
 }
 (function installProductButtonHandlers(){
