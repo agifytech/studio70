@@ -870,6 +870,15 @@ https://cf.shopee.com.br/file/br-11134207-..."></textarea></label>
    <button class="smallbtn" style="width:100%;margin-top:8px" onclick="clearPDV()">LIMPAR VENDA</button>
   </div>
   <div class="pdv-card" style="margin-top:18px"><h3 style="margin-top:0">Últimas vendas</h3><div id="pdvHistory" class="pdv-history"></div></div>
+  <div class="pdv-card" id="pdvOrdersCard" style="margin-top:18px">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+      <h3 style="margin:0">📦 Pedidos e envios da loja</h3>
+      <button class="smallbtn" type="button" onclick="loadPDVOrders()">↻ ATUALIZAR PEDIDOS</button>
+    </div>
+    <p style="font-size:11px;color:#666;margin:7px 0">Clique no pedido ou no produto para conferir endereço, situação do envio e etiqueta SuperFrete.</p>
+    <div id="pdvOrdersStatus" class="pdv-status" role="status" aria-live="polite">Clique em “Atualizar pedidos” para consultar o Supabase.</div>
+    <div id="pdvOrders" class="pdv-history" style="max-height:none;margin-top:10px"></div>
+  </div>
  </div>
 </div></div></div>
 <div class="modal" id="productModal"><div class="modal-panel"><button class="close" onclick="closeProduct()">×</button><div id="productBody"></div></div></div>
@@ -1441,7 +1450,7 @@ async function submitLogin(){
   }
 }
 document.getElementById('loginPassword').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();submitLogin()}});
-function openPDV(){requestLogin('PDV',()=>{document.getElementById('pdvModal').classList.add('open');renderPDV();document.getElementById('pdvScanner')?.focus()})}
+function openPDV(){requestLogin('PDV',()=>{document.getElementById('pdvModal').classList.add('open');renderPDV();loadPDVOrders();document.getElementById('pdvScanner')?.focus()})}
 function closePDV(){document.getElementById('pdvModal').classList.remove('open')}
 document.getElementById('pdvScanner').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();scanPDV()}});
 document.getElementById('pdvSearch').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();pdvSearchAdd()}});
@@ -1936,13 +1945,21 @@ document.getElementById('productForm').onsubmit=async e=>{
   }catch(err){alert('Não foi possível salvar o produto: '+(err?.message||err));}
 };
 async function deleteProduct(id){
-  if(!confirm('Remover este produto do Supabase?'))return;
+  const key=String(id??'').trim();
+  if(!key)return alert('ID do produto inválido.');
+  if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>deleteProduct(key));
+  const product=products.find(p=>String(p.id??'')===key);
+  const name=product?.name||key;
+  if(!confirm(`Remover "${name}" do catálogo do STUDIO 70?\n\nEssa ação não pode ser desfeita.`))return;
   try{
-    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'product_delete',admin_password:adminAuthPassword,id:String(id)})});
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'product_delete',admin_password:adminAuthPassword,id:key,product:product||null})});
     const d=await r.json().catch(()=>({}));
-    if(!r.ok||!d.ok)throw new Error(d.error||'Falha ao remover produto do Supabase.');
+    if(!r.ok||!d.ok)throw new Error(d.error||`Falha ao remover o produto (HTTP ${r.status}).`);
     await loadSupabaseProducts();
+    renderAdmin();
+    renderProducts();
     clearForm();
+    alert(`Produto "${name}" removido do catálogo.`);
   }catch(e){alert('Não foi possível remover o produto: '+(e?.message||e));}
 }
 let studio70Banners=[];
@@ -2707,7 +2724,12 @@ async function pollOrders(){
     const url=checkoutApiUrl();
     const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'orders',admin_password:adminAuthPassword,limit:30})});
     const d=await r.json().catch(()=>({}));
-    if(!r.ok||!Array.isArray(d.orders))return;
+    const statusEl=document.getElementById('pdvOrdersStatus');
+    if(!r.ok||!Array.isArray(d.orders)){
+      if(statusEl)statusEl.textContent=`Falha ao consultar pedidos (HTTP ${r.status}). ${String(d.error||d.message||'Verifique a função super-handler e a tabela store_orders.')}`;
+      return;
+    }
+    renderAdminOrders(d.orders,d);
     for(const o of d.orders){
       const ref=String(o.external_reference||o.id||'');
       if(ref&&!seenOrderRefs.has(ref)){seenOrderRefs.add(ref);const source=o.payment_provider==='store'?'Loja':'Online';notifySale(`Nova venda — ${source}`,`${ref} · ${money(o.total||0)} · ${o.payment_status||'pendente'}`);}
@@ -2717,7 +2739,16 @@ async function pollOrders(){
     localStorage.setItem('studio70_seen_orders',JSON.stringify(arr));
     if(lastOrderPoll)localStorage.setItem('studio70_last_order_poll',lastOrderPoll);
     /* Gestão de pedidos transferida para o PDV. */
-  }catch(_){}
+  }catch(e){
+    const statusEl=document.getElementById('pdvOrdersStatus');
+    if(statusEl)statusEl.textContent=`Erro ao consultar pedidos: ${String(e?.message||e||'falha de conexão')}`;
+  }
+}
+async function loadPDVOrders(){
+  if(!adminAuthPassword)return requestLogin('PDV',()=>loadPDVOrders());
+  const statusEl=document.getElementById('pdvOrdersStatus');
+  if(statusEl)statusEl.textContent='Consultando pedidos no Supabase...';
+  await pollOrders();
 }
 async function generateShippingLabel(orderId){
   if(!adminAuthPassword)return requestLogin('PAINEL ADMINISTRATIVO',()=>generateShippingLabel(orderId));
@@ -2783,9 +2814,17 @@ function orderShippingAddress(o){
   const pick=(...values)=>{for(const v of values){if(v!==undefined&&v!==null&&String(v).trim()!=='')return String(v).trim()}return '';};
   return {name:pick(s.name,s.recipient_name,s.receiver_name,o.customer_name,c.name),street:pick(s.street,s.address,s.address_line,s.logradouro,s.street_name),number:pick(s.number,s.numero,s.street_number),complement:pick(s.complement,s.complemento),district:pick(s.neighborhood,s.district,s.bairro),city:pick(s.city,s.cidade),state:pick(s.state,s.state_abbr,s.uf),cep:pick(s.cep,s.postal_code,s.zip_code,s.zip),phone:pick(s.phone,s.telephone,o.customer_phone,o.phone,c.phone),email:pick(o.customer_email,c.email),service:pick(s.service,o.shipping_service,o.superfrete_service),tracking:pick(o.superfrete_tracking_code,o.tracking_code),label:pick(o.superfrete_label_url,o.shipping_label_url,o.label_url)};
 }
-function renderAdminOrders(orders){
-  let box=document.getElementById('adminOrders');if(!box)return;
+function renderAdminOrders(orders,response={}){
+  let box=document.getElementById('pdvOrders');if(!box)return;
+  const statusBox=document.getElementById('pdvOrdersStatus');
   latestAdminOrders=Array.isArray(orders)?orders:[];
+  const source=String(response.source_table||latestAdminOrders.find(o=>o?._source_table)?._source_table||'store_orders');
+  const project=String(response.project_ref||'');
+  if(statusBox){
+    statusBox.textContent=String(response.diagnostic||'').trim() ||
+      `${latestAdminOrders.length} pedido(s) carregado(s) · Origem: ${source}${project?` · Projeto Supabase: ${project}`:''}`;
+    statusBox.className='pdv-status '+(response.diagnostic&&latestAdminOrders.length===0?'warn':'');
+  }
   const counts={all:latestAdminOrders.length,awaiting:0,shipping:0,preparing:0,shipped:0};
   const isPaid=o=>String(o.payment_status||'').toLowerCase()==='approved'||['paid','preparing','prepared','shipped','delivered'].includes(String(o.order_status||'').toLowerCase());
   const isUnpaid=o=>!isPaid(o)&&['pending','in_process','in_mediation','unpaid',''].includes(String(o.payment_status||'').toLowerCase())&&['pending','reserved','awaiting_payment','pending_payment',''].includes(String(o.order_status||'pending').toLowerCase());
@@ -2799,7 +2838,8 @@ function renderAdminOrders(orders){
     const address=[a.street,a.number].filter(Boolean).join(', '),city=[a.city,a.state].filter(Boolean).join(' - '),cep=a.cep?('CEP '+a.cep):'';
     const addressPayload=encodeURIComponent(JSON.stringify(o)).replace(/'/g,'%27');
     const addressComplete=!!(a.street&&a.city&&a.cep);
-    const labelAction=label?`<button class="smallbtn primary" type="button" onclick="printShippingLabel(${JSON.stringify(a.label)})">🖨️ ABRIR / IMPRIMIR ETIQUETA</button>`:`<button class="smallbtn primary" type="button" onclick="generateShippingLabel(${JSON.stringify(String(o.id))})">📦 GERAR ETIQUETA SUPERFRETE</button>`;
+    const legacy=String(o._source_table||'')==='orders';
+    const labelAction=label?`<button class="smallbtn primary" type="button" onclick="printShippingLabel(${JSON.stringify(a.label)})">🖨️ ABRIR / IMPRIMIR ETIQUETA</button>`:legacy?`<p class="st70-shipping-warning">Pedido legado: migre para store_orders antes de gerar etiqueta.</p>`:`<button class="smallbtn primary" type="button" onclick="generateShippingLabel(${JSON.stringify(String(o.id))})">📦 GERAR ETIQUETA SUPERFRETE</button>`;
     return `<section class="st70-shipping-detail"><div class="st70-detail-head"><b>INFORMAÇÕES DE ENVIO</b><button class="smallbtn" type="button" onclick="toggleAdminOrderDetails(${JSON.stringify(String(o.id))})">FECHAR ×</button></div><div class="st70-shipping-columns"><div><h4>DESTINATÁRIO</h4>${line('Nome',a.name)}${line('Rua e número',address)}${line('Complemento',a.complement)}${line('Bairro',a.district)}${line('Cidade / UF',city)}${line('CEP',cep)}${line('Telefone',a.phone)}${line('E-mail',a.email)}${!addressComplete?'<p class="st70-shipping-warning">⚠️ Endereço incompleto: confira os dados antes de despachar.</p>':''}</div><div><h4>ETIQUETA E RASTREIO</h4><div class="st70-label-state ${label?'has-label':'no-label'}">${label?'✓ ETIQUETA DISPONÍVEL':'! AINDA NÃO HÁ ETIQUETA'}</div>${line('Transportadora / serviço',a.service)}${line('Código de rastreio',a.tracking)}<div class="admin-tools st70-detail-actions"><button class="smallbtn" type="button" onclick="printOrderAddressLabel('${addressPayload}')">🖨️ IMPRIMIR ENDEREÇO</button>${labelAction}</div></div></div><h4>PRODUTOS DO PEDIDO</h4>${items.length?`<ul class="st70-detail-items">${items.map(i=>`<li><b>${Math.max(1,Number(i.quantity||1))}× ${escapeHtml(i.title||i.name||'Produto')}</b>${i.size?` · Tam. ${escapeHtml(i.size)}`:''}${i.color?` · ${escapeHtml(i.color)}`:''}${i.sku?` · SKU ${escapeHtml(i.sku)}`:''}</li>`).join('')}</ul>`:'<p>Não há detalhamento dos produtos neste pedido.</p>'}</section>`;
   };
   const cards=visible.map(o=>{
@@ -2807,14 +2847,15 @@ function renderAdminOrders(orders){
     const items=Array.isArray(o.items)?o.items:[];
     const itemsHtml=items.length?`<div class="st70-order-products">${items.map(i=>`<button class="st70-product-link" type="button" onclick="toggleAdminOrderDetails(${JSON.stringify(String(o.id))})">${Math.max(1,Number(i.quantity||1))}× ${escapeHtml(i.title||i.name||'Produto')}${i.size?` · Tam. ${escapeHtml(i.size)}`:''}${i.color?` · ${escapeHtml(i.color)}`:''} <span>VER ENVIO ↗</span></button>`).join('')}</div>`:'<small>Itens não detalhados neste pedido.</small>';
     const unpaid=isUnpaid(o),addressPayload=encodeURIComponent(JSON.stringify(o)).replace(/'/g,'%27');
-    let workflow='';if(paid&&status==='paid')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'preparing')">▶ INICIAR SEPARAÇÃO</button>`;else if(status==='preparing')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'prepared')">✓ PEDIDO PREPARADO</button>`;else if(status==='prepared')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'shipped')">🚚 MARCAR COMO ENVIADO</button>`;
+    const legacy=String(o._source_table||'')==='orders';
+    let workflow='';if(!legacy&&paid&&status==='paid')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'preparing')">▶ INICIAR SEPARAÇÃO</button>`;else if(!legacy&&status==='preparing')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'prepared')">✓ PEDIDO PREPARADO</button>`;else if(!legacy&&status==='prepared')workflow=`<button class="smallbtn primary" type="button" onclick="updateAdminOrderStatus(${JSON.stringify(String(o.id))},'shipped')">🚚 MARCAR COMO ENVIADO</button>`;
     const addressButton=paid?`<button class="smallbtn" type="button" onclick="printOrderAddressLabel('${addressPayload}')">🖨️ IMPRIMIR ENDEREÇO</button>`:'';
-    const shippingButton=paid?(label?`<button class="smallbtn" type="button" onclick="printShippingLabel(${JSON.stringify(String(label))})">📦 IMPRIMIR ETIQUETA</button>`:`<button class="smallbtn" type="button" onclick="toggleAdminOrderDetails(${JSON.stringify(String(o.id))})">📦 VER / GERAR ETIQUETA</button>`):'<small>Aguardando confirmação do pagamento.</small>';
-    const deleteButton=unpaid?`<button class="smallbtn danger" type="button" onclick="deletePendingOrderAdmin(${JSON.stringify(String(o.id))},${JSON.stringify(String(o.external_reference||o.id))})">🗑 EXCLUIR PENDENTE</button>`:'';
+    const shippingButton=paid?(label?`<button class="smallbtn" type="button" onclick="printShippingLabel(${JSON.stringify(String(label))})">📦 IMPRIMIR ETIQUETA</button>`:legacy?`<button class="smallbtn" type="button" onclick="toggleAdminOrderDetails(${JSON.stringify(String(o.id))})">📦 VER DADOS DE ENVIO</button>`:`<button class="smallbtn" type="button" onclick="toggleAdminOrderDetails(${JSON.stringify(String(o.id))})">📦 VER / GERAR ETIQUETA</button>`):'<small>Aguardando confirmação do pagamento.</small>';
+    const deleteButton=(!legacy&&unpaid)?`<button class="smallbtn danger" type="button" onclick="deletePendingOrderAdmin(${JSON.stringify(String(o.id))},${JSON.stringify(String(o.external_reference||o.id))})">🗑 EXCLUIR PENDENTE</button>`:'';
     const a=orderShippingAddress(o),opened=selectedAdminOrderId===String(o.id);
     return `<article class="admin-item st70-order-card"><div class="st70-order-card-main"><div class="st70-order-title-row"><button class="st70-order-open" type="button" onclick="toggleAdminOrderDetails(${JSON.stringify(String(o.id))})">${escapeHtml(o.external_reference||'Pedido')} <span>⌄ DETALHES DE ENVIO</span></button><span class="st70-status-pill status-${escapeHtml(status)}">${escapeHtml(orderStatusLabel(status))}</span></div><div class="st70-order-meta"><b>${money(o.total||0)}</b> · Pagamento: ${escapeHtml(o.payment_status||'pendente')} · ${escapeHtml(o.payment_method||'')}${o.updated_at?` · ${new Date(o.updated_at).toLocaleString('pt-BR')}`:''}</div><div class="st70-order-label-summary">${a.label?'✓ Etiqueta SuperFrete disponível':'! Sem etiqueta SuperFrete'}${a.tracking?` · Rastreio: ${escapeHtml(a.tracking)}`:''}</div>${itemsHtml}<div class="admin-tools st70-order-actions">${workflow}${addressButton}${shippingButton}${deleteButton}</div>${opened?detailHtml(o):''}</div></article>`;
   }).join('');
-  box.innerHTML=filterHtml+(cards||'<div class="empty">Nenhum pedido nesta categoria.</div>');
+  box.innerHTML=filterHtml+(cards||`<div class="empty">${latestAdminOrders.length?'Nenhum pedido nesta categoria.':'Nenhum pedido retornado pela consulta.'}</div>`);
 }
 
 (function installProductButtonHandlers(){
