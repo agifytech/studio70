@@ -844,7 +844,7 @@ https://cf.shopee.com.br/file/br-11134207-..."></textarea></label>
   <button type="button" class="smallbtn" style="margin-top:8px" onclick="saveShippingSettings()">SALVAR FRETE</button>
   <div id="shippingAdminStatus" style="font-size:11px;margin-top:6px"></div>
 </div>
-<button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><div id="labelPrice"></div><svg id="barcodeSvg"></svg><div id="labelCode"></div><div id="labelStock"></div></div></div><div><h3>📦 PEDIDOS · SEPARAÇÃO E PREPARAÇÃO</h3><p style="font-size:12px;color:#777;margin:0 0 8px">Acompanhe o pagamento, confira os itens e avance uma etapa por vez. O cliente recebe e-mail quando o pedido muda de etapa.</p><div id="adminOrders" class="admin-list" style="max-height:260px;overflow:auto;margin-bottom:18px"></div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" type="button" onclick="printSelectedLabel()">🏷️ ETIQUETA UNICA</button><button class="smallbtn" type="button" onclick="printAllLabels()">🏷️ ETIQUETA EM MASSA</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden></label></div><div id="adminList" class="admin-list"></div></div></div></div></div>
+<button class="btn" type="submit">SALVAR PRODUTO</button><button class="smallbtn" type="button" onclick="clearForm()">LIMPAR</button></form><div class="label-preview" id="labelPreview" style="display:none"><b id="labelName"></b><div id="labelPrice"></div><svg id="barcodeSvg"></svg><div id="labelCode"></div><div id="labelStock"></div></div></div><div><h3>Produtos cadastrados <span id="adminCount"></span></h3><input class="field" id="adminSearch" placeholder="Pesquisar no cadastro..."><div class="admin-tools" style="margin:10px 0;flex-wrap:wrap"><button class="smallbtn" type="button" onclick="printSelectedLabel()">🏷️ ETIQUETA UNICA</button><button class="smallbtn" type="button" onclick="printAllLabels()">🏷️ ETIQUETA EM MASSA</button><button class="smallbtn" onclick="exportData()">⬇️ Backup</button><label class="smallbtn" style="display:inline-block;text-align:center">⬆️ Restaurar<input id="importData" type="file" accept="application/json" hidden></label></div><div id="adminList" class="admin-list"></div></div></div></div></div>
 
 <div class="modal" id="pdvModal"><div class="modal-panel"><button class="close" onclick="closePDV()">×</button><h2 class="section-title">PDV — PONTO DE VENDA</h2>
 <div class="pdv-layout">
@@ -2716,7 +2716,7 @@ async function pollOrders(){
     const arr=[...seenOrderRefs].slice(-200);
     localStorage.setItem('studio70_seen_orders',JSON.stringify(arr));
     if(lastOrderPoll)localStorage.setItem('studio70_last_order_poll',lastOrderPoll);
-    if(document.getElementById('adminModal')?.classList.contains('open'))renderAdminOrders(d.orders);
+    /* Gestão de pedidos transferida para o PDV. */
   }catch(_){}
 }
 async function generateShippingLabel(orderId){
