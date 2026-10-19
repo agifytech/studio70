@@ -239,6 +239,20 @@ footer a{color:#111!important}
 .st70-label-state{font-size:11px;font-weight:900;padding:9px;border-radius:7px;margin-bottom:8px}.st70-label-state.has-label{background:#d9f2df;color:#135c2b}.st70-label-state.no-label{background:#fff0c2;color:#765000}
 .st70-detail-actions{margin-top:10px;flex-wrap:wrap}.st70-shipping-warning{background:#fff0c2;padding:8px;border-radius:6px;font-size:11px}.st70-detail-items{font-size:11px;padding-left:20px}.st70-detail-items li{margin:5px 0}
 @media(max-width:650px){.st70-shipping-columns{grid-template-columns:1fr}.st70-order-filters{position:static}.st70-order-filters .smallbtn{font-size:10px;padding:7px}.st70-order-title-row{align-items:flex-start}.st70-order-actions{display:grid!important;grid-template-columns:1fr 1fr}.st70-order-actions .smallbtn{width:100%;font-size:9px}.st70-shipping-line{gap:8px}.st70-shipping-line span{flex-basis:34%}}
+
+/* Carrossel de produtos selecionados manualmente no ADM */
+.st70-manual-carousel-section{max-width:1280px;margin:0 auto;padding:34px 22px 28px}
+.st70-carousel-heading{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:18px}
+.st70-carousel-heading .section-title{margin-bottom:8px}
+.st70-carousel-heading p{margin:0;color:#666;font-size:14px}
+.st70-carousel-kicker{display:block;font-size:11px;font-weight:800;letter-spacing:2px;margin-bottom:8px;color:#555}
+.st70-carousel-arrows{display:flex;gap:8px;flex-shrink:0}
+.st70-carousel-arrows button{width:42px;height:42px;border:1px solid #aaa69f;background:#111;color:#fff;border-radius:50%;font-size:30px;line-height:1}
+.st70-manual-product-carousel{display:flex;gap:16px;overflow-x:auto;scroll-behavior:smooth;scroll-snap-type:x mandatory;padding:4px 2px 14px;scrollbar-width:thin}
+.st70-manual-product-carousel>.product{flex:0 0 245px;width:245px;min-width:0;scroll-snap-align:start}
+.st70-manual-product-carousel .product img{height:245px}
+@media(max-width:650px){.st70-manual-carousel-section{padding:26px 14px}.st70-manual-product-carousel{gap:12px}.st70-manual-product-carousel>.product{flex-basis:190px;width:190px}.st70-manual-product-carousel .product img{height:200px}.st70-carousel-arrows button{width:36px;height:36px;font-size:25px}.st70-carousel-heading .section-title{font-size:25px}}
+
 </style>
 <style>
 html,body{max-width:100%;overflow-x:hidden}
@@ -619,6 +633,7 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
 <main id="inicio"><section class="hero-banner-section" style="padding:0;max-width:none"><div class="banner-carousel" id="bannerCarousel"><div class="banner-track" id="bannerTrack"></div><button class="banner-arrow prev" type="button" id="bannerPrev" aria-label="Banner anterior">‹</button><button class="banner-arrow next" type="button" id="bannerNext" aria-label="Próximo banner">›</button><div class="banner-dots" id="bannerDots"></div></div></section>
 <div class="trustbar"><span>🚚 Frete grátis acima de R$250</span><span>🔄 Troca fácil em 7 dias</span><span>🔒 Compra 100% segura</span><span>💳 Parcele suas compras</span></div>
 
+<section id="st70ManualCarouselSection" class="st70-manual-carousel-section" style="display:none"><div class="st70-carousel-heading"><div><span class="st70-carousel-kicker">SELEÇÃO STUDIO 70</span><h2 class="section-title">ESCOLHIDOS PARA VOCÊ</h2><p>Uma seleção especial de produtos da nossa loja.</p></div><div class="st70-carousel-arrows"><button type="button" aria-label="Produtos anteriores" onclick="moveManualProductCarousel(-1)">‹</button><button type="button" aria-label="Próximos produtos" onclick="moveManualProductCarousel(1)">›</button></div></div><div id="st70ManualProductCarousel" class="st70-manual-product-carousel"></div></section>
 <section id="produtos"><h2 class="section-title">PRODUTOS</h2><div class="searchbar"><input id="searchInput" placeholder="Pesquisar produto, SKU ou código de barras..."><select id="categoryFilter"><option value="">Todas as categorias</option></select></div><div id="productGrid" class="product-grid"></div><div id="pagination" style="display:flex;justify-content:center;gap:7px;margin-top:25px"></div></section>
 <section id="geekSection" class="geek-section" style="display:none">
   <div class="geek-header">
@@ -819,7 +834,7 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
 <label class="full">Links das fotos secundárias<textarea class="field" id="pSecondaryImages" placeholder="Um link por linha — também aceita links https://cf.shopee.com.br/file/..."></textarea></label>
 <label class="full">Links dos vídeos do produto<textarea class="field" id="pVideos" placeholder="Um link por linha — MP4/WebM ou YouTube/Vimeo"></textarea><small style="display:block;color:#777;margin-top:4px">Os vídeos serão exibidos junto com as fotos na galeria do produto.</small></label>
 <label class="full">URL do produto<input class="field" id="pUrl" placeholder="https://..."></label>
-<label class="full">Descrição<div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap"><textarea class="field" id="pDescription" style="flex:1;min-width:240px"></textarea><button class="smallbtn" type="button" id="aiDescriptionBtn" onclick="generateAIDescription()" style="white-space:nowrap">✨ GERAR DESCRIÇÃO COM IA</button></div><div id="aiDescriptionStatus" style="font-size:11px;color:#777;margin-top:6px;min-height:16px"></div></label></div><div class="checkrow"><label><input type="checkbox" id="pActive" checked> Ativo</label><label><input type="checkbox" id="pFeatured"> Destaque</label></div>
+<label class="full">Descrição<div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap"><textarea class="field" id="pDescription" style="flex:1;min-width:240px"></textarea><button class="smallbtn" type="button" id="aiDescriptionBtn" onclick="generateAIDescription()" style="white-space:nowrap">✨ GERAR DESCRIÇÃO COM IA</button></div><div id="aiDescriptionStatus" style="font-size:11px;color:#777;margin-top:6px;min-height:16px"></div></label></div><div class="checkrow"><label><input type="checkbox" id="pActive" checked> Ativo</label><label><input type="checkbox" id="pFeatured"> ★ Exibir no carrossel da vitrine</label></div><p style="font-size:11px;color:#777;margin:-4px 0 12px">Marque esta opção nos produtos que você quer destacar. Salve o produto; ele aparecerá no carrossel da página inicial. Desmarque para retirar.</p>
 <div class="payment-admin-box" id="pricingAdminBox" style="margin:14px 0;padding:14px;background:#f3f1ec;border:1px solid #c8c5be;border-radius:12px">
   <b>💰 PREÇO DE VENDA — STUDIO 70</b>
   <p style="font-size:11px;color:#666;margin:6px 0 10px">O preço do fornecedor é tratado como custo. O cliente verá e pagará o <b>Preço de venda STUDIO 70</b>.</p>
@@ -1193,6 +1208,18 @@ function productCardHtml(p){
   const quantityText=quantity!==null&&quantity!==undefined&&Number.isFinite(Number(quantity))?`<span class="supplier-stock-quantity">Fornecedor: ${Math.max(0,Math.floor(Number(quantity)))} unidade(s)</span>`:'';
   return `<article class="product${soldOut?' supplier-product-sold-out':''}" data-product-id="${pid}"><img src="${imageSrc(p.image)}" data-st70-original="${escapeAttr(p.image||'')}" data-st70-shopee="${isShopeeImageUrl(p.image)?'1':'0'}" referrerpolicy="no-referrer" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" onerror="imageError(this)"><span class="badge">${escapeHtml(categoryLabel(p)||'Outros')}</span>${soldOut?'<span class="badge supplier-sold-out">ESGOTADO</span>':''}${p.featured?'<span class="badge featured">★ Destaque</span>':''}<div class="product-info"><h3>${escapeHtml(p.name||'Produto')}</h3><div class="price">${money(salePriceOf(p))}</div>${quantityText}<div class="meta">SKU: ${escapeHtml(p.sku||'')}<br>Código: ${escapeHtml(p.barcode||'')}</div><div class="product-actions"><button class="smallbtn js-details" type="button" data-product-id="${pid}">DETALHES</button><button class="smallbtn primary js-buy" type="button" data-product-id="${pid}" ${soldOut?'disabled aria-disabled="true"':''}>${soldOut?'ESGOTADO':'COMPRAR'}</button></div></div></article>`;
 }
+function renderManualProductCarousel(){
+  const section=document.getElementById('st70ManualCarouselSection');
+  const track=document.getElementById('st70ManualProductCarousel');
+  if(!section||!track)return;
+  const chosen=(Array.isArray(products)?products:[]).filter(p=>p&&p.active!==false&&(p.featured===true||String(p.featured).toLowerCase()==='true'));
+  section.style.display=chosen.length?'block':'none';
+  track.innerHTML=chosen.map(productCardHtml).join('');
+}
+function moveManualProductCarousel(direction){
+  const track=document.getElementById('st70ManualProductCarousel');
+  if(track)track.scrollBy({left:Number(direction||1)*Math.max(220,track.clientWidth*.8),behavior:'smooth'});
+}
 function renderProducts(){
   const list=filtered();
   const pages=Math.max(1,Math.ceil(list.length/perPage));
@@ -1202,6 +1229,7 @@ function renderProducts(){
   if(grid)grid.innerHTML=slice.length?slice.map(productCardHtml).join(''):'<div class="empty" style="grid-column:1/-1">Nenhum produto encontrado.</div>';
   const pagination=document.getElementById('pagination');
   if(pagination)pagination.innerHTML=Array.from({length:pages},(_,i)=>`<button class="smallbtn js-page" type="button" data-page="${i+1}" ${i+1===page?'style="background:var(--accent)"':''}>${i+1}</button>`).join('');
+  renderManualProductCarousel();
   renderGeekProducts();
 }
 let geekPage=1;
