@@ -253,6 +253,14 @@ footer a{color:#111!important}
 .st70-manual-product-carousel .product img{height:245px}
 @media(max-width:650px){.st70-manual-carousel-section{padding:26px 14px}.st70-manual-product-carousel{gap:12px}.st70-manual-product-carousel>.product{flex-basis:190px;width:190px}.st70-manual-product-carousel .product img{height:200px}.st70-carousel-arrows button{width:36px;height:36px;font-size:25px}.st70-carousel-heading .section-title{font-size:25px}}
 
+
+/* Menu de acesso rápido às seções do ADM */
+.st70-admin-quick-menu{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 18px;padding:12px;background:#e8e6e1;border:1px solid #c8c5be;border-radius:12px;scroll-margin-top:18px}
+.st70-admin-quick-menu button{appearance:none;border:1px solid #c8c5be;background:#fff;color:#111;border-radius:8px;padding:10px 12px;font:800 12px/1.25 Arial,sans-serif;cursor:pointer;text-align:left;max-width:100%}
+.st70-admin-quick-menu button:hover,.st70-admin-quick-menu button.active{background:#111;color:#fff;border-color:#111}
+#categoryAdminCard,#adminList,#pricingAdminBox,#mpPublicKey,#freeShippingThreshold,#shippingPacMin,.shopee-import-admin-card{scroll-margin-top:95px}
+@media(max-width:650px){.st70-admin-quick-menu{display:grid;grid-template-columns:1fr 1fr;padding:9px;gap:6px}.st70-admin-quick-menu button{font-size:11px;padding:10px 8px}}
+
 </style>
 <style>
 html,body{max-width:100%;overflow-x:hidden}
@@ -1774,7 +1782,60 @@ async function importShopeeCatalog(){
     }
   }
 }
-function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');setupAdminTabs();ensureCarmenattoAdminControls();ensureCarlaStockMonitorControls();ensureSilkManScraperControls();renderAdmin();loadFashionTheme().then(fillFashionThemeAdmin);loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';}async function loadFreeShippingConfig(){
+function setupAdminQuickMenu(){
+  const panels=document.getElementById('adminTabPanels');
+  const tabs=document.getElementById('adminTabs');
+  if(!panels||!tabs)return;
+  let menu=document.getElementById('st70AdminQuickMenu');
+  if(!menu){
+    menu=document.createElement('div');
+    menu.id='st70AdminQuickMenu';
+    menu.className='st70-admin-quick-menu';
+    menu.setAttribute('aria-label','Menu de configurações administrativas');
+    menu.innerHTML=`
+      <button type="button" data-target="categories">🗂️ Categorias / grupos</button>
+      <button type="button" data-target="shopee">🛍️ Catálogo Shopee — importação pronta</button>
+      <button type="button" data-target="registered">📦 Produtos cadastrados</button>
+      <button type="button" data-target="pricing">💲 Preço de venda — STUDIO 70</button>
+      <button type="button" data-target="mercadopago">💳 Mercado Pago — configuração</button>
+      <button type="button" data-target="freeShipping">🎁 Frete grátis — regra da loja</button>
+      <button type="button" data-target="pacSedex">🚚 Frete PAC / SEDEX — estimativa</button>
+      <button type="button" data-target="banners">🖼️ Banners</button>
+      <button type="button" data-target="appearance">🎨 Aparência</button>`;
+    tabs.insertAdjacentElement('afterend',menu);
+    menu.addEventListener('click',e=>{
+      const btn=e.target.closest('button[data-target]');if(!btn)return;
+      const key=btn.dataset.target;
+      let target=null;
+      if(key==='banners'||key==='appearance'){
+        const tab=tabs.querySelector(`[data-admin-tab="${key}"]`);
+        if(tab)tab.click();
+        target=key==='banners'?document.querySelector('#adminTabPanels [data-tab="banners"] .banner-admin-card'):document.querySelector('#adminTabPanels [data-tab="appearance"] .fashion-admin-card');
+      }else{
+        const productsTab=tabs.querySelector('[data-admin-tab="products"]');if(productsTab)productsTab.click();
+        const selectors={
+          categories:'#categoryAdminCard',
+          shopee:'.shopee-import-admin-card',
+          registered:'#adminList',
+          pricing:'#pricingAdminBox',
+          mercadopago:'#mpPublicKey',
+          freeShipping:'#freeShippingThreshold',
+          pacSedex:'#shippingPacMin'
+        };
+        target=document.querySelector(selectors[key]||'');
+        if(target && key!=='categories' && key!=='shopee' && key!=='registered' && key!=='pricing'){
+          target=target.closest('.payment-admin-box')||target.closest('.form-grid')||target;
+        }
+        if(key==='registered'&&target)target=target.closest('.admin-list')||target.parentElement;
+      }
+      if(target){
+        menu.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===btn));
+        requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'}));
+      }
+    });
+  }
+}
+function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCategoryAdminControls();setupAdminTabs();setupAdminQuickMenu();ensureCarmenattoAdminControls();ensureCarlaStockMonitorControls();ensureSilkManScraperControls();renderAdmin();loadFashionTheme().then(fillFashionThemeAdmin);loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';}async function loadFreeShippingConfig(){
   try{
     const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shipping_config'})});
     const d=await r.json().catch(()=>({}));
