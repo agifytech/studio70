@@ -2488,15 +2488,16 @@ function ensureSilkManScraperControls(){
   const box=document.createElement('div');
   box.id='silkManScraperCard';
   box.style='margin-top:14px;padding:14px;border:1px solid #c8c5be;border-radius:12px;background:#fff;color:#111';
-  box.innerHTML='<b>🧵 SCRAPER — SILK MAN RJ</b><p style="color:#555;font-size:12px;margin:6px 0 10px">Busca somente as categorias Oversized suedine, Oversized estonado, 30.1 Premium e Malha peruana. O custo do fornecedor fica separado; o preço de venda segue a regra de preços do ADM. A importação grava apenas na tabela de produtos de fornecedores, sem alterar o estoque próprio.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="smallbtn" id="silkManPreviewBtn" type="button">1. BUSCAR / PRÉVIA</button><button class="smallbtn primary" id="silkManImportBtn" type="button" disabled>2. IMPORTAR PRODUTOS</button></div><div id="silkManScraperStatus" role="status" style="margin-top:8px;color:#555;font-size:12px;white-space:pre-line"></div><div id="silkManScraperPreview" style="margin-top:8px;max-height:260px;overflow:auto;font-size:12px"></div>';
+  box.innerHTML='<b>🧵 SCRAPER — SILK MAN RJ</b><p style="color:#555;font-size:12px;margin:6px 0 10px">Escolha a categoria que deseja consultar e importar. Os produtos serão gravados na tabela de fornecedores; esta rotina não publica automaticamente na vitrine principal.</p><label for="silkManCategorySelect" style="display:block;font-size:12px;font-weight:700;margin:8px 0 4px">CATEGORIA PARA IMPORTAÇÃO</label><select id="silkManCategorySelect" class="field" style="width:100%;margin-bottom:10px"><option value="Moda Infantil Masculina">Moda Infantil Masculina (Juvenil)</option><option value="Oversized Suedine">Oversized Suedine</option><option value="Oversized Estonado">Oversized Estonado</option><option value="30.1 Premium">30.1 Premium</option><option value="Malha Peruana">Malha Peruana</option><option value="__TODAS__">Todas as categorias</option></select><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="smallbtn" id="silkManPreviewBtn" type="button">1. BUSCAR / PRÉVIA</button><button class="smallbtn primary" id="silkManImportBtn" type="button" disabled>2. IMPORTAR CATEGORIA</button></div><div id="silkManScraperStatus" role="status" style="margin-top:8px;color:#555;font-size:12px;white-space:pre-line"></div><div id="silkManScraperPreview" style="margin-top:8px;max-height:260px;overflow:auto;font-size:12px"></div>';
   scanner.appendChild(box);
   document.getElementById('silkManPreviewBtn').onclick=previewSilkManProducts;
   document.getElementById('silkManImportBtn').onclick=importSilkManProducts;
 }
 let silkManScrapePreview=[];
 async function silkManScraperRequest(action){
+  const category=document.getElementById("silkManCategorySelect")?.value||"Moda Infantil Masculina";
   if(!adminAuthPassword)throw new Error('Faça login no painel administrativo primeiro.');
-  const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action,admin_password:adminAuthPassword})});
+  const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action,admin_password:adminAuthPassword,category})});
   const d=await r.json().catch(()=>({}));
   if(!r.ok||!d.ok)throw new Error(d.error||`Falha na consulta (HTTP ${r.status}).`);
   return d;
@@ -2507,7 +2508,7 @@ function renderSilkManPreview(products){
 }
 async function previewSilkManProducts(){
   const btn=document.getElementById('silkManPreviewBtn'),imp=document.getElementById('silkManImportBtn'),status=document.getElementById('silkManScraperStatus');
-  if(!btn||!status)return;btn.disabled=true;if(imp)imp.disabled=true;status.textContent='Consultando as quatro categorias do fornecedor...';
+  if(!btn||!status)return;btn.disabled=true;if(imp)imp.disabled=true;status.textContent='Consultando a categoria selecionada do fornecedor...';
   try{const d=await silkManScraperRequest('silk_man_rj_preview');silkManScrapePreview=Array.isArray(d.products)?d.products:[];renderSilkManPreview(silkManScrapePreview);const issues=Array.isArray(d.errors)?d.errors:[];status.textContent=`Prévia concluída: ${silkManScrapePreview.length} produto(s) encontrados. Nenhum produto foi gravado.\nCategorias consultadas: ${(Array.isArray(d.categories)?d.categories:[]).join(', ')||'não informado'}.`+(issues.length?`\n\nDIAGNÓSTICO (${issues.length}):\n• `+issues.slice(0,12).join('\n• '):(!silkManScrapePreview.length?'\nO site não retornou produtos no HTML consultado. Pode ser necessário identificar a API usada pelo catálogo.':''));if(imp)imp.disabled=!silkManScrapePreview.length;}
   catch(e){silkManScrapePreview=[];renderSilkManPreview([]);status.textContent='Não foi possível ler o catálogo: '+String(e?.message||e);}
   finally{btn.disabled=false;}
@@ -2515,7 +2516,7 @@ async function previewSilkManProducts(){
 async function importSilkManProducts(){
   const btn=document.getElementById('silkManImportBtn'),preview=document.getElementById('silkManPreviewBtn'),status=document.getElementById('silkManScraperStatus');
   if(!btn||!status)return;if(!silkManScrapePreview.length){status.textContent='Faça a prévia antes de importar.';return;}
-  if(!confirm(`Importar/atualizar ${silkManScrapePreview.length} produto(s) da SILK MAN RJ na tabela de fornecedores do Supabase? O catálogo principal e o checkout não serão alterados.`))return;
+  const selectedCategory=document.getElementById('silkManCategorySelect')?.value||'Moda Infantil Masculina';if(!confirm(`Importar/atualizar ${silkManScrapePreview.length} produto(s) da categoria ${selectedCategory==='__TODAS__'?'TODAS':selectedCategory} da SILK MAN RJ na tabela de fornecedores do Supabase? O catálogo principal e o checkout não serão alterados.`))return;
   btn.disabled=true;if(preview)preview.disabled=true;status.textContent='Importando produtos na tabela de fornecedores...';
   try{const d=await silkManScraperRequest('silk_man_rj_import');status.textContent=`Importação concluída. Novos: ${Number(d.created||0)} · Atualizados: ${Number(d.updated||0)} · Ignorados/sem preço: ${Number(d.skipped||0)}${d.pricing_mode==='code'?'\nA regra do ADM está em modo preço cadastrado: itens sem preço final ficaram inativos até receberem preço no ADM.':''}`;silkManScrapePreview=Array.isArray(d.products)?d.products:[];renderSilkManPreview(silkManScrapePreview);await loadSupabaseProducts();}
   catch(e){status.textContent='Falha na importação: '+String(e?.message||e);}
