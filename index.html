@@ -809,9 +809,9 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
 <div class="payment-admin-box full" style="margin:0;padding:14px;background:#fff8ed;border:1px solid #e1c28f;border-radius:12px">
   <b>🛍️ IMAGENS DIRETAS DA SHOPEE</b>
   <p style="font-size:11px;color:#666;margin:6px 0 10px;line-height:1.45">Cole aqui os links das imagens da Shopee exatamente como aparecem, incluindo <b>https://cf.shopee.com.br/file/...</b>. O primeiro link será a foto principal e os demais serão fotos secundárias. Não é necessário baixar a imagem.</p>
-  <label>Links das imagens da Shopee<textarea class="field" id="pShopeeImages" rows="4" placeholder="https://cf.shopee.com.br/file/br-11134201-...
-https://cf.shopee.com.br/file/br-11134207-...
-https://cf.shopee.com.br/file/br-11134207-..."></textarea></label>
+  <label>Link do produto na Shopee<input class="field" id="pShopeeProductUrl" placeholder="Cole o link completo do produto, por exemplo shopee.com.br/...-i.1096592591.58208362560"></label>
+  <button class="smallbtn primary" type="button" id="pShopeeFetchImagesBtn" style="margin:7px 0" onclick="fetchShopeeProductGallery()">🔎 BUSCAR TODAS AS FOTOS PELO LINK</button>
+  <label>Links das imagens encontradas<textarea class="field" id="pShopeeImages" rows="4" placeholder="As fotos da galeria da Shopee aparecerão aqui, uma por linha."></textarea></label>
   <div id="pShopeeImagesStatus" style="font-size:11px;color:#777;margin-top:5px;min-height:16px"></div>
   <button class="smallbtn" type="button" style="margin-top:7px" onclick="applyShopeeImageLinksToProduct()">↳ USAR LINKS DA SHOPEE NO PRODUTO</button>
 </div>
@@ -1820,7 +1820,7 @@ function clearForm(){
   document.getElementById('pFeatured').checked=false;
   document.getElementById('pSku').value='';
   document.getElementById('pBarcode').value='';
-  const shopeeImages=document.getElementById('pShopeeImages'); if(shopeeImages)shopeeImages.value='';
+  const shopeeImages=document.getElementById('pShopeeImages'); if(shopeeImages)shopeeImages.value='';const shopeeProductUrl=document.getElementById('pShopeeProductUrl');if(shopeeProductUrl)shopeeProductUrl.value='';
   const shopeeStatus=document.getElementById('pShopeeImagesStatus'); if(shopeeStatus)shopeeStatus.textContent='';
   document.getElementById('labelPreview').style.display='none';
   document.querySelectorAll('.admin-item').forEach(x=>x.classList.remove('admin-editing'));
@@ -1867,6 +1867,29 @@ function shopeeImageLinksFromAdmin(){
     }catch(_){return false;}
   }))];
 }
+async function fetchShopeeProductGallery(){
+  if(!adminAuthPassword)return requestLogin('BUSCAR FOTOS DA SHOPEE',fetchShopeeProductGallery);
+  const url=String(document.getElementById('pShopeeProductUrl')?.value||'').trim();
+  const status=document.getElementById('pShopeeImagesStatus');
+  const btn=document.getElementById('pShopeeFetchImagesBtn');
+  if(!url){if(status)status.textContent='Cole primeiro o link completo do produto na Shopee.';return;}
+  if(btn){btn.disabled=true;btn.textContent='⏳ BUSCANDO FOTOS...';}
+  if(status)status.textContent='Consultando a galeria pública do produto na Shopee...';
+  try{
+    const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shopee_product_images',admin_password:adminAuthPassword,product_url:url})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok||!d.ok)throw new Error(d.error||`Falha ao buscar fotos (HTTP ${r.status}).`);
+    const images=[...new Set((Array.isArray(d.images)?d.images:[]).map(normalizeImageUrl).filter(Boolean))];
+    if(!images.length)throw new Error('Nenhuma foto foi retornada pela Shopee.');
+    const area=document.getElementById('pShopeeImages');
+    const existing=String(area?.value||'').split(/\n|,/).map(v=>normalizeImageUrl(v.trim())).filter(Boolean);
+    if(area)area.value=[...new Set([...existing,...images])].join('\n');
+    const purl=document.getElementById('pUrl');if(purl&&!purl.value.trim())purl.value=url;
+    if(status)status.textContent=`✓ ${images.length} foto(s) encontradas. Confira a lista e clique em “USAR LINKS DA SHOPEE NO PRODUTO”.`;
+  }catch(e){if(status)status.textContent=`✕ ${e.message||e}`;}
+  finally{if(btn){btn.disabled=false;btn.textContent='🔎 BUSCAR TODAS AS FOTOS PELO LINK';}}
+}
+
 function applyShopeeImageLinksToProduct(){
   const links=shopeeImageLinksFromAdmin();
   const status=document.getElementById('pShopeeImagesStatus');
