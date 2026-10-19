@@ -253,33 +253,6 @@ footer a{color:#111!important}
 .st70-manual-product-carousel .product img{height:245px}
 @media(max-width:650px){.st70-manual-carousel-section{padding:26px 14px}.st70-manual-product-carousel{gap:12px}.st70-manual-product-carousel>.product{flex-basis:190px;width:190px}.st70-manual-product-carousel .product img{height:200px}.st70-carousel-arrows button{width:36px;height:36px;font-size:25px}.st70-carousel-heading .section-title{font-size:25px}}
 
-
-/* Menu de acesso rápido às seções do ADM */
-.st70-admin-quick-menu{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 18px;padding:12px;background:#e8e6e1;border:1px solid #c8c5be;border-radius:12px;scroll-margin-top:18px}
-.st70-admin-quick-menu button{appearance:none;border:1px solid #c8c5be;background:#fff;color:#111;border-radius:8px;padding:10px 12px;font:800 12px/1.25 Arial,sans-serif;cursor:pointer;text-align:left;max-width:100%}
-.st70-admin-quick-menu button:hover,.st70-admin-quick-menu button.active{background:#111;color:#fff;border-color:#111}
-#categoryAdminCard,#adminList,#pricingAdminBox,#mpPublicKey,#freeShippingThreshold,#shippingPacMin,.shopee-import-admin-card{scroll-margin-top:95px}
-@media(max-width:650px){.st70-admin-quick-menu{display:grid;grid-template-columns:1fr 1fr;padding:9px;gap:6px}.st70-admin-quick-menu button{font-size:11px;padding:10px 8px}}
-
-
-/* ST70: tema claro/escuro escolhido pelo cliente */
-:root{color-scheme:light;--theme-page:#e9e7e3;--theme-surface:#fff;--theme-text:#171715;--theme-muted:#66645f;--theme-border:#c9c6c0;--theme-control:#f5f4f1}
-html[data-theme="dark"]{color-scheme:dark;--bg:#111113;--card:#1c1c20;--muted:#b6b3ad;--text:#f5f4f1;--line:#3c3b40;--theme-page:#111113;--theme-surface:#1c1c20;--theme-text:#f5f4f1;--theme-muted:#b6b3ad;--theme-border:#3c3b40;--theme-control:#27272c}
-html[data-theme="light"]{color-scheme:light;--bg:#e9e7e3;--card:#fff;--muted:#66645f;--text:#171715;--line:#c9c6c0;--theme-page:#e9e7e3;--theme-surface:#fff;--theme-text:#171715;--theme-muted:#66645f;--theme-border:#c9c6c0;--theme-control:#f5f4f1}
-body{background:var(--theme-page);color:var(--theme-text);transition:background-color .2s,color .2s}
-section:not(.hero-banner-section),.cat,.product,.admin-card,.category-card,.banner-admin-card,.admin-item,.sale-row,.pdv-card,.pdv-item{color:var(--theme-text)}
-html[data-theme="light"] .cat,html[data-theme="light"] .product,html[data-theme="light"] .admin-card,html[data-theme="light"] .category-card,html[data-theme="light"] .banner-admin-card{background:var(--theme-surface);color:var(--theme-text)}
-html[data-theme="dark"] .cat,html[data-theme="dark"] .product,html[data-theme="dark"] .admin-card,html[data-theme="dark"] .category-card,html[data-theme="dark"] .banner-admin-card{background:var(--theme-surface);color:var(--theme-text);border-color:var(--theme-border)}
-html[data-theme="light"] input:not([type="checkbox"]):not([type="radio"]),html[data-theme="light"] select,html[data-theme="light"] textarea{background:#fff;color:#171715;border-color:var(--theme-border)}
-html[data-theme="light"] .searchbar input,html[data-theme="light"] .field{background:#fff;color:#171715}
-html[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]),html[data-theme="dark"] select,html[data-theme="dark"] textarea{background:#242429;color:#f5f4f1;border-color:var(--theme-border)}
-html[data-theme="dark"] .meta,html[data-theme="dark"] .product-description,html[data-theme="dark"] label{color:#d0cec9}
-html[data-theme="light"] .meta,html[data-theme="light"] label{color:#55534f}
-html[data-theme="light"] .header-icons .iconbtn{background:#f5f4f1;color:#171715}
-html[data-theme="dark"] .header-icons .iconbtn{background:#27272c;color:#fff}
-.theme-toggle{min-width:44px}
-@media(prefers-reduced-motion:reduce){body{transition:none}}
-
 </style>
 <style>
 html,body{max-width:100%;overflow-x:hidden}
@@ -646,7 +619,6 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
     <a href="#produtos">LANÇAMENTOS</a>
   </nav>
   <div class="header-icons">
-    <button class="iconbtn theme-toggle" id="themeToggle" type="button" aria-label="Ativar modo escuro" title="Alternar modo claro/escuro">🌙</button>
     <button class="iconbtn" id="searchBtn" type="button" aria-label="Pesquisar">🔍</button>
     <button class="iconbtn" id="cartBtn" type="button" aria-label="Carrinho">🛒 <b id="cartCount">0</b></button>
   </div>
@@ -1517,28 +1489,7 @@ async function finishSale(){
   }
   printSale(sale);
 }
-function printSale(sale){const w=window.open('','_blank','width=420,height=650');if(!w)return;const rows=sale.items.map(i=>`<tr><td>${i.name}<br><small>${i.qty} x ${money(i.unit)}</small></td><td style="text-align:right">${money(i.total)}</td></tr>`).join('');w.document.write(`<html><head><title>${sale.id}</title><style>body{font-family:Arial,sans-serif;width:320px;margin:20px auto;color:#111}h2{text-align:center;margin:0}.center{text-align:center}table{width:100%;border-collapse:collapse;margin-top:15px}td{padding:7px 0;border-bottom:1px dashed #bbb}small{color:#555}.tot{font-size:20px;font-weight:bold;text-align:right;margin-top:12px}</style></head><body><h2>STUDIO 70 BRAND</h2><div class="center">COMPROVANTE DE VENDA<br>${sale.id}<br>${new Date(sale.date).toLocaleString('pt-BR')}</div><table>${rows}</table><div>Subtotal: ${money(sale.subtotal)}</div><div>Desconto: ${money(sale.discount)}</div><div class="tot">TOTAL: ${money(sale.total)}</div><p>Pagamento: ${sale.payment}</p>${sale.payment==='Dinheiro'?`<p>Recebido: ${money(sale.received)}<br>Troco: ${money(sale.change)}</p>`:''}<p class="center">Obrigado pela preferência!</p><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script>
-<script>
-(function(){
-  const key='st70_theme_preference';
-  const root=document.documentElement;
-  function applyTheme(theme){
-    theme=(theme==='dark')?'dark':'light';
-    root.setAttribute('data-theme',theme);
-    try{localStorage.setItem(key,theme)}catch(e){}
-    const btn=document.getElementById('themeToggle');
-    if(btn){btn.textContent=theme==='dark'?'☀️':'🌙';btn.setAttribute('aria-label',theme==='dark'?'Ativar modo claro':'Ativar modo escuro');btn.title=theme==='dark'?'Ativar modo claro':'Ativar modo escuro';}
-  }
-  let saved=null;try{saved=localStorage.getItem(key)}catch(e){}
-  applyTheme(saved==='dark'?'dark':'light');
-  document.addEventListener('DOMContentLoaded',function(){
-    const btn=document.getElementById('themeToggle');
-    if(btn)btn.addEventListener('click',function(){applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark')});
-  });
-})();
-</script>
-
-</body></html>`);w.document.close()}
+function printSale(sale){const w=window.open('','_blank','width=420,height=650');if(!w)return;const rows=sale.items.map(i=>`<tr><td>${i.name}<br><small>${i.qty} x ${money(i.unit)}</small></td><td style="text-align:right">${money(i.total)}</td></tr>`).join('');w.document.write(`<html><head><title>${sale.id}</title><style>body{font-family:Arial,sans-serif;width:320px;margin:20px auto;color:#111}h2{text-align:center;margin:0}.center{text-align:center}table{width:100%;border-collapse:collapse;margin-top:15px}td{padding:7px 0;border-bottom:1px dashed #bbb}small{color:#555}.tot{font-size:20px;font-weight:bold;text-align:right;margin-top:12px}</style></head><body><h2>STUDIO 70 BRAND</h2><div class="center">COMPROVANTE DE VENDA<br>${sale.id}<br>${new Date(sale.date).toLocaleString('pt-BR')}</div><table>${rows}</table><div>Subtotal: ${money(sale.subtotal)}</div><div>Desconto: ${money(sale.discount)}</div><div class="tot">TOTAL: ${money(sale.total)}</div><p>Pagamento: ${sale.payment}</p>${sale.payment==='Dinheiro'?`<p>Recebido: ${money(sale.received)}<br>Troco: ${money(sale.change)}</p>`:''}<p class="center">Obrigado pela preferência!</p><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>`);w.document.close()}
 function renderSales(){const el=document.getElementById('pdvHistory');if(!el)return;el.innerHTML=sales.length?sales.slice(0,20).map(s=>`<div class="sale-row"><b>${s.id} — ${money(s.total)}</b><br><small>${new Date(s.date).toLocaleString('pt-BR')} · ${s.payment} · ${s.items.reduce((a,i)=>a+i.qty,0)} item(ns)</small><br><button class="smallbtn" onclick="printSale(${JSON.stringify(s).replace(/"/g,'&quot;')})">🖨️ Comprovante</button></div>`).join(''):'<div class="empty">Nenhuma venda registrada.</div>'}
 let loginTarget = null;
 let adminAuthPassword = '';
@@ -1625,32 +1576,9 @@ function setupAdminTabs(){
     const btn=e.target.closest('[data-admin-tab]');
     if(!btn)return;
     const name=btn.dataset.adminTab;
-    tabs.querySelectorAll('.admin-tab').forEach(x=>{
-      const selected=x===btn;
-      x.classList.toggle('active',selected);
-      x.setAttribute('aria-selected',selected?'true':'false');
-    });
-    panels.querySelectorAll('.admin-tab-panel').forEach(x=>{
-      const selected=x.dataset.tab===name;
-      x.classList.toggle('active',selected);
-      x.hidden=!selected;
-    });
-    const destination=panels.querySelector(`[data-tab="${name}"]`);
-    if(destination){
-      destination.hidden=false;
-      requestAnimationFrame(()=>{
-        destination.scrollIntoView({behavior:'smooth',block:'start'});
-      });
-    }
+    tabs.querySelectorAll('.admin-tab').forEach(x=>x.classList.toggle('active',x===btn));
+    panels.querySelectorAll('.admin-tab-panel').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
   });
-  tabs.querySelectorAll('.admin-tab').forEach((btn,i)=>btn.setAttribute('aria-selected',i===0?'true':'false'));
-  panels.querySelectorAll('.admin-tab-panel').forEach((el,i)=>{el.hidden=i!==0;});
-  if(!document.getElementById('st70AdminTabScrollStyle')){
-    const style=document.createElement('style');
-    style.id='st70AdminTabScrollStyle';
-    style.textContent='#adminTabPanels{scroll-margin-top:18px}#adminTabPanels>.admin-tab-panel{scroll-margin-top:18px}.admin-tab-panel[hidden]{display:none!important}';
-    document.head.appendChild(style);
-  }
 }
 let ST70_SHOPEE_PUBLIC_PRODUCTS=[];
 function renderShopeePublicPreview(products){
@@ -1823,60 +1751,7 @@ async function importShopeeCatalog(){
     }
   }
 }
-function setupAdminQuickMenu(){
-  const panels=document.getElementById('adminTabPanels');
-  const tabs=document.getElementById('adminTabs');
-  if(!panels||!tabs)return;
-  let menu=document.getElementById('st70AdminQuickMenu');
-  if(!menu){
-    menu=document.createElement('div');
-    menu.id='st70AdminQuickMenu';
-    menu.className='st70-admin-quick-menu';
-    menu.setAttribute('aria-label','Menu de configurações administrativas');
-    menu.innerHTML=`
-      <button type="button" data-target="categories">🗂️ Categorias / grupos</button>
-      <button type="button" data-target="shopee">🛍️ Catálogo Shopee — importação pronta</button>
-      <button type="button" data-target="registered">📦 Produtos cadastrados</button>
-      <button type="button" data-target="pricing">💲 Preço de venda — STUDIO 70</button>
-      <button type="button" data-target="mercadopago">💳 Mercado Pago — configuração</button>
-      <button type="button" data-target="freeShipping">🎁 Frete grátis — regra da loja</button>
-      <button type="button" data-target="pacSedex">🚚 Frete PAC / SEDEX — estimativa</button>
-      <button type="button" data-target="banners">🖼️ Banners</button>
-      <button type="button" data-target="appearance">🎨 Aparência</button>`;
-    tabs.insertAdjacentElement('afterend',menu);
-    menu.addEventListener('click',e=>{
-      const btn=e.target.closest('button[data-target]');if(!btn)return;
-      const key=btn.dataset.target;
-      let target=null;
-      if(key==='banners'||key==='appearance'){
-        const tab=tabs.querySelector(`[data-admin-tab="${key}"]`);
-        if(tab)tab.click();
-        target=key==='banners'?document.querySelector('#adminTabPanels [data-tab="banners"] .banner-admin-card'):document.querySelector('#adminTabPanels [data-tab="appearance"] .fashion-admin-card');
-      }else{
-        const productsTab=tabs.querySelector('[data-admin-tab="products"]');if(productsTab)productsTab.click();
-        const selectors={
-          categories:'#categoryAdminCard',
-          shopee:'.shopee-import-admin-card',
-          registered:'#adminList',
-          pricing:'#pricingAdminBox',
-          mercadopago:'#mpPublicKey',
-          freeShipping:'#freeShippingThreshold',
-          pacSedex:'#shippingPacMin'
-        };
-        target=document.querySelector(selectors[key]||'');
-        if(target && key!=='categories' && key!=='shopee' && key!=='registered' && key!=='pricing'){
-          target=target.closest('.payment-admin-box')||target.closest('.form-grid')||target;
-        }
-        if(key==='registered'&&target)target=target.closest('.admin-list')||target.parentElement;
-      }
-      if(target){
-        menu.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===btn));
-        requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'}));
-      }
-    });
-  }
-}
-function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');ensureCategoryAdminControls();setupAdminTabs();setupAdminQuickMenu();ensureCarmenattoAdminControls();ensureCarlaStockMonitorControls();ensureSilkManScraperControls();renderAdmin();loadFashionTheme().then(fillFashionThemeAdmin);loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';}async function loadFreeShippingConfig(){
+function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');setupAdminTabs();ensureCarmenattoAdminControls();ensureCarlaStockMonitorControls();ensureSilkManScraperControls();renderAdmin();loadFashionTheme().then(fillFashionThemeAdmin);loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';}async function loadFreeShippingConfig(){
   try{
     const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shipping_config'})});
     const d=await r.json().catch(()=>({}));
