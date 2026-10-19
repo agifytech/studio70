@@ -1529,57 +1529,80 @@ let cartTapCount=0,cartTapTimer=null;const cartAccess=document.getElementById('c
 if(cartAccess)cartAccess.addEventListener('click',e=>{cartTapCount++;clearTimeout(cartTapTimer);cartTapTimer=setTimeout(()=>{cartTapCount=0},650);if(cartTapCount>=3){e.preventDefault();e.stopImmediatePropagation();cartTapCount=0;openAdmin()}},{capture:true});
 document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();openPDV()}if(e.altKey&&e.shiftKey&&e.key.toLowerCase()==='a'){e.preventDefault();openAdmin()}if(e.key==='Escape'){document.querySelectorAll('.modal.open,.drawer.open').forEach(x=>x.classList.remove('open'))}});
 
-function setupAdminTabs(){
+function setupAdminTabs(force=false){
   const modal=document.getElementById('adminModal');
   const panel=modal?.querySelector('.modal-panel');
-  if(!panel || panel.dataset.adminTabsReady==='1')return;
-  panel.dataset.adminTabsReady='1';
-
-  const title=panel.querySelector('.section-title');
-  const scanner=panel.querySelector('.scanner');
-  const banner=panel.querySelector('.banner-admin-card:not(#categoryAdminCard)');
-  const category=panel.querySelector('#categoryAdminCard');
-  const fashion=panel.querySelector('.fashion-admin-card');
-  const geek=panel.querySelector('.geek-admin-card');
-  const shopee=panel.querySelector('.shopee-import-admin-card');
-  const grid=panel.querySelector('.admin-grid');
+  if(!panel)return;
+  const title=panel.querySelector(':scope > .section-title');
   if(!title)return;
+
+  // Preserve every existing admin control before rebuilding the tab containers.
+  const oldTabs=panel.querySelector(':scope > #adminTabs');
+  const oldPanels=panel.querySelector(':scope > #adminTabPanels');
+  if(oldPanels){
+    [...oldPanels.children].forEach(tabPanel=>{
+      while(tabPanel.firstChild) panel.insertBefore(tabPanel.firstChild,oldPanels);
+    });
+    oldPanels.remove();
+  }
+  if(oldTabs)oldTabs.remove();
 
   const tabs=document.createElement('div');
   tabs.className='admin-tabs';
   tabs.id='adminTabs';
+  tabs.setAttribute('role','tablist');
   tabs.innerHTML=`
-    <button class="admin-tab active" type="button" data-admin-tab="products">📦 PRODUTOS</button>
-    <button class="admin-tab" type="button" data-admin-tab="banners">🖼️ BANNERS</button>
-    <button class="admin-tab" type="button" data-admin-tab="appearance">🎨 APARÊNCIA</button>`;
-
+    <button class="admin-tab active" type="button" role="tab" aria-selected="true" data-admin-tab="products">📦 PRODUTOS</button>
+    <button class="admin-tab" type="button" role="tab" aria-selected="false" data-admin-tab="banners">🖼️ BANNERS</button>
+    <button class="admin-tab" type="button" role="tab" aria-selected="false" data-admin-tab="appearance">🎨 APARÊNCIA</button>`;
   const panels=document.createElement('div');
   panels.className='admin-tab-panels';
   panels.id='adminTabPanels';
   panels.innerHTML=`
-    <section class="admin-tab-panel active" data-tab="products"></section>
-    <section class="admin-tab-panel" data-tab="banners"></section>
-    <section class="admin-tab-panel" data-tab="appearance"></section>`;
-
+    <div class="admin-tab-panel active" role="tabpanel" data-tab="products"></div>
+    <div class="admin-tab-panel" role="tabpanel" data-tab="banners" hidden></div>
+    <div class="admin-tab-panel" role="tabpanel" data-tab="appearance" hidden></div>`;
   title.insertAdjacentElement('afterend',tabs);
   tabs.insertAdjacentElement('afterend',panels);
 
   const productsPanel=panels.querySelector('[data-tab="products"]');
   const bannersPanel=panels.querySelector('[data-tab="banners"]');
   const appearancePanel=panels.querySelector('[data-tab="appearance"]');
-
-  [scanner,shopee,grid,category].forEach(el=>{if(el)productsPanel.appendChild(el);});
-  if(banner)bannersPanel.appendChild(banner);
-  [fashion,geek].forEach(el=>{if(el)appearancePanel.appendChild(el);});
-
-  tabs.addEventListener('click',e=>{
-    const btn=e.target.closest('[data-admin-tab]');
-    if(!btn)return;
-    const name=btn.dataset.adminTab;
-    tabs.querySelectorAll('.admin-tab').forEach(x=>x.classList.toggle('active',x===btn));
-    panels.querySelectorAll('.admin-tab-panel').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
+  const excluded=new Set([title,tabs,panels,panel.querySelector(':scope > .close')]);
+  // Move all direct content into a tab so no settings are left underneath the tabs
+  // or visually covering the active panel.
+  [...panel.children].forEach(el=>{
+    if(excluded.has(el))return;
+    if(el.matches('.admin-tabs,#adminTabPanels,.admin-tab-panels'))return;
+    if(el.matches('.fashion-admin-card,.geek-admin-card') || el.id==='fashionAdminCard' || el.id==='geekAdminCard'){
+      appearancePanel.appendChild(el);
+    }else if(el.classList.contains('banner-admin-card') && el.id!=='categoryAdminCard'){
+      bannersPanel.appendChild(el);
+    }else{
+      productsPanel.appendChild(el);
+    }
   });
+  function activate(name){
+    tabs.querySelectorAll('[data-admin-tab]').forEach(btn=>{
+      const active=btn.dataset.adminTab===name;
+      btn.classList.toggle('active',active);
+      btn.setAttribute('aria-selected',active?'true':'false');
+    });
+    panels.querySelectorAll('[data-tab]').forEach(tabPanel=>{
+      const active=tabPanel.dataset.tab===name;
+      tabPanel.classList.toggle('active',active);
+      tabPanel.hidden=!active;
+    });
+  }
+  tabs.addEventListener('click',e=>{
+    const btn=e.target.closest('button[data-admin-tab]');
+    if(!btn || !tabs.contains(btn))return;
+    e.preventDefault();
+    activate(btn.dataset.adminTab);
+  });
+  activate('products');
 }
+
 let ST70_SHOPEE_PUBLIC_PRODUCTS=[];
 function renderShopeePublicPreview(products){
   const el=document.getElementById('shopeePublicPreview');
@@ -1751,7 +1774,7 @@ async function importShopeeCatalog(){
     }
   }
 }
-function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');setupAdminTabs();ensureCarmenattoAdminControls();ensureCarlaStockMonitorControls();ensureSilkManScraperControls();renderAdmin();loadFashionTheme().then(fillFashionThemeAdmin);loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';}async function loadFreeShippingConfig(){
+function openAdmin(){requestLogin('PAINEL ADMINISTRATIVO',async()=>{await enableNotifications();document.getElementById('adminModal').classList.add('open');setupAdminTabs();ensureCarmenattoAdminControls();ensureCarlaStockMonitorControls();ensureSilkManScraperControls();ensureCategoryAdminControls();setupAdminTabs(true);renderAdmin();loadFashionTheme().then(fillFashionThemeAdmin);loadGeekTheme().then(fillGeekThemeAdmin);loadPricingConfig();loadFreeShippingConfig();document.getElementById('scannerInput').focus();pollOrders()})} function closeAdmin(){document.getElementById('adminModal').classList.remove('open');adminAuthPassword='';}async function loadFreeShippingConfig(){
   try{
     const r=await fetch(DEFAULT_CHECKOUT_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'shipping_config'})});
     const d=await r.json().catch(()=>({}));
