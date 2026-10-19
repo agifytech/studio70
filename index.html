@@ -565,6 +565,22 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
 }
 </style>
 
+
+<style id="st70-cart-added-popup-style">
+#st70CartAddedPopup{position:fixed;right:20px;bottom:20px;z-index:99999;width:min(390px,calc(100vw - 28px));background:#fff;color:#111;border:1px solid #d5d1c9;border-radius:16px;box-shadow:0 18px 55px rgba(0,0,0,.28);padding:16px;display:none;font-family:Arial,Helvetica,sans-serif;animation:st70CartPopupIn .22s ease-out}
+#st70CartAddedPopup.show{display:block}
+#st70CartAddedPopup .st70-cart-popup-top{display:flex;gap:10px;align-items:flex-start}
+#st70CartAddedPopup .st70-cart-popup-check{flex:0 0 30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#111;color:#fff;font-weight:900;font-size:18px}
+#st70CartAddedPopup .st70-cart-popup-title{font-size:15px;font-weight:900;margin:1px 26px 5px 0}
+#st70CartAddedPopup .st70-cart-popup-name{font-size:13px;color:#555;line-height:1.4;overflow-wrap:anywhere}
+#st70CartAddedPopup .st70-cart-popup-close{position:absolute;right:10px;top:8px;border:0;background:transparent;color:#555;font-size:23px;line-height:1;padding:4px}
+#st70CartAddedPopup .st70-cart-popup-actions{display:flex;gap:8px;margin-top:14px}
+#st70CartAddedPopup .st70-cart-popup-actions button{flex:1;border:1px solid #111;border-radius:9px;padding:11px 8px;font-size:12px;font-weight:800;cursor:pointer}
+#st70CartAddedPopup .st70-cart-popup-view{background:#111;color:#fff}
+#st70CartAddedPopup .st70-cart-popup-continue{background:#fff;color:#111}
+@keyframes st70CartPopupIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){#st70CartAddedPopup{right:14px;bottom:14px;width:calc(100vw - 28px)}}
+</style>
 </head>
 <body>
 <div class="promo-carousel" id="promoCarousel" aria-label="Ofertas e benefícios">
@@ -1336,6 +1352,26 @@ function addSelectedProductToCart(id){
   return addCart(id,{size,color});
 }
 function closeProduct(){document.getElementById('productModal').classList.remove('open')}
+function showCartAddedPopup(product){
+  let popup=document.getElementById('st70CartAddedPopup');
+  if(!popup){
+    popup=document.createElement('div');
+    popup.id='st70CartAddedPopup';
+    popup.setAttribute('role','status');
+    popup.setAttribute('aria-live','polite');
+    popup.innerHTML='<div class="st70-cart-popup-top"><div class="st70-cart-popup-check" aria-hidden="true">✓</div><div><div class="st70-cart-popup-title">Produto enviado para o carrinho!</div><div class="st70-cart-popup-name" id="st70CartAddedName"></div></div></div><button type="button" class="st70-cart-popup-close" aria-label="Fechar aviso">×</button><div class="st70-cart-popup-actions"><button type="button" class="st70-cart-popup-view">VER CARRINHO</button><button type="button" class="st70-cart-popup-continue">CONTINUAR COMPRANDO</button></div>';
+    document.body.appendChild(popup);
+    popup.querySelector('.st70-cart-popup-close').addEventListener('click',()=>popup.classList.remove('show'));
+    popup.querySelector('.st70-cart-popup-continue').addEventListener('click',()=>popup.classList.remove('show'));
+    popup.querySelector('.st70-cart-popup-view').addEventListener('click',()=>{
+      popup.classList.remove('show');
+      document.getElementById('cartDrawer')?.classList.add('open');
+    });
+  }
+  const name=popup.querySelector('#st70CartAddedName');
+  if(name)name.textContent=String(product?.name||'Produto selecionado');
+  popup.classList.add('show');
+}
 function addCart(id,options={}){
   const key=String(id??''), p=products.find(x=>String(x.id??'')===key);
   if(!p){console.warn('Não foi possível adicionar: produto não encontrado',key);return false;}
@@ -1348,7 +1384,7 @@ function addCart(id,options={}){
   const item=cart.find(x=>String(x.id??'')===key&&String(x.size??'')===size&&String(x.color??'')===color);
   if(item){if(variant&&item.qty>=Number(variant.stock)){alert('Quantidade disponível esgotada para esta variação.');return false;}item.qty++;}
   else cart.push({id:key,qty:1,size,color});
-  saveCart();renderCart();return true;
+  saveCart();renderCart();showCartAddedPopup(p);return true;
 }
 function saveCart(){localStorage.setItem('studio70_cart',JSON.stringify(cart));document.getElementById('cartCount').textContent=cart.reduce((a,b)=>a+b.qty,0);}
 function findCartProduct(item){
@@ -2975,7 +3011,7 @@ function renderAdminOrders(orders,response={}){
         const hasSize=Array.isArray(product.sizes)&&product.sizes.length>0;
         const hasColor=Array.isArray(product.colors)&&product.colors.length>0;
         if(hasSize||hasColor){openProduct(productId);return;}
-        if(addCart(productId)){renderCart();document.getElementById('cartDrawer')?.classList.add('open');}
+        if(addCart(productId)){renderCart();}
         return;
       }
     },true);
