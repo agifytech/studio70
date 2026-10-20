@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://st70.com.br/sitemap.xml
