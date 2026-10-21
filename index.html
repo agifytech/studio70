@@ -3159,124 +3159,135 @@ setInterval(()=>{if(adminAuthPassword)pollOrders()},10000);
 // let fittingProductId=''; let fittingProfile=...
 // e termina na função virtualFittingResult(), antes do comentário LIGHTBOX DA GALERIA.
 
+/* PROVADOR VIRTUAL STUDIO 70 — SUBSTITUIR O BLOCO ANTIGO */
 let fittingProductId = '';
-let fittingProfile = { height: 160, weight: 60, base: 'M', sizeOptions: [] };
+let fittingProfile = { height: 160, weight: 60, base: '' };
 
 function closeVirtualFitting() {
   document.getElementById('virtualFittingModal')?.classList.remove('open');
 }
 
-function getFittingSizeOptions(product) {
-  const raw = Array.isArray(product?.sizes)
+function st70FittingOptions(product) {
+  const sizes = Array.isArray(product?.sizes)
     ? product.sizes.map(v => String(v ?? '').trim()).filter(Boolean)
     : [];
+  if (sizes.length) return [...new Set(sizes)];
 
-  // Preferir sempre os tamanhos cadastrados no próprio produto.
-  if (raw.length) return [...new Set(raw)];
-
-  const description = `${product?.name || ''} ${product?.category || ''} ${product?.subcategory || ''}`.toLowerCase();
-  if (/\b(camisa|camiseta|blusa|polo|moletom|jaqueta|casaco|oversized|cropped)\b/.test(description)) {
-    return ['P', 'M', 'G', 'GG', 'XG'];
+  const text = `${product?.name || ''} ${product?.category || ''} ${product?.subcategory || ''}`.toLowerCase();
+  if (/\b(camisa|camiseta|blusa|polo|moletom|jaqueta|casaco|oversized|cropped)\b/.test(text)) {
+    return ['P', 'M', 'G', 'GG'];
   }
-  if (/\b(único|unico|one size|tamanho único)\b/.test(description)) return ['Único'];
   return ['36', '38', '40', '42', '44', '46', '48'];
 }
 
-function getFittingSizeType(options) {
-  if (options.some(s => /^(PP|P|M|G|GG|XG|XGG|XXG)$/i.test(s))) return 'letters';
-  if (options.some(s => /^(único|unico|one size)$/i.test(s))) return 'unique';
-  return 'numbers';
+function st70FittingKind(product, options) {
+  const text = `${product?.name || ''} ${product?.category || ''} ${product?.subcategory || ''}`.toLowerCase();
+  if (/\b(calça|calca|short|bermuda|saia)\b/.test(text)) return 'bottom';
+  if (/\b(camisa|camiseta|blusa|polo|moletom|jaqueta|casaco|oversized|cropped)\b/.test(text)) return 'top';
+  if (options.some(s => /^(PP|P|M|G|GG|XG|XGG|XXG)$/i.test(s))) return 'top';
+  return 'bottom';
+}
+
+function st70LetterRank(size) {
+  const map = { PP: 0, P: 1, M: 2, G: 3, GG: 4, XG: 5, XGG: 6, XXG: 6 };
+  return map[String(size).trim().toUpperCase()];
+}
+
+function st70EstimateSize(product, options, measurements) {
+  const kind = st70FittingKind(product, options);
+  // Para blusas/camisas usa busto; para calças/bermudas usa a maior
+  // referência entre cintura e quadril. A opção "habitual" NÃO é usada no cálculo.
+  const measure = kind === 'top'
+    ? measurements.bust
+    : Math.max(measurements.waist, measurements.hip * 0.78);
+
+  const letterSizes = options.filter(s => st70LetterRank(s) !== undefined);
+  if (letterSizes.length) {
+    // Faixas aproximadas de busto (top) ou medida equivalente (bottom), em cm.
+    const thresholds = kind === 'top'
+      ? [{ max: 86, size: 'PP' }, { max: 92, size: 'P' }, { max: 100, size: 'M' }, { max: 108, size: 'G' }, { max: 116, size: 'GG' }, { max: 124, size: 'XG' }]
+      : [{ max: 68, size: 'PP' }, { max: 76, size: 'P' }, { max: 84, size: 'M' }, { max: 94, size: 'G' }, { max: 104, size: 'GG' }, { max: 114, size: 'XG' }];
+    let target = thresholds.find(t => measure <= t.max)?.size || 'XG';
+    const available = letterSizes.find(s => s.toUpperCase() === target);
+    if (available) return available;
+    // Se o cadastro usa apenas parte da grade, escolhe o tamanho disponível mais próximo.
+    const targetRank = st70LetterRank(target);
+    return letterSizes.reduce((best, s) =>
+      Math.abs(st70LetterRank(s) - targetRank) < Math.abs(st70LetterRank(best) - targetRank) ? s : best,
+      letterSizes[0]);
+  }
+
+  const numericSizes = options.map(s => ({ raw: s, n: Number((s.match(/\d+/) || [])[0]) }))
+    .filter(x => Number.isFinite(x.n) && x.n >= 30 && x.n <= 70);
+  if (numericSizes.length) {
+    // Faixas aproximadas para numeração feminina BR; seleciona entre os tamanhos cadastrados.
+    const thresholds = kind === 'top'
+      ? [{ max: 84, n: 36 }, { max: 88, n: 38 }, { max: 92, n: 40 }, { max: 96, n: 42 }, { max: 102, n: 44 }, { max: 108, n: 46 }, { max: Infinity, n: 48 }]
+      : [{ max: 66, n: 36 }, { max: 72, n: 38 }, { max: 78, n: 40 }, { max: 84, n: 42 }, { max: 92, n: 44 }, { max: 100, n: 46 }, { max: Infinity, n: 48 }];
+    const target = (thresholds.find(t => measure <= t.max) || thresholds[thresholds.length - 1]).n;
+    return numericSizes.reduce((best, s) => Math.abs(s.n - target) < Math.abs(best.n - target) ? s : best, numericSizes[0]).raw;
+  }
+
+  const unique = options.find(s => /^(único|unico|one size|tamanho único)$/i.test(s));
+  if (unique) return unique;
+  return options[0] || 'Não informado';
 }
 
 function openVirtualFitting(id) {
   const p = products.find(x => String(x.id) === String(id));
   if (!p) return;
-
   fittingProductId = String(id);
   const body = document.getElementById('virtualFittingBody');
   if (!body) return;
-
-  const options = getFittingSizeOptions(p);
-  fittingProfile.sizeOptions = options;
-  const type = getFittingSizeType(options);
-  const selected = type === 'letters'
-    ? (options.find(s => /^M$/i.test(s)) || options[0])
-    : type === 'unique'
-      ? options[0]
-      : (options.find(s => /^40(?:\b|\s|\/|-)/i.test(s)) || options[0]);
-
+  const options = st70FittingOptions(p);
   body.innerHTML = `<h2 class="section-title">⌁ Provador Virtual</h2>
-    <p style="color:var(--muted)">Descubra a vestibilidade de <b>${escapeHtml(p.name || 'este produto')}</b>.
-    Informe seus dados para receber uma sugestão de tamanho.</p>
+    <p style="color:var(--muted)">Informe suas medidas para estimar o tamanho de <b>${escapeHtml(p.name || 'este produto')}</b>. O tamanho habitual não determina o resultado.</p>
     <div class="form-grid">
       <label>Altura (cm)<input class="field" id="fitHeight" type="number" min="120" max="230" value="160"></label>
       <label>Peso (kg)<input class="field" id="fitWeight" type="number" min="35" max="250" value="60"></label>
-      <label>Tamanho habitual
-        <select class="field" id="fitBaseSize">
-          ${options.map(s => `<option value="${escapeHtml(s)}" ${s === selected ? 'selected' : ''}>${escapeHtml(s)}</option>`).join('')}
+      <label>Busto (cm)<input class="field" id="fitBustStart" type="number" min="60" max="160" value="92"></label>
+      <label>Cintura (cm)<input class="field" id="fitWaistStart" type="number" min="45" max="150" value="76"></label>
+      <label>Quadril (cm)<input class="field" id="fitHipStart" type="number" min="60" max="170" value="100"></label>
+      <label>Tamanho que costuma usar (opcional)
+        <select class="field" id="fitBaseSize"><option value="">Não informar</option>
+          ${options.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('')}
         </select>
       </label>
     </div>
-    <button class="btn" style="width:100%;margin-top:16px" type="button" onclick="virtualFittingNext()">CONTINUAR</button>`;
-
+    <button class="btn" style="width:100%;margin-top:16px" type="button" onclick="virtualFittingResult()">CALCULAR MEU TAMANHO</button>
+    <p style="font-size:11px;color:var(--muted);margin-top:12px">Estimativa geral: a tabela específica do fabricante é a referência mais precisa.</p>`;
   document.getElementById('virtualFittingModal')?.classList.add('open');
 }
 
 function virtualFittingNext() {
-  const p = products.find(x => String(x.id) === String(fittingProductId));
-  const baseEl = document.getElementById('fitBaseSize');
-  const options = getFittingSizeOptions(p);
-  fittingProfile = {
-    height: Number(document.getElementById('fitHeight')?.value || 160),
-    weight: Number(document.getElementById('fitWeight')?.value || 60),
-    base: String(baseEl?.value || options[0]),
-    sizeOptions: options
-  };
-
-  const body = document.getElementById('virtualFittingBody');
-  if (!body) return;
-
-  body.innerHTML = `<h2 class="section-title">Suas medidas</h2>
-    <p style="color:var(--muted)">Ajuste as medidas aproximadas ou use os valores sugeridos.</p>
-    <label>Busto (cm)<input class="field" id="fitBust" type="range" min="70" max="140" value="92" oninput="document.getElementById('fitBustOut').textContent=this.value+' cm'"><output id="fitBustOut">92 cm</output></label>
-    <label>Cintura (cm)<input class="field" id="fitWaist" type="range" min="55" max="130" value="76" oninput="document.getElementById('fitWaistOut').textContent=this.value+' cm'"><output id="fitWaistOut">76 cm</output></label>
-    <label>Quadril (cm)<input class="field" id="fitHip" type="range" min="75" max="150" value="100" oninput="document.getElementById('fitHipOut').textContent=this.value+' cm'"><output id="fitHipOut">100 cm</output></label>
-    <div style="display:flex;gap:10px;margin-top:16px">
-      <button class="smallbtn" style="flex:1" type="button" onclick="openVirtualFitting(fittingProductId)">VOLTAR</button>
-      <button class="btn" style="flex:1" type="button" onclick="virtualFittingResult()">VER RESULTADO</button>
-    </div>`;
+  // Compatibilidade com chamadas antigas; o fluxo agora calcula direto pelas medidas.
+  virtualFittingResult();
 }
 
 function virtualFittingResult() {
   const p = products.find(x => String(x.id) === String(fittingProductId));
   const body = document.getElementById('virtualFittingBody');
-  if (!body) return;
-
-  const options = getFittingSizeOptions(p);
-  const type = getFittingSizeType(options);
-  const base = String(fittingProfile.base || options[0]);
-  const bust = Number(document.getElementById('fitBust')?.value || 92);
-  const waist = Number(document.getElementById('fitWaist')?.value || 76);
-  const hip = Number(document.getElementById('fitHip')?.value || 100);
-  const score = (bust - 92) * 0.12 + (waist - 76) * 0.08 + (hip - 100) * 0.08;
-
-  let size = base;
-  if (type !== 'unique' && options.length > 1) {
-    const baseIndex = Math.max(0, options.findIndex(s => s.toLowerCase() === base.toLowerCase()));
-    const shift = score > 7 ? 2 : score > 2 ? 1 : score < -7 ? -2 : score < -2 ? -1 : 0;
-    const targetIndex = Math.max(0, Math.min(options.length - 1, baseIndex + shift));
-    size = options[targetIndex];
-  } else if (type === 'unique') {
-    size = options[0];
+  if (!p || !body) return;
+  const options = st70FittingOptions(p);
+  const measurements = {
+    height: Number(document.getElementById('fitHeight')?.value || 160),
+    weight: Number(document.getElementById('fitWeight')?.value || 60),
+    bust: Number(document.getElementById('fitBustStart')?.value || 92),
+    waist: Number(document.getElementById('fitWaistStart')?.value || 76),
+    hip: Number(document.getElementById('fitHipStart')?.value || 100)
+  };
+  if (measurements.bust < 60 || measurements.waist < 45 || measurements.hip < 60) {
+    alert('Confira suas medidas antes de continuar.');
+    return;
   }
-  const fit = score > 8 ? 'mais ajustado' : score < -8 ? 'mais confortável' : 'com maior chance de vestir com conforto';
+  const size = st70EstimateSize(p, options, measurements);
   body.innerHTML = `<h2 class="section-title">Resultado do provador</h2>
     <div style="padding:22px;text-align:center;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.04)">
-      <div style="font-size:13px;color:var(--muted)">TAMANHO INDICADO</div>
+      <div style="font-size:13px;color:var(--muted)">TAMANHO ESTIMADO</div>
       <strong style="display:block;font-size:56px;color:var(--accent);margin:8px 0">${escapeHtml(size)}</strong>
-      <p>O tamanho <b>${escapeHtml(size)}</b> tem maior chance de vestir ${fit} para esse perfil.</p>
+      <p>Estimativa calculada a partir das medidas informadas e da grade disponível para este produto.</p>
     </div>
-    <p style="font-size:12px;color:var(--muted);margin-top:14px">A recomendação é uma estimativa baseada nas medidas informadas e pode variar conforme o modelo e a preferência de vestibilidade.</p>
+    <p style="font-size:12px;color:var(--muted);margin-top:14px">Esta é uma estimativa baseada em faixas gerais, não na tabela de medidas do fabricante. Se o produto tiver uma tabela própria, ela deve prevalecer.</p>
     <div style="display:flex;gap:10px">
       <button class="smallbtn" style="flex:1" type="button" onclick="openVirtualFitting(fittingProductId)">CALCULAR NOVAMENTE</button>
       <button class="btn" style="flex:1" type="button" onclick="closeVirtualFitting()">ENTENDI</button>
