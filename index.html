@@ -947,7 +947,7 @@ footer h2,footer a{color:var(--fashion-footer-text)!important}
         <div class="status" id="freightStatus"></div>
         <div id="freightList" class="freight-list"></div>
       </div>
-      <div class="card" style="margin-top:18px"><h2>🎟️ Cupom de desconto</h2><div style="display:flex;gap:8px"><input class="field" id="storeCouponCode" placeholder="Digite seu cupom" style="margin:0"><button class="btn" type="button" style="width:auto;white-space:nowrap" onclick="applyStoreCoupon()">APLICAR</button></div><div class="status" id="storeCouponStatus"></div><p class="note">A validação verifica validade, compra mínima e limite de usos. Promoções podem ter condições específicas.</p></div>
+      <div class="card" style="margin-top:18px"><h2>🎟️ Cupom de desconto</h2><div style="display:flex;gap:8px"><input class="field" id="storeCouponCode" placeholder="Digite seu cupom" style="margin:0"><button class="btn" type="button" style="width:auto;white-space:nowrap" onclick="applyStoreCoupon()">APLICAR</button></div><div class="status" id="storeCouponStatus"></div><p class="note">Ao aplicar, o desconto deve aparecer no resumo do pedido. O valor final é validado novamente pelo servidor antes do pagamento.</p></div>
       <div class="card" style="margin-top:18px">
         <h2>3. Pagamento</h2>
         <div class="paybox"><b>Mercado Pago</b><div class="note">Escolha Pix para pagamento instantâneo ou cartão para abrir o checkout seguro do Mercado Pago.</div></div>
@@ -2493,7 +2493,25 @@ async function validateStoreCouponCode(code, showStatus=true){
   const r=await fetch(checkoutApiUrl(),{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({action:'coupon_validate',code,subtotal,shipping,quantity})});
   const d=await r.json().catch(()=>({}));
   if(!r.ok||d.ok!==true||!d.coupon)throw new Error(d.error||'O servidor não confirmou este cupom.');
-  window.st70ValidatedCoupon={...d.coupon,code:String(d.coupon.code||code).toUpperCase(),discount:Math.max(0,Number(d.discount||0)),shipping_discount:Math.max(0,Number(d.shipping_discount||0))};
+  const couponType=String(d.coupon.type||'percent');
+  let discount=Number(d.discount);
+  let shippingDiscount=Number(d.shipping_discount);
+  // Compatibilidade com versões antigas do backend: calcula a prévia a partir dos dados do cupom,
+  // mas o pagamento continua sendo recalculado e validado no servidor.
+  if(!Number.isFinite(discount))discount=NaN;
+  if(!Number.isFinite(shippingDiscount))shippingDiscount=NaN;
+  if(!Number.isFinite(discount)||!Number.isFinite(shippingDiscount)){
+    const value=Math.max(0,Number(d.coupon.value||0));
+    if(couponType==='percent')discount=Math.min(subtotal,Math.round(subtotal*Math.min(90,value)/100*100)/100);
+    else if(couponType==='fixed'||couponType==='quantity')discount=Math.min(subtotal,value);
+    else discount=0;
+    shippingDiscount=couponType==='free_shipping'?shipping:0;
+  }
+  discount=Math.max(0,Math.min(subtotal,Math.round(discount*100)/100));
+  shippingDiscount=Math.max(0,Math.min(shipping,Math.round(shippingDiscount*100)/100));
+  if(couponType!=='free_shipping'&&discount<=0)throw new Error('O cupom foi encontrado, mas o desconto calculado é R$ 0,00. Confira o tipo e o valor do cupom no ADM e publique a versão atualizada do super-handler no Supabase.');
+  if(couponType==='free_shipping'&&shippingDiscount<=0)shippingDiscount=shipping;
+  window.st70ValidatedCoupon={...d.coupon,code:String(d.coupon.code||code).toUpperCase(),discount,shipping_discount:shippingDiscount};
   if(showStatus&&status){const off=Number(window.st70ValidatedCoupon.discount||0);const free=window.st70ValidatedCoupon.type==='free_shipping'||Number(window.st70ValidatedCoupon.shipping_discount||0)>0;status.textContent='✓ Cupom '+window.st70ValidatedCoupon.code+' aplicado'+(off>0?': −'+integratedMoney(off):'')+(free?' · frete grátis':'')+'.';}
   integratedUpdateTotal();
   return window.st70ValidatedCoupon;
