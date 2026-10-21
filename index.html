@@ -1543,6 +1543,7 @@ function setupAdminTabs(){
   const fashion=panel.querySelector('.fashion-admin-card');
   const geek=panel.querySelector('.geek-admin-card');
   const shopee=panel.querySelector('.shopee-import-admin-card');
+  const shopeePublic=panel.querySelector('#shopeePublicImportCard');
   const grid=panel.querySelector('.admin-grid');
   if(!title)return;
 
@@ -1571,7 +1572,7 @@ function setupAdminTabs(){
   const bannersPanel=panels.querySelector('[data-tab="banners"]');
   const appearancePanel=panels.querySelector('[data-tab="appearance"]');
 
-  [scanner,shopee,grid,category].forEach(el=>{if(el)productsPanel.appendChild(el);});
+  [scanner,shopee,shopeePublic,grid,category].forEach(el=>{if(el)productsPanel.appendChild(el);});
   if(banner)bannersPanel.appendChild(banner);
   [fashion,geek].forEach(el=>{if(el)appearancePanel.appendChild(el);});
 
@@ -1581,6 +1582,13 @@ function setupAdminTabs(){
     const name=btn.dataset.adminTab;
     tabs.querySelectorAll('.admin-tab').forEach(x=>x.classList.toggle('active',x===btn));
     panels.querySelectorAll('.admin-tab-panel').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));
+    // O modal tem rolagem própria; reposiciona no início da aba escolhida.
+    // Sem isso, a aba troca, mas o painel conserva a rolagem anterior.
+    requestAnimationFrame(()=>{
+      const selected=panels.querySelector('.admin-tab-panel.active');
+      panel.scrollTo({top:Math.max(0,tabs.offsetTop-8),behavior:'smooth'});
+      if(selected)selected.scrollIntoView({block:'start',behavior:'smooth'});
+    });
   });
 }
 let ST70_SHOPEE_PUBLIC_PRODUCTS=[];
